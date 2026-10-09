@@ -150,6 +150,10 @@ function report(e, src) {
   if (/before initialization/.test(e.message)) hint = "Hint: a let or const variable was used before the line that declares it.";
   if (/Assignment to constant/.test(e.message)) hint = "Hint: a const can't be reassigned. Use let if the value needs to change.";
   if (/Maximum call stack/.test(e.message)) hint = "Hint: the recursion never stops (or goes too deep). Check that every path reaches a base case.";
+  if (/\b(Temporal|getOrInsert(Computed)?|sumPrecise|rawJSON|fromAsync|isError|toBase64|fromBase64)\b/.test(e.message)
+      && /is not defined|is not a function/.test(e.message)) {
+    hint = "Hint: this uses a recent JavaScript feature that your browser doesn't support yet. Update your browser, or try the latest Chrome, Edge or Firefox.";
+  }
   return hint ? `${text}\n${hint}` : text;
 }
 

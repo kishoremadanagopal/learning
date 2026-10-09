@@ -341,4 +341,4 @@ console.log(avg(10), avg(20), avg(60));
 </details>
 
 ---
-Previous: [Lesson 7](07-functions.md) · Back to the [course home](../README.md)
+Previous: [Lesson 7](07-functions.md) · Next: [Lesson 9: Arrays](09-arrays.md)

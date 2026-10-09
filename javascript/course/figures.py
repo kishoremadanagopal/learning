@@ -103,6 +103,54 @@ def closure_fig():
 
 
 
+# ---------------------------------------------------------------- Part 2: working with data
+
+@fig("reduce")
+def reduce_fig():
+    f, ax = diag.canvas(10.5, 3.6)
+    label(ax, 0.3, 3.3, "[120, 35, 64].reduce((acc, t) => acc + t, 0)", ha="left", size=10, mono=True)
+    steps = [(0, 120, 120), (120, 35, 155), (155, 64, 219)]
+    for i, (acc, item, res) in enumerate(steps):
+        x = 0.4 + i * 3.4
+        sbox(ax, x, 1.75, 1.15, 0.7, f"acc\n{acc}", color=BLUE, fontsize=9.5, mono=True)
+        label(ax, x + 1.38, 2.1, "+", size=13, bold=True)
+        sbox(ax, x + 1.6, 1.75, 1.15, 0.7, f"item\n{item}", color=ORANGE, fontsize=9.5, mono=True)
+        arrow(ax, x + 1.38, 1.7, x + 1.38, 1.0, color=INK)
+        sbox(ax, x + 0.8, 0.25, 1.15, 0.7, f"{res}", color=TEAL if i < 2 else PURPLE, fontsize=11, mono=True, bold=True)
+        label(ax, x + 1.38, 2.75, f"step {i + 1}", size=9, color=MUTED)
+        if i < 2:
+            ax.add_patch(FancyArrowPatch((x + 2.0, 0.6), (x + 3.4 + 0.05, 2.05), arrowstyle="-|>", mutation_scale=12,
+                                         color=TEAL, linewidth=1.3, connectionstyle="arc3,rad=0.25"))
+    label(ax, 9.25, 0.05, "result", size=9, color=PURPLE)
+    return f
+
+
+@fig("references")
+def references_fig():
+    f, ax = diag.canvas(11.0, 4.6)
+    label(ax, 0.3, 4.35, "const b = a;   (one object, two names)", ha="left", size=10, bold=True)
+    sbox(ax, 0.4, 3.2, 0.9, 0.55, "a", color=BLUE, mono=True)
+    sbox(ax, 0.4, 2.45, 0.9, 0.55, "b", color=BLUE, mono=True)
+    sbox(ax, 2.6, 2.7, 2.3, 0.85, "{ qty: 2 }", color=GREY, mono=True)
+    arrow(ax, 1.35, 3.47, 2.55, 3.2, color=BLUE)
+    arrow(ax, 1.35, 2.72, 2.55, 3.0, color=BLUE)
+    label(ax, 3.75, 2.4, "b.qty = 2 changes what a sees", size=8.5, color=MUTED)
+
+    label(ax, 5.7, 4.35, "shallow = { ...original }   vs   deep = structuredClone(original)", ha="left", size=10, bold=True)
+    sbox(ax, 5.8, 3.2, 1.7, 0.6, "original", color=BLUE, mono=True, fontsize=9.5)
+    sbox(ax, 5.8, 2.3, 1.7, 0.6, "shallow", color=ORANGE, mono=True, fontsize=9.5)
+    sbox(ax, 5.8, 0.6, 1.7, 0.6, "deep", color=TEAL, mono=True, fontsize=9.5)
+    sbox(ax, 8.6, 2.65, 2.2, 0.75, "address\n{ city }", color=GREY, mono=True, fontsize=9)
+    sbox(ax, 8.6, 0.55, 2.2, 0.75, "address copy\n{ city }", color=TEAL, mono=True, fontsize=9)
+    arrow(ax, 7.55, 3.5, 8.55, 3.15, color=BLUE)
+    arrow(ax, 7.55, 2.6, 8.55, 2.9, color=ORANGE)
+    arrow(ax, 7.55, 0.9, 8.55, 0.92, color=TEAL)
+    label(ax, 9.7, 2.25, "shared!", size=9, bold=True, color=CRIMSON)
+    label(ax, 9.7, 0.2, "its own copy", size=9, color=TEAL)
+    return f
+
+
+
 def main(names):
     OUT.mkdir(exist_ok=True)
     for name in names or FIGS:

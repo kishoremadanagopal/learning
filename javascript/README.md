@@ -1,6 +1,6 @@
 # JavaScript, TypeScript and JSON
 
-A hands-on course that starts from zero: 8 lessons on JavaScript (the language of the web), working with data and JSON, asynchronous code, building interactive pages, TypeScript, and Node.js tooling, ending with interview topics and a final project.
+A hands-on course that starts from zero: 15 lessons on JavaScript (the language of the web), working with data and JSON, asynchronous code, building interactive pages, TypeScript, and Node.js tooling, ending with interview topics and a final project.
 
 JavaScript runs every web page, and with Node.js it runs servers and tools too. JSON is how almost every API, including every LLM API, sends data. TypeScript adds types on top of JavaScript and is now the default for serious projects. Together they're essential for full-stack and AI engineers, and useful for analysts who build dashboards and automations.
 
@@ -8,9 +8,9 @@ JavaScript runs every web page, and with Node.js it runs servers and tools too. 
 
 The sandbox runs your JavaScript right in your browser, in a separate thread, so even an endless loop can be stopped. Nothing to install and no sign-up.
 
-- every lesson, with **45 examples** you can run and change
-- **16 exercises** with hidden tests, each with an approach, hints and a walkthrough
-- **32 quiz questions**, with explanations
+- every lesson, with **83 examples** you can run and change
+- **30 exercises** with hidden tests, each with an approach, hints and a walkthrough
+- **60 quiz questions**, with explanations
 - your progress and code saved in your own browser
 
 **Before you start:** nothing. Programming experience helps but isn't needed. If you already know Python, you'll move quickly: the lessons point out where JavaScript differs.
@@ -19,7 +19,7 @@ The sandbox runs your JavaScript right in your browser, in a separate thread, so
 
 | | |
 |---|---|
-| 📘 [Lessons](#lessons) | 8 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
+| 📘 [Lessons](#lessons) | 15 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
 | 📖 [Glossary](glossary.md) | every term used in the course, defined in plain English |
 | 🧾 [Cheat sheet](cheatsheet.md) | the syntax and patterns on one page, and every concept at a glance |
 
@@ -44,6 +44,18 @@ The sandbox runs your JavaScript right in your browser, in a separate thread, so
 | 6 | [Loops](lessons/06-loops.md) | for…of over arrays and strings, the classic for loop, while and do…while, break and continue, for…in over object keys, accumulators, running maximums, nested loops, off-by-one errors, endless loops and how to avoid them | 11–12 |
 | 7 | [Functions](lessons/07-functions.md) | function declarations, function expressions, arrow functions and implicit return, parameters and arguments, return and undefined, default parameters, rest parameters and spread, hoisting, functions as values, callbacks, higher-order functions, throwing errors for bad input, writing small single-purpose functions | 13–14 |
 | 8 | [Scope and closures](lessons/08-scope-and-closures.md) | lexical scope, global, function and block scope, the scope chain, shadowing, var versus let and const, hoisting and the temporal dead zone, closures, private state, function factories, counters, once and memoize, the loop-closure bug | 15–16 |
+
+### Part 2: Working with Data (Beginner)
+
+| # | Lesson | Topics | Sandbox |
+|---|---|---|---|
+| 9 | [Arrays](lessons/09-arrays.md) | creating arrays, length, indexes and at(), push, pop, shift, unshift and splice, includes, indexOf and lastIndexOf, methods that change an array versus ones that return a new one, toSorted, toReversed, toSpliced and with, arrays as references, copying with spread, slice, concat, Array.from, fill, flat, nested arrays | 17–18 |
+| 10 | [Array methods: map, filter, reduce and friends](lessons/10-array-methods.md) | callbacks on arrays, map, filter, find, findIndex and findLast, some and every, reduce and accumulators, sorting with a comparator, why the default sort compares text, localeCompare, stable sorting and tie-breakers, forEach, flat and flatMap, Object.groupBy and Map.groupBy, chaining methods into pipelines | 19–20 |
+| 11 | [Objects](lessons/11-objects.md) | object literals, properties, dot and bracket access, adding, changing and deleting properties, shorthand properties, computed keys, methods and this, in and Object.hasOwn, Object.keys, values, entries and fromEntries, key order, nested objects, references, shallow and deep copies, structuredClone, comparing objects, Object.freeze | 21–22 |
+| 12 | [Destructuring and spread](lessons/12-destructuring-and-spread.md) | array destructuring, skipping and defaults, rest elements, swapping variables, object destructuring, renaming, nested destructuring, rest properties, destructuring parameters and options objects, spread for arrays and objects, merging with later spreads winning, immutable updates of nested data | 23–24 |
+| 13 | [Map and Set](lessons/13-map-and-set.md) | Map and its methods, Map versus plain objects, any key type, size and order, getOrInsert, counting and grouping with a Map, Map.groupBy, Set and its methods, removing duplicates, fast membership tests, union, intersection, difference, symmetricDifference, isSubsetOf and isDisjointFrom, WeakMap and WeakSet | 25–26 |
+| 14 | [JSON](lessons/14-json.md) | what JSON is and where it's used, JSON syntax rules versus JavaScript objects, JSON.parse and JSON.stringify, pretty-printing, values that don't survive (undefined, functions, Date, Map, Set, NaN), replacers and revivers, invalid JSON and SyntaxError, try and catch, very large numbers, context.source and JSON.rawJSON, validating the shape of parsed data, schema libraries such as Zod | 27–28 |
+| 15 | [Dates and times](lessons/15-dates-and-time.md) | timestamps and the Unix epoch, the Date object, zero-based months, mutation, local time versus UTC, unreliable parsing, overflow, ISO 8601, Intl.DateTimeFormat and Intl.RelativeTimeFormat, the Temporal API, PlainDate, PlainTime, PlainDateTime, ZonedDateTime, Instant and Duration, calendar arithmetic, time zones and daylight saving, browser support and polyfills | 29–30 |
 
 ## Running it on your own computer
 

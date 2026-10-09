@@ -50,3 +50,49 @@ const sum = (...nums) => { let t = 0; for (const n of nums) t += n; return t; };
 sum(...[1, 2, 3]);                              // spread an array into arguments
 function makeCounter() { let c = 0; return () => ++c; }   // closure: private state
 ```
+
+## Working with data [9–15]
+
+### Arrays [9–10]
+
+| Changes the array | Returns a new one |
+|---|---|
+| `push` `pop` `shift` `unshift` `splice` | `slice` `concat` `[...arr]` |
+| `sort` `reverse` | `toSorted` `toReversed` `toSpliced` `with` |
+
+```js
+items.map((x) => x * 2)                       // transform
+items.filter((x) => x.paid)                   // keep some
+items.find((x) => x.id === 7)                 // first match or undefined
+items.some(fn)  items.every(fn)  items.includes(v)
+items.reduce((acc, x) => acc + x.total, 0)    // always give a start value
+nums.toSorted((a, b) => a - b)                // numbers need a comparator
+names.toSorted((a, b) => a.localeCompare(b))
+Object.groupBy(items, (x) => x.category)
+```
+
+### Objects, destructuring and spread [11–12]
+
+```js
+obj[key]  Object.hasOwn(obj, "k")  Object.entries(obj)  Object.fromEntries(pairs)
+const copy = { ...obj }                       // shallow
+const deep = structuredClone(obj)             // deep
+const { name, age = 0, address: { city } = {} } = user
+const [first, ...rest] = list
+const settings = { ...defaults, ...overrides }   // later wins
+function f(x, { currency = "GBP" } = {}) { … }   // options object
+```
+
+### Map, Set, JSON and dates [13–15]
+
+```js
+const m = new Map();  m.set(k, v);  m.get(k);  m.getOrInsert(k, []);  m.size
+const unique = [...new Set(items)];  a.union(b)  a.intersection(b)  a.difference(b)
+JSON.parse(text)        // throws SyntaxError on bad input: use try / catch
+JSON.stringify(value, null, 2)
+new Date(Date.UTC(2026, 9, 8)).toISOString()     // months start at 0!
+Temporal.PlainDate.from("2026-10-08").add({ days: 30 })   // not in Safari yet
+new Intl.DateTimeFormat("en-GB", { dateStyle: "full", timeZone: "Europe/London" }).format(d)
+```
+
+JSON drops `undefined` and functions, turns Dates into strings and Maps/Sets into `{}`, and loses precision on integers above 2⁵³.

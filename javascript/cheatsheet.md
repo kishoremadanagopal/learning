@@ -51,6 +51,52 @@ sum(...[1, 2, 3]);                              // spread an array into argument
 function makeCounter() { let c = 0; return () => ++c; }   // closure: private state
 ```
 
+## Working with data [9–15]
+
+### Arrays [9–10]
+
+| Changes the array | Returns a new one |
+|---|---|
+| `push` `pop` `shift` `unshift` `splice` | `slice` `concat` `[...arr]` |
+| `sort` `reverse` | `toSorted` `toReversed` `toSpliced` `with` |
+
+```js
+items.map((x) => x * 2)                       // transform
+items.filter((x) => x.paid)                   // keep some
+items.find((x) => x.id === 7)                 // first match or undefined
+items.some(fn)  items.every(fn)  items.includes(v)
+items.reduce((acc, x) => acc + x.total, 0)    // always give a start value
+nums.toSorted((a, b) => a - b)                // numbers need a comparator
+names.toSorted((a, b) => a.localeCompare(b))
+Object.groupBy(items, (x) => x.category)
+```
+
+### Objects, destructuring and spread [11–12]
+
+```js
+obj[key]  Object.hasOwn(obj, "k")  Object.entries(obj)  Object.fromEntries(pairs)
+const copy = { ...obj }                       // shallow
+const deep = structuredClone(obj)             // deep
+const { name, age = 0, address: { city } = {} } = user
+const [first, ...rest] = list
+const settings = { ...defaults, ...overrides }   // later wins
+function f(x, { currency = "GBP" } = {}) { … }   // options object
+```
+
+### Map, Set, JSON and dates [13–15]
+
+```js
+const m = new Map();  m.set(k, v);  m.get(k);  m.getOrInsert(k, []);  m.size
+const unique = [...new Set(items)];  a.union(b)  a.intersection(b)  a.difference(b)
+JSON.parse(text)        // throws SyntaxError on bad input: use try / catch
+JSON.stringify(value, null, 2)
+new Date(Date.UTC(2026, 9, 8)).toISOString()     // months start at 0!
+Temporal.PlainDate.from("2026-10-08").add({ days: 30 })   // not in Safari yet
+new Intl.DateTimeFormat("en-GB", { dateStyle: "full", timeZone: "Europe/London" }).format(d)
+```
+
+JSON drops `undefined` and functions, turns Dates into strings and Maps/Sets into `{}`, and loses precision on integers above 2⁵³.
+
 ## Every concept at a glance
 
 Generated from the **At a glance** table at the end of each lesson. The number in brackets links to the lesson.
@@ -86,3 +132,34 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | Private state | variables inside a factory, returned function uses them | O(1) | O(state) | [8](lessons/08-scope-and-closures.md) |
 | Run once | flag + saved result in a closure | O(1) | O(1) | [8](lessons/08-scope-and-closures.md) |
 | Memoize | Map cache in a closure | O(1) per repeat | O(distinct inputs) | [8](lessons/08-scope-and-closures.md) |
+| Add or remove at the end | push / pop | O(1) | O(1) | [9](lessons/09-arrays.md) |
+| Add or remove at the start | unshift / shift | O(n) | O(1) | [9](lessons/09-arrays.md) |
+| Copy | [...arr] or arr.slice() | O(n) | O(n) | [9](lessons/09-arrays.md) |
+| Rotate | normalise k with modulo; join two slices | O(n) | O(n) | [9](lessons/09-arrays.md) |
+| Chunk | step by size; slice each piece | O(n) | O(n) | [9](lessons/09-arrays.md) |
+| Transform each | arr.map(fn) | O(n) | O(n) | [10](lessons/10-array-methods.md) |
+| Keep matching | arr.filter(fn) | O(n) | O(n) | [10](lessons/10-array-methods.md) |
+| Combine all | arr.reduce(fn, start) | O(n) | O(1) plus the result | [10](lessons/10-array-methods.md) |
+| Sort | toSorted((a, b) => …) | O(n log n) | O(n) | [10](lessons/10-array-methods.md) |
+| Top n by count | count in an object or Map; sort entries; slice | O(n + k log k) | O(k) | [10](lessons/10-array-methods.md) |
+| Read by variable name | obj[key] | O(1) | O(1) | [11](lessons/11-objects.md) |
+| Loop over pairs | for (const [k, v] of Object.entries(obj)) | O(n) | O(n) | [11](lessons/11-objects.md) |
+| Transform an object | Object.fromEntries(Object.entries(obj).map(…)) | O(n) | O(n) | [11](lessons/11-objects.md) |
+| Deep copy | structuredClone(obj) | O(size) | O(size) | [11](lessons/11-objects.md) |
+| Safe nested read | walk the path; stop at null or undefined | O(depth) | O(1) | [11](lessons/11-objects.md) |
+| Unpack by name | const { a, b: renamed, c = 1 } = obj | O(k) | O(k) | [12](lessons/12-destructuring-and-spread.md) |
+| Merge with overrides | { ...defaults, ...overrides } | O(n) | O(n) | [12](lessons/12-destructuring-and-spread.md) |
+| Update one item | { ...state, items: items.map(i => i.id === id ? { ...i, ...changes } : i) } | O(n) | O(n) | [12](lessons/12-destructuring-and-spread.md) |
+| Named options | function f(x, { opt = 1 } = {}) | O(1) | O(1) | [12](lessons/12-destructuring-and-spread.md) |
+| Count occurrences | map.set(k, (map.get(k) ?? 0) + 1) | O(n) | O(distinct) | [13](lessons/13-map-and-set.md) |
+| Remove duplicates | [...new Set(items)] | O(n) | O(n) | [13](lessons/13-map-and-set.md) |
+| Seen before? | set.has(x) | O(1) average | O(n) | [13](lessons/13-map-and-set.md) |
+| Compare lists | new Set(a).intersection(new Set(b)) | O(n + m) | O(n + m) | [13](lessons/13-map-and-set.md) |
+| Value to text | JSON.stringify(value, null, 2) | O(size) | O(size) | [14](lessons/14-json.md) |
+| Text to value | JSON.parse(text, reviver) inside try / catch | O(size) | O(size) | [14](lessons/14-json.md) |
+| Never throw | return { ok, value } or { ok, error } | O(size) | O(size) | [14](lessons/14-json.md) |
+| Check the shape | type checks per field; collect problems | O(fields) | O(problems) | [14](lessons/14-json.md) |
+| Store a moment | ISO 8601 UTC string or timestamp | O(1) | O(1) | [15](lessons/15-dates-and-time.md) |
+| Show a moment | Intl.DateTimeFormat(locale, { timeZone }) | O(1) | O(1) | [15](lessons/15-dates-and-time.md) |
+| Days between dates | UTC timestamps ÷ 86,400,000, or PlainDate.until | O(1) | O(1) | [15](lessons/15-dates-and-time.md) |
+| Add months safely | Temporal.PlainDate add({ months }) | O(1) | O(1) | [15](lessons/15-dates-and-time.md) |
