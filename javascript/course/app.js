@@ -53,18 +53,51 @@
     return out + esc(src.slice(last));
   }
 
+  // HTML: tags, attribute names and values, comments; JavaScript inside <script> uses the highlighter above.
+  const HTML_RE = /<!--[\s\S]*?(?:-->|$)|<!doctype[^>]*>?|<(script|style)\b(?:"[^"]*"|'[^']*'|[^'">])*>|<\/?[A-Za-z][\w-]*(?:"[^"]*"?|'[^']*'?|[^'">])*>?/gi;
+  const ATTR_RE = /^<\/?[\w-]+|("[^"]*"?|'[^']*'?)|([^\s"'=<>/]+)(?=\s*=)|\/?>$/g;
+  function highlightTag(t) {
+    let out = "", last = 0;
+    t.replace(ATTR_RE, (m, str, attr, idx) => {
+      out += esc(t.slice(last, idx));
+      last = idx + m.length;
+      out += `<span class="${str ? "s" : attr ? "f" : "k"}">${esc(m)}</span>`;
+      return m;
+    });
+    return out + esc(t.slice(last));
+  }
+  function highlightHTML(src) {
+    let out = "", last = 0, m;
+    HTML_RE.lastIndex = 0;
+    while ((m = HTML_RE.exec(src))) {
+      out += esc(src.slice(last, m.index));
+      out += m[0].startsWith("<!") ? `<span class="c">${esc(m[0])}</span>` : highlightTag(m[0]);
+      last = HTML_RE.lastIndex;
+      if (m[1]) {
+        const rest = src.slice(last);
+        const close = new RegExp(`</${m[1]}\\s*>`, "i").exec(rest);
+        const body = close ? rest.slice(0, close.index) : rest;
+        out += m[1].toLowerCase() === "script" ? highlight(body) : esc(body);
+        last += body.length;
+        HTML_RE.lastIndex = last;
+      }
+    }
+    return out + esc(src.slice(last));
+  }
+  const highlightAs = (src, lang) => (lang === "html" ? highlightHTML(src) : highlight(src));
+
   /* ---------- Editor ---------- */
   const code = $("code"), hl = $("hl"), gutter = $("gutter"), view = $("view"), stdinBox = $("stdin");
   const runBtn = $("runBtn"), checkBtn = $("checkBtn"), resetBtn = $("resetBtn"), stopBtn = $("stopBtn");
   let pyReady = false;
-  let ctx = { mode: "scratch" };          // or {mode:"example"} / {mode:"exercise", lesson, index}
+  let ctx = { mode: "scratch", lang: "js" };   // or {mode:"example"} / {mode:"exercise", lesson, index}; lang is "js" or "html"
   let currentView = "output";
   let outputHTML = '<span class="meta">Press Run on any example, or write your own code here.</span>';
 
   if (/Mac|iPhone|iPad/.test(navigator.platform)) $("kbd").textContent = "⌘ ↵";
 
   function refreshEditor() {
-    hl.innerHTML = highlight(code.value) + "\n";
+    hl.innerHTML = highlightAs(code.value, ctx.lang) + "\n";
     const n = code.value.split("\n").length;
     let g = "";
     for (let i = 1; i <= n; i++) g += i + "\n";
@@ -108,6 +141,7 @@
       const line = v.slice(ls, s);
       let indent = line.match(/^\s*/)[0];
       if (/[{[(]\s*(\/\/.*)?$/.test(line)) indent += "  ";
+      else if (ctx.lang === "html" && /<(?!\/|!|(?:area|base|br|col|embed|hr|img|input|link|meta|source|track|wbr)\b)[A-Za-z][^<>]*[^/]>\s*$/.test(line) && !/<\/[\w-]+>\s*$/.test(line)) indent += "  ";
       e.preventDefault();
       code.setRangeText("\n" + indent, s, en, "end");
       code.dispatchEvent(new Event("input"));
@@ -120,6 +154,40 @@
     const isEx = ctx.mode === "exercise";
     checkBtn.hidden = !isEx;
     resetBtn.hidden = !isEx;
+    setPageMode(ctx.lang === "html");
+  }
+
+  /* ---------- Page preview (HTML lessons): the page runs in a sandboxed iframe, see dom.js ---------- */
+  let pageSession = null, pageBusy = false, pageVerdictHTML = "", renderQueued = false;
+  function setPageMode(on) {
+    $("ide").classList.toggle("page-mode", on);
+    $("preview").hidden = !on;
+    if (!on && pageSession) { pageSession.dispose(); pageSession = null; }
+    if (on && !pageSession) $("previewHost").innerHTML = '<p class="meta" style="padding:12px 14px;margin:0;font:italic 13px var(--body)">Press Run to open your page here.</p>';
+  }
+  function livePageOutput(parts) {
+    if (renderQueued) return;
+    renderQueued = true;
+    requestAnimationFrame(() => {
+      renderQueued = false;
+      outputHTML = (renderResult({ parts }) || '<span class="meta">Console output from your page appears here.</span>') + pageVerdictHTML;
+      if (currentView === "output") renderView();
+    });
+  }
+  function openPage(src) {
+    if (pageSession) pageSession.dispose();
+    pageVerdictHTML = "";
+    outputHTML = '<span class="meta">Console output from your page appears here.</span>';
+    renderView();
+    pageSession = window.DomSandbox.open($("previewHost"), src, livePageOutput);
+    return pageSession;
+  }
+  async function pageReady() {
+    try { await window.DomSandbox.load(window.BUILD); return true; } catch (e) {
+      outputHTML = `<span class="err">The page preview couldn't start (${esc(e.message)}). Check your connection and reload.</span>`;
+      renderView();
+      return false;
+    }
   }
 
   /* ---------- JavaScript engine (a Web Worker, so endless loops can be stopped) ---------- */
@@ -158,6 +226,17 @@
     });
   }
   stopBtn.addEventListener("click", () => {
+    if (pageBusy && pageSession) {
+      pageSession.dispose();
+      pageSession = null;
+      pageBusy = false;
+      busy(false);
+      $("timing").textContent = "stopped";
+      $("previewHost").innerHTML = "";
+      outputHTML = '<span class="err">Stopped. The page was closed; your code is still in the editor.</span>';
+      renderView();
+      return;
+    }
     if (!pending) return;
     worker.terminate();
     const p = pending; pending = null;
@@ -174,27 +253,10 @@
   function selectOutputTab() {
     if (currentView !== "output") document.querySelector('.tab[data-view="output"]').click();
   }
-  function selectDataTab() {
-    document.querySelector('.tab[data-view="data"]').click();
-    openSheet();
-  }
   function renderView() {
     view.classList.toggle("out", currentView === "output");
-    if (currentView === "output") { view.innerHTML = outputHTML; view.scrollTop = view.scrollHeight; return; }
-    const ds = window.DATASETS || [];
-    view.innerHTML = `<div class="data-list"><span class="meta">Practice files you can open in any lesson. They reset before every run, so you can't break them.</span>` +
-      ds.map((d, i) => `<div class="data-item"><b>${esc(d.name)}</b> · ${d.rows} rows<p>${esc(d.about)}</p>` +
-        `<code>${d.columns.map(esc).join(", ")}</code><br><button class="mini-btn" type="button" data-load="${i}">Load into editor</button></div>`).join("") + `</div>`;
-    view.querySelectorAll("[data-load]").forEach((btn) => btn.addEventListener("click", () => {
-      const d = ds[+btn.dataset.load];
-      const reader = d.name.endsWith(".json") ? "read_json" : "read_csv";
-      ctx = { mode: "scratch", page: ctx.page };
-      clearActiveExercise();
-      setIdeHeader("Scratchpad", d.name);
-      setCode(`import pandas as pd\n\ndf = pd.${reader}("${d.name}")\nprint(df.shape)\nprint(df.head())\n`);
-      doRun();
-    }));
-    view.scrollTop = 0;
+    view.innerHTML = outputHTML;
+    view.scrollTop = view.scrollHeight;
   }
   function renderResult(res) {
     let h = (res.parts || []).map(([k, t]) => k === "err" ? `<span class="err">${esc(t)}</span>` : esc(t)).join("");
@@ -225,7 +287,43 @@
     $("stdinRow").hidden = !text;
   }
 
+  async function runPage() {
+    if (pageBusy) return;
+    pageBusy = true;
+    selectOutputTab();
+    openSheet();
+    busy(true, "loading page");
+    const t0 = performance.now();
+    if (await pageReady()) {
+      const s = openPage(code.value);
+      const res = await s.result(0);
+      if (s !== pageSession) return;      // stopped, or replaced by a newer run
+      setTiming(res.ok, performance.now() - t0, res.ok ? "page loaded" : "error");
+    }
+    busy(false);
+    pageBusy = false;
+  }
+
+  async function checkPage(lesson, i, ex) {
+    if (pageBusy) return;
+    pageBusy = true;
+    selectOutputTab();
+    openSheet();
+    busy(true, "checking");
+    const t0 = performance.now();
+    let v = { ok: false, msg: "The page preview couldn't start." };
+    if (await pageReady()) {
+      const s = openPage(code.value);
+      const res = await s.check(ex.check);
+      if (s !== pageSession) return;
+      v = res.verdict;
+    }
+    pageBusy = false;
+    finishCheck(lesson, i, ex, v, t0, (renderResult({ parts: pageSession ? pageSession.parts : [] })));
+  }
+
   async function doRun() {
+    if (ctx.lang === "html") return runPage();
     if (pending) return;
     selectOutputTab();
     openSheet();
@@ -244,6 +342,7 @@
   async function doCheck() {
     if (pending || ctx.mode !== "exercise") return;
     const lesson = ctx.lesson, i = ctx.index, ex = lesson.exercises[i];
+    if (ex.lang === "html") return checkPage(lesson, i, ex);
     selectOutputTab();
     openSheet();
     busy(true, pyReady ? "checking" : "starting");
@@ -252,12 +351,18 @@
     const t0 = performance.now();
     const res = await job("check", code.value, ex.check, ex.stdin || stdinBox.value);
     const v = res.verdict || { ok: false, msg: res.stopped ? "Stopped before the checks finished." : "The checker couldn't run." };
+    finishCheck(lesson, i, ex, v, t0, renderResult(res));
+  }
+
+  function finishCheck(lesson, i, ex, v, t0, shownHTML) {
     const before = lessonDone(lesson);
     if (v.ok) { state.passed[exKey(lesson, i)] = true; save(); }
     let verdict = v.ok ? "✓ All checks passed. Nice work!" : "✗ " + v.msg;
     if (!v.ok && (ex.approach || ex.hints.length)) verdict += "\n\nStuck? On the exercise card, open 🧭 Approach, then the 💡 hints one at a time.";
     if (v.ok && !before && lessonDone(lesson)) verdict += "\nLesson complete.";
-    outputHTML = renderResult(res) + `<span class="verdict ${v.ok ? "pass" : "fail"}">${esc(verdict)}</span>`;
+    const verdictHTML = `<span class="verdict ${v.ok ? "pass" : "fail"}">${esc(verdict)}</span>`;
+    if (ex.lang === "html") pageVerdictHTML = verdictHTML;
+    outputHTML = shownHTML + verdictHTML;
     setTiming(v.ok, performance.now() - t0, v.ok ? "passed" : "not yet");
     busy(false);
     renderView();
@@ -402,18 +507,19 @@
     // Examples
     page.querySelectorAll(".example").forEach((el) => {
       const ex = lesson.examples[+el.dataset.ex];
-      const tag = ex.error ? '<span class="tag warn">Example · raises an error</span>' : '<span class="tag">Example</span>';
+      const kind = ex.lang === "html" ? "Page" : "Example";
+      const tag = ex.error ? `<span class="tag warn">${kind} · raises an error</span>` : `<span class="tag">${kind}</span>`;
       el.outerHTML = `<div class="codeblock" data-ex="${el.dataset.ex}">
         <div class="codeblock-bar">${tag}${ex.stdin ? '<span class="tag">uses input</span>' : ""}<button class="run-btn" type="button" data-act="run">▶ Run</button></div>
-        <pre>${highlight(ex.code)}</pre></div>`;
+        <pre>${highlightAs(ex.code, ex.lang)}</pre></div>`;
     });
-    page.querySelectorAll("pre.plain").forEach((el) => { el.innerHTML = highlight(el.textContent); });
+    page.querySelectorAll("pre.plain").forEach((el) => { el.innerHTML = highlightAs(el.textContent, el.dataset.lang); });
 
     page.querySelectorAll(".codeblock .run-btn").forEach((btn) => btn.addEventListener("click", () => {
       const ex = lesson.examples[+btn.closest(".codeblock").dataset.ex];
-      ctx = { mode: "example", page: lesson.id };
+      ctx = { mode: "example", page: lesson.id, lang: ex.lang };
       clearActiveExercise();
-      setIdeHeader("Example", lesson.title);
+      setIdeHeader(ex.lang === "html" ? "Page example" : "Example", lesson.title);
       setCode(ex.code);
       showStdin(ex.stdin);
       doRun();
@@ -452,7 +558,7 @@
           slot.hidden = false;
         } else if (a === "show-solution") {
           slot.dataset.kind = "solution";
-          slot.innerHTML = `<b>✅ Solution</b><pre>${highlight(ex.solution)}</pre>
+          slot.innerHTML = `<b>✅ Solution</b><pre>${highlightAs(ex.solution, ex.lang)}</pre>
             ${ex.walkthrough ? `<div class="walkthrough prose">${ex.walkthrough}</div>` : ""}
             <div class="reveal-actions"><button class="mini-btn" data-act="load-solution" type="button">Load into editor</button></div>`;
           highlightPanel(slot);
@@ -491,7 +597,7 @@
     renderNav(lesson.id);
   }
 
-  function highlightPanel(el) { el.querySelectorAll("pre.plain").forEach((p) => { p.innerHTML = highlight(p.textContent); }); }
+  function highlightPanel(el) { el.querySelectorAll("pre.plain").forEach((p) => { p.innerHTML = highlightAs(p.textContent, p.dataset.lang); }); }
 
   function updateExerciseCard(lesson, i) {
     const card = document.getElementById(`ex-${i}`);
@@ -509,7 +615,7 @@
 
   function openExercise(lesson, i, overrideCode) {
     const ex = lesson.exercises[i];
-    ctx = { mode: "exercise", lesson, index: i, page: lesson.id };
+    ctx = { mode: "exercise", lesson, index: i, page: lesson.id, lang: ex.lang || "js" };
     setIdeHeader(`Exercise ${ex.number}`, ex.title);
     const saved = state.code[exKey(lesson, i)];
     const src = overrideCode != null ? overrideCode : (saved != null ? saved : ex.starter);
@@ -537,7 +643,7 @@
 
   /* ---------- Start ---------- */
   setIdeHeader("Scratchpad", "main.js");
-  setCode('# Your scratchpad. Try anything!\nimport pandas as pd\n\nstudents = pd.read_csv("students.csv")\nprint(students["math"].describe())\n');
+  setCode('// Your scratchpad. Try anything!\nconst name = "world";\nconsole.log(`Hello, ${name}!`);\n');
   renderView();
   route();
   startWorker();

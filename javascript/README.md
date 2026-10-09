@@ -1,16 +1,16 @@
 # JavaScript, TypeScript and JSON
 
-A hands-on course that starts from zero: 25 lessons on JavaScript (the language of the web), working with data and JSON, asynchronous code, building interactive pages, TypeScript, and Node.js tooling, ending with interview topics and a final project.
+A hands-on course that starts from zero: 30 lessons on JavaScript (the language of the web), working with data and JSON, asynchronous code, building interactive pages, TypeScript, and Node.js tooling, ending with interview topics and a final project.
 
 JavaScript runs every web page, and with Node.js it runs servers and tools too. JSON is how almost every API, including every LLM API, sends data. TypeScript adds types on top of JavaScript and is now the default for serious projects. Together they're essential for full-stack and AI engineers, and useful for analysts who build dashboards and automations.
 
 ## ▶ [Open the practice sandbox](https://kishoremadanagopal.github.io/learning/javascript/)
 
-The sandbox runs your JavaScript right in your browser, in a separate thread, so even an endless loop can be stopped. Nothing to install and no sign-up.
+The sandbox runs your JavaScript right in your browser, in a separate thread, so even an endless loop can be stopped, and shows the pages you build in the browser lessons in a live, sandboxed preview. Nothing to install and no sign-up.
 
-- every lesson, with **131 examples** you can run and change
-- **50 exercises** with hidden tests, each with an approach, hints and a walkthrough
-- **100 quiz questions**, with explanations
+- every lesson, with **155 examples** you can run and change
+- **60 exercises** with hidden tests, each with an approach, hints and a walkthrough
+- **120 quiz questions**, with explanations
 - your progress and code saved in your own browser
 
 **Before you start:** nothing. Programming experience helps but isn't needed. If you already know Python, you'll move quickly: the lessons point out where JavaScript differs.
@@ -19,7 +19,7 @@ The sandbox runs your JavaScript right in your browser, in a separate thread, so
 
 | | |
 |---|---|
-| 📘 [Lessons](#lessons) | 25 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
+| 📘 [Lessons](#lessons) | 30 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
 | 📖 [Glossary](glossary.md) | every term used in the course, defined in plain English |
 | 🧾 [Cheat sheet](cheatsheet.md) | the syntax and patterns on one page, and every concept at a glance |
 
@@ -77,9 +77,19 @@ The sandbox runs your JavaScript right in your browser, in a separate thread, so
 | 24 | [fetch and web APIs](lessons/24-fetch-and-apis.md) | HTTP methods, URLs, status codes, headers and bodies, APIs, fetch and Response, response.ok, reading JSON and text, why fetch doesn't reject on HTTP errors, a getJSON helper, building URLs with URL and URLSearchParams, POST with a JSON body and Content-Type, handling API error messages, CORS, keeping secret API keys on the server, the course's practice API | 47–48 |
 | 25 | [Timeouts, retries, cancellation and streaming](lessons/25-async-patterns.md) | timeouts with Promise.race, cleaning up timers, cancellation with AbortController and AbortSignal, AbortSignal.timeout and AbortSignal.any, retries with exponential backoff and jitter, which errors to retry, idempotency and idempotency keys, limiting concurrency, reading streamed responses with readers and TextDecoderStream, server-sent events and LLM streaming | 49–50 |
 
+### Part 5: JavaScript in the browser (Intermediate)
+
+| # | Lesson | Topics | Sandbox |
+|---|---|---|---|
+| 26 | [Web pages and the DOM](lessons/26-the-dom.md) | what HTML, CSS and JavaScript each do, the page preview, the DOM tree, element and text nodes, document, where to put script tags (end of body, defer, type="module"), DOMContentLoaded and load, CSS selectors, querySelector and querySelectorAll, NodeList versus array, getElementById, textContent and innerText, attributes versus properties, data- attributes and dataset, closest, matches, parentElement, children and siblings | 51–52 |
+| 27 | [Changing the page](lessons/27-changing-the-page.md) | textContent for text, innerHTML and cross-site scripting, setHTML and sanitizing, createElement, append, prepend, before, after, replaceWith, replaceChildren and remove, moving and cloning elements, attributes versus properties, boolean attributes (hidden, disabled), classList add, remove, toggle and contains, inline styles and CSS custom properties, template elements, building lists in one update, layout thrashing | 53–54 |
+| 28 | [Events](lessons/28-events.md) | addEventListener, the event object, target and currentTarget, click, input, change, keydown and event.key, focus and blur, pointer events, default actions and preventDefault, capture and bubbling, stopPropagation, event delegation with closest, once, passive and signal options, removeEventListener, AbortController for listeners, CustomEvent and dispatchEvent, inline onclick attributes, accessible buttons | 55–56 |
+| 29 | [Forms and user input](lessons/29-forms.md) | form controls and labels, name attributes, values are strings, valueAsNumber, checked, select and radio values, form.elements, FormData, Object.fromEntries and getAll, submit buttons and type="button", the submit event and preventDefault, required, type, min, max, pattern and minlength, checkValidity, reportValidity, validity and setCustomValidity, novalidate, :user-invalid, the input event for live feedback, sending forms with fetch, disabling the button while sending, server-side validation | 57–58 |
+| 30 | [Project: a product browser](lessons/30-product-browser.md) | state and a single render function, loading, empty and error states, retry buttons, filtering loaded data in memory, debouncing search input, cancelling stale requests with AbortController, ARIA live regions, localStorage for preferences and its limits, how frameworks such as React, Vue and Svelte build on the same idea | 59–60 |
+
 ## Running it on your own computer
 
-Every example also runs in [Node.js](https://nodejs.org) 26 or newer (`node file.js`) or in your browser's developer console. A few lessons use the newest JavaScript features; they say so, and which browsers support them.
+Every JavaScript example also runs in [Node.js](https://nodejs.org) 26 or newer (`node file.js`) or in your browser's developer console. The page examples in Part 5 are HTML files: save one as `page.html` and open it in your browser (the `shop.example` practice API exists only in the sandbox). A few lessons use the newest JavaScript features; they say so, and which browsers support them.
 
 ## Editing the course
 

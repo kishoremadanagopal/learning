@@ -176,6 +176,55 @@ def event_loop_fig():
 
 
 
+# ---------------------------------------------------------------- Part 5: JavaScript in the browser
+
+@fig("dom-tree")
+def dom_tree_fig():
+    f, ax = diag.canvas(11.0, 5.0)
+    src = ['<body>', '  <h1>Shop</h1>', '  <ul id="list">', '    <li class="item">Bell</li>', '    <li class="item">Pump</li>', '  </ul>', '</body>']
+    sbox(ax, 0.2, 0.7, 3.6, 3.9, "", color=GREY)
+    label(ax, 2.0, 4.35, "the HTML you write", size=10, bold=True)
+    for i, ln in enumerate(src):
+        label(ax, 0.4, 3.85 - i * 0.45, ln, size=9, mono=True, ha="left")
+    arrow(ax, 3.9, 2.6, 4.7, 2.6, color=INK)
+    label(ax, 4.3, 2.9, "parse", size=8.5, color=MUTED)
+    label(ax, 7.9, 4.75, "the DOM tree JavaScript works with", size=10, bold=True)
+    nodes = {"body": (7.6, 4.0, BLUE), "h1": (5.9, 2.9, BLUE), "ul#list": (8.9, 2.9, BLUE),
+             "li.item": (7.9, 1.7, BLUE), "li.item ": (9.9, 1.7, BLUE), '"Shop"': (5.9, 1.7, ORANGE),
+             '"Bell"': (7.9, 0.55, ORANGE), '"Pump"': (9.9, 0.55, ORANGE)}
+    for name, (x, y, c) in nodes.items():
+        sbox(ax, x - 0.75, y - 0.25, 1.5, 0.5, name.strip(), color=c, mono=True, fontsize=9)
+    for a, b in [("body", "h1"), ("body", "ul#list"), ("ul#list", "li.item"), ("ul#list", "li.item "),
+                 ("h1", '"Shop"'), ("li.item", '"Bell"'), ("li.item ", '"Pump"')]:
+        (x1, y1, _), (x2, y2, _) = nodes[a], nodes[b]
+        arrow(ax, x1, y1 - 0.27, x2, y2 + 0.27, color=GREY, style="-")
+    sbox(ax, 0.3, 0.12, 0.35, 0.25, "", color=BLUE)
+    label(ax, 0.75, 0.245, "element node", size=8.5, ha="left", color=MUTED)
+    sbox(ax, 2.2, 0.12, 0.35, 0.25, "", color=ORANGE)
+    label(ax, 2.65, 0.245, "text node", size=8.5, ha="left", color=MUTED)
+    return f
+
+
+@fig("event-flow")
+def event_flow_fig():
+    f, ax = diag.canvas(11.0, 5.2)
+    layers = [("window", 0.3, 0.3, 10.4, 3.9, GREY), ("document · body", 0.8, 0.6, 9.4, 3.1, GREY),
+              ('ul id="list"', 1.3, 0.9, 8.4, 2.3, BLUE), ('li', 1.8, 1.2, 7.4, 1.5, BLUE)]
+    for name, x, y, w, h, c in layers:
+        sbox(ax, x, y, w, h, "", color=c)
+        label(ax, x + 0.15, y + h - 0.22, name, size=9, mono=True, ha="left", color=MUTED)
+    sbox(ax, 4.3, 1.45, 2.4, 0.6, "button (target)", color=ORANGE, mono=True, fontsize=9.5)
+    ax.add_patch(FancyArrowPatch((2.6, 4.75), (4.25, 1.85), arrowstyle="-|>", mutation_scale=14, color=PURPLE, linewidth=1.6,
+                                 connectionstyle="arc3,rad=0.15"))
+    label(ax, 2.6, 4.98, "1. capture: down from window", size=9, color=PURPLE, bold=True)
+    ax.add_patch(FancyArrowPatch((6.75, 1.85), (8.4, 4.75), arrowstyle="-|>", mutation_scale=14, color=TEAL, linewidth=1.6,
+                                 connectionstyle="arc3,rad=0.15"))
+    label(ax, 8.4, 4.98, "3. bubble: back up to window", size=9, color=TEAL, bold=True)
+    label(ax, 5.5, 1.15, "2. target", size=9, color=ORANGE, bold=True)
+    label(ax, 5.5, -0.05, "addEventListener listens in the bubble phase by default, so a listener on the ul hears clicks on every button inside it", size=9.5)
+    return f
+
+
 def main(names):
     OUT.mkdir(exist_ok=True)
     for name in names or FIGS:

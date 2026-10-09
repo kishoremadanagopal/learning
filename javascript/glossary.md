@@ -19,36 +19,57 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **`await`** | Pauses the current async function until a promise settles, then gives its value or throws its error. [23] |
 | **BigInt** | A type for exact whole numbers of any size, written with an `n` suffix. [4] |
 | **Block scope** | Names that exist only inside the nearest `{ }`, as with `let` and `const`. [8] |
+| **Boolean attribute** | An attribute that's on when present, whatever its value, like `disabled` or `hidden`. [27] |
 | **`break`** | Ends a loop immediately. [6] |
+| **Bubbling** | An event travelling up from its target through every ancestor. [28] |
 | **Bundler** | A tool that combines many modules into a few files for the browser. [17] |
 | **Callback** | A function passed to another function, to be called by it. [7, 21] |
 | **Call stack** | The chain of function calls currently running; errors travel up it. [18, 21] |
+| **Capture phase** | The event travelling down from `window` to the target, before bubbling. [28] |
 | **Capturing group** | A bracketed part of a pattern whose matched text is saved. [20] |
 | **Character class** | A set of characters in brackets, such as `[a-z]`, or a shorthand such as `\d`. [20] |
 | **Class** | A blueprint for creating objects with the same fields and methods. [16] |
+| **`classList`** | An element's classes, with `add`, `remove`, `toggle` and `contains`. [27] |
+| **`closest`** | Finds the nearest ancestor (or the element itself) matching a selector. [26] |
 | **Closure** | A function bundled with the variables of the scope it was created in. [8] |
 | **CommonJS** | Node.js's older module system, using `require` and `module.exports`. [17] |
 | **Comparator** | A function `(a, b) => number` telling a sort which item comes first. [10] |
 | **Computed key** | A key written in brackets whose name is calculated, `{ [name]: value }`. [11] |
 | **Concurrency limit** | The maximum number of operations allowed to run at the same time. [25] |
 | **`const`** | Declares a name that can't be reassigned. [2] |
+| **Constraint validation** | The browser's built-in checks from attributes like `required`, `min` and `pattern`. [29] |
 | **Constructor** | The method that runs when an instance is created, setting up its fields. [16] |
 | **`continue`** | Skips the rest of the current pass and starts the next. [6] |
 | **CORS** | Browser rules that decide whether a page may read responses from another site. [24] |
+| **`createElement`** | Makes a new element that isn't in the page until you insert it. [27] |
+| **Cross-site scripting (XSS)** | An attack where data inserted as HTML runs the attacker's code in your page. [27] |
+| **CSS selector** | A pattern that matches elements, like `#cart li.item`; used by CSS and by `querySelector`. [26] |
+| **`currentTarget`** | The element whose listener is currently running. [28] |
 | **Custom error** | A class extending `Error` to name a kind of failure and carry extra data. [18] |
+| **`CustomEvent`** | An event your own code creates and dispatches, with data in `detail`. [28] |
+| **`data-` attribute** | A custom attribute for your own data, read through `el.dataset`. [26] |
 | **Debounce** | Delay an action until calls stop arriving for a while. [21] |
 | **Deep copy** | A copy that also copies every nested object. [11] |
+| **Default action** | What the browser does after the listeners run, like following a link; cancelled with `preventDefault()`. [28] |
 | **Default export** | A module's single main export, imported without braces under any name. [17] |
 | **Default parameter** | A value used when an argument is missing or `undefined`. [7] |
 | **Default value** | A value used in destructuring when the original is `undefined`. [12] |
+| **`defer`** | A script attribute: download in parallel, run after the HTML has been parsed. [26] |
 | **Destructuring** | Unpacking values from an array or object into variables in one statement. [12] |
+| **`DOMContentLoaded`** | The event fired when the HTML has been fully parsed. [26] |
+| **DOM (Document Object Model)** | The tree of objects the browser builds from a page's HTML, which JavaScript reads and changes. [26] |
 | **Dynamic import** | `import()`, loading a module at run time and returning a promise. [17] |
 | **Dynamic typing** | Types belong to values, not variables, and are checked as the code runs. [2] |
 | **ECMAScript** | The official standard that defines the JavaScript language, with a new edition each year. [1] |
+| **Element** | A node made from an HTML tag, such as `<li>`. [26] |
 | **Error cause** | The original error kept inside a newer, more descriptive one. [18] |
 | **Escape sequence** | A backslash code for a special character, such as `\n` for a new line. [3] |
 | **ES modules (ESM)** | JavaScript's standard module system, using `import` and `export`. [17] |
+| **Event** | Something that happens in the page, such as a click or a key press, which code can listen for. [28] |
+| **Event delegation** | Handling events for many children with one listener on their container. [28] |
+| **Event listener** | A function called each time an event happens on an element. [28] |
 | **Event loop** | The mechanism that runs queued callbacks whenever the call stack is empty. [21] |
+| **Event object** | The argument a listener receives, describing the event (`type`, `target`, `key`…). [28] |
 | **Exception** | An error that's thrown and interrupts normal execution until caught. [18] |
 | **Exponential backoff** | Waiting twice as long after each failed attempt. [25] |
 | **Factory function** | A function that creates and returns new objects or functions. [8] |
@@ -58,6 +79,9 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **`find`** | Returns the first item that passes a test, or `undefined`. [10] |
 | **Flag** | A letter after the pattern that changes how it matches, such as `g` or `i`. [20] |
 | **Floating point** | The binary format numbers are stored in, exact for whole numbers but approximate for most decimals. [4] |
+| **Form control** | An input, select, textarea or button that a user can interact with. [29] |
+| **`FormData`** | All of a form's named values, as the browser would send them. [29] |
+| **Framework** | A library such as React, Vue or Svelte that turns state into DOM updates for you. [30] |
 | **Function** | A reusable block of code that can take inputs and return a result. [7] |
 | **Generator function** | A `function*` that produces values one at a time with `yield`. [19] |
 | **`getOrInsert`** | Returns a Map's value for a key, storing a default first if the key is missing. [13] |
@@ -74,6 +98,7 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Infinite loop** | A loop whose condition never becomes false. [6] |
 | **`Infinity`** | A number value bigger than any other, such as the result of `1 / 0`. [4] |
 | **Inheritance** | A class extending another and reusing its fields and methods. [16] |
+| **`innerHTML`** | An element's content as HTML text; setting it parses the string as HTML. [27] |
 | **Instance** | An object created from a class with `new`. [16] |
 | **ISO 8601** | The international standard text format for dates and times, such as `2026-10-08T14:30:00Z`. [15] |
 | **Iterable** | A value `for…of` can loop over, such as an array, string, Map or Set. [6, 19] |
@@ -82,10 +107,15 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **JavaScript** | The programming language of the web, also used for servers and tools. [1] |
 | **Jitter** | A random amount added to retry delays so clients don't retry in sync. [25] |
 | **JSON** | A text format for data built from objects, arrays, strings, numbers, booleans and null. [14] |
+| **`<label>`** | The visible name of a control; linked with `for`, it's read by screen readers and clickable. [29] |
+| **Layout thrashing** | Forcing the browser to recalculate layout repeatedly by mixing page changes and layout reads. [27] |
 | **Lazy evaluation** | Computing values only when they're needed. [19] |
 | **`let`** | Declares a name that can be reassigned. [2] |
 | **Lexical scope** | Scopes decided by where code is written, not where it's called. [8] |
+| **Live region** | An element (such as `role="status"`) whose changes screen readers announce. [29] |
+| **Loading / empty / error states** | What the page shows while waiting, when there's nothing to show, and when something failed. [30] |
 | **`localeCompare`** | Compares strings in the order people expect for a language. [10] |
+| **`localStorage`** | Small, persistent string storage per site, kept in the browser. [30] |
 | **Lookahead / lookbehind** | A check on what follows or precedes a position, without including it in the match. [20] |
 | **Loop** | Code that repeats a block while a condition holds or for each item. [6] |
 | **Loose equality (`==`)** | Compares after converting types; best avoided. [5] |
@@ -97,10 +127,13 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Microtask** | A queued promise callback or `queueMicrotask` function; all run before the next task. [21] |
 | **Module** | A file with its own scope that exports values for other files to import. [17] |
 | **Mutating method** | A method that changes the array it's called on, such as `push` or `sort`. [9] |
+| **`name` attribute** | The key a control's value is sent under, and how `form.elements` finds it. [29] |
 | **Named export** | An export imported by its exact name, in braces. [17] |
 | **Named group** | A capturing group with a name, `(?<name>…)`. [20] |
 | **`NaN`** | "not a number", the result of a failed numeric operation. [2] |
+| **Node** | Any item in the DOM tree: an element, a piece of text, a comment, or the document itself. [26] |
 | **Node.js** | A runtime for running JavaScript outside the browser: servers, scripts and tools. [1] |
+| **`NodeList`** | The list `querySelectorAll` returns; it has `forEach` and `length` but not `map`. [26] |
 | **Non-mutating method** | A method that returns a new array and leaves the original unchanged, such as `slice` or `toSorted`. [9] |
 | **`null`** | A value meaning "deliberately empty". [2] |
 | **Nullish coalescing (`??`)** | Gives the right-hand value only when the left is `null` or `undefined`. [5] |
@@ -125,11 +158,14 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Property** | One key and its value inside an object. [11] |
 | **Prototype** | The object another object inherits properties from. [16] |
 | **Quantifier** | How many times something repeats, such as `+`, `*`, `?` or `{2,4}`. [20] |
+| **`querySelector`** | Returns the first element matching a selector, or `null`. [26] |
 | **Query string** | The `?key=value&…` part of a URL. [24] |
 | **`reduce`** | Combines all items into one value using an accumulator. [10] |
 | **Reference** | What a variable holds for an object or array: a pointer to it, not a copy. [9] |
 | **Regular expression** | A pattern that describes text to match. [20] |
 | **Remainder (`%`)** | What's left after division; its sign follows the left-hand number in JavaScript. [4] |
+| **Render function** | A function that updates the page to match the current state. [30] |
+| **`replaceChildren`** | Replaces all of an element's children with the given nodes (or none). [27] |
 | **Replacer** | A function or key list that controls what `JSON.stringify` outputs. [14] |
 | **`response.ok`** | True when the status is 200–299. [24] |
 | **Rest element** | `...rest` in destructuring, collecting the remaining items or properties. [12] |
@@ -138,12 +174,14 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Reviver** | A function that transforms values as `JSON.parse` reads them. [14] |
 | **Runtime (host)** | A program that runs JavaScript and adds its own features, such as a browser or Node.js. [1] |
 | **Safe integer** | A whole number small enough (up to 2⁵³ − 1) to be stored exactly. [4] |
+| **Sanitize** | Remove dangerous parts (scripts, event handlers) from HTML before inserting it. [27] |
 | **Schema** | A description of the shape data must have. [14] |
 | **Scope** | The part of a program where a name can be used. [8] |
 | **Sequential** | One operation after another, each waiting for the previous one. [23] |
 | **Serialise / parse** | Turning a value into text, and text back into a value. [14] |
 | **Server-sent events (SSE)** | A format for a server to push a stream of text events over HTTP. [25] |
 | **Set** | A collection of unique values. [13] |
+| **`setCustomValidity`** | Marks a control invalid with your own message (an empty string clears it). [29] |
 | **Settled** | Fulfilled or rejected; a settled promise never changes. [22] |
 | **Shadowing** | An inner variable hiding an outer one with the same name. [8] |
 | **Shallow copy** | A new array or object whose items are the same values (nested objects are shared). [9] |
@@ -154,6 +192,8 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Spread** | `...` expanding an array or object into a new array, object or argument list. [12] |
 | **Spread syntax** | `...array`, expanding an array into separate values. [7] |
 | **Stable sort** | A sort that keeps equal items in their original order. [10] |
+| **Stale response** | A response to an old request that arrives after a newer one. [30] |
+| **State** | The data that determines what the page shows at any moment. [30] |
 | **Statement** | One instruction in a program, usually ending with a semicolon. [1] |
 | **Static member** | A field or method that belongs to the class itself, not to instances. [16] |
 | **Status code** | A number describing the result, such as 200 OK or 404 Not Found. [24] |
@@ -162,16 +202,20 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Strict mode** | A stricter version of JavaScript that turns some silent mistakes into errors. [2] |
 | **String** | A sequence of characters: text. [3] |
 | **`structuredClone`** | A built-in function that makes deep copies of data. [11] |
+| **Submit event** | Fired on a form when it's submitted by a button or by Enter, after validation passes. [29] |
 | **`super`** | Calls the parent class's constructor or methods. [16] |
 | **`SyntaxError`** | The error `JSON.parse` throws for invalid JSON. [14] |
+| **`target`** | The element where the event happened. [28] |
 | **Task (macrotask)** | A queued callback from a timer, event or I/O; one runs per loop turn. [21] |
 | **TC39** | The committee that develops the ECMAScript standard. [1] |
+| **`<template>`** | HTML that isn't shown, kept to be cloned with `content.cloneNode(true)`. [27] |
 | **Template literal** | A string in backticks that can span lines and insert values with `${…}`. [3] |
 | **Temporal** | The modern JavaScript API for dates and times, with immutable objects and separate types for dates, times and zones. [15] |
 | **Temporal dead zone** | The part of a block before a `let` or `const` declaration, where the name can't be used. [8] |
 | **`Temporal.PlainDate`** | A calendar date with no time or time zone. [15] |
 | **`Temporal.ZonedDateTime`** | A date and time in a specific time zone. [15] |
 | **Ternary operator** | `condition ? a : b`, an expression that picks one of two values. [5] |
+| **`textContent`** | All the text inside an element, without tags. [26] |
 | **`this`** | The object a method was called on, decided at call time for ordinary functions. [16] |
 | **Throttle** | Allow an action at most once per time period. [21] |
 | **Timeout** | Giving up waiting after a set time. [25] |
@@ -188,6 +232,7 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **UTC** | Coordinated Universal Time, the reference time zone with no daylight saving. [15] |
 | **UTF-16 code unit** | The 16-bit unit JavaScript strings are made of; some characters need two. [3] |
 | **Validation** | Checking that data has the expected structure and types before using it. [14] |
+| **`valueAsNumber`** | A number input's value as a number (`NaN` when empty). [29] |
 | **Variable** | A name that refers to a value. [2] |
 | **WeakMap** | A Map with object keys that doesn't keep its keys alive. [13] |
 | **Web Worker** | A background thread in the browser; the sandbox runs your code in one. [1] |

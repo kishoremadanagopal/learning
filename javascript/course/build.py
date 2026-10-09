@@ -12,8 +12,9 @@ Usage:
   python build.py --test-only part2   # test one content file without assembling (for authors)
   python build.py --show lesson-id    # print what every example in a lesson outputs
 
-Requires: pip install markdown matplotlib, and Node.js 26 or newer for the tests (set NODE_BIN to its path if `node`
-is older): the same runner.js runs the lesson code in Node.js as in the browser.
+Requires: pip install markdown matplotlib, and for the tests Node.js 26 or newer (set NODE_BIN to its path if `node`
+is older) and Playwright with Chromium (pip install playwright; playwright install chromium): the same runner.js runs
+the JavaScript in Node.js as in the browser, and the same dom.js runs the HTML pages in Chromium as in the sandbox.
 """
 import html
 import io
@@ -38,7 +39,8 @@ REPO_TREE = "https://github.com/kishoremadanagopal/learning/tree/main/javascript
 DATA = ROOT / "data"
 FIGURES = ROOT / "figures"
 NODE = os.environ.get("NODE_BIN", "node")
-RUNNABLE = ("js",)                 # fences that become runnable examples
+RUNNABLE = ("js", "html")          # fences that become runnable examples (html ones run as a page in the preview)
+SANDBOX_FILES = ("app.js", "worker.js", "runner.js", "dom.js", "dom-prelude.js")
 STATIC_LANG = {"js-static": "js", "ts-static": "ts", "json": "json", "html-static": "html", "bash": "bash", "css": "css"}
 
 FENCE_RE = re.compile(r"^```([\w-]*)([^\n]*)\n(.*?)\n```[ \t]*$", re.S | re.M)
@@ -71,7 +73,8 @@ def md_to_html(text, runnable=True):
             examples.append({"code": code, "stdin": stdin, "error": bool(opts.get("error")), "lang": lang})
             return f'\n<div class="example" data-ex="{len(examples) - 1}"></div>\n'
         cls = "out" if lang in ("output", "text", "") else "plain"
-        return f'\n<pre class="{cls}">{html.escape(code)}</pre>\n'
+        data_lang = f' data-lang="{STATIC_LANG[lang]}"' if lang in STATIC_LANG else ""
+        return f'\n<pre class="{cls}"{data_lang}>{html.escape(code)}</pre>\n'
 
     text = FENCE_RE.sub(repl, text)
     out = markdown.markdown(text, extensions=["tables", "sane_lists"])
@@ -91,12 +94,16 @@ SECTION_RE = re.compile(r"^(approach|walkthrough):[ \t]*$", re.M)
 def parse_exercise(title, body):
     """An exercise: prompt, fenced starter / check / solution / slow code, then optional
     `hint:` lines (a ladder, shown one at a time), an `approach:` section and a `walkthrough:` section."""
-    ex = {"title": title.strip(), "starter": "", "check": "", "solution": "", "slow": "", "stdin": "",
+    ex = {"title": title.strip(), "lang": "js", "starter": "", "check": "", "solution": "", "slow": "", "stdin": "",
           "hints": [], "_hints": [], "approach": "", "_approach": "", "walkthrough": "", "_walkthrough": ""}
 
     def grab(m):
         lang, info, code = m.group(1), m.group(2).strip(), m.group(3)
         if lang in RUNNABLE and info in ("starter", "check", "solution", "stdin", "slow"):
+            if info == "check" and lang != "js":
+                raise ValueError(f"Exercise {title!r}: checks are JavaScript (```js check)")
+            if info in ("starter", "solution"):
+                ex["lang"] = lang
             ex[info] = code
             return ""
         return m.group(0)
@@ -313,7 +320,7 @@ def lesson_markdown(l, lessons):
     for k, ex in enumerate(l["exercises"], start=1):
         lines += [f"### {k}. {ex['title']}", "", gh_fences(ex["_prompt"]), ""]
         if any(ln.strip() and not ln.strip().startswith("#") for ln in ex["starter"].splitlines()):
-            lines += ["Starter code:", "", f"```js\n{ex['starter']}\n```", ""]
+            lines += ["Starter code:", "", f"```{ex['lang']}\n{ex['starter']}\n```", ""]
         if ex["_approach"]:
             lines += ["<details>", "<summary>🧭 How to approach it</summary>", "", gh_fences(ex["_approach"]), "", "</details>", ""]
         for h, hint in enumerate(ex["_hints"], start=1):
@@ -321,7 +328,7 @@ def lesson_markdown(l, lessons):
     lines += [f"**In the sandbox:** exercise{'s' if len(l['exercises']) > 1 else ''} {ex_range(l)}. Press **Check** to run the hidden tests.", ""]
     lines += ["### Answers and walkthroughs", "", "Open these only after a real attempt. Each one explains the solution step by step.", ""]
     for k, ex in enumerate(l["exercises"], start=1):
-        lines += ["<details>", f"<summary>✅ {k}. {ex['title']}</summary>", "", f"```js\n{ex['solution']}\n```", ""]
+        lines += ["<details>", f"<summary>✅ {k}. {ex['title']}</summary>", "", f"```{ex['lang']}\n{ex['solution']}\n```", ""]
         if ex["_walkthrough"]:
             lines += [gh_fences(ex["_walkthrough"]), ""]
         lines += ["</details>", ""]
@@ -408,7 +415,7 @@ def readme_markdown(data, datasets):
         "",
         f"## ▶ [Open the practice sandbox]({SITE_URL})",
         "",
-        "The sandbox runs your JavaScript right in your browser, in a separate thread, so even an endless loop can be stopped. Nothing to install and no sign-up.",
+        "The sandbox runs your JavaScript right in your browser, in a separate thread, so even an endless loop can be stopped, and shows the pages you build in the browser lessons in a live, sandboxed preview. Nothing to install and no sign-up.",
         "",
         f"- every lesson, with **{n_run} examples** you can run and change",
         f"- **{n_ex} exercises** with hidden tests, each with an approach, hints and a walkthrough",
@@ -444,7 +451,7 @@ def readme_markdown(data, datasets):
     out += [
         "## Running it on your own computer",
         "",
-        "Every example also runs in [Node.js](https://nodejs.org) 26 or newer (`node file.js`) or in your browser's developer console. A few lessons use the newest JavaScript features; they say so, and which browsers support them.",
+        "Every JavaScript example also runs in [Node.js](https://nodejs.org) 26 or newer (`node file.js`) or in your browser's developer console. The page examples in Part 5 are HTML files: save one as `page.html` and open it in your browser (the `shop.example` practice API exists only in the sandbox). A few lessons use the newest JavaScript features; they say so, and which browsers support them.",
         "",
         "## Editing the course",
         "",
@@ -459,11 +466,12 @@ MAINTAINER_README = """# Editing the course
 Everything in the folder above (the sandbox, `lessons/`, `glossary.md`, `cheatsheet.md` and `README.md`) is generated from the files here. Edit the sources, then rebuild.
 
 ```bash
-pip install markdown matplotlib
+pip install markdown matplotlib playwright
+playwright install chromium
 NODE_BIN=/path/to/node26 python course/build.py --test
 ```
 
-`--test` runs every example and exercise with the same `runner.js` the browser sandbox uses (in Node.js 26 or newer, each run in a worker thread with a time limit), and fails if a solution doesn't pass its hidden tests, a starter already passes, an exercise has no hint or walkthrough, or an example's error flag is wrong. `--show <lesson-id>` prints each example's output so you can check the lesson text matches it.
+`--test` runs every example and exercise with the same code the browser sandbox uses: JavaScript with `runner.js` (in Node.js 26 or newer, each run in a worker thread with a time limit), and HTML pages with `dom.js` in headless Chromium. It fails if a solution doesn't pass its hidden tests, a starter already passes, an exercise has no hint or walkthrough, or an example's error flag is wrong. `--show <lesson-id>` prints each example's output so you can check the lesson text matches it.
 
 | File | What it is |
 |---|---|
@@ -474,6 +482,7 @@ NODE_BIN=/path/to/node26 python course/build.py --test
 | `runner.js` | runs code and checks, in the browser (Web Worker) and in tests (Node.js) |
 | `harness.mjs` | the Node.js test harness |
 | `page.html`, `app.js`, `worker.js` | the sandbox page, its logic, and the Web Worker that runs the code |
+| `dom.js`, `dom-prelude.js` | the page preview: runs ```` ```html ```` examples and exercises in a sandboxed iframe |
 | `build.py` | builds everything and tests the lesson code |
 
 ## Exercise checks
@@ -488,6 +497,19 @@ Check code runs after the learner's code (as an async function), with these help
 | `uses("reduce(")` | the learner's code contains this (comments ignored) |
 | `test("fn", [[args, expected, "label"], ...], {valid, key, show})` | hidden test cases (async functions are awaited); reports the first failing input |
 | `__output__`, `__source__` | everything printed, and the learner's code |
+
+Exercises whose starter and solution are ```` ```html ```` pages run in the page preview; their checks (still ```` ```js check ````) run inside the page after it loads, with these extra helpers:
+
+| Helper | Use |
+|---|---|
+| `$(css)`, `$$(css)` | `querySelector`, and `querySelectorAll` as an array |
+| `pick(css, "what")` | the element, or a "your page needs …" failure |
+| `text(cssOrElement)` | its text with whitespace collapsed and trimmed (`null` if missing) |
+| `await click(target)`, `await type(target, value)`, `await submit(form)` | act like a user (`type` fires `input` and `change`; `submit` uses `requestSubmit`, so validation runs) |
+| `await waitFor(() => condition, "what", ms)` | wait for async updates (fetch, debounce) |
+| `await settle(ms)` | wait a little |
+
+`need("name")` finds functions and top-level `const`/`let` of normal (non-module) scripts.
 """
 
 
@@ -513,15 +535,16 @@ def assemble(data):
     # GitHub Pages caches files for 10 minutes: version every script URL so a new build is picked up at once.
     import hashlib
     h = hashlib.sha1(lessons_js.encode())
-    for f in ("app.js", "worker.js", "runner.js"):
+    for f in SANDBOX_FILES:
         h.update((ROOT / f).read_bytes())
     version = h.hexdigest()[:10]
     lessons_js += f'window.BUILD = "{version}";\n'
-    page = page.replace('src="lessons.js"', f'src="lessons.js?v={version}"').replace('src="app.js"', f'src="app.js?v={version}"')
+    for f in ("lessons.js", "app.js", "dom.js"):
+        page = page.replace(f'src="{f}"', f'src="{f}?v={version}"')
     SITE.mkdir(exist_ok=True)
     (SITE / "index.html").write_text(wrap(page))
     (SITE / "lessons.js").write_text(lessons_js)
-    for f in ("app.js", "worker.js", "runner.js"):
+    for f in SANDBOX_FILES:
         if (ROOT / f).resolve() != (SITE / f).resolve():
             shutil.copy(ROOT / f, SITE / f)
     if DATA.exists() and DATA.resolve() != (SITE / "data").resolve():
@@ -553,7 +576,43 @@ def assemble(data):
 # ---------------------------------------------------------------- tests (same runner as the browser)
 
 def run_jobs(jobs):
-    """Run jobs ({type: run|check, code, check, stdin}) with runner.js in Node.js; returns their results in order."""
+    """Run jobs ({type: run|check, code, check, stdin, lang}) and return their results in order: JavaScript with
+    runner.js in Node.js, HTML pages with dom.js in headless Chromium (the same files the sandbox uses)."""
+    html_at = [i for i, j in enumerate(jobs) if j.get("lang") == "html"]
+    if html_at:
+        results = run_js_jobs([j for j in jobs if j.get("lang") != "html"])
+        page_results = run_page_jobs([jobs[i] for i in html_at])
+        merged, js_iter, page_iter = [], iter(results), iter(page_results)
+        for j in jobs:
+            merged.append(next(page_iter) if j.get("lang") == "html" else next(js_iter))
+        return merged
+    return run_js_jobs(jobs)
+
+
+def run_page_jobs(jobs):
+    """Run HTML-page jobs in headless Chromium with Playwright (pip install playwright; playwright install chromium)."""
+    import time
+    from playwright.sync_api import sync_playwright
+    out = []
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content("<!doctype html><html><body><div id='host' style='width:800px;height:600px'></div></body></html>")
+        page.add_script_tag(content=(ROOT / "dom.js").read_text())
+        page.evaluate("([r, p]) => DomSandbox.setSources(r, p)", [(ROOT / "runner.js").read_text(), (ROOT / "dom-prelude.js").read_text()])
+        for job in jobs:
+            t0 = time.perf_counter()
+            res = page.evaluate("""async (job) => {
+                const s = DomSandbox.open(document.getElementById("host"), job.code);
+                try { return job.type === "check" ? await s.check(job.check) : await s.result(300); } finally { s.dispose(); }
+            }""", job)
+            res["ms"] = (time.perf_counter() - t0) * 1000
+            out.append(res)
+        browser.close()
+    return out
+
+
+def run_js_jobs(jobs):
     if not jobs:
         return []
     with tempfile.TemporaryDirectory(prefix="jscourse-") as tmp:
@@ -573,7 +632,7 @@ def show(data, lesson_id):
     for l in data["lessons"]:
         if l["id"] != lesson_id:
             continue
-        results = run_jobs([{"type": "run", "code": ex["code"], "stdin": ex["stdin"]} for ex in l["examples"]])
+        results = run_jobs([{"type": "run", "code": ex["code"], "stdin": ex["stdin"], "lang": ex["lang"]} for ex in l["examples"]])
         for i, (ex, res) in enumerate(zip(l["examples"], results)):
             print(f"===== example {i} ({'error expected' if ex['error'] else 'ok expected'}) =====")
             print(ex["code"])
@@ -587,12 +646,12 @@ def test(data):
     jobs, where = [], []
     for l in data["lessons"]:
         for i, ex in enumerate(l["examples"]):
-            jobs.append({"type": "run", "code": ex["code"], "stdin": ex["stdin"]})
+            jobs.append({"type": "run", "code": ex["code"], "stdin": ex["stdin"], "lang": ex["lang"]})
             where.append(("example", l, i, ex))
         for ex in l["exercises"]:
-            jobs.append({"type": "check", "code": ex["solution"], "check": ex["check"], "stdin": ex["stdin"]})
+            jobs.append({"type": "check", "code": ex["solution"], "check": ex["check"], "stdin": ex["stdin"], "lang": ex["lang"]})
             where.append(("solution", l, None, ex))
-            jobs.append({"type": "check", "code": ex["starter"], "check": ex["check"], "stdin": ex["stdin"]})
+            jobs.append({"type": "check", "code": ex["starter"], "check": ex["check"], "stdin": ex["stdin"], "lang": ex["lang"]})
             where.append(("starter", l, None, ex))
     results = run_jobs(jobs)
     problems = 0

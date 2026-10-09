@@ -370,4 +370,4 @@ console.log(await retry(flaky), "after", calls, "calls");
 </details>
 
 ---
-Previous: [Lesson 24](24-fetch-and-apis.md) · Back to the [course home](../README.md)
+Previous: [Lesson 24](24-fetch-and-apis.md) · Next: [Lesson 26: Web pages and the DOM](26-the-dom.md)

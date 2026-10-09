@@ -47,14 +47,22 @@ export function inspect(value, depth = 2, seen = new Set(), top = true) {
     return `${Object.prototype.toString.call(value).slice(8, -1)} <${value.toString()}>`;
   }
   if (value instanceof Promise) return "Promise { … }";
+  if (typeof Node !== "undefined" && value instanceof Node) {         // the page preview: show elements like the browser console
+    if (value.nodeType === 1) { const tag = /^<[^>]*>/.exec(value.outerHTML); return tag ? tag[0] : `<${value.localName}>`; }
+    if (value.nodeType === 3) return `#text ${quote(value.data)}`;
+    if (value.nodeType === 9) return "#document";
+    return `[${value.nodeName}]`;
+  }
   if (value instanceof WeakMap) return "WeakMap { <items unknown> }";
   if (value instanceof WeakSet) return "WeakSet { <items unknown> }";
   seen.add(value);
   try {
     const inner = (v) => inspect(v, depth - 1, seen, false);
     let items, open, close, prefix = "";
-    if (Array.isArray(value)) {
-      if (depth < 0) return "[Array]";
+    const domList = typeof NodeList !== "undefined" && (value instanceof NodeList || value instanceof HTMLCollection);
+    if (Array.isArray(value) || domList) {
+      if (depth < 0) return domList ? `[${value.constructor.name}]` : "[Array]";
+      if (domList) prefix = `${value.constructor.name}(${value.length}) `;
       items = [];
       let holes = 0;
       for (let i = 0; i < value.length; i++) {
@@ -136,17 +144,20 @@ const HINTS = {
   RangeError: "Hint: a number is out of range, or a function called itself too many times (missing base case?).",
 };
 
-function report(e, src) {
+function report(e, src, lineHint) {
   if (!(e instanceof Error)) return `Uncaught ${inspect(e, 2, new Set(), false)}`;
-  const line = errorLine(e);
+  const line = lineHint || errorLine(e);
   const lines = src.split("\n");
   let text = `${e.name}: ${e.message}`;
-  if (line && line <= lines.length && e.name !== "SyntaxError") {
+  if (line && line <= lines.length && (e.name !== "SyntaxError" || lineHint)) {
     text = `Line ${line}: ${lines[line - 1].trim()}\n${text}`;
   }
   let hint = HINTS[e.name] || "";
   if (/is not a function/.test(e.message)) hint = "Hint: you called something that isn't a function. Check the name, and whether you meant a property (no parentheses).";
   if (/Cannot read properties of (undefined|null)/.test(e.message)) hint = "Hint: you used a property of undefined or null. The value on the left of the dot doesn't exist yet: console.log it to check.";
+  if (/(Cannot (read|set) properties of null|null is not an object)/.test(e.message) && typeof document !== "undefined") {
+    hint = "Hint: something is null, which often means querySelector found no element. Check the selector's spelling (# for an id, . for a class), and that the element exists before the script runs.";
+  }
   if (/before initialization/.test(e.message)) hint = "Hint: a let or const variable was used before the line that declares it.";
   if (/Assignment to constant/.test(e.message)) hint = "Hint: a const can't be reassigned. Use let if the value needs to change.";
   if (/Maximum call stack/.test(e.message)) hint = "Hint: the recursion never stops (or goes too deep). Check that every path reaches a base case.";
@@ -159,11 +170,12 @@ function report(e, src) {
 
 /* ---------------------------------------------------------------- running code */
 
-function makeEnv(parts, stdin) {
+function makeEnv(parts, stdin, onPush) {
   let size = 0;
   const push = (kind, text) => {
     if (size > MAX_OUTPUT) return;
     size += text.length;
+    if (onPush) onPush(kind, text);
     const last = parts[parts.length - 1];
     if (last && last[0] === kind) last[1] += text; else parts.push([kind, text]);
     if (size > MAX_OUTPUT) parts.push(["err", "\n(output cut off: your code printed a lot)\n"]);
@@ -266,7 +278,7 @@ const PRODUCTS = [
   { id: 6, name: "Puncture kit", category: "tools", price: 450, stock: 60 },
 ];
 
-function makeFakeShop(schedule) {
+function makeFakeShop(schedule, realFetch = globalThis.fetch.bind(globalThis)) {
   const flaky = new Map();
   const orders = [{ id: 1001, customer: "Ada", items: [{ productId: 2, qty: 1 }], total: 800 }];
   const json = (status, body, headers = {}) =>
@@ -343,7 +355,7 @@ function makeFakeShop(schedule) {
     const raw = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
     let url;
     try { url = new URL(raw, "https://shop.example"); } catch { url = null; }
-    if (!url || url.hostname !== "shop.example") return globalThis.fetch(input, init);
+    if (!url || url.hostname !== "shop.example") return realFetch(input, init);
     const method = (init.method ?? (input instanceof Request ? input.method : "GET")).toUpperCase();
     const delay = url.pathname === "/api/slow" ? Number(url.searchParams.get("ms") ?? 500) : 30;
     await wait(delay, init.signal);
@@ -449,6 +461,7 @@ export function deepEqual(a, b, tol = 1e-9) {
 }
 
 function makeHelpers(lookup, output, source, pending) {
+  const outputNow = () => (typeof output === "function" ? output() : output);
   const MISSING = Symbol("missing");
   const read = (name) => {
     try { return lookup(name); } catch { return MISSING; }
@@ -471,7 +484,7 @@ function makeHelpers(lookup, output, source, pending) {
     }
     return true;
   }
-  const printed = (...texts) => texts.every((t) => output.includes(String(t)));
+  const printed = (...texts) => texts.every((t) => outputNow().includes(String(t)));
   const code = () => source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:\\])\/\/.*$/gm, "$1");
   const uses = (...snippets) => snippets.every((s) => code().includes(s));
   function test(fnOrName, cases, opts = {}) {
@@ -508,7 +521,7 @@ function makeHelpers(lookup, output, source, pending) {
     }
     return true;
   }
-  return { need, same, printed, uses, test, deepEqual, inspect: (v) => inspect(v, 3, new Set(), false), __output__: output, __source__: source };
+  return { need, same, printed, uses, test, deepEqual, inspect: (v) => inspect(v, 3, new Set(), false), __output__: outputNow(), __source__: source };
 }
 
 function structuredCloneSafe(args) {

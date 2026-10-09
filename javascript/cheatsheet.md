@@ -169,6 +169,47 @@ const url = new URL("/api/orders", base); url.searchParams.set("customer", name)
 
 Retry temporary failures (network, timeouts, 429, 5xx) with exponential backoff and jitter; don't retry 4xx errors or non-idempotent requests.
 
+## JavaScript in the browser [26–30]
+
+Put scripts at the end of `<body>`, or in `<head>` with `defer` or `type="module"`, so the elements they use exist.
+
+```js
+const cart = document.querySelector("#cart");            // first match or null
+const items = [...document.querySelectorAll(".item")];   // every match, as an array
+item.dataset.id                                          // data-id="4" → "4" (a string)
+button.closest("li")                                     // nearest ancestor that matches
+
+el.textContent = userData;                               // safe; innerHTML only for HTML you wrote
+const li = document.createElement("li");
+list.replaceChildren(...newItems);                       // replace a list in one update
+el.classList.toggle("selected", isSelected);
+button.disabled = true;   el.hidden = false;             // boolean properties, not setAttribute
+template.content.firstElementChild.cloneNode(true)
+
+list.addEventListener("click", (e) => {                  // event delegation
+  const button = e.target.closest("button.add");
+  if (!button) return;
+  add(Number(button.closest("li").dataset.id));
+});
+el.addEventListener("keydown", handler, { signal: controller.signal });   // controller.abort() removes it
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();                                    // no page reload
+  const data = Object.fromEntries(new FormData(form));   // every value is a string
+  const qty = form.elements.qty.valueAsNumber;
+});
+```
+
+| Event | When |
+|---|---|
+| `click` | button activated (mouse, tap, Enter or Space) |
+| `input` / `change` | every edit / value committed |
+| `keydown` | key pressed: check `e.key` |
+| `submit` | form submitted (button or Enter), after validation passes |
+| `DOMContentLoaded` / `load` | HTML parsed / everything loaded |
+
+Interactive pages: keep a **state** object, write one **render()** that makes the page match it, and have event handlers change the state and call render. Show loading, empty and error states; abort stale requests.
+
 ## Every concept at a glance
 
 Generated from the **At a glance** table at the end of each lesson. The number in brackets links to the lesson.
@@ -269,3 +310,23 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | Retry | loop: try return await fn(); wait base × 2^(n − 1) | O(attempts) calls | O(1) | [25](lessons/25-async-patterns.md) |
 | Limit concurrency | n workers pulling from a shared index | O(items) | O(n) | [25](lessons/25-async-patterns.md) |
 | Stream | res.body.pipeThrough(new TextDecoderStream()).getReader() | O(chunks) | O(chunk) | [25](lessons/25-async-patterns.md) |
+| Find one element | querySelector(css) or getElementById(id) | O(n) elements in the worst case | O(1) | [26](lessons/26-the-dom.md) |
+| Find all matches | [...querySelectorAll(css)] | O(n) | O(matches) | [26](lessons/26-the-dom.md) |
+| Find the item a click belongs to | target.closest(selector) | O(depth) | O(1) | [26](lessons/26-the-dom.md) |
+| Read custom data | el.dataset.name, then Number() if needed | O(1) | O(1) | [26](lessons/26-the-dom.md) |
+| Show outside data | el.textContent = value | O(length) | O(length) | [27](lessons/27-changing-the-page.md) |
+| Render a list | build elements, then parent.replaceChildren(...items) | O(n) | O(n) | [27](lessons/27-changing-the-page.md) |
+| Switch a visual state | el.classList.toggle(name, condition) | O(1) | O(1) | [27](lessons/27-changing-the-page.md) |
+| Repeat a block of markup | clone a template's content and fill it | O(size of block) | O(size of block) | [27](lessons/27-changing-the-page.md) |
+| React to a click | el.addEventListener("click", handler) | O(1) per event | O(1) | [28](lessons/28-events.md) |
+| Many similar items | one listener on the container + closest | O(depth) per event | O(1) listeners | [28](lessons/28-events.md) |
+| Cancel the browser's action | event.preventDefault() | O(1) | O(1) | [28](lessons/28-events.md) |
+| Remove many listeners | pass { signal } and call controller.abort() | O(listeners) | O(1) | [28](lessons/28-events.md) |
+| Read one control | form.elements.name.value (or valueAsNumber, checked) | O(1) | O(1) | [29](lessons/29-forms.md) |
+| Read the whole form | Object.fromEntries(new FormData(form)) | O(controls) | O(controls) | [29](lessons/29-forms.md) |
+| Handle sending | submit listener + preventDefault + try / finally | O(1) + the request | O(1) | [29](lessons/29-forms.md) |
+| Validate | HTML attributes, checkValidity, setCustomValidity; again on the server | O(controls) | O(1) | [29](lessons/29-forms.md) |
+| Keep the page consistent | state object + one render() | O(rendered items) per update | O(state) | [30](lessons/30-product-browser.md) |
+| Search loaded data | filter a copy, case-insensitive, on input | O(n) per search | O(matches) | [30](lessons/30-product-browser.md) |
+| Avoid stale results | abort the previous request before starting a new one | O(1) | O(1) | [30](lessons/30-product-browser.md) |
+| Remember a preference | localStorage.setItem / getItem inside try / catch | O(size) | O(size) | [30](lessons/30-product-browser.md) |

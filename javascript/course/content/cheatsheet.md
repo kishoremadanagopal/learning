@@ -168,3 +168,44 @@ const url = new URL("/api/orders", base); url.searchParams.set("customer", name)
 | `Promise.any` | the first to fulfil | all reject (AggregateError) |
 
 Retry temporary failures (network, timeouts, 429, 5xx) with exponential backoff and jitter; don't retry 4xx errors or non-idempotent requests.
+
+## JavaScript in the browser [26–30]
+
+Put scripts at the end of `<body>`, or in `<head>` with `defer` or `type="module"`, so the elements they use exist.
+
+```js
+const cart = document.querySelector("#cart");            // first match or null
+const items = [...document.querySelectorAll(".item")];   // every match, as an array
+item.dataset.id                                          // data-id="4" → "4" (a string)
+button.closest("li")                                     // nearest ancestor that matches
+
+el.textContent = userData;                               // safe; innerHTML only for HTML you wrote
+const li = document.createElement("li");
+list.replaceChildren(...newItems);                       // replace a list in one update
+el.classList.toggle("selected", isSelected);
+button.disabled = true;   el.hidden = false;             // boolean properties, not setAttribute
+template.content.firstElementChild.cloneNode(true)
+
+list.addEventListener("click", (e) => {                  // event delegation
+  const button = e.target.closest("button.add");
+  if (!button) return;
+  add(Number(button.closest("li").dataset.id));
+});
+el.addEventListener("keydown", handler, { signal: controller.signal });   // controller.abort() removes it
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();                                    // no page reload
+  const data = Object.fromEntries(new FormData(form));   // every value is a string
+  const qty = form.elements.qty.valueAsNumber;
+});
+```
+
+| Event | When |
+|---|---|
+| `click` | button activated (mouse, tap, Enter or Space) |
+| `input` / `change` | every edit / value committed |
+| `keydown` | key pressed: check `e.key` |
+| `submit` | form submitted (button or Enter), after validation passes |
+| `DOMContentLoaded` / `load` | HTML parsed / everything loaded |
+
+Interactive pages: keep a **state** object, write one **render()** that makes the page match it, and have event handlers change the state and call render. Show loading, empty and error states; abort stale requests.
