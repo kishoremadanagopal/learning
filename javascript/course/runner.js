@@ -249,19 +249,160 @@ function makeEnv(parts, stdin, onPush) {
   };
   const clearInterval = (id) => { if (active.get(id) === "interval") { active.delete(id); realClearInterval(id); } };
   const clearAll = () => {
-    for (const [id, kind] of active) (kind === "interval" ? realClearInterval : realClear)(id);
+    for (const [id, kind] of active) {
+      if (kind === "interval") realClearInterval(id);
+      else if (kind === "timeout") realClear(id);
+    }
     active.clear();
   };
   const fetch = makeFakeShop((fn, ms) => {
     const id = setTimeout(fn, ms);
     return { cancel: () => clearTimeout(id) };
   });
+  const testing = makeTesting(push, active);
   return {
-    console, prompt, setTimeout, clearTimeout, setInterval, clearInterval, active, clearAll, fetch,
+    console, prompt, setTimeout, clearTimeout, setInterval, clearInterval, active, clearAll, fetch, testing,
     takeErrors: () => { const e = errors; errors = []; return e; },
     addError: (e) => errors.push(e),
     push,
   };
+}
+
+/* ---------------------------------------------------------------- test, describe, it and assert
+
+   The testing lesson's code can use these without importing them. They follow node:test and node:assert/strict
+   (a subset), and print like Node.js's test reporter: ✔ for a passing test, ✖ and the reason for a failing one. */
+
+class TestAssertionError extends Error {
+  constructor(message) { super(message); this.name = "AssertionError"; this.code = "ERR_ASSERTION"; }
+}
+
+function strictDeepEqual(a, b) {
+  if (Object.is(a, b)) return true;
+  if (typeof a !== "object" || typeof b !== "object" || a === null || b === null) return false;
+  if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) return false;
+  if (a instanceof Date) return Object.is(a.getTime(), b.getTime());
+  if (a instanceof Map || a instanceof Set) {
+    if (a.size !== b.size) return false;
+    if (a instanceof Set) { for (const v of a) if (!b.has(v)) return false; return true; }
+    for (const [k, v] of a) if (!b.has(k) || !strictDeepEqual(v, b.get(k))) return false;
+    return true;
+  }
+  const ka = Object.keys(a), kb = Object.keys(b);
+  if (ka.length !== kb.length) return false;
+  return ka.every((k) => Object.prototype.hasOwnProperty.call(b, k) && strictDeepEqual(a[k], b[k]));
+}
+
+function makeAssert() {
+  const show = (v) => inspect(v, 3, new Set(), false);
+  const fail = (message, fallback) => {
+    if (message instanceof Error) throw message;
+    throw new TestAssertionError(message ?? fallback);
+  };
+  function matches(error, expected) {
+    if (expected === undefined) return true;
+    if (expected instanceof RegExp) return expected.test(String(error && error.message !== undefined ? error.message : error));
+    if (typeof expected === "function") {
+      if (expected.prototype !== undefined && error instanceof expected) return true;
+      if (Error.isPrototypeOf(expected) || expected === Error) return false;
+      return expected(error) === true;
+    }
+    if (typeof expected === "object" && expected !== null) {
+      return Object.keys(expected).every((k) => expected[k] instanceof RegExp
+        ? expected[k].test(String(error?.[k])) : strictDeepEqual(error?.[k], expected[k]));
+    }
+    return false;
+  }
+  const assert = (value, message) => { if (!value) fail(message, `The expression evaluated to a falsy value:\n\n  ${show(value)}\n`); };
+  assert.ok = assert;
+  assert.equal = assert.strictEqual = (actual, expected, message) => {
+    if (!Object.is(actual, expected)) fail(message, `Expected values to be strictly equal:\n\n${show(actual)} !== ${show(expected)}\n`);
+  };
+  assert.notEqual = assert.notStrictEqual = (actual, expected, message) => {
+    if (Object.is(actual, expected)) fail(message, `Expected "actual" to be strictly unequal to: ${show(expected)}`);
+  };
+  assert.deepEqual = assert.deepStrictEqual = (actual, expected, message) => {
+    if (!strictDeepEqual(actual, expected)) {
+      fail(message, `Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ ${show(actual)}\n- ${show(expected)}\n`);
+    }
+  };
+  assert.notDeepEqual = assert.notDeepStrictEqual = (actual, expected, message) => {
+    if (strictDeepEqual(actual, expected)) fail(message, `Expected "actual" not to be strictly deep-equal to: ${show(expected)}`);
+  };
+  assert.match = (string, regexp, message) => {
+    if (typeof string !== "string" || !regexp.test(string)) fail(message, `The input did not match the regular expression ${regexp}. Input:\n\n${show(string)}\n`);
+  };
+  assert.throws = (fn, expected, message) => {
+    if (typeof expected === "string") { message = expected; expected = undefined; }
+    try { fn(); } catch (e) {
+      if (!matches(e, expected)) fail(message, `The error didn't match what was expected. It was:\n\n${show(e)}\n`);
+      return;
+    }
+    fail(message, "Missing expected exception.");
+  };
+  assert.rejects = async (promiseOrFn, expected, message) => {
+    if (typeof expected === "string") { message = expected; expected = undefined; }
+    try { await (typeof promiseOrFn === "function" ? promiseOrFn() : promiseOrFn); } catch (e) {
+      if (!matches(e, expected)) fail(message, `The rejection didn't match what was expected. It was:\n\n${show(e)}\n`);
+      return;
+    }
+    fail(message, "Missing expected rejection.");
+  };
+  assert.fail = (message = "Failed") => fail(message);
+  assert.AssertionError = TestAssertionError;
+  return assert;
+}
+
+function makeTesting(push, active) {
+  const stats = { tests: 0, pass: 0, fail: 0, suites: 0 };
+  let queue = Promise.resolve(), collecting = null, running = 0;
+  const token = Symbol("tests");
+  const ms = (t0) => `${(performance.now() - t0).toFixed(1)}ms`;
+  const indent = (text, pad) => text.split("\n").map((ln) => (ln ? pad + ln : ln)).join("\n");
+
+  async function runTest(name, fn, depth) {
+    const pad = "  ".repeat(depth), t0 = performance.now();
+    stats.tests++;
+    try {
+      await fn();
+      stats.pass++;
+      push("out", `${pad}✔ ${name} (${ms(t0)})\n`);
+    } catch (e) {
+      stats.fail++;
+      const why = e instanceof Error ? `${e.name}: ${e.message}` : `thrown: ${inspect(e, 2, new Set(), false)}`;
+      push("err", `${pad}✖ ${name} (${ms(t0)})\n${indent(why.trimEnd(), pad + "    ")}\n`);
+    }
+  }
+  async function runSuite(name, fn, depth) {
+    const pad = "  ".repeat(depth);
+    stats.suites++;
+    const children = [], outer = collecting;
+    collecting = children;
+    try {
+      fn();
+    } catch (e) {
+      stats.fail++;
+      push("err", `${pad}✖ ${name}\n${indent(`${e && e.name}: ${e && e.message}`, pad + "    ")}\n`);
+      return;
+    } finally {
+      collecting = outer;
+    }
+    push("out", `${pad}▶ ${name}\n`);
+    for (const child of children) await child(depth + 1);
+  }
+  function enqueue(job) {
+    if (collecting) { collecting.push(job); return Promise.resolve(); }
+    running++;
+    active.set(token, "tests");
+    const p = queue.then(() => job(0));
+    queue = p.catch(() => {}).finally(() => { if (--running === 0) active.delete(token); });
+    return queue;
+  }
+  const test = (name, fn) => enqueue((depth) => runTest(name, fn, depth));
+  const describe = (name, fn) => enqueue((depth) => runSuite(name, fn, depth));
+  const summary = () => stats.tests
+    ? `ℹ tests ${stats.tests}${stats.suites ? ` · suites ${stats.suites}` : ""} · pass ${stats.pass} · fail ${stats.fail}\n` : "";
+  return { test, describe, it: test, assert: makeAssert(), stats, summary };
 }
 
 /* ---------------------------------------------------------------- a pretend web API for the async lessons
@@ -370,7 +511,7 @@ export function reportUnhandled(error) {
   if (activeEnv) activeEnv.addError({ uncaught: true, error });
 }
 
-const PARAMS = ["console", "prompt", "setTimeout", "clearTimeout", "setInterval", "clearInterval", "fetch", "__extra"];
+const PARAMS = ["console", "prompt", "setTimeout", "clearTimeout", "setInterval", "clearInterval", "fetch", "test", "describe", "it", "assert", "__extra"];
 
 // view: what to show in error messages when the code that runs isn't what the learner wrote (TypeScript compiled
 // to JavaScript): { source: the learner's code, mapLine: line in the running code -> line in source, or null }.
@@ -383,9 +524,10 @@ async function execute(src, stdin = "", extra = {}, view = null) {
   };
   const parts = [];
   const env = makeEnv(parts, stdin);
-  let ok = true, lookup = () => undefined;
-  // Learner code becomes the body of an async function. The closure at the end lets checks read its variables.
-  const body = `"use strict";\n${src}\n;return (__name) => eval(__name);\n//# sourceURL=main.js`;
+  let ok = true, testsFailed = false, lookup = () => undefined;
+  // Learner code becomes the body of an async function (inside a second one, so the learner's own declarations can
+  // reuse the sandbox's names, like `it`). The closure at the end lets checks read its variables.
+  const body = `"use strict"; return (async () => {\n${src}\n;return (__name) => eval(__name);\n})();\n//# sourceURL=main.js`;
   let fn;
   try {
     fn = new AsyncFunction(...PARAMS, body);
@@ -395,7 +537,9 @@ async function execute(src, stdin = "", extra = {}, view = null) {
   }
   activeEnv = env;
   try {
-    const finished = fn(env.console, env.prompt, env.setTimeout, env.clearTimeout, env.setInterval, env.clearInterval, env.fetch, extra);
+    const t = env.testing;
+    const finished = fn(env.console, env.prompt, env.setTimeout, env.clearTimeout, env.setInterval, env.clearInterval, env.fetch,
+                        t.test, t.describe, t.it, t.assert, extra);
     lookup = await withLimit(finished, WAIT_LIMIT_MS, "Your code is still waiting (for a promise that never settles?) after 5 s, so it was stopped.");
     // Let pending timers, promise callbacks and async work finish, like a real JavaScript program would.
     const t0 = Date.now();
@@ -405,8 +549,13 @@ async function execute(src, stdin = "", extra = {}, view = null) {
       await new Promise((r) => globalThis.setTimeout(r, 5));
     }
     if (env.active.size) {
+      const what = [...env.active.values()].includes("tests") ? "the tests were still running" : "a timer or setInterval was still running. Clear intervals with clearInterval";
       env.clearAll();
-      env.push("err", "\n(Stopped waiting after 5 s: a timer or setInterval was still running. Clear intervals with clearInterval.)\n");
+      env.push("err", `\n(Stopped waiting after 5 s: ${what}.)\n`);
+    }
+    if (env.testing.stats.tests) {
+      env.push("out", env.testing.summary());
+      if (env.testing.stats.fail) { ok = false; testsFailed = true; }
     }
   } catch (e) {
     ok = false;
@@ -419,7 +568,7 @@ async function execute(src, stdin = "", extra = {}, view = null) {
     parts.push(["err", (parts.length ? "\n" : "") + text]);
   }
   activeEnv = null;
-  return { ok, parts, lookup, env };
+  return { ok, parts, lookup, env, testsFailed: testsFailed && parts.every(([k, t]) => k !== "err" || /^\s*✖/m.test(t)) };
 }
 
 function withLimit(promise, ms, message) {
@@ -548,9 +697,11 @@ export class AssertionError extends Error {
 }
 
 export async function check(src, checkSrc, stdin = "", extra = {}, view = null) {
-  const { ok, parts, lookup } = await execute(src, stdin, extra, view);
+  const { ok, parts, lookup, testsFailed } = await execute(src, stdin, extra, view);
   if (!ok) {
-    return { ok: false, parts, figures: [], verdict: { ok: false, msg: "Your code raised an error (see above). Fix it and check again." } };
+    const msg = testsFailed ? "Some of the tests in your code fail (see above). Make them all pass, then check again."
+                            : "Your code raised an error (see above). Fix it and check again.";
+    return { ok: false, parts, figures: [], verdict: { ok: false, msg } };
   }
   const output = parts.filter((p) => p[0] === "out").map((p) => p[1]).join("");
   const pending = [];

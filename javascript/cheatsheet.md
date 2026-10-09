@@ -244,6 +244,43 @@ catch (err) { const msg = err instanceof Error ? err.message : String(err); }
 
 Avoid `any`, `as` and `!` for outside data: start from `unknown` and check. Run with `node file.ts` (type stripping, no checking: erasable syntax only), check with `tsc --noEmit`, and keep `strict` on.
 
+## Node.js and tooling [36–40]
+
+```bash
+node app.js · node --watch app.js · node --env-file=.env app.js · node app.ts
+npm install zod · npm install -D vitest · npm ci · npx eslint . · npm run dev · node --run dev
+npm outdated · npm audit · prettier --check . · eslint . --fix · tsc --noEmit · node --test
+```
+
+```js
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+const config = JSON.parse(await readFile(join(import.meta.dirname, "config.json"), "utf8"));
+const args = process.argv.slice(2);   const port = Number(process.env.PORT ?? 3000);
+
+import { test, describe, it } from "node:test";      // in the sandbox: already available
+import assert from "node:assert/strict";
+test("adds", () => assert.equal(add(1, 2), 3));
+assert.deepEqual(actual, expected); assert.throws(() => f(), RangeError); await assert.rejects(p, /404/);
+
+async function handle(request) {                      // web-standard handler
+  const url = new URL(request.url);
+  if (request.method === "GET" && url.pathname === "/api/health") return Response.json({ ok: true });
+  return Response.json({ error: "Not found" }, { status: 404 });
+}
+const withErrors = (handler) => async (req) => {
+  try { return await handler(req); } catch (e) { console.error(e); return Response.json({ error: "Internal server error" }, { status: 500 }); }
+};
+```
+
+| Range | Allows |
+|---|---|
+| `^4.1.0` | ≥ 4.1.0, < 5.0.0 (for `^0.3.2`: < 0.4.0) |
+| `~4.1.0` | ≥ 4.1.0, < 4.2.0 |
+| `4.1.0` | exactly 4.1.0 |
+
+Commit `package-lock.json`, never `node_modules` or `.env`. Status codes: 200/201/204 success · 400 bad input · 401/403 auth · 404 not found · 405 wrong method · 409 conflict · 500 server error.
+
 ## Every concept at a glance
 
 Generated from the **At a glance** table at the end of each lesson. The number in brackets links to the lesson.
@@ -379,3 +416,18 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | Outside data | unknown → validate (guard or schema) → typed value | O(size of data) | O(1) | [35](lessons/35-typing-outside-data.md) |
 | Expected failure | return a Result union; callers check ok | O(1) | O(1) | [35](lessons/35-typing-outside-data.md) |
 | One definition, many uses | schema → type (z.infer) and JSON Schema | O(schema) | O(schema) | [35](lessons/35-typing-outside-data.md) |
+| Read options | util.parseArgs or a small parser over process.argv.slice(2) | O(args) | O(args) | [36](lessons/36-node-basics.md) |
+| Configuration | defaults merged with a file and environment variables | O(keys) | O(keys) | [36](lessons/36-node-basics.md) |
+| Read a file | await readFile(path.join(import.meta.dirname, …), "utf8") | O(file size) | O(file size) | [36](lessons/36-node-basics.md) |
+| Reproducible installs | commit package-lock.json; npm ci | O(packages) | O(packages) | [37](lessons/37-npm-and-packages.md) |
+| Compare versions | split into numbers, compare field by field | O(1) | O(1) | [37](lessons/37-npm-and-packages.md) |
+| Safer dependencies | few packages, lockfile, audit, no install scripts | — | — | [37](lessons/37-npm-and-packages.md) |
+| Consistent style | Prettier on save and prettier --check in CI | O(code) | O(code) | [38](lessons/38-formatting-linting-bundling.md) |
+| Find likely bugs | ESLint rules over the AST | O(code) | O(AST) | [38](lessons/38-formatting-linting-bundling.md) |
+| Ship to browsers | bundle: module graph → ordered, tree-shaken, minified files | O(modules + imports) | O(code) | [38](lessons/38-formatting-linting-bundling.md) |
+| Check a function | test + assert.equal / deepEqual / throws | O(cases) | O(1) | [39](lessons/39-testing.md) |
+| Async code | async test function + await (assert.rejects for failures) | O(cases) | O(1) | [39](lessons/39-testing.md) |
+| Hard dependencies | pass them in; give tests fakes | O(1) | O(1) | [39](lessons/39-testing.md) |
+| Answer requests | handler(Request) → Response, route on path then method | O(routes) per request | O(1) | [40](lessons/40-web-server.md) |
+| Accept data | await request.json() in try/catch, validate, 400 on failure | O(body) | O(body) | [40](lessons/40-web-server.md) |
+| Shared behaviour | middleware: (handler) => wrapped handler | O(layers) | O(1) | [40](lessons/40-web-server.md) |

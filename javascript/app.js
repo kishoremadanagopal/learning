@@ -32,7 +32,7 @@
 
   /* ---------- Syntax highlighting ---------- */
   const KW = new Set("as async await break case catch class const continue debugger default delete do else export extends false finally for from function get if import in instanceof let new null of return set static super switch this throw true try typeof undefined var void while with yield interface type enum implements readonly keyof satisfies declare namespace abstract private protected public".split(" "));
-  const BI = new Set("console Math JSON Object Array String Number Boolean BigInt Symbol Map Set WeakMap WeakSet Promise Date RegExp Error TypeError RangeError SyntaxError ReferenceError Temporal Intl Iterator parseInt parseFloat isNaN isFinite structuredClone setTimeout setInterval clearTimeout clearInterval fetch prompt globalThis document window NaN Infinity string number boolean unknown never any void object".split(" "));
+  const BI = new Set("console Math JSON Object Array String Number Boolean BigInt Symbol Map Set WeakMap WeakSet Promise Date RegExp Error TypeError RangeError SyntaxError ReferenceError Temporal Intl Iterator parseInt parseFloat isNaN isFinite structuredClone setTimeout setInterval clearTimeout clearInterval fetch prompt test describe assert process require globalThis document window NaN Infinity string number boolean unknown never any void object".split(" "));
   const TOKEN_RE = /(\/\/[^\n]*|\/\*[\s\S]*?(?:\*\/|$))|("(?:\\.|[^"\\\n])*"?|'(?:\\.|[^'\\\n])*'?|`(?:\\[\s\S]|[^`\\])*`?)|(@[A-Za-z_][\w.]*)|(\b\d[\d_]*(?:\.[\d_]*)?(?:[eE][+-]?\d+)?n?\b|\b0[xXoObB][\da-fA-F_]+n?\b)|([A-Za-z_$][\w$]*)/g;
   function highlight(src) {
     let out = "", last = 0, prev = "";

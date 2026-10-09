@@ -243,3 +243,40 @@ catch (err) { const msg = err instanceof Error ? err.message : String(err); }
 | a type guard | `if (isProduct(data)) …` |
 
 Avoid `any`, `as` and `!` for outside data: start from `unknown` and check. Run with `node file.ts` (type stripping, no checking: erasable syntax only), check with `tsc --noEmit`, and keep `strict` on.
+
+## Node.js and tooling [36–40]
+
+```bash
+node app.js · node --watch app.js · node --env-file=.env app.js · node app.ts
+npm install zod · npm install -D vitest · npm ci · npx eslint . · npm run dev · node --run dev
+npm outdated · npm audit · prettier --check . · eslint . --fix · tsc --noEmit · node --test
+```
+
+```js
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+const config = JSON.parse(await readFile(join(import.meta.dirname, "config.json"), "utf8"));
+const args = process.argv.slice(2);   const port = Number(process.env.PORT ?? 3000);
+
+import { test, describe, it } from "node:test";      // in the sandbox: already available
+import assert from "node:assert/strict";
+test("adds", () => assert.equal(add(1, 2), 3));
+assert.deepEqual(actual, expected); assert.throws(() => f(), RangeError); await assert.rejects(p, /404/);
+
+async function handle(request) {                      // web-standard handler
+  const url = new URL(request.url);
+  if (request.method === "GET" && url.pathname === "/api/health") return Response.json({ ok: true });
+  return Response.json({ error: "Not found" }, { status: 404 });
+}
+const withErrors = (handler) => async (req) => {
+  try { return await handler(req); } catch (e) { console.error(e); return Response.json({ error: "Internal server error" }, { status: 500 }); }
+};
+```
+
+| Range | Allows |
+|---|---|
+| `^4.1.0` | ≥ 4.1.0, < 5.0.0 (for `^0.3.2`: < 0.4.0) |
+| `~4.1.0` | ≥ 4.1.0, < 4.2.0 |
+| `4.1.0` | exactly 4.1.0 |
+
+Commit `package-lock.json`, never `node_modules` or `.env`. Status codes: 200/201/204 success · 400 bad input · 401/403 auth · 404 not found · 405 wrong method · 409 conflict · 500 server error.

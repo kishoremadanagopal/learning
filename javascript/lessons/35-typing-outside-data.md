@@ -403,4 +403,4 @@ console.log(missing.ok ? missing.value : missing.error);
 </details>
 
 ---
-Previous: [Lesson 34](34-classes-and-tsconfig.md) · Back to the [course home](../README.md)
+Previous: [Lesson 34](34-classes-and-tsconfig.md) · Next: [Lesson 36: Node.js: JavaScript outside the browser](36-node-basics.md)

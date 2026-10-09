@@ -1,6 +1,6 @@
 # JavaScript, TypeScript and JSON
 
-A hands-on course that starts from zero: 35 lessons on JavaScript (the language of the web), working with data and JSON, asynchronous code, building interactive pages, TypeScript, and Node.js tooling, ending with interview topics and a final project.
+A hands-on course that starts from zero: 40 lessons on JavaScript (the language of the web), working with data and JSON, asynchronous code, building interactive pages, TypeScript, and Node.js tooling, ending with interview topics and a final project.
 
 JavaScript runs every web page, and with Node.js it runs servers and tools too. JSON is how almost every API, including every LLM API, sends data. TypeScript adds types on top of JavaScript and is now the default for serious projects. Together they're essential for full-stack and AI engineers, and useful for analysts who build dashboards and automations.
 
@@ -8,9 +8,9 @@ JavaScript runs every web page, and with Node.js it runs servers and tools too. 
 
 The sandbox runs your JavaScript right in your browser, in a separate thread, so even an endless loop can be stopped, and shows the pages you build in the browser lessons in a live, sandboxed preview. Nothing to install and no sign-up.
 
-- every lesson, with **180 examples** you can run and change
-- **70 exercises** with hidden tests, each with an approach, hints and a walkthrough
-- **140 quiz questions**, with explanations
+- every lesson, with **193 examples** you can run and change
+- **80 exercises** with hidden tests, each with an approach, hints and a walkthrough
+- **160 quiz questions**, with explanations
 - your progress and code saved in your own browser
 
 **Before you start:** nothing. Programming experience helps but isn't needed. If you already know Python, you'll move quickly: the lessons point out where JavaScript differs.
@@ -19,7 +19,7 @@ The sandbox runs your JavaScript right in your browser, in a separate thread, so
 
 | | |
 |---|---|
-| 📘 [Lessons](#lessons) | 35 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
+| 📘 [Lessons](#lessons) | 40 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
 | 📖 [Glossary](glossary.md) | every term used in the course, defined in plain English |
 | 🧾 [Cheat sheet](cheatsheet.md) | the syntax and patterns on one page, and every concept at a glance |
 
@@ -96,6 +96,16 @@ The sandbox runs your JavaScript right in your browser, in a separate thread, so
 | 33 | [Typed functions and generics](lessons/33-functions-and-generics.md) | typed parameters and return types, optional and default parameters, rest parameters, function types, contextual typing of callbacks, void, generic functions and type parameters, type argument inference, constraints with extends, keyof and indexed access types, generic types, Result types, Record, utility types (Partial, Required, Readonly, Pick, Omit, ReturnType, Awaited), deriving types with typeof and as const | 65–66 |
 | 34 | [Classes, enums, modules and tsconfig](lessons/34-classes-and-tsconfig.md) | typed class fields and constructors, readonly, getters, TypeScript's private versus JavaScript's # private fields, implements, abstract classes, parameter properties, enums and their generated code, unions of literal types with as const, erasable syntax and erasableSyntaxOnly, exporting and importing types, import type, declaration files, DefinitelyTyped and @types packages, the types option, tsconfig.json for 2026, noUncheckedIndexedAccess, verbatimModuleSyntax, TypeScript 7's removed options | 67–68 |
 | 35 | [Typing data from outside](lessons/35-typing-outside-data.md) | the trust boundary, res.json() and JSON.parse returning any, generic fetch helpers and their limits, unknown in catch blocks, type guards with type predicates, assertion functions, Result types for expected failures, exceptions versus results, schema validation with Zod, inferring types from schemas, JSON Schema, OpenAPI, LLM tool arguments | 69–70 |
+
+### Part 7: Node.js and tooling (Intermediate)
+
+| # | Lesson | Topics | Sandbox |
+|---|---|---|---|
+| 36 | [Node.js: JavaScript outside the browser](lessons/36-node-basics.md) | what Node.js is (V8, the event loop and built-in modules), Deno and Bun, the LTS schedule and the change from Node.js 27, installing and version managers, node, the REPL, --watch and running TypeScript, ES modules and CommonJS, "type": "module", .mjs and .cjs, require of ES modules, node: built-in modules, process.argv, process.env and exitCode, .env files and --env-file, fs/promises, path.join, import.meta.dirname, streams, util.parseArgs | 71–72 |
+| 37 | [npm, packages and package.json](lessons/37-npm-and-packages.md) | packages and the npm registry, package.json fields (name, version, private, type, scripts, dependencies, devDependencies, engines, exports, bin), node --run, npm install, uninstall, ci and npx, node_modules, package-lock.json, semantic versioning, version ranges (caret, tilde, exact, 0.x), pre-releases, npm outdated, update and audit, Dependabot and Renovate, pnpm, Yarn and Bun, supply-chain attacks (Shai-Hulud), install scripts, typosquatting and trusted publishing | 73–74 |
+| 38 | [Formatting, linting and bundling](lessons/38-formatting-linting-bundling.md) | formatters and Prettier, linters and ESLint 10's flat config, rules and --fix, typescript-eslint, Biome and Oxlint, abstract syntax trees and how rules work, type-checking with tsc --noEmit, bundlers and module graphs, tree shaking, minification, transpiling, content hashes and caching, source maps, Vite 8 and Rolldown, hot module replacement, esbuild and webpack, running all checks in CI | 75–76 |
+| 39 | [Testing your code](lessons/39-testing.md) | why automated tests, unit, integration and end-to-end tests, the test pyramid, node:test and node --test, node:assert/strict, test, describe and it, equal, deepEqual, ok, match, throws and rejects, async tests, arrange-act-assert, choosing test cases and edge cases, testing behaviour not implementation, mutation testing, dependency injection, test doubles, mock functions and fake timers, Vitest, Jest and Playwright, coverage, test-driven development | 77–78 |
+| 40 | [A small web server and API](lessons/40-web-server.md) | HTTP servers, node:http and createServer, web-standard Request and Response handlers, Response.json, routing on method and path, path parameters, query strings, reading JSON bodies, validating input, status codes (200, 201, 204, 400, 401, 403, 404, 405, 409, 500), frameworks (Express 5, Fastify, Hono, full-stack frameworks), middleware as handler wrappers, error handling, logging, CORS and preflight requests, configuration and secrets, running servers in production | 79–80 |
 
 ## Running it on your own computer
 
