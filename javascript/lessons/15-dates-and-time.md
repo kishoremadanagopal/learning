@@ -321,4 +321,4 @@ console.log(formatDuration(125), formatDuration(45), formatDuration(1620), forma
 </details>
 
 ---
-Previous: [Lesson 14](14-json.md) · Back to the [course home](../README.md)
+Previous: [Lesson 14](14-json.md) · Next: [Lesson 16: Classes and this](16-classes.md)

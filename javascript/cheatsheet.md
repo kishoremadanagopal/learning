@@ -97,6 +97,44 @@ new Intl.DateTimeFormat("en-GB", { dateStyle: "full", timeZone: "Europe/London" 
 
 JSON drops `undefined` and functions, turns Dates into strings and Maps/Sets into `{}`, and loses precision on integers above 2⁵³.
 
+## Modern JavaScript [16–20]
+
+```js
+class Account {
+  #balance = 0;                       // private field
+  static count = 0;                   // belongs to the class
+  constructor(owner) { this.owner = owner; }
+  get balance() { return this.#balance; }
+  deposit(n) { this.#balance += n; return this; }   // return this to chain
+}
+class Savings extends Account { constructor(o) { super(o); } }
+const handler = obj.method.bind(obj);              // keep this in a callback
+
+export const VAT = 0.2;  export default class Basket {}
+import Basket, { VAT as rate } from "./prices.js";
+const mod = await import("./big.js");              // load on demand
+
+try { risky(); } catch (e) { if (e instanceof SyntaxError) { … } else throw e; } finally { cleanUp(); }
+class ValidationError extends Error { constructor(field, msg) { super(msg); this.name = "ValidationError"; this.field = field; } }
+throw new Error("Couldn't save", { cause: err });
+
+function* range(a, b) { for (let i = a; i < b; i++) yield i; }
+naturals().filter(isOdd).map(square).take(3).toArray()   // lazy iterator helpers
+
+/(?<year>\d{4})-(?<month>\d{2})/.exec(text).groups
+text.replace(/\s+/g, " ")   text.matchAll(/…/g)   new RegExp(RegExp.escape(term), "gi")
+```
+
+| Regex | Meaning |
+|---|---|
+| `\d \w \s` / `\D \W \S` | digit, word character, whitespace / not |
+| `[abc] [^abc] [a-z]` | one of, none of, range |
+| `* + ? {n,m}` | quantifiers (add `?` for lazy) |
+| `^ $ \b` | start, end, word boundary |
+| `(?<name>…) (?:…)` | named group, non-capturing group |
+| `(?=…) (?!…) (?<=…) (?<!…)` | lookahead / lookbehind |
+| flags `g i m s u v` | all, ignore case, multi-line, dot matches newline, Unicode |
+
 ## Every concept at a glance
 
 Generated from the **At a glance** table at the end of each lesson. The number in brackets links to the lesson.
@@ -163,3 +201,19 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | Show a moment | Intl.DateTimeFormat(locale, { timeZone }) | O(1) | O(1) | [15](lessons/15-dates-and-time.md) |
 | Days between dates | UTC timestamps ÷ 86,400,000, or PlainDate.until | O(1) | O(1) | [15](lessons/15-dates-and-time.md) |
 | Add months safely | Temporal.PlainDate add({ months }) | O(1) | O(1) | [15](lessons/15-dates-and-time.md) |
+| Protect state | #private fields + validated methods + getters | O(1) | O(1) | [16](lessons/16-classes.md) |
+| Share behaviour | base class method calling an overridden method | O(1) | O(1) | [16](lessons/16-classes.md) |
+| Keep this in callbacks | arrow-function fields or .bind(this) | O(1) | O(1) | [16](lessons/16-classes.md) |
+| Share code | export from one module; import in another | O(1) | O(1) | [17](lessons/17-modules.md) |
+| Load on demand | await import("./big.js") | O(module size) | O(module size) | [17](lessons/17-modules.md) |
+| Resolve a relative path | folder parts as a stack; .. pops | O(path length) | O(depth) | [17](lessons/17-modules.md) |
+| Handle a failure | try { … } catch (e) { if (expected) … else throw e } | O(1) | O(1) | [18](lessons/18-errors.md) |
+| Name a failure | class MyError extends Error { constructor(…) { super(msg) } } | O(1) | O(1) | [18](lessons/18-errors.md) |
+| Fallbacks | try each option; collect errors; AggregateError if all fail | O(options) | O(options) | [18](lessons/18-errors.md) |
+| Custom iteration | [Symbol.iterator]() returning { next } | O(1) per step | O(1) | [19](lessons/19-iterators-and-generators.md) |
+| Lazy sequence | function* with a loop and yield | O(1) per value | O(1) | [19](lessons/19-iterators-and-generators.md) |
+| First n of a pipeline | iter.filter(…).map(…).take(n).toArray() | O(items examined) | O(n) | [19](lessons/19-iterators-and-generators.md) |
+| Does it match? | /pattern/.test(text) | O(n) typically | O(1) | [20](lessons/20-regular-expressions.md) |
+| All matches with groups | text.matchAll(/(?<name>…)/g) | O(n) typically | O(matches) | [20](lessons/20-regular-expressions.md) |
+| Replace with logic | text.replace(/…/g, (m, …groups) => …) | O(n) | O(n) | [20](lessons/20-regular-expressions.md) |
+| Search for user text | new RegExp(RegExp.escape(term), "gi") | O(n) | O(term) | [20](lessons/20-regular-expressions.md) |

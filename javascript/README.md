@@ -1,6 +1,6 @@
 # JavaScript, TypeScript and JSON
 
-A hands-on course that starts from zero: 15 lessons on JavaScript (the language of the web), working with data and JSON, asynchronous code, building interactive pages, TypeScript, and Node.js tooling, ending with interview topics and a final project.
+A hands-on course that starts from zero: 20 lessons on JavaScript (the language of the web), working with data and JSON, asynchronous code, building interactive pages, TypeScript, and Node.js tooling, ending with interview topics and a final project.
 
 JavaScript runs every web page, and with Node.js it runs servers and tools too. JSON is how almost every API, including every LLM API, sends data. TypeScript adds types on top of JavaScript and is now the default for serious projects. Together they're essential for full-stack and AI engineers, and useful for analysts who build dashboards and automations.
 
@@ -8,9 +8,9 @@ JavaScript runs every web page, and with Node.js it runs servers and tools too. 
 
 The sandbox runs your JavaScript right in your browser, in a separate thread, so even an endless loop can be stopped. Nothing to install and no sign-up.
 
-- every lesson, with **83 examples** you can run and change
-- **30 exercises** with hidden tests, each with an approach, hints and a walkthrough
-- **60 quiz questions**, with explanations
+- every lesson, with **107 examples** you can run and change
+- **40 exercises** with hidden tests, each with an approach, hints and a walkthrough
+- **80 quiz questions**, with explanations
 - your progress and code saved in your own browser
 
 **Before you start:** nothing. Programming experience helps but isn't needed. If you already know Python, you'll move quickly: the lessons point out where JavaScript differs.
@@ -19,7 +19,7 @@ The sandbox runs your JavaScript right in your browser, in a separate thread, so
 
 | | |
 |---|---|
-| 📘 [Lessons](#lessons) | 15 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
+| 📘 [Lessons](#lessons) | 20 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
 | 📖 [Glossary](glossary.md) | every term used in the course, defined in plain English |
 | 🧾 [Cheat sheet](cheatsheet.md) | the syntax and patterns on one page, and every concept at a glance |
 
@@ -56,6 +56,16 @@ The sandbox runs your JavaScript right in your browser, in a separate thread, so
 | 13 | [Map and Set](lessons/13-map-and-set.md) | Map and its methods, Map versus plain objects, any key type, size and order, getOrInsert, counting and grouping with a Map, Map.groupBy, Set and its methods, removing duplicates, fast membership tests, union, intersection, difference, symmetricDifference, isSubsetOf and isDisjointFrom, WeakMap and WeakSet | 25–26 |
 | 14 | [JSON](lessons/14-json.md) | what JSON is and where it's used, JSON syntax rules versus JavaScript objects, JSON.parse and JSON.stringify, pretty-printing, values that don't survive (undefined, functions, Date, Map, Set, NaN), replacers and revivers, invalid JSON and SyntaxError, try and catch, very large numbers, context.source and JSON.rawJSON, validating the shape of parsed data, schema libraries such as Zod | 27–28 |
 | 15 | [Dates and times](lessons/15-dates-and-time.md) | timestamps and the Unix epoch, the Date object, zero-based months, mutation, local time versus UTC, unreliable parsing, overflow, ISO 8601, Intl.DateTimeFormat and Intl.RelativeTimeFormat, the Temporal API, PlainDate, PlainTime, PlainDateTime, ZonedDateTime, Instant and Duration, calendar arithmetic, time zones and daylight saving, browser support and polyfills | 29–30 |
+
+### Part 3: Modern JavaScript (Intermediate)
+
+| # | Lesson | Topics | Sandbox |
+|---|---|---|---|
+| 16 | [Classes and this](lessons/16-classes.md) | classes and instances, constructors, methods, public fields, private fields with #, getters and setters, static members, chaining by returning this, inheritance with extends and super, overriding methods, instanceof, composition versus inheritance, how this is decided, losing this in callbacks, arrow functions and bind, prototypes and the prototype chain | 31–32 |
+| 17 | [Modules: import and export](lessons/17-modules.md) | why programs are split into modules, ES modules, named and default exports, import syntax, renaming and namespace imports, module scope, strict mode and running once, live read-only bindings, relative, absolute and package specifiers, file extensions, modules in the browser, ESM versus CommonJS in Node.js, dynamic import() and code splitting, circular imports, side effects on import | 33–34 |
+| 18 | [Errors and error handling](lessons/18-errors.md) | throwing and the call stack, built-in error types, throw, try, catch and finally, catching only what you can handle and rethrowing, custom error classes with extra fields, error causes, errors as values, AggregateError, Error.isError, validating input, logging errors safely | 35–36 |
+| 19 | [Iterators and generators](lessons/19-iterators-and-generators.md) | the iteration protocol, Symbol.iterator, iterators and next(), making classes iterable, generator functions and yield, pausing and lazy evaluation, infinite sequences, iterator helpers (map, filter, take, drop, flatMap, reduce, toArray), Iterator.from, when laziness pays off, async generators | 37–38 |
+| 20 | [Regular expressions](lessons/20-regular-expressions.md) | regex literals and the RegExp constructor, literal characters, character classes, quantifiers, anchors and word boundaries, alternation, flags (g, i, m, s, u, v, y, d), test, match, matchAll, replace and split, capturing, named and non-capturing groups, replacement strings and functions, greedy versus lazy quantifiers, lookahead and lookbehind, Unicode property escapes, RegExp.escape, catastrophic backtracking, when to use a parser instead | 39–40 |
 
 ## Running it on your own computer
 
