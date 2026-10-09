@@ -240,11 +240,115 @@ function makeEnv(parts, stdin) {
     for (const [id, kind] of active) (kind === "interval" ? realClearInterval : realClear)(id);
     active.clear();
   };
+  const fetch = makeFakeShop((fn, ms) => {
+    const id = setTimeout(fn, ms);
+    return { cancel: () => clearTimeout(id) };
+  });
   return {
-    console, prompt, setTimeout, clearTimeout, setInterval, clearInterval, active, clearAll,
+    console, prompt, setTimeout, clearTimeout, setInterval, clearInterval, active, clearAll, fetch,
     takeErrors: () => { const e = errors; errors = []; return e; },
     addError: (e) => errors.push(e),
     push,
+  };
+}
+
+/* ---------------------------------------------------------------- a pretend web API for the async lessons
+
+   fetch("https://shop.example/api/...") is answered here, in the sandbox, after a short delay, so lessons can
+   use the real fetch API without a server. Any other URL goes to the real network. */
+
+const PRODUCTS = [
+  { id: 1, name: "Inner tube", category: "parts", price: 600, stock: 42 },
+  { id: 2, name: "Bell", category: "accessories", price: 800, stock: 15 },
+  { id: 3, name: "Tubeless tyre", category: "parts", price: 4500, stock: 0 },
+  { id: 4, name: "Floor pump", category: "tools", price: 3200, stock: 7 },
+  { id: 5, name: "Bike lock", category: "accessories", price: 2900, stock: 22 },
+  { id: 6, name: "Puncture kit", category: "tools", price: 450, stock: 60 },
+];
+
+function makeFakeShop(schedule) {
+  const flaky = new Map();
+  const orders = [{ id: 1001, customer: "Ada", items: [{ productId: 2, qty: 1 }], total: 800 }];
+  const json = (status, body, headers = {}) =>
+    new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json", ...headers } });
+
+  function wait(ms, signal) {
+    return new Promise((resolve, reject) => {
+      if (signal?.aborted) return reject(signal.reason ?? new DOMException("The operation was aborted.", "AbortError"));
+      const id = schedule(resolve, ms);
+      signal?.addEventListener("abort", () => {
+        id.cancel();
+        reject(signal.reason ?? new DOMException("The operation was aborted.", "AbortError"));
+      }, { once: true });
+    });
+  }
+
+  async function route(url, method, body) {
+    const path = url.pathname;
+    let m;
+    if (path === "/api/products" && method === "GET") {
+      const cat = url.searchParams.get("category");
+      return json(200, cat ? PRODUCTS.filter((p) => p.category === cat) : PRODUCTS);
+    }
+    if ((m = /^\/api\/products\/(\d+)$/.exec(path)) && method === "GET") {
+      const product = PRODUCTS.find((p) => p.id === Number(m[1]));
+      return product ? json(200, product) : json(404, { error: `No product with id ${m[1]}` });
+    }
+    if (path === "/api/orders" && method === "GET") {
+      const who = url.searchParams.get("customer");
+      return json(200, who ? orders.filter((o) => o.customer === who) : orders);
+    }
+    if (path === "/api/orders" && method === "POST") {
+      let data;
+      try { data = JSON.parse(body ?? ""); } catch { return json(400, { error: "Body must be JSON" }); }
+      if (typeof data?.customer !== "string" || !data.customer.trim()) return json(400, { error: "customer is required" });
+      if (!Array.isArray(data.items) || data.items.length === 0) return json(400, { error: "items must be a non-empty array" });
+      let total = 0;
+      for (const item of data.items) {
+        const product = PRODUCTS.find((p) => p.id === item?.productId);
+        if (!product) return json(400, { error: `Unknown productId ${item?.productId}` });
+        if (!Number.isInteger(item.qty) || item.qty < 1) return json(400, { error: "qty must be a positive integer" });
+        if (item.qty > product.stock) return json(409, { error: `Only ${product.stock} ${product.name} in stock` });
+        total += product.price * item.qty;
+      }
+      const order = { id: 1001 + orders.length, customer: data.customer, items: data.items, total };
+      orders.push(order);
+      return json(201, order, { location: `/api/orders/${order.id}` });
+    }
+    if (path === "/api/flaky") {
+      const key = url.searchParams.get("key") ?? "default";
+      const failures = Number(url.searchParams.get("fail") ?? 2);
+      const seen = (flaky.get(key) ?? 0) + 1;
+      flaky.set(key, seen);
+      return seen <= failures ? json(503, { error: "Service unavailable, try again" }, { "retry-after": "0" })
+                              : json(200, { ok: true, attempt: seen });
+    }
+    if (path === "/api/stream") {
+      const words = (url.searchParams.get("text") ?? "Streaming sends a response in small pieces as it's produced.").split(" ");
+      const encoder = new TextEncoder();
+      let i = 0;
+      const stream = new ReadableStream({
+        async pull(controller) {
+          if (i >= words.length) { controller.close(); return; }
+          await wait(15);
+          controller.enqueue(encoder.encode((i ? " " : "") + words[i++]));
+        },
+      });
+      return new Response(stream, { status: 200, headers: { "content-type": "text/plain; charset=utf-8" } });
+    }
+    return json(404, { error: `Not found: ${method} ${path}` });
+  }
+
+  return async function fetch(input, init = {}) {
+    const raw = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+    let url;
+    try { url = new URL(raw, "https://shop.example"); } catch { url = null; }
+    if (!url || url.hostname !== "shop.example") return globalThis.fetch(input, init);
+    const method = (init.method ?? (input instanceof Request ? input.method : "GET")).toUpperCase();
+    const delay = url.pathname === "/api/slow" ? Number(url.searchParams.get("ms") ?? 500) : 30;
+    await wait(delay, init.signal);
+    if (url.pathname === "/api/slow") return json(200, { ok: true, waited: delay });
+    return route(url, method, typeof init.body === "string" ? init.body : undefined);
   };
 }
 
@@ -254,7 +358,7 @@ export function reportUnhandled(error) {
   if (activeEnv) activeEnv.addError({ uncaught: true, error });
 }
 
-const PARAMS = ["console", "prompt", "setTimeout", "clearTimeout", "setInterval", "clearInterval", "__extra"];
+const PARAMS = ["console", "prompt", "setTimeout", "clearTimeout", "setInterval", "clearInterval", "fetch", "__extra"];
 
 async function execute(src, stdin = "", extra = {}) {
   const parts = [];
@@ -271,7 +375,7 @@ async function execute(src, stdin = "", extra = {}) {
   }
   activeEnv = env;
   try {
-    const finished = fn(env.console, env.prompt, env.setTimeout, env.clearTimeout, env.setInterval, env.clearInterval, extra);
+    const finished = fn(env.console, env.prompt, env.setTimeout, env.clearTimeout, env.setInterval, env.clearInterval, env.fetch, extra);
     lookup = await withLimit(finished, WAIT_LIMIT_MS, "Your code is still waiting (for a promise that never settles?) after 5 s, so it was stopped.");
     // Let pending timers, promise callbacks and async work finish, like a real JavaScript program would.
     const t0 = Date.now();

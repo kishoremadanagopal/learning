@@ -1,6 +1,6 @@
 # JavaScript, TypeScript and JSON
 
-A hands-on course that starts from zero: 20 lessons on JavaScript (the language of the web), working with data and JSON, asynchronous code, building interactive pages, TypeScript, and Node.js tooling, ending with interview topics and a final project.
+A hands-on course that starts from zero: 25 lessons on JavaScript (the language of the web), working with data and JSON, asynchronous code, building interactive pages, TypeScript, and Node.js tooling, ending with interview topics and a final project.
 
 JavaScript runs every web page, and with Node.js it runs servers and tools too. JSON is how almost every API, including every LLM API, sends data. TypeScript adds types on top of JavaScript and is now the default for serious projects. Together they're essential for full-stack and AI engineers, and useful for analysts who build dashboards and automations.
 
@@ -8,9 +8,9 @@ JavaScript runs every web page, and with Node.js it runs servers and tools too. 
 
 The sandbox runs your JavaScript right in your browser, in a separate thread, so even an endless loop can be stopped. Nothing to install and no sign-up.
 
-- every lesson, with **107 examples** you can run and change
-- **40 exercises** with hidden tests, each with an approach, hints and a walkthrough
-- **80 quiz questions**, with explanations
+- every lesson, with **131 examples** you can run and change
+- **50 exercises** with hidden tests, each with an approach, hints and a walkthrough
+- **100 quiz questions**, with explanations
 - your progress and code saved in your own browser
 
 **Before you start:** nothing. Programming experience helps but isn't needed. If you already know Python, you'll move quickly: the lessons point out where JavaScript differs.
@@ -19,7 +19,7 @@ The sandbox runs your JavaScript right in your browser, in a separate thread, so
 
 | | |
 |---|---|
-| 📘 [Lessons](#lessons) | 20 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
+| 📘 [Lessons](#lessons) | 25 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
 | 📖 [Glossary](glossary.md) | every term used in the course, defined in plain English |
 | 🧾 [Cheat sheet](cheatsheet.md) | the syntax and patterns on one page, and every concept at a glance |
 
@@ -66,6 +66,16 @@ The sandbox runs your JavaScript right in your browser, in a separate thread, so
 | 18 | [Errors and error handling](lessons/18-errors.md) | throwing and the call stack, built-in error types, throw, try, catch and finally, catching only what you can handle and rethrowing, custom error classes with extra fields, error causes, errors as values, AggregateError, Error.isError, validating input, logging errors safely | 35–36 |
 | 19 | [Iterators and generators](lessons/19-iterators-and-generators.md) | the iteration protocol, Symbol.iterator, iterators and next(), making classes iterable, generator functions and yield, pausing and lazy evaluation, infinite sequences, iterator helpers (map, filter, take, drop, flatMap, reduce, toArray), Iterator.from, when laziness pays off, async generators | 37–38 |
 | 20 | [Regular expressions](lessons/20-regular-expressions.md) | regex literals and the RegExp constructor, literal characters, character classes, quantifiers, anchors and word boundaries, alternation, flags (g, i, m, s, u, v, y, d), test, match, matchAll, replace and split, capturing, named and non-capturing groups, replacement strings and functions, greedy versus lazy quantifiers, lookahead and lookbehind, Unicode property escapes, RegExp.escape, catastrophic backtracking, when to use a parser instead | 39–40 |
+
+### Part 4: Asynchronous JavaScript (Intermediate)
+
+| # | Lesson | Topics | Sandbox |
+|---|---|---|---|
+| 21 | [The event loop](lessons/21-event-loop.md) | single-threaded JavaScript, synchronous and asynchronous code, the call stack, the runtime's timers and I/O, the task (macrotask) queue, the microtask queue, why setTimeout(fn, 0) isn't immediate, blocking the main thread, Web Workers, callbacks and callback hell, debouncing and throttling | 41–42 |
+| 22 | [Promises](lessons/22-promises.md) | promise states, fulfilling and rejecting, then, catch and finally, chaining and returning values, error propagation, unhandled rejections, new Promise and promisifying callbacks, Promise.withResolvers, Promise.resolve and reject, Promise.all, allSettled, race and any, writing Promise.all yourself | 43–44 |
+| 23 | [async and await](lessons/23-async-await.md) | async functions and their promises, await, error handling with try / catch / finally, sequential versus parallel awaits, Promise.all with map, await in loops and why not forEach, top-level await, async iterables, for await, async generators, Array.fromAsync, common async mistakes | 45–46 |
+| 24 | [fetch and web APIs](lessons/24-fetch-and-apis.md) | HTTP methods, URLs, status codes, headers and bodies, APIs, fetch and Response, response.ok, reading JSON and text, why fetch doesn't reject on HTTP errors, a getJSON helper, building URLs with URL and URLSearchParams, POST with a JSON body and Content-Type, handling API error messages, CORS, keeping secret API keys on the server, the course's practice API | 47–48 |
+| 25 | [Timeouts, retries, cancellation and streaming](lessons/25-async-patterns.md) | timeouts with Promise.race, cleaning up timers, cancellation with AbortController and AbortSignal, AbortSignal.timeout and AbortSignal.any, retries with exponential backoff and jitter, which errors to retry, idempotency and idempotency keys, limiting concurrency, reading streamed responses with readers and TextDecoderStream, server-sent events and LLM streaming | 49–50 |
 
 ## Running it on your own computer
 

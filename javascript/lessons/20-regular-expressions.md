@@ -343,4 +343,4 @@ console.log(highlight("Version 1.5 (beta), not 125", "1.5"));
 </details>
 
 ---
-Previous: [Lesson 19](19-iterators-and-generators.md) · Back to the [course home](../README.md)
+Previous: [Lesson 19](19-iterators-and-generators.md) · Next: [Lesson 21: The event loop](21-event-loop.md)

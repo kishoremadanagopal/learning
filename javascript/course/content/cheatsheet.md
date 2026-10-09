@@ -134,3 +134,37 @@ text.replace(/\s+/g, " ")   text.matchAll(/…/g)   new RegExp(RegExp.escape(ter
 | `(?<name>…) (?:…)` | named group, non-capturing group |
 | `(?=…) (?!…) (?<=…) (?<!…)` | lookahead / lookbehind |
 | flags `g i m s u v` | all, ignore case, multi-line, dot matches newline, Unicode |
+
+## Asynchronous JavaScript [21–25]
+
+Order of execution: **synchronous code → all microtasks (promise callbacks) → one task (timer, event) → repeat**.
+
+```js
+const delay = (ms, v) => new Promise((resolve) => setTimeout(() => resolve(v), ms));
+p.then((v) => next(v)).catch((e) => handle(e)).finally(cleanUp);   // return inside then!
+
+async function load(id) {
+  const res = await fetch(`https://shop.example/api/products/${id}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);    // fetch doesn't reject on 404/500
+  return res.json();
+}
+const [a, b] = await Promise.all([load(1), load(2)]);    // parallel
+for (const id of ids) await load(id);                    // sequential (never await in forEach)
+
+await fetch(url, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(data),
+  signal: AbortSignal.timeout(5000),                     // cancel after 5 s
+});
+const url = new URL("/api/orders", base); url.searchParams.set("customer", name);
+```
+
+| Combinator | Resolves | Rejects |
+|---|---|---|
+| `Promise.all` | all fulfil (values in order) | the first rejection |
+| `Promise.allSettled` | all settle (status per item) | never |
+| `Promise.race` | the first to settle | the first to settle |
+| `Promise.any` | the first to fulfil | all reject (AggregateError) |
+
+Retry temporary failures (network, timeouts, 429, 5xx) with exponential backoff and jitter; don't retry 4xx errors or non-idempotent requests.

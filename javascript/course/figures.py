@@ -151,6 +151,31 @@ def references_fig():
 
 
 
+# ---------------------------------------------------------------- Part 4: asynchronous JavaScript
+
+@fig("event-loop")
+def event_loop_fig():
+    f, ax = diag.canvas(11.0, 4.8)
+    sbox(ax, 0.3, 1.0, 2.4, 2.9, "", color=BLUE)
+    label(ax, 1.5, 3.6, "call stack", size=10.5, bold=True, color=BLUE)
+    for i, t in enumerate(["main()", "handleClick()", "render()"]):
+        sbox(ax, 0.55, 1.25 + i * 0.7, 1.9, 0.5, t, color=GREY, mono=True, fontsize=8.5)
+    sbox(ax, 4.1, 2.6, 2.9, 1.3, "", color=PURPLE)
+    label(ax, 5.55, 3.62, "runtime (browser / Node.js)", size=9.5, bold=True, color=PURPLE)
+    label(ax, 5.55, 3.05, "timers · network · events", size=9, color=MUTED)
+    arrow(ax, 2.75, 3.3, 4.05, 3.3, color=INK)
+    label(ax, 3.4, 3.55, "setTimeout, fetch", size=8, color=MUTED)
+    sbox(ax, 8.0, 3.0, 2.7, 0.8, "microtask queue\npromise callbacks", color=TEAL, fontsize=8.5)
+    sbox(ax, 8.0, 1.6, 2.7, 0.8, "task queue\ntimers, events, I/O", color=ORANGE, fontsize=8.5)
+    arrow(ax, 7.05, 3.1, 7.95, 3.35, color=TEAL)
+    arrow(ax, 7.05, 2.75, 7.95, 2.05, color=ORANGE)
+    ax.add_patch(FancyArrowPatch((9.35, 1.55), (2.0, 0.95), arrowstyle="-|>", mutation_scale=14, color=INK,
+                                 linewidth=1.5, connectionstyle="arc3,rad=-0.25"))
+    label(ax, 5.8, 0.25, "event loop: when the stack is empty, run ALL microtasks, then ONE task, repeat", size=9.5, bold=True)
+    return f
+
+
+
 def main(names):
     OUT.mkdir(exist_ok=True)
     for name in names or FIGS:

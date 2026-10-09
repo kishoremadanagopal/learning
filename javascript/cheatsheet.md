@@ -135,6 +135,40 @@ text.replace(/\s+/g, " ")   text.matchAll(/…/g)   new RegExp(RegExp.escape(ter
 | `(?=…) (?!…) (?<=…) (?<!…)` | lookahead / lookbehind |
 | flags `g i m s u v` | all, ignore case, multi-line, dot matches newline, Unicode |
 
+## Asynchronous JavaScript [21–25]
+
+Order of execution: **synchronous code → all microtasks (promise callbacks) → one task (timer, event) → repeat**.
+
+```js
+const delay = (ms, v) => new Promise((resolve) => setTimeout(() => resolve(v), ms));
+p.then((v) => next(v)).catch((e) => handle(e)).finally(cleanUp);   // return inside then!
+
+async function load(id) {
+  const res = await fetch(`https://shop.example/api/products/${id}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);    // fetch doesn't reject on 404/500
+  return res.json();
+}
+const [a, b] = await Promise.all([load(1), load(2)]);    // parallel
+for (const id of ids) await load(id);                    // sequential (never await in forEach)
+
+await fetch(url, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(data),
+  signal: AbortSignal.timeout(5000),                     // cancel after 5 s
+});
+const url = new URL("/api/orders", base); url.searchParams.set("customer", name);
+```
+
+| Combinator | Resolves | Rejects |
+|---|---|---|
+| `Promise.all` | all fulfil (values in order) | the first rejection |
+| `Promise.allSettled` | all settle (status per item) | never |
+| `Promise.race` | the first to settle | the first to settle |
+| `Promise.any` | the first to fulfil | all reject (AggregateError) |
+
+Retry temporary failures (network, timeouts, 429, 5xx) with exponential backoff and jitter; don't retry 4xx errors or non-idempotent requests.
+
 ## Every concept at a glance
 
 Generated from the **At a glance** table at the end of each lesson. The number in brackets links to the lesson.
@@ -217,3 +251,21 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | All matches with groups | text.matchAll(/(?<name>…)/g) | O(n) typically | O(matches) | [20](lessons/20-regular-expressions.md) |
 | Replace with logic | text.replace(/…/g, (m, …groups) => …) | O(n) | O(n) | [20](lessons/20-regular-expressions.md) |
 | Search for user text | new RegExp(RegExp.escape(term), "gi") | O(n) | O(term) | [20](lessons/20-regular-expressions.md) |
+| Order of execution | sync code → all microtasks → one task → repeat | — | — | [21](lessons/21-event-loop.md) |
+| Heavy computation | move it to a Web Worker | O(work) off the main thread | O(data copied) | [21](lessons/21-event-loop.md) |
+| Debounce | clear the pending timer; set a new one | O(1) per call | O(1) | [21](lessons/21-event-loop.md) |
+| Wait for several | await Promise.all([a, b, c]) | max of their times | O(n) | [22](lessons/22-promises.md) |
+| Keep every outcome | Promise.allSettled(ps) | max of their times | O(n) | [22](lessons/22-promises.md) |
+| Wrap a callback API | new Promise((resolve, reject) => …) | O(1) | O(1) | [22](lessons/22-promises.md) |
+| Independent work | await Promise.all(items.map(async (x) => …)) | slowest item | O(n) | [23](lessons/23-async-await.md) |
+| Dependent steps | const a = await f(); const b = await g(a) | sum of steps | O(1) | [23](lessons/23-async-await.md) |
+| One at a time | for (const job of jobs) await job() | sum of jobs | O(1) | [23](lessons/23-async-await.md) |
+| Values over time | for await (const x of source) | O(items) | O(1) | [23](lessons/23-async-await.md) |
+| Read JSON | const res = await fetch(url); if (!res.ok) throw …; await res.json() | one request | O(body) | [24](lessons/24-fetch-and-apis.md) |
+| Send JSON | fetch(url, { method: "POST", headers, body: JSON.stringify(data) }) | one request | O(body) | [24](lessons/24-fetch-and-apis.md) |
+| Safe URLs | new URL(path, base) with searchParams.set | O(length) | O(length) | [24](lessons/24-fetch-and-apis.md) |
+| Timeout | Promise.race([op, timer]).finally(clear) | O(1) | O(1) | [25](lessons/25-async-patterns.md) |
+| Cancel | fetch(url, { signal: AbortSignal.timeout(ms) }) | O(1) | O(1) | [25](lessons/25-async-patterns.md) |
+| Retry | loop: try return await fn(); wait base × 2^(n − 1) | O(attempts) calls | O(1) | [25](lessons/25-async-patterns.md) |
+| Limit concurrency | n workers pulling from a shared index | O(items) | O(n) | [25](lessons/25-async-patterns.md) |
+| Stream | res.body.pipeThrough(new TextDecoderStream()).getReader() | O(chunks) | O(chunk) | [25](lessons/25-async-patterns.md) |
