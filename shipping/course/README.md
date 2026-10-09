@@ -1,0 +1,43 @@
+# Editing the course
+
+Everything in the folder above (the sandbox, `lessons/`, `glossary.md`, `cheatsheet.md` and `README.md`) is generated from the files here. Edit the sources, then rebuild.
+
+```bash
+pip install markdown matplotlib
+NODE_BIN=/path/to/node22-or-newer python course/build.py --test
+```
+
+`--test` runs every example and exercise with the same `shell.js` the browser sandbox uses (in Node.js, each run in a worker thread with a time limit), and fails if a solution doesn't pass its checks, a starter already passes, an exercise has no hint or walkthrough, or an example's error flag is wrong. `--show <lesson-id>` prints each example's output so you can check the lesson text matches it.
+
+| File | What it is |
+|---|---|
+| `content/part1.md` … | lesson text, examples, exercises and quizzes |
+| `content/extras*.md` | each lesson's topics, key terms, common mistakes and At-a-glance rows (task, command, what it changes, how to undo) |
+| `content/setups.md` | named setup scripts (`## name` + a sh block) that prepare a sandbox before an example or exercise |
+| `content/cheatsheet.md` | the cheat sheet |
+| `figures.py` | draws the lesson diagrams in `figures/` |
+| `shell.js` | the sandbox terminal: an in-memory file system, a small shell, and git's command-line interface on top of isomorphic-git; later parts register simulated tools |
+| `gitlib.js` | isomorphic-git 1.42.2 with a Buffer polyfill, bundled with esbuild (`esbuild entry.js --bundle --format=esm --minify --inject:shim.js`) |
+| `runner.js` | runs JavaScript examples and checks (shared with the JavaScript course) |
+| `harness.mjs` | the Node.js test harness |
+| `page.html`, `app.js`, `worker.js` | the sandbox page, its logic, and the Web Worker that runs commands |
+| `build.py` | builds everything and tests the lesson code |
+
+## Fences
+
+| Fence | Becomes |
+|---|---|
+| ```` ```sh ```` | a runnable terminal example; ```` ```sh setup=name ```` starts from a named setup; ```` ```sh error ```` expects the last command to fail |
+| ```` ```bash ```` , ```` ```yaml ````, ```` ```dockerfile ```` … | shown, not run |
+| ```` ```text ```` | output shown as text |
+
+Exercises: ```` ```sh starter ```` (optionally `setup=name`), ```` ```sh setup ```` (an exercise-specific setup), ```` ```sh solution ````, and a ```` ```js check ```` that runs after the learner's commands with these helpers:
+
+| Helper | Use |
+|---|---|
+| `await repo(path?)` | the Git repository (the one the learner is in, by default): `log()`, `files(ref)`, `staged()`, `status()`, `branch()`, `branches()`, `tags()`, `resolve(ref)`, `config(key)`, `read(path)`, `exists(path)`, `ignored(path)` |
+| `await sh("git status -s")` | run more commands in the same sandbox and get their output |
+| `read(path)`, `exists(path)`, `isDir(path)` | files (paths relative to the final directory, or `~/…`) |
+| `ran(/git add/)`, `commands()` | what the learner typed |
+| `same(actual, expected, "what")`, `printed("text")` | comparisons; output |
+| `globalConfig(key)`, `cwd()` | the global git config and the final directory |
