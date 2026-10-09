@@ -146,7 +146,7 @@ const HINTS = {
 
 function report(e, src, lineHint) {
   if (!(e instanceof Error)) return `Uncaught ${inspect(e, 2, new Set(), false)}`;
-  const line = lineHint || errorLine(e);
+  const line = lineHint === undefined ? errorLine(e) : lineHint;
   const lines = src.split("\n");
   let text = `${e.name}: ${e.message}`;
   if (line && line <= lines.length && (e.name !== "SyntaxError" || lineHint)) {
@@ -372,7 +372,15 @@ export function reportUnhandled(error) {
 
 const PARAMS = ["console", "prompt", "setTimeout", "clearTimeout", "setInterval", "clearInterval", "fetch", "__extra"];
 
-async function execute(src, stdin = "", extra = {}) {
+// view: what to show in error messages when the code that runs isn't what the learner wrote (TypeScript compiled
+// to JavaScript): { source: the learner's code, mapLine: line in the running code -> line in source, or null }.
+async function execute(src, stdin = "", extra = {}, view = null) {
+  const shownSrc = view ? view.source : src;
+  const describeError = (e) => {
+    if (!view) return report(e, src);
+    const jsLine = errorLine(e);
+    return report(e, shownSrc, jsLine ? view.mapLine(jsLine) : null);
+  };
   const parts = [];
   const env = makeEnv(parts, stdin);
   let ok = true, lookup = () => undefined;
@@ -382,7 +390,7 @@ async function execute(src, stdin = "", extra = {}) {
   try {
     fn = new AsyncFunction(...PARAMS, body);
   } catch (e) {
-    parts.push(["err", report(e, src)]);
+    parts.push(["err", describeError(e)]);
     return { ok: false, parts, lookup, env };
   }
   activeEnv = env;
@@ -403,11 +411,11 @@ async function execute(src, stdin = "", extra = {}) {
   } catch (e) {
     ok = false;
     env.clearAll();
-    parts.push(["err", report(e, src)]);
+    parts.push(["err", describeError(e)]);
   }
   for (const e of env.takeErrors()) {
     ok = false;
-    const text = e && e.uncaught ? "Uncaught (in promise) " + report(e.error, src) : report(e, src);
+    const text = e && e.uncaught ? "Uncaught (in promise) " + describeError(e.error) : describeError(e);
     parts.push(["err", (parts.length ? "\n" : "") + text]);
   }
   activeEnv = null;
@@ -422,8 +430,8 @@ function withLimit(promise, ms, message) {
   ]).finally(() => globalThis.clearTimeout(timer));
 }
 
-export async function run(src, stdin = "", extra = {}) {
-  const { ok, parts } = await execute(src, stdin, extra);
+export async function run(src, stdin = "", extra = {}, view = null) {
+  const { ok, parts } = await execute(src, stdin, extra, view);
   return { ok, parts, figures: [] };
 }
 
@@ -539,14 +547,14 @@ export class AssertionError extends Error {
   constructor(msg) { super(msg); this.name = "AssertionError"; }
 }
 
-export async function check(src, checkSrc, stdin = "", extra = {}) {
-  const { ok, parts, lookup } = await execute(src, stdin, extra);
+export async function check(src, checkSrc, stdin = "", extra = {}, view = null) {
+  const { ok, parts, lookup } = await execute(src, stdin, extra, view);
   if (!ok) {
     return { ok: false, parts, figures: [], verdict: { ok: false, msg: "Your code raised an error (see above). Fix it and check again." } };
   }
   const output = parts.filter((p) => p[0] === "out").map((p) => p[1]).join("");
   const pending = [];
-  const helpers = makeHelpers(lookup, output, src, pending);
+  const helpers = makeHelpers(lookup, output, view ? view.source : src, pending);
   const names = Object.keys(helpers);
   let verdict;
   try {

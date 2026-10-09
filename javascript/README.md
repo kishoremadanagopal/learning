@@ -1,6 +1,6 @@
 # JavaScript, TypeScript and JSON
 
-A hands-on course that starts from zero: 30 lessons on JavaScript (the language of the web), working with data and JSON, asynchronous code, building interactive pages, TypeScript, and Node.js tooling, ending with interview topics and a final project.
+A hands-on course that starts from zero: 35 lessons on JavaScript (the language of the web), working with data and JSON, asynchronous code, building interactive pages, TypeScript, and Node.js tooling, ending with interview topics and a final project.
 
 JavaScript runs every web page, and with Node.js it runs servers and tools too. JSON is how almost every API, including every LLM API, sends data. TypeScript adds types on top of JavaScript and is now the default for serious projects. Together they're essential for full-stack and AI engineers, and useful for analysts who build dashboards and automations.
 
@@ -8,9 +8,9 @@ JavaScript runs every web page, and with Node.js it runs servers and tools too. 
 
 The sandbox runs your JavaScript right in your browser, in a separate thread, so even an endless loop can be stopped, and shows the pages you build in the browser lessons in a live, sandboxed preview. Nothing to install and no sign-up.
 
-- every lesson, with **155 examples** you can run and change
-- **60 exercises** with hidden tests, each with an approach, hints and a walkthrough
-- **120 quiz questions**, with explanations
+- every lesson, with **180 examples** you can run and change
+- **70 exercises** with hidden tests, each with an approach, hints and a walkthrough
+- **140 quiz questions**, with explanations
 - your progress and code saved in your own browser
 
 **Before you start:** nothing. Programming experience helps but isn't needed. If you already know Python, you'll move quickly: the lessons point out where JavaScript differs.
@@ -19,7 +19,7 @@ The sandbox runs your JavaScript right in your browser, in a separate thread, so
 
 | | |
 |---|---|
-| 📘 [Lessons](#lessons) | 30 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
+| 📘 [Lessons](#lessons) | 35 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
 | 📖 [Glossary](glossary.md) | every term used in the course, defined in plain English |
 | 🧾 [Cheat sheet](cheatsheet.md) | the syntax and patterns on one page, and every concept at a glance |
 
@@ -86,6 +86,16 @@ The sandbox runs your JavaScript right in your browser, in a separate thread, so
 | 28 | [Events](lessons/28-events.md) | addEventListener, the event object, target and currentTarget, click, input, change, keydown and event.key, focus and blur, pointer events, default actions and preventDefault, capture and bubbling, stopPropagation, event delegation with closest, once, passive and signal options, removeEventListener, AbortController for listeners, CustomEvent and dispatchEvent, inline onclick attributes, accessible buttons | 55–56 |
 | 29 | [Forms and user input](lessons/29-forms.md) | form controls and labels, name attributes, values are strings, valueAsNumber, checked, select and radio values, form.elements, FormData, Object.fromEntries and getAll, submit buttons and type="button", the submit event and preventDefault, required, type, min, max, pattern and minlength, checkValidity, reportValidity, validity and setCustomValidity, novalidate, :user-invalid, the input event for live feedback, sending forms with fetch, disabling the button while sending, server-side validation | 57–58 |
 | 30 | [Project: a product browser](lessons/30-product-browser.md) | state and a single render function, loading, empty and error states, retry buttons, filtering loaded data in memory, debouncing search input, cancelling stale requests with AbortController, ARIA live regions, localStorage for preferences and its limits, how frameworks such as React, Vue and Svelte build on the same idea | 59–60 |
+
+### Part 6: TypeScript (Intermediate)
+
+| # | Lesson | Topics | Sandbox |
+|---|---|---|---|
+| 31 | [Why TypeScript](lessons/31-why-typescript.md) | what TypeScript is, static type checking before the code runs, the sandbox's strict type-checking, TypeScript 7.0's native compiler and TypeScript 6.0, type annotations, type inference, the basic types, arrays and tuples, literal types, any versus unknown, strict mode and strict null checks, noImplicitAny, type erasure, running TypeScript with tsc, Node.js type stripping, bundlers and editors | 61–62 |
+| 32 | [Object types, unions and narrowing](lessons/32-object-types.md) | type aliases and interfaces, optional and readonly properties, excess property checks, union types, literal types, narrowing with typeof, truthiness, equality, in, instanceof and Array.isArray, early returns, discriminated unions, exhaustiveness checks with never, null and undefined, optional chaining, typed querySelector, type assertions with as and !, satisfies | 63–64 |
+| 33 | [Typed functions and generics](lessons/33-functions-and-generics.md) | typed parameters and return types, optional and default parameters, rest parameters, function types, contextual typing of callbacks, void, generic functions and type parameters, type argument inference, constraints with extends, keyof and indexed access types, generic types, Result types, Record, utility types (Partial, Required, Readonly, Pick, Omit, ReturnType, Awaited), deriving types with typeof and as const | 65–66 |
+| 34 | [Classes, enums, modules and tsconfig](lessons/34-classes-and-tsconfig.md) | typed class fields and constructors, readonly, getters, TypeScript's private versus JavaScript's # private fields, implements, abstract classes, parameter properties, enums and their generated code, unions of literal types with as const, erasable syntax and erasableSyntaxOnly, exporting and importing types, import type, declaration files, DefinitelyTyped and @types packages, the types option, tsconfig.json for 2026, noUncheckedIndexedAccess, verbatimModuleSyntax, TypeScript 7's removed options | 67–68 |
+| 35 | [Typing data from outside](lessons/35-typing-outside-data.md) | the trust boundary, res.json() and JSON.parse returning any, generic fetch helpers and their limits, unknown in catch blocks, type guards with type predicates, assertion functions, Result types for expected failures, exceptions versus results, schema validation with Zod, inferring types from schemas, JSON Schema, OpenAPI, LLM tool arguments | 69–70 |
 
 ## Running it on your own computer
 

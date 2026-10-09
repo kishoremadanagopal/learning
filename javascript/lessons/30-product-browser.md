@@ -481,4 +481,4 @@ Open these only after a real attempt. Each one explains the solution step by ste
 </details>
 
 ---
-Previous: [Lesson 29](29-forms.md) · Back to the [course home](../README.md)
+Previous: [Lesson 29](29-forms.md) · Next: [Lesson 31: Why TypeScript](31-why-typescript.md)

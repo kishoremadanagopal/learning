@@ -209,3 +209,37 @@ form.addEventListener("submit", async (e) => {
 | `DOMContentLoaded` / `load` | HTML parsed / everything loaded |
 
 Interactive pages: keep a **state** object, write one **render()** that makes the page match it, and have event handlers change the state and call render. Show loading, empty and error states; abort stale requests.
+
+## TypeScript [31–35]
+
+```ts
+let count = 0;                                     // inferred: number
+function pounds(pence: number, symbol = "£"): string { … }
+function lineTotal(price: number, qty: number, discount?: number): number { … }
+
+type Category = "parts" | "tools";                 // union of literal types
+interface Product { readonly id: number; name: string; category: Category; salePrice?: number }
+
+type Shipping = { kind: "pickup" } | { kind: "express"; fee: number };   // discriminated union
+switch (s.kind) { case "express": s.fee; break; … default: const never_: never = s; }
+
+function first<T>(items: T[]): T | undefined { return items[0]; }        // generic
+function pluck<T, K extends keyof T>(items: T[], key: K): T[K][] { … }
+type Patch = Partial<Omit<Product, "id">>;         // also Pick, Required, Readonly, Record, ReturnType
+
+const STATUSES = ["placed", "shipped"] as const;   // instead of an enum
+type Status = (typeof STATUSES)[number];
+
+function isProduct(v: unknown): v is Product { … } // type guard: check outside data
+type Result<T> = { ok: true; value: T } | { ok: false; error: string };
+catch (err) { const msg = err instanceof Error ? err.message : String(err); }
+```
+
+| Narrow with | Example |
+|---|---|
+| `typeof` | `typeof x === "string"` |
+| truthiness / equality | `if (!c) return;` · `x === null` |
+| `in`, `instanceof`, `Array.isArray` | `"email" in x` · `d instanceof Date` |
+| a type guard | `if (isProduct(data)) …` |
+
+Avoid `any`, `as` and `!` for outside data: start from `unknown` and check. Run with `node file.ts` (type stripping, no checking: erasable syntax only), check with `tsc --noEmit`, and keep `strict` on.

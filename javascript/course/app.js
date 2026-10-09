@@ -207,7 +207,7 @@
         $("status").classList.add("ready");
         $("statusText").textContent = "JavaScript ready";
       } else if (m.type === "loading") {
-        busyLabel = "loading packages";
+        busyLabel = `loading ${m.what || "packages"} (first time only)`;
       } else if (m.type === "result" && pending && pending.id === m.id) {
         const p = pending; pending = null; p.resolve(m.result);
       }
@@ -218,11 +218,11 @@
     };
     worker.postMessage({ type: "init", files: (window.DATASETS || []).map((d) => d.name) });
   }
-  function job(type, src, check, stdin) {
+  function job(type, src, check, stdin, extra = {}) {
     return new Promise((resolve) => {
       const id = ++jobNo;
       pending = { id, resolve };
-      worker.postMessage({ type, id, code: src, check, stdin });
+      worker.postMessage({ type, id, code: src, check, stdin, lang: ctx.lang, ...extra });
     });
   }
   stopBtn.addEventListener("click", () => {
@@ -349,7 +349,7 @@
     await readyPromise;
     busyLabel = "checking";
     const t0 = performance.now();
-    const res = await job("check", code.value, ex.check, ex.stdin || stdinBox.value);
+    const res = await job("check", code.value, ex.check, ex.stdin || stdinBox.value, { typecheck: ex.typecheck || "" });
     const v = res.verdict || { ok: false, msg: res.stopped ? "Stopped before the checks finished." : "The checker couldn't run." };
     finishCheck(lesson, i, ex, v, t0, renderResult(res));
   }
@@ -507,7 +507,7 @@
     // Examples
     page.querySelectorAll(".example").forEach((el) => {
       const ex = lesson.examples[+el.dataset.ex];
-      const kind = ex.lang === "html" ? "Page" : "Example";
+      const kind = ex.lang === "html" ? "Page" : ex.lang === "ts" ? "TypeScript" : "Example";
       const tag = ex.error ? `<span class="tag warn">${kind} · raises an error</span>` : `<span class="tag">${kind}</span>`;
       el.outerHTML = `<div class="codeblock" data-ex="${el.dataset.ex}">
         <div class="codeblock-bar">${tag}${ex.stdin ? '<span class="tag">uses input</span>' : ""}<button class="run-btn" type="button" data-act="run">▶ Run</button></div>
@@ -519,7 +519,7 @@
       const ex = lesson.examples[+btn.closest(".codeblock").dataset.ex];
       ctx = { mode: "example", page: lesson.id, lang: ex.lang };
       clearActiveExercise();
-      setIdeHeader(ex.lang === "html" ? "Page example" : "Example", lesson.title);
+      setIdeHeader(ex.lang === "html" ? "Page example" : ex.lang === "ts" ? "TypeScript example" : "Example", lesson.title);
       setCode(ex.code);
       showStdin(ex.stdin);
       doRun();

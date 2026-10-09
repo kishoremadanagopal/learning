@@ -39,8 +39,10 @@ REPO_TREE = "https://github.com/kishoremadanagopal/learning/tree/main/javascript
 DATA = ROOT / "data"
 FIGURES = ROOT / "figures"
 NODE = os.environ.get("NODE_BIN", "node")
-RUNNABLE = ("js", "html")          # fences that become runnable examples (html ones run as a page in the preview)
-SANDBOX_FILES = ("app.js", "worker.js", "runner.js", "dom.js", "dom-prelude.js")
+RUNNABLE = ("js", "html", "ts")    # fences that become runnable examples (html: a page in the preview; ts: type-checked)
+SANDBOX_FILES = ("app.js", "worker.js", "runner.js", "dom.js", "dom-prelude.js", "tsrun.js")
+TS_VERSION = "6.0.3"               # the compiler the sandbox loads (worker.js) and the tests use
+TS_PACKAGE = Path(os.environ.get("TS_PACKAGE", ROOT / "node_modules" / "typescript"))
 STATIC_LANG = {"js-static": "js", "ts-static": "ts", "json": "json", "html-static": "html", "bash": "bash", "css": "css"}
 
 FENCE_RE = re.compile(r"^```([\w-]*)([^\n]*)\n(.*?)\n```[ \t]*$", re.S | re.M)
@@ -94,12 +96,14 @@ SECTION_RE = re.compile(r"^(approach|walkthrough):[ \t]*$", re.M)
 def parse_exercise(title, body):
     """An exercise: prompt, fenced starter / check / solution / slow code, then optional
     `hint:` lines (a ladder, shown one at a time), an `approach:` section and a `walkthrough:` section."""
-    ex = {"title": title.strip(), "lang": "js", "starter": "", "check": "", "solution": "", "slow": "", "stdin": "",
+    ex = {"title": title.strip(), "lang": "js", "starter": "", "check": "", "solution": "", "slow": "", "stdin": "", "typecheck": "",
           "hints": [], "_hints": [], "approach": "", "_approach": "", "walkthrough": "", "_walkthrough": ""}
 
     def grab(m):
         lang, info, code = m.group(1), m.group(2).strip(), m.group(3)
-        if lang in RUNNABLE and info in ("starter", "check", "solution", "stdin", "slow"):
+        if lang in RUNNABLE and info in ("starter", "check", "solution", "stdin", "slow", "typecheck"):
+            if info == "typecheck" and lang != "ts":
+                raise ValueError(f"Exercise {title!r}: typecheck blocks are TypeScript (```ts typecheck)")
             if info == "check" and lang != "js":
                 raise ValueError(f"Exercise {title!r}: checks are JavaScript (```js check)")
             if info in ("starter", "solution"):
@@ -468,6 +472,7 @@ Everything in the folder above (the sandbox, `lessons/`, `glossary.md`, `cheatsh
 ```bash
 pip install markdown matplotlib playwright
 playwright install chromium
+(cd course && npm install --no-save typescript@6.0.3)     # the compiler the sandbox loads, for the TypeScript lessons
 NODE_BIN=/path/to/node26 python course/build.py --test
 ```
 
@@ -483,6 +488,7 @@ NODE_BIN=/path/to/node26 python course/build.py --test
 | `harness.mjs` | the Node.js test harness |
 | `page.html`, `app.js`, `worker.js` | the sandbox page, its logic, and the Web Worker that runs the code |
 | `dom.js`, `dom-prelude.js` | the page preview: runs ```` ```html ```` examples and exercises in a sandboxed iframe |
+| `tsrun.js` | TypeScript: type-checks ```` ```ts ```` code (strict) with TypeScript 6.0.3, then runs it with `runner.js`; the worker downloads the compiler from a CDN on first use, and `build.py` writes `ts-libs.json` (its built-in type declarations) from the local package (`TS_PACKAGE` to use another folder) |
 | `build.py` | builds everything and tests the lesson code |
 
 ## Exercise checks
@@ -510,6 +516,8 @@ Exercises whose starter and solution are ```` ```html ```` pages run in the page
 | `await settle(ms)` | wait a little |
 
 `need("name")` finds functions and top-level `const`/`let` of normal (non-module) scripts.
+
+TypeScript exercises (```` ```ts starter ```` and ```` ```ts solution ````) are type-checked first: type errors fail the check. An optional ```` ```ts typecheck ```` block is appended to the learner's code and must compile too; a line after `// @ts-expect-error reason` must be a type error, which is how exercises test the learner's types. The ```` ```js check ```` then runs against the compiled JavaScript (`__source__` is the TypeScript).
 """
 
 
@@ -539,6 +547,9 @@ def assemble(data):
         h.update((ROOT / f).read_bytes())
     version = h.hexdigest()[:10]
     lessons_js += f'window.BUILD = "{version}";\n'
+    if any(l["lang"] == "ts" for les in data["lessons"] for l in les["examples"] + les["exercises"]):
+        (SITE / "ts-libs.json").parent.mkdir(exist_ok=True)
+        (SITE / "ts-libs.json").write_text(json.dumps(ts_libs(), separators=(",", ":")))
     for f in ("lessons.js", "app.js", "dom.js"):
         page = page.replace(f'src="{f}"', f'src="{f}?v={version}"')
     SITE.mkdir(exist_ok=True)
@@ -612,13 +623,40 @@ def run_page_jobs(jobs):
     return out
 
 
+def ts_libs():
+    """The TypeScript compiler's built-in declarations the sandbox needs (ES2025+ and the Web Worker globals),
+    from the local typescript package (npm install typescript@TS_VERSION, or set TS_PACKAGE to its folder)."""
+    pkg = json.loads((TS_PACKAGE / "package.json").read_text())
+    if pkg["version"] != TS_VERSION:
+        raise RuntimeError(f"{TS_PACKAGE} is TypeScript {pkg['version']}; the sandbox uses {TS_VERSION}")
+    if f'TS_VERSION = "{TS_VERSION}"' not in (ROOT / "worker.js").read_text():
+        raise RuntimeError(f"worker.js must load TypeScript {TS_VERSION}")
+    libs = {}
+    def walk(name):
+        f = f"lib.{name}.d.ts"
+        if f in libs:
+            return
+        text = (TS_PACKAGE / "lib" / f).read_text()
+        libs[f] = text
+        for ref in re.findall(r'/// <reference lib="([^"]+)" />', text):
+            walk(ref)
+    walk("esnext")
+    walk("webworker")
+    return libs
+
+
 def run_js_jobs(jobs):
     if not jobs:
         return []
     with tempfile.TemporaryDirectory(prefix="jscourse-") as tmp:
         jf, rf = Path(tmp) / "jobs.json", Path(tmp) / "results.json"
         jf.write_text(json.dumps(jobs))
-        proc = subprocess.run([NODE, str(ROOT / "harness.mjs"), str(jf), str(rf)], capture_output=True, text=True)
+        args = [NODE, str(ROOT / "harness.mjs"), str(jf), str(rf)]
+        if any(j.get("lang") == "ts" for j in jobs):
+            lf = Path(tmp) / "ts-libs.json"
+            lf.write_text(json.dumps(ts_libs()))
+            args += [str(TS_PACKAGE / "lib" / "typescript.js"), str(lf)]
+        proc = subprocess.run(args, capture_output=True, text=True)
         if proc.returncode != 0 or not rf.exists():
             raise RuntimeError(f"The Node.js harness failed (is NODE_BIN Node.js 26 or newer?):\n{proc.stderr[-2000:]}")
         return json.loads(rf.read_text())
@@ -649,9 +687,9 @@ def test(data):
             jobs.append({"type": "run", "code": ex["code"], "stdin": ex["stdin"], "lang": ex["lang"]})
             where.append(("example", l, i, ex))
         for ex in l["exercises"]:
-            jobs.append({"type": "check", "code": ex["solution"], "check": ex["check"], "stdin": ex["stdin"], "lang": ex["lang"]})
+            jobs.append({"type": "check", "code": ex["solution"], "check": ex["check"], "stdin": ex["stdin"], "lang": ex["lang"], "typecheck": ex["typecheck"]})
             where.append(("solution", l, None, ex))
-            jobs.append({"type": "check", "code": ex["starter"], "check": ex["check"], "stdin": ex["stdin"], "lang": ex["lang"]})
+            jobs.append({"type": "check", "code": ex["starter"], "check": ex["check"], "stdin": ex["stdin"], "lang": ex["lang"], "typecheck": ex["typecheck"]})
             where.append(("starter", l, None, ex))
     results = run_jobs(jobs)
     problems = 0

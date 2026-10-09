@@ -5,6 +5,7 @@ Everything in the folder above (the sandbox, `lessons/`, `glossary.md`, `cheatsh
 ```bash
 pip install markdown matplotlib playwright
 playwright install chromium
+(cd course && npm install --no-save typescript@6.0.3)     # the compiler the sandbox loads, for the TypeScript lessons
 NODE_BIN=/path/to/node26 python course/build.py --test
 ```
 
@@ -20,6 +21,7 @@ NODE_BIN=/path/to/node26 python course/build.py --test
 | `harness.mjs` | the Node.js test harness |
 | `page.html`, `app.js`, `worker.js` | the sandbox page, its logic, and the Web Worker that runs the code |
 | `dom.js`, `dom-prelude.js` | the page preview: runs ```` ```html ```` examples and exercises in a sandboxed iframe |
+| `tsrun.js` | TypeScript: type-checks ```` ```ts ```` code (strict) with TypeScript 6.0.3, then runs it with `runner.js`; the worker downloads the compiler from a CDN on first use, and `build.py` writes `ts-libs.json` (its built-in type declarations) from the local package (`TS_PACKAGE` to use another folder) |
 | `build.py` | builds everything and tests the lesson code |
 
 ## Exercise checks
@@ -47,3 +49,5 @@ Exercises whose starter and solution are ```` ```html ```` pages run in the page
 | `await settle(ms)` | wait a little |
 
 `need("name")` finds functions and top-level `const`/`let` of normal (non-module) scripts.
+
+TypeScript exercises (```` ```ts starter ```` and ```` ```ts solution ````) are type-checked first: type errors fail the check. An optional ```` ```ts typecheck ```` block is appended to the learner's code and must compile too; a line after `// @ts-expect-error reason` must be a type error, which is how exercises test the learner's types. The ```` ```js check ```` then runs against the compiled JavaScript (`__source__` is the TypeScript).

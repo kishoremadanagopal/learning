@@ -210,6 +210,40 @@ form.addEventListener("submit", async (e) => {
 
 Interactive pages: keep a **state** object, write one **render()** that makes the page match it, and have event handlers change the state and call render. Show loading, empty and error states; abort stale requests.
 
+## TypeScript [31–35]
+
+```ts
+let count = 0;                                     // inferred: number
+function pounds(pence: number, symbol = "£"): string { … }
+function lineTotal(price: number, qty: number, discount?: number): number { … }
+
+type Category = "parts" | "tools";                 // union of literal types
+interface Product { readonly id: number; name: string; category: Category; salePrice?: number }
+
+type Shipping = { kind: "pickup" } | { kind: "express"; fee: number };   // discriminated union
+switch (s.kind) { case "express": s.fee; break; … default: const never_: never = s; }
+
+function first<T>(items: T[]): T | undefined { return items[0]; }        // generic
+function pluck<T, K extends keyof T>(items: T[], key: K): T[K][] { … }
+type Patch = Partial<Omit<Product, "id">>;         // also Pick, Required, Readonly, Record, ReturnType
+
+const STATUSES = ["placed", "shipped"] as const;   // instead of an enum
+type Status = (typeof STATUSES)[number];
+
+function isProduct(v: unknown): v is Product { … } // type guard: check outside data
+type Result<T> = { ok: true; value: T } | { ok: false; error: string };
+catch (err) { const msg = err instanceof Error ? err.message : String(err); }
+```
+
+| Narrow with | Example |
+|---|---|
+| `typeof` | `typeof x === "string"` |
+| truthiness / equality | `if (!c) return;` · `x === null` |
+| `in`, `instanceof`, `Array.isArray` | `"email" in x` · `d instanceof Date` |
+| a type guard | `if (isProduct(data)) …` |
+
+Avoid `any`, `as` and `!` for outside data: start from `unknown` and check. Run with `node file.ts` (type stripping, no checking: erasable syntax only), check with `tsc --noEmit`, and keep `strict` on.
+
 ## Every concept at a glance
 
 Generated from the **At a glance** table at the end of each lesson. The number in brackets links to the lesson.
@@ -330,3 +364,18 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | Search loaded data | filter a copy, case-insensitive, on input | O(n) per search | O(matches) | [30](lessons/30-product-browser.md) |
 | Avoid stale results | abort the previous request before starting a new one | O(1) | O(1) | [30](lessons/30-product-browser.md) |
 | Remember a preference | localStorage.setItem / getItem inside try / catch | O(size) | O(size) | [30](lessons/30-product-browser.md) |
+| Type a function | annotate parameters (and the return type) | O(1) | O(1) | [31](lessons/31-why-typescript.md) |
+| Value of unknown shape | unknown, then check it | O(size of the check) | O(1) | [31](lessons/31-why-typescript.md) |
+| Run TypeScript | strip types (node, bundler); check with tsc --noEmit | O(code) | O(code) | [31](lessons/31-why-typescript.md) |
+| Variants of a thing | discriminated union + switch on the discriminant | O(1) per check | O(1) | [32](lessons/32-object-types.md) |
+| Optional value | narrow with if / ?. / ?? before use | O(1) | O(1) | [32](lessons/32-object-types.md) |
+| Check a config object | satisfies Type | compile time only | O(1) | [32](lessons/32-object-types.md) |
+| Same logic for many types | generic function with inferred type parameters | O(1) extra | O(1) | [33](lessons/33-functions-and-generics.md) |
+| Choose a property safely | K extends keyof T, result T[K] | compile time only | O(1) | [33](lessons/33-functions-and-generics.md) |
+| Related object types | Partial, Pick, Omit, Readonly | compile time only | O(1) | [33](lessons/33-functions-and-generics.md) |
+| Private state | #field (runtime) rather than private (compile time) | O(1) | O(1) | [34](lessons/34-classes-and-tsconfig.md) |
+| Fixed set of values | as const array + derived union instead of an enum | O(1) | O(values) | [34](lessons/34-classes-and-tsconfig.md) |
+| Project settings | tsconfig.json with strict and modern module options | — | — | [34](lessons/34-classes-and-tsconfig.md) |
+| Outside data | unknown → validate (guard or schema) → typed value | O(size of data) | O(1) | [35](lessons/35-typing-outside-data.md) |
+| Expected failure | return a Result union; callers check ok | O(1) | O(1) | [35](lessons/35-typing-outside-data.md) |
+| One definition, many uses | schema → type (z.infer) and JSON Schema | O(schema) | O(schema) | [35](lessons/35-typing-outside-data.md) |
