@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Learning</title>
-<meta name="description" content="Free, hands-on courses: Learn SQL, Python, data analysis with pandas, statistics, machine learning, data structures and algorithms, AI engineering with LLMs, and Java from scratch, with in-browser practice sandboxes.">
+<meta name="description" content="Free, hands-on courses: Learn SQL, Python, data analysis with pandas, statistics, machine learning, data structures and algorithms, AI engineering with LLMs, JavaScript and TypeScript, and Java from scratch, with in-browser practice sandboxes.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
 <style>
@@ -30,6 +30,8 @@
   --dsa-soft: #e3f2e4;
   --ai: #7e22ce;
   --ai-soft: #f3e8ff;
+  --js: #a15c07;
+  --js-soft: #fdf3d8;
   --java: #c25e0a;
   --java-soft: #fbeadb;
   --java-blue: #3a6d96;
@@ -41,13 +43,13 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0f1418; --surface: #161d23; --ink: #e2e8ee; --muted: #93a0ae; --line: #27313b;
-    --sql: #38bfa8; --sql-soft: #16332d; --py: #79aee0; --py-soft: #1b2a3b; --py-yellow: #f2c94c; --data: #a99cf0; --data-soft: #262041; --stats: #5fd3c4; --stats-soft: #15302d; --ml: #f08bb0; --ml-soft: #3a1a26; --dsa: #7cc982; --dsa-soft: #1a2e1c; --ai: #c99cf5; --ai-soft: #2a1a3d; --java: #f5a25d; --java-soft: #33241a; --java-blue: #79aee0; --on-accent: #0b1418;
+    --sql: #38bfa8; --sql-soft: #16332d; --py: #79aee0; --py-soft: #1b2a3b; --py-yellow: #f2c94c; --data: #a99cf0; --data-soft: #262041; --stats: #5fd3c4; --stats-soft: #15302d; --ml: #f08bb0; --ml-soft: #3a1a26; --dsa: #7cc982; --dsa-soft: #1a2e1c; --ai: #c99cf5; --ai-soft: #2a1a3d; --js: #f2c14e; --js-soft: #33290f; --java: #f5a25d; --java-soft: #33241a; --java-blue: #79aee0; --on-accent: #0b1418;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0f1418; --surface: #161d23; --ink: #e2e8ee; --muted: #93a0ae; --line: #27313b;
-  --sql: #38bfa8; --sql-soft: #16332d; --py: #79aee0; --py-soft: #1b2a3b; --py-yellow: #f2c94c; --data: #a99cf0; --data-soft: #262041; --stats: #5fd3c4; --stats-soft: #15302d; --ml: #f08bb0; --ml-soft: #3a1a26; --dsa: #7cc982; --dsa-soft: #1a2e1c; --ai: #c99cf5; --ai-soft: #2a1a3d; --java: #f5a25d; --java-soft: #33241a; --java-blue: #79aee0; --on-accent: #0b1418;
+  --sql: #38bfa8; --sql-soft: #16332d; --py: #79aee0; --py-soft: #1b2a3b; --py-yellow: #f2c94c; --data: #a99cf0; --data-soft: #262041; --stats: #5fd3c4; --stats-soft: #15302d; --ml: #f08bb0; --ml-soft: #3a1a26; --dsa: #7cc982; --dsa-soft: #1a2e1c; --ai: #c99cf5; --ai-soft: #2a1a3d; --js: #f2c14e; --js-soft: #33290f; --java: #f5a25d; --java-soft: #33241a; --java-blue: #79aee0; --on-accent: #0b1418;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -69,6 +71,8 @@ header p { margin: 0; font-size: 18px; color: var(--muted); }
 .course.ml { --accent: var(--ml); --soft: var(--ml-soft); }
 .course.dsa { --accent: var(--dsa); --soft: var(--dsa-soft); }
 .course.ai { --accent: var(--ai); --soft: var(--ai-soft); }
+.course.js { --accent: var(--js); --soft: var(--js-soft); }
+.course:last-child:nth-child(odd), .order div:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .course.java { --accent: var(--java); --soft: var(--java-soft); }
 .course.java::before { background: linear-gradient(90deg, var(--java) 0 60%, var(--java-blue) 60%); }
 .course.py::before { background: linear-gradient(90deg, var(--py) 0 60%, var(--py-yellow) 60%); }
@@ -201,6 +205,20 @@ reply = model(prompt(docs, question))
       </div>
     </article>
 
+    <article class="course js">
+      <pre class="sample" aria-hidden="true"><b>const</b> res = <b>await</b> fetch("/api/products");
+<b>const</b> data: <b>unknown</b> = <b>await</b> res.json();
+<b>if</b> (isProduct(data)) render(data);
+<span>→ typed, checked, on the page</span></pre>
+      <h2>JavaScript, TypeScript and JSON</h2>
+      <p>The language of the web, from zero: data and JSON, async code and APIs, interactive pages with a live preview, TypeScript, Node.js and testing, interview topics, and a final project that builds an AI shopping assistant with tools.</p>
+      <div class="facts"><span><b>45</b> lessons</span><span><b>90</b> exercises</span><span><b>180</b> quiz questions</span><span>live page preview</span></div>
+      <div class="actions">
+        <a class="primary" href="javascript/">Open the JavaScript course</a>
+        <a class="secondary" href="https://github.com/kishoremadanagopal/learning/tree/main/javascript#lessons">Read the lessons</a>
+      </div>
+    </article>
+
     <article class="course java">
       <pre class="sample" aria-hidden="true"><b>record</b> Point(<b>int</b> x, <b>int</b> y) {}
 
@@ -220,6 +238,7 @@ System.out.println(p);</pre>
     <div><b>New to programming?</b><span>Start with Python. It teaches how programs think: variables, decisions, loops and functions.</span></div>
     <div><b>Working with data or AI?</b><span>Learn SQL and Python, then Python for Data, Statistics, Machine Learning and Data Structures and Algorithms: the shared core of analyst and AI engineer roles.</span></div>
     <div><b>Building with LLMs?</b><span>After Python, take AI Engineering: prompts, RAG, agents and evals, all practised in the browser without an API key.</span></div>
+    <div><b>Building for the web?</b><span>Take JavaScript, TypeScript and JSON: web pages, APIs, Node.js and typed code, ending with an LLM-powered assistant.</span></div>
     <div><b>Aiming for software jobs?</b><span>Add Java. It powers backends, Android and enterprise systems, and teaches object-oriented design properly.</span></div>
   </section>
 

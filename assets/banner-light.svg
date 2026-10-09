@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-label="Learning: SQL, Python, pandas, machine learning, data structures and algorithms, AI engineering with LLMs, and Java from scratch">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-label="Learning: SQL, Python, pandas, machine learning, data structures and algorithms, AI engineering with LLMs, JavaScript and TypeScript, and Java from scratch">
   <defs>
     <pattern id="g" width="32" height="32" patternUnits="userSpaceOnUse">
       <path d="M32 0H0V32" fill="none" stroke="#e3e8ec" stroke-width="1"/>
@@ -15,10 +15,10 @@
 
   <text x="64" y="92" font-family="'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="16" font-weight="600" letter-spacing="3" fill="#5b697b">FREE · HANDS-ON · RUNS IN YOUR BROWSER</text>
   <text x="60" y="186" font-family="'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="96" font-weight="800" letter-spacing="-3" fill="#16202b">Learning</text>
-  <text x="64" y="236" font-family="'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="23" fill="#5b697b">Learn <tspan fill="#0e7466" font-weight="700">SQL</tspan>, <tspan fill="#2c679c" font-weight="700">Python</tspan>, <tspan fill="#4b3ca8" font-weight="700">pandas</tspan>, <tspan fill="#b42357" font-weight="700">ML</tspan>, <tspan fill="#2e7d32" font-weight="700">DSA</tspan>, <tspan fill="#7e22ce" font-weight="700">AI</tspan> and <tspan fill="#e8730c" font-weight="700">Java</tspan> from scratch.</text>
+  <text x="64" y="236" font-family="'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="22" fill="#5b697b">Learn <tspan fill="#0e7466" font-weight="700">SQL</tspan>, <tspan fill="#2c679c" font-weight="700">Python</tspan>, <tspan fill="#4b3ca8" font-weight="700">pandas</tspan>, <tspan fill="#b42357" font-weight="700">ML</tspan>, <tspan fill="#2e7d32" font-weight="700">DSA</tspan>, <tspan fill="#7e22ce" font-weight="700">AI</tspan>, <tspan fill="#a15c07" font-weight="700">JS</tspan> and <tspan fill="#e8730c" font-weight="700">Java</tspan> from scratch.</text>
   <g font-family="'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="17" fill="#5b697b">
-    <text x="64" y="292"><tspan fill="#16202b" font-weight="700">256</tspan> lessons</text>
-    <text x="190" y="292"><tspan fill="#16202b" font-weight="700">558</tspan> auto-checked exercises</text>
+    <text x="64" y="292"><tspan fill="#16202b" font-weight="700">301</tspan> lessons</text>
+    <text x="190" y="292"><tspan fill="#16202b" font-weight="700">648</tspan> auto-checked exercises</text>
     <text x="442" y="292"><tspan fill="#16202b" font-weight="700">0</tspan> installs</text>
   </g>
 
