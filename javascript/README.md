@@ -1,6 +1,6 @@
 # JavaScript, TypeScript and JSON
 
-A hands-on course that starts from zero: 40 lessons on JavaScript (the language of the web), working with data and JSON, asynchronous code, building interactive pages, TypeScript, and Node.js tooling, ending with interview topics and a final project.
+A hands-on course that starts from zero: 45 lessons on JavaScript (the language of the web), working with data and JSON, asynchronous code, building interactive pages, TypeScript, and Node.js tooling, ending with interview topics and a final project.
 
 JavaScript runs every web page, and with Node.js it runs servers and tools too. JSON is how almost every API, including every LLM API, sends data. TypeScript adds types on top of JavaScript and is now the default for serious projects. Together they're essential for full-stack and AI engineers, and useful for analysts who build dashboards and automations.
 
@@ -8,9 +8,9 @@ JavaScript runs every web page, and with Node.js it runs servers and tools too. 
 
 The sandbox runs your JavaScript right in your browser, in a separate thread, so even an endless loop can be stopped, and shows the pages you build in the browser lessons in a live, sandboxed preview. Nothing to install and no sign-up.
 
-- every lesson, with **193 examples** you can run and change
-- **80 exercises** with hidden tests, each with an approach, hints and a walkthrough
-- **160 quiz questions**, with explanations
+- every lesson, with **209 examples** you can run and change
+- **90 exercises** with hidden tests, each with an approach, hints and a walkthrough
+- **180 quiz questions**, with explanations
 - your progress and code saved in your own browser
 
 **Before you start:** nothing. Programming experience helps but isn't needed. If you already know Python, you'll move quickly: the lessons point out where JavaScript differs.
@@ -19,7 +19,7 @@ The sandbox runs your JavaScript right in your browser, in a separate thread, so
 
 | | |
 |---|---|
-| 📘 [Lessons](#lessons) | 40 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
+| 📘 [Lessons](#lessons) | 45 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
 | 📖 [Glossary](glossary.md) | every term used in the course, defined in plain English |
 | 🧾 [Cheat sheet](cheatsheet.md) | the syntax and patterns on one page, and every concept at a glance |
 
@@ -106,6 +106,16 @@ The sandbox runs your JavaScript right in your browser, in a separate thread, so
 | 38 | [Formatting, linting and bundling](lessons/38-formatting-linting-bundling.md) | formatters and Prettier, linters and ESLint 10's flat config, rules and --fix, typescript-eslint, Biome and Oxlint, abstract syntax trees and how rules work, type-checking with tsc --noEmit, bundlers and module graphs, tree shaking, minification, transpiling, content hashes and caching, source maps, Vite 8 and Rolldown, hot module replacement, esbuild and webpack, running all checks in CI | 75–76 |
 | 39 | [Testing your code](lessons/39-testing.md) | why automated tests, unit, integration and end-to-end tests, the test pyramid, node:test and node --test, node:assert/strict, test, describe and it, equal, deepEqual, ok, match, throws and rejects, async tests, arrange-act-assert, choosing test cases and edge cases, testing behaviour not implementation, mutation testing, dependency injection, test doubles, mock functions and fake timers, Vitest, Jest and Playwright, coverage, test-driven development | 77–78 |
 | 40 | [A small web server and API](lessons/40-web-server.md) | HTTP servers, node:http and createServer, web-standard Request and Response handlers, Response.json, routing on method and path, path parameters, query strings, reading JSON bodies, validating input, status codes (200, 201, 204, 400, 401, 403, 404, 405, 409, 500), frameworks (Express 5, Fastify, Hono, full-stack frameworks), middleware as handler wrappers, error handling, logging, CORS and preflight requests, configuration and secrets, running servers in production | 79–80 |
+
+### Part 8: Projects and interviews (Advanced)
+
+| # | Lesson | Topics | Sandbox |
+|---|---|---|---|
+| 41 | [Interview topics: scope, closures and this](lessons/41-scope-closures-this.md) | var, let and const, hoisting, the temporal dead zone, closures, the loop-and-closure puzzle, private state with closures, the four rules for this, arrow functions and this, call, apply and bind, losing this in callbacks, prototypes and the prototype chain, what new does, == versus ===, typeof null and NaN, explaining answers in interviews | 81–82 |
+| 42 | [Interview coding: patterns and practice](lessons/42-interview-coding.md) | the six-step approach out loud, clarifying questions, stating complexity, common JavaScript interview tasks (debounce, throttle, Promise.all, memoize, bind, curry, deep clone, deep equality, flatten), structuredClone and flat, event-loop output puzzles, implementing an event emitter, an LRU cache with a Map, practising under interview conditions | 83–84 |
+| 43 | [Project, step 1: calling an LLM API](lessons/43-llm-api.md) | chat model APIs, the simulated Messages API, model, max_tokens, system prompts and messages, content blocks, stop reasons, token usage and cost, the official TypeScript SDK, stateless conversations and history, error types and status codes, retrying 429 and 529 with backoff and retry-after, streaming with server-sent events, buffering and parsing a stream, TextDecoder with stream mode, asking for JSON and parsing it defensively, structured outputs, keeping API keys on a server | 85–86 |
+| 44 | [Project, step 2: tools and the agent loop](lessons/44-tools-and-agents.md) | tools and why models need them, tool definitions (name, description, input_schema), tool_use and tool_result blocks, the rules for tool calls in the history, the agent loop, step limits, parallel tool calls, errors as is_error results, validating tool inputs, typing blocks with discriminated unions and Extract, confirmation before side effects, prompt injection, logging tool calls, the Model Context Protocol (MCP) | 87–88 |
+| 45 | [Final project: a typed shopping assistant](lessons/45-final-project.md) | the shopping assistant's design, types for messages, blocks and tools, a JSON Schema validator (type, properties, required, additionalProperties, items, enum, minimum, maximum, minLength), validation errors as tool results, tool implementations calling the shop API, an assistant that keeps its history between questions, testing against a deterministic simulated model, evaluating real models, turning the project into a portfolio piece | 89–90 |
 
 ## Running it on your own computer
 

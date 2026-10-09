@@ -463,4 +463,4 @@ console.log(res.status, await res.json());
 </details>
 
 ---
-Previous: [Lesson 39](39-testing.md) · Back to the [course home](../README.md)
+Previous: [Lesson 39](39-testing.md) · Next: [Lesson 41: Interview topics: scope, closures and this](41-scope-closures-this.md)

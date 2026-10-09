@@ -36,6 +36,9 @@ Check code runs after the learner's code (as an async function), with these help
 | `uses("reduce(")` | the learner's code contains this (comments ignored) |
 | `test("fn", [[args, expected, "label"], ...], {valid, key, show})` | hidden test cases (async functions are awaited); reports the first failing input |
 | `__output__`, `__source__` | everything printed, and the learner's code |
+| `fetch` | the run's pretend APIs, to see what the learner's code did there |
+
+`runner.js` also answers two pretend APIs inside the sandbox, so lessons can use `fetch` with no server: the bike shop at `https://shop.example/api/…` (products, orders, slow, flaky and streaming endpoints) and a rule-based model at `https://llm.example/v1/messages` that speaks the Messages API format (tools, tool results, streaming, errors; keys start with `sk-sim-`). Learner code can also use `test`, `describe`, `it` and `assert` (a node:test-style subset) without importing them.
 
 Exercises whose starter and solution are ```` ```html ```` pages run in the page preview; their checks (still ```` ```js check ````) run inside the page after it loads, with these extra helpers:
 

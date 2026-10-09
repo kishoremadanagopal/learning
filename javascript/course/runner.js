@@ -441,7 +441,10 @@ function makeFakeShop(schedule, realFetch = globalThis.fetch.bind(globalThis)) {
     let m;
     if (path === "/api/products" && method === "GET") {
       const cat = url.searchParams.get("category");
-      return json(200, cat ? PRODUCTS.filter((p) => p.category === cat) : PRODUCTS);
+      const q = url.searchParams.get("q")?.trim().toLowerCase();
+      const max = url.searchParams.get("maxPrice");
+      return json(200, PRODUCTS.filter((p) => (!cat || p.category === cat)
+        && (!q || p.name.toLowerCase().includes(q)) && (max === null || p.price <= Number(max))));
     }
     if ((m = /^\/api\/products\/(\d+)$/.exec(path)) && method === "GET") {
       const product = PRODUCTS.find((p) => p.id === Number(m[1]));
@@ -492,12 +495,306 @@ function makeFakeShop(schedule, realFetch = globalThis.fetch.bind(globalThis)) {
     return json(404, { error: `Not found: ${method} ${path}` });
   }
 
+  /* ---------------------------------------------------------------- a pretend LLM API for Part 8
+
+     POST https://llm.example/v1/messages is answered by a small, rule-based "model" that speaks the same request
+     and response format as Anthropic's Messages API (messages, content blocks, tools, tool_use and tool_result,
+     stop_reason, usage, and server-sent events when stream is true). It doesn't understand language: it follows
+     a few rules about the bike shop, so lessons and exercises get the same answer every time. */
+  let llmCalls = 0;
+  const flakyCalls = new Map();
+  const llmError = (status, type, message, headers = {}) => json(status, { type: "error", error: { type, message } }, headers);
+  const KEYWORDS = { tube: "tube", tubes: "tube", inner: "tube", bell: "bell", bells: "bell", tyre: "tyre", tyres: "tyre",
+                     tubeless: "tyre", pump: "pump", pumps: "pump", lock: "lock", locks: "lock", puncture: "puncture", kit: "kit" };
+  const NUMBER_WORDS = { a: 1, an: 1, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10 };
+  const pounds = (pence) => `£${(pence / 100).toFixed(2)}`;
+  const blocksOf = (content) => (typeof content === "string" ? [{ type: "text", text: content }] : Array.isArray(content) ? content : []);
+  const textOf = (message) => blocksOf(message.content).filter((b) => b.type === "text").map((b) => b.text).join("\n");
+  const toolResultText = (block) => (typeof block.content === "string" ? block.content
+    : blocksOf(block.content).filter((b) => b.type === "text").map((b) => b.text).join("\n"));
+  const tryJSON = (text) => { try { return JSON.parse(text); } catch { return undefined; } };
+
+  function validateLLMRequest(data) {
+    if (typeof data !== "object" || data === null) return "Body must be a JSON object";
+    if (typeof data.model !== "string" || !data.model) return "model: Field required";
+    if (data.max_tokens === undefined) return "max_tokens: Field required";
+    if (!Number.isInteger(data.max_tokens) || data.max_tokens < 1) return "max_tokens: must be a positive integer";
+    if (data.system !== undefined && typeof data.system !== "string") return "system: must be a string";
+    if (!Array.isArray(data.messages) || data.messages.length === 0) return "messages: at least one message is required";
+    for (const [i, m] of data.messages.entries()) {
+      if (m?.role !== "user" && m?.role !== "assistant") return `messages.${i}.role: must be "user" or "assistant"`;
+      if (typeof m.content !== "string" && !Array.isArray(m.content)) return `messages.${i}.content: must be a string or a list of content blocks`;
+      if (i === 0 && m.role !== "user") return "messages: the first message must use the \"user\" role";
+      if (i > 0 && data.messages[i - 1].role === m.role) return `messages: roles must alternate between "user" and "assistant", but messages ${i - 1} and ${i} are both "${m.role}"`;
+      const uses = blocksOf(m.content).filter((b) => b.type === "tool_use").map((b) => b.id);
+      if (uses.length) {
+        const next = data.messages[i + 1];
+        const answered = next ? blocksOf(next.content).filter((b) => b.type === "tool_result").map((b) => b.tool_use_id) : [];
+        const missing = uses.filter((id) => !answered.includes(id));
+        if (missing.length) return `messages.${i + 1}: tool_use ids were found without tool_result blocks immediately after: ${missing.join(", ")}. Each tool_use block must have a corresponding tool_result block in the next message.`;
+      }
+      for (const b of blocksOf(m.content)) {
+        if (b?.type === "tool_result") {
+          const prev = data.messages[i - 1];
+          const ids = prev ? blocksOf(prev.content).filter((x) => x.type === "tool_use").map((x) => x.id) : [];
+          if (!ids.includes(b.tool_use_id)) return `messages.${i}: unexpected tool_use_id found in tool_result blocks: ${b.tool_use_id}. Each tool_result block must have a corresponding tool_use block in the previous message.`;
+        } else if (!["text", "tool_use", "tool_result"].includes(b?.type)) {
+          return `messages.${i}.content: unsupported content block type ${JSON.stringify(b?.type)}`;
+        } else if (b.type === "text" && typeof b.text !== "string") {
+          return `messages.${i}.content: a text block needs a "text" string`;
+        }
+      }
+    }
+    if (data.messages.at(-1).role !== "user") return "messages: the last message must use the \"user\" role";
+    if (data.tools !== undefined) {
+      if (!Array.isArray(data.tools)) return "tools: must be a list";
+      for (const [i, t] of data.tools.entries()) {
+        if (typeof t?.name !== "string" || !/^[a-zA-Z0-9_-]{1,64}$/.test(t.name)) return `tools.${i}.name: must match ^[a-zA-Z0-9_-]{1,64}$`;
+        if (typeof t.input_schema !== "object" || t.input_schema === null || t.input_schema.type !== "object") return `tools.${i}.input_schema: must be a JSON Schema with "type": "object"`;
+      }
+    }
+    return null;
+  }
+
+  // What the user wants, read from their words.
+  function intentOf(text) {
+    const lower = text.toLowerCase();
+    const words = lower.split(/[^a-z0-9£]+/).filter(Boolean);
+    const productWords = [...new Set(words.map((w) => KEYWORDS[w]).filter(Boolean))];
+    const productWord = productWords[0] ?? null;
+    let qty = 1, qtyIsDozen = false;
+    const digits = /\b(\d+)\s*(?:x\s*)?(?:[a-z]+\s+)?(?:inner tubes?|bells?|tyres?|tubeless tyres?|pumps?|floor pumps?|locks?|bike locks?|puncture kits?|kits?)\b/.exec(lower);
+    if (/\ba dozen\b/.test(lower)) { qty = 12; qtyIsDozen = true; }
+    else if (digits) qty = Number(digits[1]);
+    else {
+      const w = words.find((x, i) => NUMBER_WORDS[x] && words.slice(i + 1, i + 4).some((y) => KEYWORDS[y]));
+      if (w) qty = NUMBER_WORDS[w];
+    }
+    const under = /\b(?:under|below|less than|cheaper than)\s+£?(\d+(?:\.\d+)?)/.exec(lower);
+    const customer = /\b(?:for|name is|i'm|i am)\s+([A-Z][a-z]+)\b/.exec(text);
+    return {
+      productWord, productWords, qty, qtyIsDozen,
+      maxPrice: under ? Math.round(Number(under[1]) * 100) : null,
+      order: /\b(order|buy|purchase|get me)\b/.test(lower),
+      shopQuestion: Boolean(productWord || under || /\b(price|prices|cost|costs|stock|sell|cheap|cheapest|products?)\b/.test(lower)),
+      customer: customer ? customer[1] : null,
+    };
+  }
+
+  function describeProducts(products, query) {
+    if (!Array.isArray(products) || products.length === 0) return `I couldn't find any products matching "${query}".`;
+    const one = (p) => `${p.name} (${pounds(p.price)}, ${p.stock > 0 ? `${p.stock} in stock` : "sold out"})`;
+    if (products.length === 1) {
+      const p = products[0];
+      return p.stock > 0 ? `The ${p.name} costs ${pounds(p.price)}, and we have ${p.stock} in stock.`
+                         : `The ${p.name} costs ${pounds(p.price)}, but it's sold out at the moment.`;
+    }
+    return `I found ${products.length} products: ${products.map(one).join(", ")}.`;
+  }
+
+  function plainReply(system, messages, text) {
+    const lower = text.trim().toLowerCase();
+    const userTexts = messages.filter((m) => m.role === "user").map(textOf);
+    let reply;
+    const repeat = /^repeat:\s*([\s\S]*)$/i.exec(text.trim());
+    const count = /\bcount to (\d+)\b/.exec(lower);
+    if (repeat) reply = repeat[1];
+    else if (count) reply = Array.from({ length: Math.min(Number(count[1]), 500) }, (_, i) => i + 1).join(", ");
+    else if (/\bwhat('s| is) my name\b/.test(lower)) {
+      const said = userTexts.slice(0, -1).map((t) => /\b[Mm]y name is ([A-Z][a-z]+)/.exec(t)).filter(Boolean).at(-1);
+      reply = said ? `Your name is ${said[1]}.` : "I don't know your name: you haven't told me in this conversation.";
+    } else if (/\b[Mm]y name is ([A-Z][a-z]+)/.test(text)) {
+      reply = `Nice to meet you, ${/\b[Mm]y name is ([A-Z][a-z]+)/.exec(text)[1]}!`;
+    } else if (/^(hi|hello|hey)\b/.test(lower)) reply = "Hello! How can I help you with the bike shop today?";
+    else if (/capital of france/.test(lower)) reply = "The capital of France is Paris.";
+    else {
+      const intent = intentOf(text);
+      const product = intent.productWord && PRODUCTS.find((p) => p.name.toLowerCase().includes(intent.productWord));
+      if (product && /\bjson\b/.test(lower)) {
+        reply = "Here it is:\n```json\n" + JSON.stringify({ name: product.name, price: product.price, inStock: product.stock > 0 }, null, 2) + "\n```";
+      } else if (intent.shopQuestion) {
+        reply = "I can't look that up without a tool: I don't know the shop's current prices or stock.";
+      } else {
+        reply = "I'm a small simulated model, so I only know a few things. Try asking about the bike shop's products.";
+      }
+    }
+    if (/pirate/i.test(system ?? "")) reply = "Arr! " + reply;
+    return reply;
+  }
+
+  // Decide the reply: a list of content blocks and a stop reason.
+  function respond(data) {
+    const { system, messages } = data;
+    const tools = data.tools ?? [];
+    const has = (name) => tools.some((t) => t.name === name);
+    const last = messages.at(-1);
+    const textTurns = messages.filter((m) => m.role === "user" && textOf(m).trim());
+    const question = textTurns.length ? textOf(textTurns.at(-1)) : "";
+    let toolCount = 0;
+    for (const m of messages) for (const b of blocksOf(m.content)) if (b.type === "tool_use") toolCount++;
+    const toolUses = (calls, preface) => {
+      const blocks = preface ? [{ type: "text", text: preface }] : [];
+      for (const [name, input] of calls) {
+        toolCount++;
+        blocks.push({ type: "tool_use", id: `toolu_${String(toolCount).padStart(2, "0")}`, name, input });
+      }
+      return { content: blocks, stop_reason: "tool_use" };
+    };
+    const toolUse = (name, input, preface) => toolUses([[name, input]], preface);
+    const say = (text) => ({ content: [{ type: "text", text }], stop_reason: "end_turn" });
+    const pirate = (r) => (/pirate/i.test(system ?? "") && r.content[0]?.type === "text" ? (r.content[0].text = "Arr! " + r.content[0].text, r) : r);
+
+    // The text request this task started from: if the model just asked for a name, it's the request before that.
+    const prevAssistant = messages.length > 1 ? messages.at(-2) : null;
+    const askedForName = prevAssistant && /What name should I put the order under\?$/.test(textOf(prevAssistant));
+    const results = blocksOf(last.content).filter((b) => b.type === "tool_result");
+
+    if (!tools.length) return say(plainReply(system, messages, question));
+
+    if (results.length) {
+      const calls = blocksOf(prevAssistant.content).filter((b) => b.type === "tool_use");
+      const call = calls.find((c) => c.id === results[0].tool_use_id) ?? calls[0];
+      const result = results[0];
+      const resultText = toolResultText(result);
+      const intent = intentOf(question);
+      if (result.is_error) {
+        const earlierError = messages.slice(0, -2).some((m) => blocksOf(m.content).some((b) => b.type === "tool_result" && b.is_error));
+        const fixed = Object.fromEntries(Object.entries(call.input ?? {}).map(([k, v]) => [k, typeof v === "string" && /^\d+$/.test(v) ? Number(v) : v]));
+        if (!earlierError && JSON.stringify(fixed) !== JSON.stringify(call.input)) {
+          return toolUse(call.name, fixed, "Sorry, let me fix that and try again.");
+        }
+        return pirate(say(`Sorry, I couldn't do that: ${resultText}`));
+      }
+      const value = tryJSON(resultText);
+      if (call.name === "search_products" && results.length > 1) {
+        const lists = results.map((r) => tryJSON(toolResultText(r)));
+        if (lists.some((l) => !Array.isArray(l))) return say("Sorry, I got a result I couldn't read.");
+        const seen = new Set();
+        const merged = lists.flat().filter((p) => !seen.has(p.id) && seen.add(p.id));
+        return pirate(say(describeProducts(merged, "")));
+      }
+      if (call.name === "search_products") {
+        const products = Array.isArray(value) ? value : value && Array.isArray(value.products) ? value.products : null;
+        if (!products) return say("Sorry, I got a result I couldn't read.");
+        if (intent.order && has("place_order") && products.length) {
+          const p = products.find((x) => x.stock > 0) ?? products[0];
+          if (p.stock < intent.qty) return pirate(say(`Sorry, we only have ${p.stock} ${p.name} in stock, so I can't order ${intent.qty}.`));
+          const name = intent.customer;
+          if (!name) return pirate(say("Sure! What name should I put the order under?"));
+          return toolUse("place_order", { customer: name, productId: p.id, qty: intent.qtyIsDozen ? String(intent.qty) : intent.qty });
+        }
+        return pirate(say(describeProducts(products, call.input?.query ?? "")));
+      }
+      if (call.name === "place_order" && value && typeof value.id === "number") {
+        const items = (value.items ?? []).map((it) => `${it.qty} × ${PRODUCTS.find((p) => p.id === it.productId)?.name ?? "item"}`).join(", ");
+        return pirate(say(`Done! Order ${value.id} is placed: ${items}, ${pounds(value.total)} in total.`));
+      }
+      return pirate(say(`Here's what ${call.name} returned: ${resultText}`));
+    }
+
+    // A new request (or the customer's name, if the model just asked for it).
+    if (askedForName && has("place_order")) {
+      const name = (/([A-Z][a-z]+)/.exec(question) ?? [])[1] ?? question.trim();
+      const intent = intentOf(textTurns.length > 1 ? textOf(textTurns.at(-2)) : "");
+      let product = null;
+      for (const m of messages) for (const b of blocksOf(m.content)) {
+        if (b.type === "tool_result" && !b.is_error) {
+          const v = tryJSON(toolResultText(b));
+          if (Array.isArray(v) && v.length) product = v.find((x) => x.stock > 0) ?? v[0];
+        }
+      }
+      if (product) return toolUse("place_order", { customer: name, productId: product.id, qty: intent.qtyIsDozen ? String(intent.qty) : intent.qty });
+    }
+    const intent = intentOf(question);
+    if (intent.shopQuestion && has("search_products") && !intent.order && intent.productWords.length > 1) {
+      return toolUses(intent.productWords.map((query) => ["search_products", { query }]), "Let me look those up.");
+    }
+    if (intent.shopQuestion && has("search_products")) {
+      const input = {};
+      if (intent.productWord) input.query = intent.productWord;
+      if (intent.maxPrice !== null) input.maxPrice = intent.maxPrice;
+      return toolUse("search_products", input, "Let me check the shop.");
+    }
+    return say(plainReply(system, messages, question));
+  }
+
+  const estimateTokens = (text) => Math.max(1, Math.ceil(text.length / 4));
+
+  async function llm(url, method, headers, bodyText, signal) {
+    if (url.pathname !== "/v1/messages") return llmError(404, "not_found_error", `Not found: ${method} ${url.pathname}`);
+    if (method !== "POST") return llmError(405, "invalid_request_error", `Method ${method} not allowed; use POST`);
+    const key = headers.get("x-api-key");
+    if (!key) return llmError(401, "authentication_error", "x-api-key header is required");
+    if (!key.startsWith("sk-sim-")) return llmError(401, "authentication_error", "invalid x-api-key (the simulated API accepts keys starting with sk-sim-)");
+    if (key === "sk-sim-flaky") {
+      const n = (flakyCalls.get(key) ?? 0) + 1;
+      flakyCalls.set(key, n);
+      if (n === 1) return llmError(429, "rate_limit_error", "Too many requests: please slow down", { "retry-after": "0" });
+      if (n === 2) return llmError(529, "overloaded_error", "Overloaded");
+    }
+    const data = tryJSON(bodyText ?? "");
+    if (data === undefined) return llmError(400, "invalid_request_error", "Body must be valid JSON");
+    const problem = validateLLMRequest(data);
+    if (problem) return llmError(400, "invalid_request_error", problem);
+
+    let { content, stop_reason } = respond(data);
+    const inputTokens = estimateTokens((data.system ?? "") + JSON.stringify(data.messages) + JSON.stringify(data.tools ?? []));
+    let outputTokens = estimateTokens(content.map((b) => (b.type === "text" ? b.text : JSON.stringify(b.input))).join(""));
+    if (outputTokens > data.max_tokens && content.every((b) => b.type === "text")) {
+      content = [{ type: "text", text: content.map((b) => b.text).join("").slice(0, data.max_tokens * 4) }];
+      stop_reason = "max_tokens";
+      outputTokens = data.max_tokens;
+    }
+    const id = `msg_sim_${String(++llmCalls).padStart(4, "0")}`;
+    const message = { id, type: "message", role: "assistant", model: data.model, content, stop_reason, stop_sequence: null,
+                      usage: { input_tokens: inputTokens, output_tokens: outputTokens } };
+    if (!data.stream) return json(200, message);
+
+    // Streaming: server-sent events, delivered in small chunks that don't line up with the events.
+    const events = [["message_start", { type: "message_start", message: { ...message, content: [], stop_reason: null, usage: { input_tokens: inputTokens, output_tokens: 1 } } }]];
+    content.forEach((block, index) => {
+      if (block.type === "text") {
+        events.push(["content_block_start", { type: "content_block_start", index, content_block: { type: "text", text: "" } }]);
+        for (const piece of block.text.match(/\S+\s*|\s+/g) ?? []) {
+          events.push(["content_block_delta", { type: "content_block_delta", index, delta: { type: "text_delta", text: piece } }]);
+        }
+      } else {
+        events.push(["content_block_start", { type: "content_block_start", index, content_block: { ...block, input: {} } }]);
+        const jsonText = JSON.stringify(block.input);
+        for (let i = 0; i < jsonText.length; i += 12) {
+          events.push(["content_block_delta", { type: "content_block_delta", index, delta: { type: "input_json_delta", partial_json: jsonText.slice(i, i + 12) } }]);
+        }
+      }
+      events.push(["content_block_stop", { type: "content_block_stop", index }]);
+    });
+    events.push(["message_delta", { type: "message_delta", delta: { stop_reason, stop_sequence: null }, usage: { output_tokens: outputTokens } }]);
+    events.push(["message_stop", { type: "message_stop" }]);
+    const sse = events.map(([event, payload]) => `event: ${event}\ndata: ${JSON.stringify(payload)}\n\n`).join("");
+    const bytes = new TextEncoder().encode(sse);
+    let pos = 0;
+    const stream = new ReadableStream({
+      async pull(controller) {
+        if (pos >= bytes.length) { controller.close(); return; }
+        await wait(4, signal);
+        controller.enqueue(bytes.slice(pos, pos + 37));
+        pos += 37;
+      },
+    });
+    return new Response(stream, { status: 200, headers: { "content-type": "text/event-stream; charset=utf-8" } });
+  }
+
   return async function fetch(input, init = {}) {
     const raw = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
     let url;
     try { url = new URL(raw, "https://shop.example"); } catch { url = null; }
-    if (!url || url.hostname !== "shop.example") return realFetch(input, init);
+    if (!url || (url.hostname !== "shop.example" && url.hostname !== "llm.example")) return realFetch(input, init);
     const method = (init.method ?? (input instanceof Request ? input.method : "GET")).toUpperCase();
+    if (url.hostname === "llm.example") {
+      const headers = new Headers(init.headers ?? (input instanceof Request ? input.headers : undefined));
+      const body = typeof init.body === "string" ? init.body : input instanceof Request && init.body === undefined ? await input.text() : undefined;
+      await wait(40, init.signal);
+      return llm(url, method, headers, body, init.signal);
+    }
     const delay = url.pathname === "/api/slow" ? Number(url.searchParams.get("ms") ?? 500) : 30;
     await wait(delay, init.signal);
     if (url.pathname === "/api/slow") return json(200, { ok: true, waited: delay });
@@ -697,7 +994,7 @@ export class AssertionError extends Error {
 }
 
 export async function check(src, checkSrc, stdin = "", extra = {}, view = null) {
-  const { ok, parts, lookup, testsFailed } = await execute(src, stdin, extra, view);
+  const { ok, parts, lookup, testsFailed, env } = await execute(src, stdin, extra, view);
   if (!ok) {
     const msg = testsFailed ? "Some of the tests in your code fail (see above). Make them all pass, then check again."
                             : "Your code raised an error (see above). Fix it and check again.";
@@ -705,7 +1002,8 @@ export async function check(src, checkSrc, stdin = "", extra = {}, view = null) 
   }
   const output = parts.filter((p) => p[0] === "out").map((p) => p[1]).join("");
   const pending = [];
-  const helpers = makeHelpers(lookup, output, view ? view.source : src, pending);
+  // Checks share the run's pretend APIs (fetch), so they can see what the learner's code did there.
+  const helpers = { ...makeHelpers(lookup, output, view ? view.source : src, pending), fetch: env.fetch };
   const names = Object.keys(helpers);
   let verdict;
   try {

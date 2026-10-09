@@ -280,3 +280,34 @@ const withErrors = (handler) => async (req) => {
 | `4.1.0` | exactly 4.1.0 |
 
 Commit `package-lock.json`, never `node_modules` or `.env`. Status codes: 200/201/204 success · 400 bad input · 401/403 auth · 404 not found · 405 wrong method · 409 conflict · 500 server error.
+
+## Projects and interviews [41–45]
+
+| Topic | Remember |
+|---|---|
+| hoisting | functions usable early; `var` is `undefined`; `let`/`const` throw (temporal dead zone) |
+| closures | a function keeps the variables of the scope it was created in; `let` gives each loop iteration its own |
+| `this` | set by the call: `obj.m()` → obj; `fn()` → undefined; `call`/`apply`/`bind`; `new`; arrows inherit it |
+| event loop | sync → all microtasks (`then`, after `await`) → one task (timer) → repeat |
+
+```js
+const res = await fetch("https://llm.example/v1/messages", {          // the real API: your provider's URL
+  method: "POST",
+  headers: { "content-type": "application/json", "x-api-key": KEY, "anthropic-version": "2023-06-01" },
+  body: JSON.stringify({ model, max_tokens: 1024, system, tools, messages }),
+});
+const msg = await res.json();          // { content: [blocks], stop_reason, usage }
+const text = msg.content.filter((b) => b.type === "text").map((b) => b.text).join("");
+
+// the agent loop
+for (let step = 0; step < MAX_STEPS; step++) {
+  const reply = await callModel(messages);
+  messages.push({ role: "assistant", content: reply.content });
+  if (reply.stop_reason !== "tool_use") return textOf(reply);
+  const results = [];
+  for (const b of reply.content) if (b.type === "tool_use") results.push(await runTool(b));   // validate first; errors → is_error
+  messages.push({ role: "user", content: results });
+}
+```
+
+Streaming: buffer chunks, split events on `"\n\n"`, parse `data:` lines, use `text_delta`s. Keep API keys on the server; validate model output like any outside data; confirm actions before they happen.

@@ -281,6 +281,37 @@ const withErrors = (handler) => async (req) => {
 
 Commit `package-lock.json`, never `node_modules` or `.env`. Status codes: 200/201/204 success · 400 bad input · 401/403 auth · 404 not found · 405 wrong method · 409 conflict · 500 server error.
 
+## Projects and interviews [41–45]
+
+| Topic | Remember |
+|---|---|
+| hoisting | functions usable early; `var` is `undefined`; `let`/`const` throw (temporal dead zone) |
+| closures | a function keeps the variables of the scope it was created in; `let` gives each loop iteration its own |
+| `this` | set by the call: `obj.m()` → obj; `fn()` → undefined; `call`/`apply`/`bind`; `new`; arrows inherit it |
+| event loop | sync → all microtasks (`then`, after `await`) → one task (timer) → repeat |
+
+```js
+const res = await fetch("https://llm.example/v1/messages", {          // the real API: your provider's URL
+  method: "POST",
+  headers: { "content-type": "application/json", "x-api-key": KEY, "anthropic-version": "2023-06-01" },
+  body: JSON.stringify({ model, max_tokens: 1024, system, tools, messages }),
+});
+const msg = await res.json();          // { content: [blocks], stop_reason, usage }
+const text = msg.content.filter((b) => b.type === "text").map((b) => b.text).join("");
+
+// the agent loop
+for (let step = 0; step < MAX_STEPS; step++) {
+  const reply = await callModel(messages);
+  messages.push({ role: "assistant", content: reply.content });
+  if (reply.stop_reason !== "tool_use") return textOf(reply);
+  const results = [];
+  for (const b of reply.content) if (b.type === "tool_use") results.push(await runTool(b));   // validate first; errors → is_error
+  messages.push({ role: "user", content: results });
+}
+```
+
+Streaming: buffer chunks, split events on `"\n\n"`, parse `data:` lines, use `text_delta`s. Keep API keys on the server; validate model output like any outside data; confirm actions before they happen.
+
 ## Every concept at a glance
 
 Generated from the **At a glance** table at the end of each lesson. The number in brackets links to the lesson.
@@ -431,3 +462,18 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | Answer requests | handler(Request) → Response, route on path then method | O(routes) per request | O(1) | [40](lessons/40-web-server.md) |
 | Accept data | await request.json() in try/catch, validate, 400 on failure | O(body) | O(body) | [40](lessons/40-web-server.md) |
 | Shared behaviour | middleware: (handler) => wrapped handler | O(layers) | O(1) | [40](lessons/40-web-server.md) |
+| Private state | closure over variables in a factory function | O(1) | O(state) | [41](lessons/41-scope-closures-this.md) |
+| Fix this for a callback | arrow function or fn.bind(obj) | O(1) | O(1) | [41](lessons/41-scope-closures-this.md) |
+| Cache results | memoize with a Map keyed by the arguments | O(1) per repeated call | O(distinct calls) | [41](lessons/41-scope-closures-this.md) |
+| Event emitter | Map of event → array of listeners; emit over a copy | O(listeners) per emit | O(listeners) | [42](lessons/42-interview-coding.md) |
+| LRU cache | Map insertion order; delete + set to mark use; evict first key | O(1) per get/set | O(capacity) | [42](lessons/42-interview-coding.md) |
+| Flatten | recursion or arr.flat(Infinity) | O(total items) | O(total items) | [42](lessons/42-interview-coding.md) |
+| One reply | POST messages → check status → join text blocks | O(reply) | O(history) | [43](lessons/43-llm-api.md) |
+| Conversation | resend the full history each turn | O(history) per turn | O(history) | [43](lessons/43-llm-api.md) |
+| Stream | buffer chunks, split on blank lines, parse data lines | O(reply) | O(one event) | [43](lessons/43-llm-api.md) |
+| Answer a tool call | look up by name, run, wrap the result (or the error) in a tool_result | O(tool) | O(result) | [44](lessons/44-tools-and-agents.md) |
+| Agent loop | call → append → run every tool_use → append results → repeat, up to a limit | O(steps × history) | O(history) | [44](lessons/44-tools-and-agents.md) |
+| Unsafe actions | confirmation step + limits in code | — | — | [44](lessons/44-tools-and-agents.md) |
+| Check model input | recursive validate(schema, value, path) | O(size of value) | O(depth + errors) | [45](lessons/45-final-project.md) |
+| Remember a conversation | closure holding messages, appended by each ask | O(history) per question | O(history) | [45](lessons/45-final-project.md) |
+| Recover from bad input | validation errors as is_error tool results; the model retries | O(retries) | O(1) | [45](lessons/45-final-project.md) |
