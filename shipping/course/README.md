@@ -17,6 +17,7 @@ NODE_BIN=/path/to/node22-or-newer python course/build.py --test
 | `content/cheatsheet.md` | the cheat sheet |
 | `figures.py` | draws the lesson diagrams in `figures/` |
 | `shell.js` | the sandbox terminal: an in-memory file system, a small shell, and git's command-line interface on top of isomorphic-git; later parts register simulated tools |
+| `github.js` | everything with more than one repository: clone, remote, fetch, push, pull, rebase, cherry-pick, and the pretend GitHub with the `gh` command (repositories live under `/github.com/<owner>/<name>`; you're signed in as `ada`, with a second account `grace`) |
 | `gitlib.js` | isomorphic-git 1.42.2 with a Buffer polyfill, bundled with esbuild (`esbuild entry.js --bundle --format=esm --minify --inject:shim.js`) |
 | `runner.js` | runs JavaScript examples and checks (shared with the JavaScript course) |
 | `harness.mjs` | the Node.js test harness |
@@ -35,7 +36,8 @@ Exercises: ```` ```sh starter ```` (optionally `setup=name`), ```` ```sh setup `
 
 | Helper | Use |
 |---|---|
-| `await repo(path?)` | the Git repository (the one the learner is in, by default): `log()`, `files(ref)`, `staged()`, `status()`, `branch()`, `branches()`, `tags()`, `resolve(ref)`, `config(key)`, `read(path)`, `exists(path)`, `ignored(path)` |
+| `await repo(path?)` | the Git repository (the one the learner is in, by default): `log(ref)`, `files(ref)`, `staged()`, `status()`, `branch()`, `branches()`, `tags()`, `resolve(ref)`, `config(key)`, `read(path)`, `exists(path)`, `ignored(path)`, `upstream(branch)`, `remotes()`, `remoteBranches()`, `tracking(branch)` (`{upstream, ahead, behind, gone}`), `inProgress()` (`merge`, `rebase`, `cherry-pick` or null) |
+| `await github("owner/name")` | a repository on the pretend GitHub: `log(ref)`, `files(ref)`, `branches()`, `resolve(ref)`, `tags()`, `tag(name)` (`{annotated, commit, message}`), `pulls()`, `rulesets()`, `releases()`, `defaultBranch` |
 | `await sh("git status -s")` | run more commands in the same sandbox and get their output |
 | `read(path)`, `exists(path)`, `isDir(path)` | files (paths relative to the final directory, or `~/…`) |
 | `ran(/git add/)`, `commands()` | what the learner typed |

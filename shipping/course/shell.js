@@ -13,6 +13,7 @@
    commit hashes in lessons are the same every time. */
 
 import { git, Buffer } from "./gitlib.js";
+import { installGitHub } from "./github.js";
 
 const HOME = "/home/learner";
 const START = Date.UTC(2026, 9, 1, 9, 0, 0) / 1000;      // 1 October 2026, 09:00 UTC
@@ -144,13 +145,13 @@ export function tokenize(line) {
   const tokens = [];
   let i = 0, word = null;
   const push = () => { if (word !== null) { tokens.push(word); word = null; } };
-  const OPS = ["2>&1", "&&", "||", ">>", "<<-", "<<", ";", "|", ">"];
+  const OPS = ["2>&1", "2>", "&&", "||", ">>", "<<-", "<<", ";", "|", ">"];
   outer: while (i < line.length) {
     const c = line[i];
     if (c === " " || c === "\t") { push(); i++; continue; }
     if (c === "#" && word === null) break;
     for (const op of OPS) {
-      if (line.startsWith(op, i) && (op !== "2>&1" || word === null)) {
+      if (line.startsWith(op, i) && (!op.startsWith("2>") || word === null)) {
         push();
         tokens.push({ op });
         i += op.length;
@@ -311,7 +312,7 @@ export class Shell {
       for (let k = 0; k < st.length; k++) {
         const t = st[k];
         if (typeof t === "object") {
-          if (t.op === ">" || t.op === ">>") {
+          if (t.op === ">" || t.op === ">>" || t.op === "2>") {
             const target = st[k + 1];
             if (typeof target !== "string") throw new ShellError("syntax error near unexpected token `newline'");
             redirects.push({ op: t.op, path: target });
@@ -322,16 +323,27 @@ export class Shell {
         } else words.push(t);
       }
       const expanded = this.expand(words);
-      const out = { stdout: "", stderr: "" };
+      const out = { stdout: "", seq: [] };   // seq keeps stdout and stderr in the order they were written
       const io = {
         stdin: input,
-        out: (text) => { out.stdout += text; },
-        err: (text) => { if (mergeErr) out.stdout += text; else out.stderr += text; },
+        out: (text) => { out.stdout += text; out.seq.push(["out", text]); },
+        err: (text) => { if (mergeErr) { out.stdout += text; out.seq.push(["out", text]); } else out.seq.push(["err", text]); },
       };
       status = expanded.length ? await this.exec(expanded, io) : 0;
-      if (out.stderr) this.push("err", out.stderr);
-      if (redirects.length) {
-        for (const r of redirects) {
+      const outRedirects = redirects.filter((r) => r.op !== "2>"), errRedirect = redirects.find((r) => r.op === "2>");
+      const toTerminal = last && !outRedirects.length;
+      let errText = "";
+      for (const [kind, text] of out.seq) {
+        if (kind === "err" && errRedirect) errText += text;
+        else if (kind === "err" || toTerminal) this.push(kind, text);
+      }
+      if (errRedirect && errRedirect.path !== "/dev/null") {
+        const path = this.abs(errRedirect.path);
+        if (this.fs.isDir(this.fs.parent(path))) await this.fs.writeFile(path, errText);
+      }
+      if (outRedirects.length) {
+        for (const r of outRedirects) {
+          if (r.path === "/dev/null") continue;
           const path = this.abs(r.path);
           if (this.fs.isDir(path)) { this.push("err", `bash: ${r.path}: Is a directory\n`); status = 1; continue; }
           if (!this.fs.isDir(this.fs.parent(path))) { this.push("err", `bash: ${r.path}: No such file or directory\n`); status = 1; continue; }
@@ -340,7 +352,7 @@ export class Shell {
         }
         input = "";
       } else if (last) {
-        this.push("out", out.stdout);
+        // already shown, in order, above
       } else {
         input = out.stdout;
       }
@@ -702,6 +714,7 @@ class GitError extends Error {
 }
 
 async function getConfigValue(sh, dir, key) {
+  if (sh.configOverride?.has(key)) return sh.configOverride.get(key);
   if (dir) {
     const local = await git.getConfig({ fs: sh.fs, dir, path: key }).catch(() => undefined);
     if (local !== undefined) return local;
@@ -910,11 +923,13 @@ async function decorations(sh, dir) {
     if (oid) add(oid, b === current ? `HEAD -> ${b}` : b);
   }
   for (const remote of await git.listRemotes({ fs: sh.fs, dir }).catch(() => [])) {
-    for (const b of await git.listBranches({ fs: sh.fs, dir, remote: remote.remote }).catch(() => [])) {
-      if (b === "HEAD") continue;
+    let remoteHead = null;
+    for (const b of (await git.listBranches({ fs: sh.fs, dir, remote: remote.remote }).catch(() => [])).sort()) {
       const oid = await git.resolveRef({ fs: sh.fs, dir, ref: `refs/remotes/${remote.remote}/${b}` }).catch(() => null);
-      if (oid) add(oid, `${remote.remote}/${b}`);
+      if (!oid) continue;
+      if (b === "HEAD") remoteHead = oid; else add(oid, `${remote.remote}/${b}`);
     }
+    if (remoteHead) add(remoteHead, `${remote.remote}/HEAD`);
   }
   for (const t of await git.listTags({ fs: sh.fs, dir })) {
     let oid = await git.resolveRef({ fs: sh.fs, dir, ref: `refs/tags/${t}` }).catch(() => null);
@@ -927,6 +942,52 @@ async function decorations(sh, dir) {
   return map;
 }
 const rank = (label) => (label.startsWith("HEAD") ? 0 : label.startsWith("tag:") ? 3 : label.includes("/") ? 2 : 1);
+
+// Every commit reachable from oid (including it).
+async function ancestors(sh, dir, oid) {
+  const seen = new Set();
+  const stack = oid ? [oid] : [];
+  while (stack.length) {
+    const o = stack.pop();
+    if (seen.has(o)) continue;
+    seen.add(o);
+    const { commit } = await git.readCommit({ fs: sh.fs, dir, oid: o });
+    stack.push(...commit.parent);
+  }
+  return seen;
+}
+
+// The upstream a branch tracks ("origin/main"), from branch.<name>.remote and branch.<name>.merge.
+async function upstreamOf(sh, dir, branch) {
+  const remote = await git.getConfig({ fs: sh.fs, dir, path: `branch.${branch}.remote` }).catch(() => undefined);
+  const merge = await git.getConfig({ fs: sh.fs, dir, path: `branch.${branch}.merge` }).catch(() => undefined);
+  if (!remote || !merge) return null;
+  const name = merge.replace(/^refs\/heads\//, "");
+  const ref = remote === "." ? `refs/heads/${name}` : `refs/remotes/${remote}/${name}`;
+  const oid = await git.resolveRef({ fs: sh.fs, dir, ref }).catch(() => null);
+  return { remote, merge: name, short: remote === "." ? name : `${remote}/${name}`, ref, oid };
+}
+
+// How a branch compares with its upstream, worded like git status.
+async function trackingInfo(sh, dir, branch) {
+  const up = await upstreamOf(sh, dir, branch);
+  if (!up) return null;
+  if (!up.oid) {
+    return { up, gone: true, ahead: 0, behind: 0, short: `[gone]`,
+             long: `Your branch is based on '${up.short}', but the upstream is gone.\n  (use "git branch --unset-upstream" to fixup)\n` };
+  }
+  const local = await git.resolveRef({ fs: sh.fs, dir, ref: `refs/heads/${branch}` });
+  const a = await ancestors(sh, dir, local), b = await ancestors(sh, dir, up.oid);
+  const ahead = [...a].filter((o) => !b.has(o)).length, behind = [...b].filter((o) => !a.has(o)).length;
+  const c = (n) => `${n} commit${n === 1 ? "" : "s"}`;
+  let long;
+  if (!ahead && !behind) long = `Your branch is up to date with '${up.short}'.\n`;
+  else if (!behind) long = `Your branch is ahead of '${up.short}' by ${c(ahead)}.\n  (use "git push" to publish your local commits)\n`;
+  else if (!ahead) long = `Your branch is behind '${up.short}' by ${c(behind)}, and can be fast-forwarded.\n  (use "git pull" to update your local branch)\n`;
+  else long = `Your branch and '${up.short}' have diverged,\nand have ${ahead} and ${behind} different commits each, respectively.\n  (use "git pull" if you want to integrate the remote branch with yours)\n`;
+  const parts = [ahead && `ahead ${ahead}`, behind && `behind ${behind}`].filter(Boolean);
+  return { up, gone: false, ahead, behind, long, short: parts.length ? `[${parts.join(", ")}]` : "" };
+}
 
 async function statusInfo(sh, dir) {
   const head = await headOid(sh, dir);
@@ -981,16 +1042,18 @@ function parseOpts(args, spec) {
     if (lookup.has(name)) {
       const [key, type] = lookup.get(name);
       if (type === "bool") opts[key] = true;
+      else if (type === "count") opts[key] = (opts[key] ?? 0) + 1;
       else if (type === "multi") { (opts[key] ??= []).push(eq > 0 ? a.slice(eq + 1) : args[++i]); }
       else opts[key] = eq > 0 ? a.slice(eq + 1) : args[++i];
     } else if (/^-\d+$/.test(a) && lookup.has("-n")) {
       opts[lookup.get("-n")[0]] = a.slice(1);
     } else if (/^-[a-zA-Z]{2,}$/.test(a) && [...a.slice(1)].every((c) => lookup.has("-" + c))
-               && [...a.slice(1, -1)].every((c) => lookup.get("-" + c)[1] === "bool")) {
+               && [...a.slice(1, -1)].every((c) => ["bool", "count"].includes(lookup.get("-" + c)[1]))) {
       // combined short options: git commit -am "message"
       for (const c of a.slice(1)) {
         const [key, type] = lookup.get("-" + c);
         if (type === "bool") opts[key] = true;
+        else if (type === "count") opts[key] = (opts[key] ?? 0) + 1;
         else if (type === "multi") (opts[key] ??= []).push(args[++i]);
         else opts[key] = args[++i];
       }
@@ -1004,17 +1067,39 @@ function parseOpts(args, spec) {
 const GIT_COMMANDS = {};
 
 async function runGit(sh, args, io) {
-  // global options: -C <dir>
-  while (args[0] === "-C") { args = args.slice(2); }
+  // global options: -C <dir> runs as if started there; -c key=value sets config for one command
+  const savedCwd = sh.cwd, overrides = [];
+  try {
+    while (args[0] === "-C" || args[0] === "-c") {
+      if (args[0] === "-C") {
+        const target = sh.abs(args[1] ?? "");
+        if (!sh.fs.isDir(target)) { io.err(`fatal: cannot change to '${args[1]}': No such file or directory\n`); return 128; }
+        sh.cwd = target;
+      } else {
+        const [k, ...v] = (args[1] ?? "").split("=");
+        (sh.configOverride ??= new Map());
+        overrides.push([k, sh.configOverride.get(k)]);
+        sh.configOverride.set(k, v.join("=") || "true");
+      }
+      args = args.slice(2);
+    }
+    return await runGitCommand(sh, args, io);
+  } finally {
+    sh.cwd = savedCwd;
+    for (const [k, v] of overrides.reverse()) { if (v === undefined) sh.configOverride.delete(k); else sh.configOverride.set(k, v); }
+  }
+}
+
+async function runGitCommand(sh, args, io) {
   const [sub, ...rest] = args;
   if (!sub || sub === "--help" || sub === "help") {
     io.out("usage: git <command> [<args>]\n\nCommands in this sandbox: " + Object.keys(GIT_COMMANDS).sort().join(", ") + "\n");
     return 0;
   }
-  if (sub === "--version" || sub === "version") { io.out("git version 2.55.0 (this sandbox runs git's commands on isomorphic-git)\n"); return 0; }
+  if (sub === "--version" || sub === "version") { io.out("git version 2.56.0 (this sandbox runs git's commands on isomorphic-git)\n"); return 0; }
   const fn = GIT_COMMANDS[sub];
   if (!fn) {
-    const real = "am apply archive bisect blame bundle cherry cherry-pick clean describe difftool fsck gc grep gui instaweb lfs maintenance mergetool notes prune range-diff rebase reflog remote repack replace request-pull rerere shortlog sparse-checkout submodule worktree".split(" ");
+    const real = "am apply archive bisect blame bundle cherry clean describe difftool fsck gc grep gui instaweb lfs maintenance mergetool notes prune range-diff reflog repack replace request-pull rerere shortlog sparse-checkout submodule worktree".split(" ");
     if (real.includes(sub)) {
       io.err(`git ${sub}: this command isn't available in the sandbox yet; try it on your own computer.\n`);
       return 1;
@@ -1111,43 +1196,86 @@ GIT_COMMANDS.status = async (sh, dir, args, io) => {
   const branch = await git.currentBranch({ fs: sh.fs, dir, fullname: false }).catch(() => undefined);
   const untracked = collapseUntracked(info.untracked, new Set(info.index.keys()));
   if (opts["-s"]) {
-    if (opts["-b"]) io.out(`## ${info.head ? branch ?? "HEAD (no branch)" : `No commits yet on ${branch}`}\n`);
+    if (opts["-b"]) {
+      let line = info.head ? branch ?? "HEAD (no branch)" : `No commits yet on ${branch}`;
+      const t = branch && info.head ? await trackingInfo(sh, dir, branch) : null;
+      if (t) line += `...${t.up.short}${t.short ? " " + t.short : ""}`;
+      io.out(`## ${line}\n`);
+    }
     const codes = new Map();
     const letter = { "new file": "A", modified: "M", deleted: "D" };
     for (const s of info.staged) codes.set(s.path, [letter[s.kind], " "]);
     for (const u of info.unstaged) codes.set(u.path, [(codes.get(u.path) || [" "])[0], letter[u.kind]]);
+    for (const p of conflictedPaths(sh, dir, info)) codes.set(p, ["U", "U"]);
     for (const [path, [x, y]] of [...codes].sort((a, b) => a[0].localeCompare(b[0]))) io.out(`${x}${y} ${path}\n`);
     for (const path of untracked) io.out(`?? ${path}\n`);
     return 0;
   }
   let out = branch ? `On branch ${branch}\n` : `HEAD detached at ${short(info.head)}\n`;
+  const rebasing = sh.fs.exists(dir + "/.git/rebase-merge/head-name");
+  if (rebasing) {
+    const onto = sh.fs.text(dir + "/.git/rebase-merge/onto").trim();
+    const headName = sh.fs.text(dir + "/.git/rebase-merge/head-name").trim().replace("refs/heads/", "");
+    out = `interactive rebase in progress; onto ${short(onto)}\n`;
+    const done = (sh.fs.text(dir + "/.git/rebase-merge/done") ?? "").split("\n").filter(Boolean);
+    const todo = (sh.fs.text(dir + "/.git/rebase-merge/git-rebase-todo") ?? "").split("\n").filter(Boolean);
+    if (!done.length) out += "No commands done.\n";
+    else {
+      out += done.length === 1 ? "Last command done (1 command done):\n" : `Last commands done (${done.length} commands done):\n`;
+      for (const l of done.slice(-2)) out += `   ${l}\n`;
+      if (done.length > 2) out += `  (see more in file .git/rebase-merge/done)\n`;
+    }
+    if (!todo.length) out += "No commands remaining.\n";
+    else {
+      out += todo.length === 1 ? "Next command to do (1 remaining command):\n" : `Next commands to do (${todo.length} remaining commands):\n`;
+      for (const l of todo.slice(0, 2)) out += `   ${l}\n`;
+      out += `  (use "git rebase --edit-todo" to view and edit)\n`;
+    }
+    out += `You are currently rebasing branch '${headName}' on '${short(onto)}'.\n`;
+  }
+  if (branch && info.head && !rebasing) {
+    const t = await trackingInfo(sh, dir, branch);
+    if (t) out += t.long + "\n";
+  }
   const merging = sh.fs.exists(dir + "/.git/MERGE_HEAD");
-  if (!info.head) out += "\nNo commits yet\n";
+  const picking = sh.fs.exists(dir + "/.git/CHERRY_PICK_HEAD");
+  if (!info.head) out += "\nNo commits yet\n\n";
   const conflicts = conflictedPaths(sh, dir, info);
-  if (merging) {
-    out += conflicts.length ? "You have unmerged paths.\n  (fix conflicts and run \"git commit\")\n  (use \"git merge --abort\" to abort the merge)\n"
-      : "All conflicts fixed but you are still merging.\n  (use \"git commit\" to conclude merge)\n";
+  if (rebasing) {
+    out += conflicts.length ? "  (fix conflicts and then run \"git rebase --continue\")\n  (use \"git rebase --skip\" to skip this patch)\n  (use \"git rebase --abort\" to check out the original branch)\n\n"
+      : "  (all conflicts fixed: run \"git rebase --continue\")\n\n";
+  } else if (merging) {
+    out += conflicts.length ? "You have unmerged paths.\n  (fix conflicts and run \"git commit\")\n  (use \"git merge --abort\" to abort the merge)\n\n"
+      : "All conflicts fixed but you are still merging.\n  (use \"git commit\" to conclude merge)\n\n";
+  } else if (picking) {
+    const pick = short(sh.fs.text(dir + "/.git/CHERRY_PICK_HEAD").trim());
+    out += `You are currently cherry-picking commit ${pick}.\n` + (conflicts.length
+      ? "  (fix conflicts and run \"git cherry-pick --continue\")\n  (use \"git cherry-pick --skip\" to skip this patch)\n  (use \"git cherry-pick --abort\" to cancel the cherry-pick operation)\n\n"
+      : "  (all conflicts fixed: run \"git cherry-pick --continue\")\n  (use \"git cherry-pick --skip\" to skip this patch)\n  (use \"git cherry-pick --abort\" to cancel the cherry-pick operation)\n\n");
   }
   const stagedNoConflict = info.staged.filter((s) => !conflicts.includes(s.path));
   if (stagedNoConflict.length) {
-    out += `\nChanges to be committed:\n  (use "git ${info.head ? "restore --staged" : "rm --cached"} <file>..." to unstage)\n`;
+    out += "Changes to be committed:\n" + (merging || picking ? "" : `  (use "git ${info.head ? "restore --staged" : "rm --cached"} <file>..." to unstage)\n`);
     for (const s of stagedNoConflict) out += `\t${(s.kind + ":").padEnd(12)}${s.path}\n`;
+    out += "\n";
   }
   if (conflicts.length) {
-    out += `\nUnmerged paths:\n  (use "git add <file>..." to mark resolution)\n`;
+    out += "Unmerged paths:\n" + (merging || picking ? "" : `  (use "git restore --staged <file>..." to unstage)\n`) + `  (use "git add <file>..." to mark resolution)\n`;
     for (const p of conflicts) out += `\tboth modified:   ${p}\n`;
+    out += "\n";
   }
   const unstagedNoConflict = info.unstaged.filter((u) => !conflicts.includes(u.path));
   if (unstagedNoConflict.length) {
     const anyDeleted = unstagedNoConflict.some((u) => u.kind === "deleted");
-    out += `\nChanges not staged for commit:\n  (use "git ${anyDeleted ? "add/rm" : "add"} <file>..." to update what will be committed)\n  (use "git restore <file>..." to discard changes in working directory)\n`;
+    out += `Changes not staged for commit:\n  (use "git ${anyDeleted ? "add/rm" : "add"} <file>..." to update what will be committed)\n  (use "git restore <file>..." to discard changes in working directory)\n`;
     for (const u of unstagedNoConflict) out += `\t${(u.kind + ":").padEnd(12)}${u.path}\n`;
+    out += "\n";
   }
   if (untracked.length) {
-    out += `\nUntracked files:\n  (use "git add <file>..." to include in what will be committed)\n`;
+    out += `Untracked files:\n  (use "git add <file>..." to include in what will be committed)\n`;
     for (const p of untracked) out += `\t${p}\n`;
+    out += "\n";
   }
-  out += "\n";
   if (conflicts.length && !unstagedNoConflict.length && !stagedNoConflict.length) out += `no changes added to commit (use "git add" and/or "git commit -a")\n`;
   if (!stagedNoConflict.length && !conflicts.length) {
     if (unstagedNoConflict.length) out += `no changes added to commit (use "git add" and/or "git commit -a")\n`;
@@ -1155,12 +1283,12 @@ GIT_COMMANDS.status = async (sh, dir, args, io) => {
     else if (!info.head) out += `nothing to commit (create/copy files and use "git add" to track)\n`;
     else out += `nothing to commit, working tree clean\n`;
   }
-  io.out(out.replace(/^\n+/, (m) => (out.startsWith("On branch") || out.startsWith("HEAD") ? m : "")).replace(/\n\n\n+/g, "\n\n"));
+  io.out(out);
   return 0;
 };
 
 function conflictedPaths(sh, dir, info) {
-  if (!sh.fs.exists(dir + "/.git/MERGE_HEAD")) return [];
+  if (!["MERGE_HEAD", "CHERRY_PICK_HEAD", "REBASE_HEAD"].some((f) => sh.fs.exists(dir + "/.git/" + f))) return [];
   const result = [];
   for (const full of sh.fs.walkFiles(dir)) {
     const rel = full.slice(dir.length + 1);
@@ -1304,6 +1432,7 @@ GIT_COMMANDS.commit = async (sh, dir, args, io) => {
   }
   const root = !commit.parent.length ? " (root-commit)" : "";
   let out = `[${branch ?? "detached HEAD"}${root} ${short(oid)}] ${message.split("\n")[0]}\n`;
+  if (commit.parent.length > 1) { io.out(out); return 0; }   // merge commits: just the header, like git
   if (opts["--amend"]) out += ` Date: ${gitDate(commit.author.timestamp)}\n`;
   out += stats.length ? summaryLine(stats) : " 0 files changed\n";
   for (const s of stats) {
@@ -1358,11 +1487,16 @@ async function logCommits(sh, dir, start, { all = false, limit = Infinity, path 
 
 GIT_COMMANDS.log = async (sh, dir, args, io) => {
   const { opts, rest } = parseOpts(args, { "--oneline": "bool", "-n|--max-count": "value", "--all": "bool", "--graph": "bool", "--stat": "bool", "-p|--patch": "bool", "--decorate": "bool", "--format|--pretty": "value", "--reverse": "bool" });
-  let rev = "HEAD", path = null;
+  let rev = "HEAD", path = null, exclude = null;
   for (const r of rest) {
     if (r === "--") continue;
     if (sh.fs.exists(sh.abs(r)) && !(await resolveCommit(sh, dir, r).catch(() => null))) path = relPath(sh, dir, r);
     else rev = r;
+  }
+  const range = /^(.*?)\.\.(?!\.)(.*)$/.exec(rev);
+  if (range) {
+    exclude = await ancestors(sh, dir, await resolveCommit(sh, dir, range[1] || "HEAD"));
+    rev = range[2] || "HEAD";
   }
   const head = await headOid(sh, dir);
   if (!head) {
@@ -1370,7 +1504,8 @@ GIT_COMMANDS.log = async (sh, dir, args, io) => {
     throw new GitError(`fatal: your current branch '${branch}' does not have any commits yet`);
   }
   const start = await resolveCommit(sh, dir, rev);
-  let commits = await logCommits(sh, dir, start, { all: opts["--all"], limit: opts["-n"] ? Number(opts["-n"]) : Infinity, path });
+  let commits = await logCommits(sh, dir, start, { all: opts["--all"], limit: opts["-n"] && !exclude ? Number(opts["-n"]) : Infinity, path });
+  if (exclude) commits = commits.filter((c) => !exclude.has(c.oid)).slice(0, opts["-n"] ? Number(opts["-n"]) : Infinity);
   if (opts["--graph"]) commits = await topoOrder(sh, dir, commits);
   if (opts["--reverse"]) commits = commits.reverse();
   const deco = await decorations(sh, dir);
@@ -1601,6 +1736,8 @@ GIT_COMMANDS.reset = async (sh, dir, args, io) => {
   const branch = await git.currentBranch({ fs: sh.fs, dir, fullname: true }).catch(() => undefined);
   await git.writeRef({ fs: sh.fs, dir, ref: branch ?? "HEAD", value: oid, force: true });
   if (opts["--soft"]) return 0;
+  for (const f of [".git/MERGE_HEAD", ".git/MERGE_MSG", ".git/CHERRY_PICK_HEAD"]) if (sh.fs.exists(dir + "/" + f)) await sh.fs.unlink(dir + "/" + f);
+  sh.unmerged = new Set();
   // mixed: index = target tree; hard: also the working tree
   const targetFiles = await treeFiles(sh, dir, oid);
   const index = await indexFiles(sh, dir);
@@ -1766,23 +1903,67 @@ function ignoreMatches(pattern, path) {
 }
 
 GIT_COMMANDS.branch = async (sh, dir, args, io) => {
-  const { opts, rest } = parseOpts(args, { "-d|--delete": "bool", "-D": "bool", "-m|--move": "bool", "-a|--all": "bool", "-v|--verbose": "bool", "-r|--remotes": "bool", "--show-current": "bool" });
+  const { opts, rest } = parseOpts(args, { "-d|--delete": "bool", "-D": "bool", "-m|--move": "bool", "-a|--all": "bool", "-v|--verbose": "count",
+    "-r|--remotes": "bool", "--show-current": "bool", "-u|--set-upstream-to": "value", "--unset-upstream": "bool", "-f|--force": "bool" });
   const current = await git.currentBranch({ fs: sh.fs, dir, fullname: false }).catch(() => undefined);
   if (opts["--show-current"]) { if (current) io.out(current + "\n"); return 0; }
+  if (opts["-u"]) {
+    const name = rest[0] ?? current;
+    const target = opts["-u"];
+    const m = /^([^/]+)\/(.+)$/.exec(target);
+    const remotes = (await git.listRemotes({ fs: sh.fs, dir }).catch(() => [])).map((r) => r.remote);
+    if (!m || !remotes.includes(m[1]) || !(await git.resolveRef({ fs: sh.fs, dir, ref: `refs/remotes/${target}` }).catch(() => null))) {
+      throw new GitError(`fatal: the requested upstream branch '${target}' does not exist\nhint:\nhint: If you are planning on basing your work on an upstream\nhint: branch that already exists at the remote, you may need to\nhint: run "git fetch" to retrieve it.\nhint:\nhint: If you are planning to push out a new local branch that\nhint: will track its remote counterpart, you may want to use\nhint: "git push -u" to set the upstream config as you push.\nhint: Disable this message with "git config set advice.setUpstreamFailure false"`);
+    }
+    await git.setConfig({ fs: sh.fs, dir, path: `branch.${name}.remote`, value: m[1] });
+    await git.setConfig({ fs: sh.fs, dir, path: `branch.${name}.merge`, value: `refs/heads/${m[2]}` });
+    io.out(`branch '${name}' set up to track '${target}'.\n`);
+    return 0;
+  }
+  if (opts["--unset-upstream"]) {
+    const name = rest[0] ?? current;
+    if (!(await upstreamOf(sh, dir, name))) throw new GitError(`fatal: branch '${name}' has no upstream information`);
+    await git.setConfig({ fs: sh.fs, dir, path: `branch.${name}.remote`, value: undefined });
+    await git.setConfig({ fs: sh.fs, dir, path: `branch.${name}.merge`, value: undefined });
+    return 0;
+  }
   if (opts["-d"] || opts["-D"]) {
+    if (opts["-r"]) {
+      for (const name of rest) {
+        const oid = await git.resolveRef({ fs: sh.fs, dir, ref: `refs/remotes/${name}` }).catch(() => null);
+        if (!oid) throw new GitError(`error: remote-tracking branch '${name}' not found`, 1);
+        await git.deleteRef({ fs: sh.fs, dir, ref: `refs/remotes/${name}` });
+        io.out(`Deleted remote-tracking branch ${name} (was ${short(oid)}).\n`);
+      }
+      return 0;
+    }
+    let status = 0;
     for (const name of rest) {
-      if (name === current) throw new GitError(`error: cannot delete branch '${name}' used by worktree at '${dir}'`, 1);
+      if (name === current) { io.err(`error: cannot delete branch '${name}' used by worktree at '${dir}'\n`); status = 1; continue; }
       const oid = await git.resolveRef({ fs: sh.fs, dir, ref: `refs/heads/${name}` }).catch(() => null);
-      if (!oid) throw new GitError(`error: branch '${name}' not found`, 1);
-      if (!opts["-D"]) {
+      if (!oid) { io.err(`error: branch '${name}' not found\n`); status = 1; continue; }
+      if (!opts["-D"] && !opts["-f"]) {
+        // merged into its upstream if it has one, otherwise into HEAD
+        const up = await upstreamOf(sh, dir, name);
         const head = await headOid(sh, dir);
-        const merged = head && (oid === head || (await git.isDescendent({ fs: sh.fs, dir, oid: head, ancestor: oid, depth: -1 })));
-        if (!merged) throw new GitError(`error: the branch '${name}' is not fully merged\nhint: If you are sure you want to delete it, run 'git branch -D ${name}'`, 1);
+        const into = async (target) => !!target && (oid === target || (await ancestors(sh, dir, target)).has(oid));
+        const inHead = await into(head);
+        if (up && up.oid) {
+          if (!(await into(up.oid))) {
+            io.err(`error: the branch '${name}' is not fully merged\nhint: If you are sure you want to delete it, run 'git branch -D ${name}'\nhint: Disable this message with "git config set advice.forceDeleteBranch false"\n`);
+            status = 1; continue;
+          }
+          if (!inHead) io.err(`warning: deleting branch '${name}' that has been merged to\n         '${up.ref}', but not yet merged to HEAD\n`);
+        } else if (!inHead) {
+          io.err(`error: the branch '${name}' is not fully merged\nhint: If you are sure you want to delete it, run 'git branch -D ${name}'\nhint: Disable this message with "git config set advice.forceDeleteBranch false"\n`);
+          status = 1; continue;
+        }
       }
       await git.deleteBranch({ fs: sh.fs, dir, ref: name });
+      for (const k of ["remote", "merge"]) await git.setConfig({ fs: sh.fs, dir, path: `branch.${name}.${k}`, value: undefined }).catch(() => {});
       io.out(`Deleted branch ${name} (was ${short(oid)}).\n`);
     }
-    return 0;
+    return status;
   }
   if (opts["-m"]) {
     const [a, b] = rest.length === 2 ? rest : [current, rest[0]];
@@ -1792,32 +1973,56 @@ GIT_COMMANDS.branch = async (sh, dir, args, io) => {
   if (rest.length) {
     const [name, start] = rest;
     if (!(await headOid(sh, dir)) && !start) throw new GitError(`fatal: not a valid object name: '${current}'`);
-    if (await git.resolveRef({ fs: sh.fs, dir, ref: `refs/heads/${name}` }).catch(() => null)) throw new GitError(`fatal: a branch named '${name}' already exists`);
+    if (await git.resolveRef({ fs: sh.fs, dir, ref: `refs/heads/${name}` }).catch(() => null)) {
+      if (!opts["-f"]) throw new GitError(`fatal: a branch named '${name}' already exists`);
+      if (name === current) throw new GitError(`fatal: cannot force update the branch '${name}' used by worktree at '${dir}'`);
+      await git.writeRef({ fs: sh.fs, dir, ref: `refs/heads/${name}`, value: await resolveCommit(sh, dir, start ?? "HEAD"), force: true });
+      return 0;
+    }
     if (!isValidBranch(name)) throw new GitError(`fatal: '${name}' is not a valid branch name`);
     const oid = await resolveCommit(sh, dir, start ?? "HEAD");
     await git.writeRef({ fs: sh.fs, dir, ref: `refs/heads/${name}`, value: oid });
+    // starting from a remote-tracking branch sets up tracking, like git's branch.autoSetupMerge
+    const m = start && /^([^/]+)\/(.+)$/.exec(start);
+    if (m && (await git.resolveRef({ fs: sh.fs, dir, ref: `refs/remotes/${start}` }).catch(() => null))) {
+      await git.setConfig({ fs: sh.fs, dir, path: `branch.${name}.remote`, value: m[1] });
+      await git.setConfig({ fs: sh.fs, dir, path: `branch.${name}.merge`, value: `refs/heads/${m[2]}` });
+      io.out(`branch '${name}' set up to track '${start}'.\n`);
+    }
     return 0;
   }
-  const names = await git.listBranches({ fs: sh.fs, dir });
+  const names = (await git.listBranches({ fs: sh.fs, dir })).sort();
   const head = await headOid(sh, dir);
-  let out = "";
-  if (!current && head) out += `* (HEAD detached at ${short(head)})\n`;
-  for (const n of names.sort()) {
-    let line = `${n === current ? "* " : "  "}${n}`;
-    if (opts["-v"]) {
-      const oid = await git.resolveRef({ fs: sh.fs, dir, ref: n });
-      const { commit } = await git.readCommit({ fs: sh.fs, dir, oid });
-      line = `${line.padEnd(Math.max(...names.map((x) => x.length)) + 2)} ${short(oid)} ${commit.message.split("\n")[0]}`;
-    }
-    if (!opts["-r"]) out += line + "\n";
-  }
+  const verbose = opts["-v"] ? Number(opts["-v"]) : 0;
+  const rows = [];   // [marker, name, oid, symref]
+  if (!current && head) rows.push(["*", `(HEAD detached at ${short(head)})`, head]);
+  if (!opts["-r"]) for (const n of names) rows.push([n === current ? "*" : " ", n, await git.resolveRef({ fs: sh.fs, dir, ref: `refs/heads/${n}` }), null, true]);
   if (opts["-a"] || opts["-r"]) {
     for (const r of await git.listRemotes({ fs: sh.fs, dir }).catch(() => [])) {
-      for (const b of await git.listBranches({ fs: sh.fs, dir, remote: r.remote }).catch(() => [])) {
-        if (b === "HEAD") continue;
-        out += `  ${opts["-a"] ? "remotes/" : ""}${r.remote}/${b}\n`;
+      for (const b of (await git.listBranches({ fs: sh.fs, dir, remote: r.remote }).catch(() => [])).sort()) {
+        const label = `${opts["-a"] ? "remotes/" : ""}${r.remote}/${b}`;
+        if (b === "HEAD") {
+          const target = await git.resolveRef({ fs: sh.fs, dir, ref: `refs/remotes/${r.remote}/HEAD`, depth: 2 }).catch(() => null);
+          if (target) rows.push([" ", label, null, target.replace(/^refs\/remotes\//, "")]);
+          continue;
+        }
+        rows.push([" ", label, await git.resolveRef({ fs: sh.fs, dir, ref: `refs/remotes/${r.remote}/${b}` })]);
       }
     }
+  }
+  const width = Math.max(0, ...rows.filter((r) => !r[3]).map((r) => r[1].length));
+  let out = "";
+  for (const [mark, name, oid, symref, local] of rows) {
+    if (symref) { out += `${mark} ${name} -> ${symref}\n`; continue; }
+    if (!verbose) { out += `${mark} ${name}\n`; continue; }
+    const { commit } = await git.readCommit({ fs: sh.fs, dir, oid });
+    let track = "";
+    if (local) {
+      const t = await trackingInfo(sh, dir, name);
+      if (t && verbose >= 2) track = `[${t.up.short}${t.gone ? ": gone" : t.short ? ": " + t.short.slice(1, -1) : ""}] `;
+      else if (t && (t.short || t.gone)) track = `[${t.gone ? "gone" : t.short.slice(1, -1)}] `;
+    }
+    out += `${mark} ${name.padEnd(width)} ${short(oid)} ${track}${commit.message.split("\n")[0]}\n`;
   }
   io.out(out);
   return 0;
@@ -1827,7 +2032,7 @@ function isValidBranch(name) {
   return /^[^\s~^:?*[\\]+$/.test(name) && !name.startsWith("-") && !name.endsWith("/") && !name.endsWith(".lock") && !name.includes("..") && !name.includes("//") && name !== "HEAD";
 }
 
-async function switchTo(sh, dir, target, { create = false, force = false, detach = false, start = null }, io) {
+async function switchTo(sh, dir, target, { create = false, force = false, detach = false, start = null, fresh = false }, io) {
   const current = await git.currentBranch({ fs: sh.fs, dir, fullname: false }).catch(() => undefined);
   if (create) {
     if (await git.resolveRef({ fs: sh.fs, dir, ref: `refs/heads/${target}` }).catch(() => null)) throw new GitError(`fatal: a branch named '${target}' already exists`);
@@ -1835,8 +2040,16 @@ async function switchTo(sh, dir, target, { create = false, force = false, detach
     const head = await headOid(sh, dir);
     if (start) {
       const oid = await resolveCommit(sh, dir, start);
+      // check the switch is possible before creating the branch
+      await checkSwitch(sh, dir, oid, force);
       await git.writeRef({ fs: sh.fs, dir, ref: `refs/heads/${target}`, value: oid });
       await switchTo(sh, dir, target, { force }, { out: () => {}, err: io.err });
+      const m = /^([^/]+)\/(.+)$/.exec(start);
+      if (m && (await git.resolveRef({ fs: sh.fs, dir, ref: `refs/remotes/${start}` }).catch(() => null))) {
+        await git.setConfig({ fs: sh.fs, dir, path: `branch.${target}.remote`, value: m[1] });
+        await git.setConfig({ fs: sh.fs, dir, path: `branch.${target}.merge`, value: `refs/heads/${m[2]}` });
+        if (!fresh) io.out(`branch '${target}' set up to track '${start}'.\n`);
+      }
     } else {
       if (head) await git.writeRef({ fs: sh.fs, dir, ref: `refs/heads/${target}`, value: head });
       await git.writeRef({ fs: sh.fs, dir, ref: "HEAD", value: `refs/heads/${target}`, symbolic: true, force: true });
@@ -1847,30 +2060,19 @@ async function switchTo(sh, dir, target, { create = false, force = false, detach
   const isBranch = !!(await git.resolveRef({ fs: sh.fs, dir, ref: `refs/heads/${target}` }).catch(() => null));
   if (!isBranch) {
     // a remote branch with the same name: create a tracking branch, like git does
-    const remoteOid = await git.resolveRef({ fs: sh.fs, dir, ref: `refs/remotes/origin/${target}` }).catch(() => null);
-    if (remoteOid && !detach) {
-      await git.writeRef({ fs: sh.fs, dir, ref: `refs/heads/${target}`, value: remoteOid });
-      await git.setConfig({ fs: sh.fs, dir, path: `branch.${target}.remote`, value: "origin" });
-      await git.setConfig({ fs: sh.fs, dir, path: `branch.${target}.merge`, value: `refs/heads/${target}` });
-      io.out(`branch '${target}' set up to track 'origin/${target}'.\n`);
-      return switchTo(sh, dir, target, { force }, io);
+    const remote = await remoteHaving(sh, dir, target);
+    if (remote && !detach) {
+      const remoteOid = await git.resolveRef({ fs: sh.fs, dir, ref: `refs/remotes/${remote}/${target}` });
+      const status = await switchTo(sh, dir, target, { create: true, start: `${remote}/${target}`, force, fresh: true }, { out: () => {}, err: io.err });
+      io.out(`branch '${target}' set up to track '${remote}/${target}'.\nSwitched to a new branch '${target}'\n`);
+      void remoteOid;
+      return status;
     }
   }
   if (!isBranch && !detach) throw new GitError(`fatal: invalid reference: ${target}`);
   if (isBranch && target === current) { io.out(`Already on '${target}'\n`); return 0; }
   const oid = await resolveCommit(sh, dir, target);
-  // refuse to overwrite local changes in files that differ between the commits
-  const info = await statusInfo(sh, dir);
-  const from = await treeFiles(sh, dir, info.head), to = await treeFiles(sh, dir, oid);
-  const dirty = [...info.staged.map((s) => s.path), ...info.unstaged.map((u) => u.path)];
-  const blocked = dirty.filter((p) => from.get(p) !== to.get(p));
-  if (blocked.length && !force) {
-    throw new GitError(`error: Your local changes to the following files would be overwritten by checkout:\n${blocked.map((p) => "\t" + p).join("\n")}\nPlease commit your changes or stash them before you switch branches.\nAborting`, 1);
-  }
-  const untrackedClash = info.untracked.filter((p) => to.has(p));
-  if (untrackedClash.length && !force) {
-    throw new GitError(`error: The following untracked working tree files would be overwritten by checkout:\n${untrackedClash.map((p) => "\t" + p).join("\n")}\nPlease move or remove them before you switch branches.\nAborting`, 1);
-  }
+  const { info, from, to, blocked } = await checkSwitch(sh, dir, oid, force);
   // update files that differ between the two commits (keeping other local changes)
   for (const path of new Set([...from.keys(), ...to.keys()])) {
     if (from.get(path) === to.get(path) && !force) continue;
@@ -1890,8 +2092,33 @@ async function switchTo(sh, dir, target, { create = false, force = false, detach
   return 0;
 }
 
+// Refuse to switch when it would overwrite local changes or untracked files, like git.
+async function checkSwitch(sh, dir, oid, force) {
+  const info = await statusInfo(sh, dir);
+  const from = await treeFiles(sh, dir, info.head), to = await treeFiles(sh, dir, oid);
+  const dirty = [...info.staged.map((s) => s.path), ...info.unstaged.map((u) => u.path)];
+  const blocked = dirty.filter((p) => from.get(p) !== to.get(p));
+  if (blocked.length && !force) {
+    throw new GitError(`error: Your local changes to the following files would be overwritten by checkout:\n${blocked.map((p) => "\t" + p).join("\n")}\nPlease commit your changes or stash them before you switch branches.\nAborting`, 1);
+  }
+  const untrackedClash = info.untracked.filter((p) => to.has(p));
+  if (untrackedClash.length && !force) {
+    throw new GitError(`error: The following untracked working tree files would be overwritten by checkout:\n${untrackedClash.map((p) => "\t" + p).join("\n")}\nPlease move or remove them before you switch branches.\nAborting`, 1);
+  }
+  return { info, from, to, blocked };
+}
+
+// The remote that has a branch with this name (for "git switch feature" when only origin/feature exists).
+async function remoteHaving(sh, dir, name) {
+  for (const r of await git.listRemotes({ fs: sh.fs, dir }).catch(() => [])) {
+    if (await git.resolveRef({ fs: sh.fs, dir, ref: `refs/remotes/${r.remote}/${name}` }).catch(() => null)) return r.remote;
+  }
+  return null;
+}
+
 GIT_COMMANDS.switch = async (sh, dir, args, io) => {
-  const { opts, rest } = parseOpts(args, { "-c|--create": "value", "-C": "value", "--detach|-d": "bool", "-f|--force|--discard-changes": "bool" });
+  const { opts, rest } = parseOpts(args, { "-c|--create": "value", "-C": "value", "--detach|-d": "bool", "-f|--force|--discard-changes": "bool", "-q|--quiet": "bool", "-t|--track": "bool" });
+  if (opts["-q"]) io = { ...io, out: () => {} };
   if (opts["-c"]) {
     await switchTo(sh, dir, opts["-c"], { create: true, start: rest[0] ?? null }, io);
     return 0;
@@ -1904,7 +2131,7 @@ GIT_COMMANDS.switch = async (sh, dir, args, io) => {
   }
   const before = await git.currentBranch({ fs: sh.fs, dir, fullname: false }).catch(() => undefined);
   const isBranch = await git.resolveRef({ fs: sh.fs, dir, ref: `refs/heads/${rest[0]}` }).catch(() => null);
-  if (!isBranch && !opts["--detach"] && !(await git.resolveRef({ fs: sh.fs, dir, ref: `refs/remotes/origin/${rest[0]}` }).catch(() => null))) {
+  if (!isBranch && !opts["--detach"] && !(await remoteHaving(sh, dir, rest[0]))) {
     if (await resolveCommit(sh, dir, rest[0]).catch(() => null)) throw new GitError(`fatal: a branch is expected, got commit '${rest[0]}'\nhint: If you want to detach HEAD at the commit, try again with the --detach option.`);
     throw new GitError(`fatal: invalid reference: ${rest[0]}`);
   }
@@ -1914,7 +2141,8 @@ GIT_COMMANDS.switch = async (sh, dir, args, io) => {
 };
 
 GIT_COMMANDS.checkout = async (sh, dir, args, io) => {
-  const { opts, rest } = parseOpts(args, { "-b": "value", "-B": "value", "-f|--force": "bool" });
+  const { opts, rest } = parseOpts(args, { "-b": "value", "-B": "value", "-f|--force": "bool", "-q|--quiet": "bool", "-t|--track": "bool" });
+  if (opts["-q"]) io = { ...io, out: () => {} };
   if (opts["-b"]) { await switchTo(sh, dir, opts["-b"], { create: true, start: rest[0] ?? null }, io); return 0; }
   const dashes = rest.indexOf("--");
   if (dashes !== -1 || (rest.length && rest.every((r) => sh.fs.exists(sh.abs(r)) || false) && !(await resolveCommit(sh, dir, rest[0]).catch(() => null)))) {
@@ -1925,7 +2153,7 @@ GIT_COMMANDS.checkout = async (sh, dir, args, io) => {
   if (!rest.length) throw new GitError("fatal: you must specify a branch or commit", 128);
   const before = await git.currentBranch({ fs: sh.fs, dir, fullname: false }).catch(() => undefined);
   const isBranch = await git.resolveRef({ fs: sh.fs, dir, ref: `refs/heads/${rest[0]}` }).catch(() => null);
-  const status = await switchTo(sh, dir, rest[0], { force: !!opts["-f"], detach: !isBranch }, io);
+  const status = await switchTo(sh, dir, rest[0], { force: !!opts["-f"], detach: !isBranch && !(await remoteHaving(sh, dir, rest[0])) }, io);
   if (before) (sh.previousBranch ??= new Map()).set(dir, before);
   return status;
 };
@@ -1967,13 +2195,19 @@ GIT_COMMANDS.tag = async (sh, dir, args, io) => {
 };
 
 GIT_COMMANDS.merge = async (sh, dir, args, io) => {
-  const { opts, rest } = parseOpts(args, { "--no-ff": "bool", "--ff-only": "bool", "--abort": "bool", "-m|--message": "value", "--squash": "bool", "--continue": "bool" });
+  const { opts, rest } = parseOpts(args, { "--no-ff": "bool", "--ff-only": "bool", "--abort": "bool", "-m|--message": "value", "--squash": "bool", "--continue": "bool", "-q|--quiet": "bool", "--no-edit": "bool", "-e|--edit": "bool" });
+  if (opts["-q"]) io = { ...io, out: () => {} };
   if (opts["--abort"]) {
     if (!sh.fs.exists(dir + "/.git/MERGE_HEAD")) throw new GitError("fatal: There is no merge to abort (MERGE_HEAD missing).");
     return GIT_COMMANDS.reset(sh, dir, ["--hard", "-q", "HEAD"], io);
   }
   if (opts["--continue"]) return GIT_COMMANDS.commit(sh, dir, [], io);
-  if (!rest.length) throw new GitError("fatal: No remote for the current branch.");
+  if (!rest.length) {
+    const cur = await git.currentBranch({ fs: sh.fs, dir, fullname: false }).catch(() => undefined);
+    const up = cur ? await upstreamOf(sh, dir, cur) : null;
+    if (!up || !up.oid) throw new GitError("fatal: No remote for the current branch.");
+    rest.push(up.short);
+  }
   const theirsName = rest[0];
   const theirs = await resolveCommit(sh, dir, theirsName).catch(() => null);
   if (!theirs) throw new GitError(`merge: ${theirsName} - not something we can merge`, 1);
@@ -1998,7 +2232,7 @@ GIT_COMMANDS.merge = async (sh, dir, args, io) => {
   // a real three-way merge
   const base = (await git.findMergeBase({ fs: sh.fs, dir, oids: [ours, theirs] }))[0];
   const baseFiles = await filesAt(sh, dir, base);
-  const conflicts = [];
+  const conflicts = [], contentMerged = new Set();
   const result = new Map(from);
   for (const path of new Set([...baseFiles.keys(), ...from.keys(), ...to.keys()])) {
     const b = baseFiles.get(path) ?? null, o = from.get(path) ?? null, t = to.get(path) ?? null;
@@ -2006,18 +2240,20 @@ GIT_COMMANDS.merge = async (sh, dir, args, io) => {
     if (b === o) { if (t === null) result.delete(path); else result.set(path, t); continue; }
     if (b === t) continue;
     if (o === null || t === null) { conflicts.push(path); result.set(path, o ?? t); continue; }
-    const merged = mergeText(b ?? "", o, t, "HEAD", theirsName);
+    contentMerged.add(path);
+    const merged = mergeText(b ?? "", o, t, "HEAD", sh.mergeLabel ?? theirsName);
     if (merged.conflict) conflicts.push(path);
     result.set(path, merged.text);
   }
   for (const path of new Set([...from.keys(), ...result.keys()])) {
     const text = result.has(path) ? result.get(path) : null;
     if (text === (from.get(path) ?? null)) continue;
-    io.out(conflicts.includes(path) ? `Auto-merging ${path}\nCONFLICT (content): Merge conflict in ${path}\n` : text !== null && from.has(path) && to.has(path) ? `Auto-merging ${path}\n` : "");
+    io.out(contentMerged.has(path) ? `Auto-merging ${path}\n` + (conflicts.includes(path) ? `CONFLICT (content): Merge conflict in ${path}\n` : "") : "");
     await writeWork(sh, dir, path, text);
     if (!conflicts.includes(path)) { if (text === null) await git.remove({ fs: sh.fs, dir, filepath: path }); else await git.add({ fs: sh.fs, dir, filepath: path }); }
   }
-  const message = opts["-m"] ?? `Merge branch '${theirsName}'${branch === "main" || branch === "master" ? "" : ` into ${branch}`}`;
+  const isRemote = !!(await git.resolveRef({ fs: sh.fs, dir, ref: `refs/remotes/${theirsName}` }).catch(() => null)) && !(await git.resolveRef({ fs: sh.fs, dir, ref: `refs/heads/${theirsName}` }).catch(() => null));
+  const message = opts["-m"] ?? `Merge ${isRemote ? "remote-tracking branch" : "branch"} '${theirsName}'${branch === "main" || branch === "master" ? "" : ` into ${branch}`}`;
   if (opts["--squash"]) {
     io.out("Squash commit -- not updating HEAD\n" + (conflicts.length ? "Automatic merge failed; fix conflicts and then commit the result.\n" : ""));
     return conflicts.length ? 1 : 0;
@@ -2118,7 +2354,7 @@ async function withLocalIdentity(sh, dir, fn) {
 
 GIT_COMMANDS.stash = async (sh, dir, args, io) => {
   const op = args[0] && !args[0].startsWith("-") ? args[0] : "push";
-  const opts = parseOpts(args.slice(op === args[0] ? 1 : 0), { "-m|--message": "value", "-u|--include-untracked": "bool" }).opts;
+  const opts = parseOpts(args.slice(op === args[0] ? 1 : 0), { "-m|--message": "value", "-u|--include-untracked": "bool", "--index": "bool", "-q|--quiet": "bool" }).opts;
   const branch = await git.currentBranch({ fs: sh.fs, dir, fullname: false });
   if (op === "push" || op === "save") {
     const info = await statusInfo(sh, dir);
@@ -2135,14 +2371,29 @@ GIT_COMMANDS.stash = async (sh, dir, args, io) => {
     return 0;
   }
   if (op === "pop" || op === "apply") {
+    const stashOid = await git.resolveRef({ fs: sh.fs, dir, ref: "refs/stash" }).catch(() => null);
+    if (!stashOid) throw new GitError("error: No stash entries found.", 1);
     try { await withLocalIdentity(sh, dir, () => git.stash({ fs: sh.fs, dir, op })); }
-    catch (e) { throw new GitError(e.message.includes("No stash") || e.code === "NotFoundError" ? "No stash entries found." : `error: ${e.message}`, 1); }
-    io.out(op === "pop" ? "Dropped refs/stash@{0}\n" : "");
+    catch (e) { throw new GitError(e.message.includes("No stash") || e.code === "NotFoundError" ? "error: No stash entries found." : `error: ${e.message}`, 1); }
+    if (!opts["--index"]) {
+      // like git, changes to existing files come back unstaged (new files stay added) unless --index
+      const after = await statusInfo(sh, dir);
+      for (const st of after.staged) if (st.kind === "modified") await git.resetIndex({ fs: sh.fs, dir, filepath: st.path });
+    }
+    // like git, show the status afterwards
+    await GIT_COMMANDS.status(sh, dir, [], io);
+    if (op === "pop") io.out(`Dropped refs/stash@{0} (${stashOid})\n`);
     return 0;
   }
   if (op === "drop" || op === "clear") { await git.stash({ fs: sh.fs, dir, op }); return 0; }
   throw new GitError(`error: unknown subcommand: ${op}`, 129);
 };
+
+const GH_API = installGitHub({
+  git, GIT_COMMANDS, GitError, parseOpts, resolveCommit, filesAt, headOid, statusInfo, switchFiles, mergeText, unifiedDiff, short,
+  identity, writeWork, registerCommand, ancestors, upstreamOf, getConfigValue, findRoot, gitDate, conflictedPaths, summaryLine,
+  diffLines, splitLines, START,
+});
 
 export const gitCommands = GIT_COMMANDS;
 export { GitError, resolveCommit, treeFiles, blobText, statusInfo, findRoot, filesAt, unifiedDiff, headOid };
@@ -2213,12 +2464,66 @@ function makeShellHelpers(sh) {
       read(path) { return sh.fs.text(dir + "/" + path); },
       exists(path) { return sh.fs.exists(dir + "/" + path); },
       async ignored(path) { return isIgnored(sh, dir, path); },
+      async upstream(branch) {
+        const b = branch ?? (await git.currentBranch({ fs: sh.fs, dir, fullname: false }));
+        const up = b ? await upstreamOf(sh, dir, b) : null;
+        return up ? up.short : null;
+      },
+      async remotes() {
+        const out = {};
+        for (const r of await git.listRemotes({ fs: sh.fs, dir }).catch(() => [])) out[r.remote] = r.url;
+        return out;
+      },
+      async remoteBranches() {
+        const out = [];
+        for (const r of await git.listRemotes({ fs: sh.fs, dir }).catch(() => [])) {
+          for (const b of await git.listBranches({ fs: sh.fs, dir, remote: r.remote }).catch(() => [])) if (b !== "HEAD") out.push(`${r.remote}/${b}`);
+        }
+        return out.sort();
+      },
+      async tracking(branch) {
+        const b = branch ?? (await git.currentBranch({ fs: sh.fs, dir, fullname: false }));
+        const t = b ? await trackingInfo(sh, dir, b) : null;
+        return t ? { upstream: t.up.short, ahead: t.ahead, behind: t.behind, gone: t.gone } : null;
+      },
+      inProgress() {
+        return sh.fs.exists(dir + "/.git/MERGE_HEAD") ? "merge" : sh.fs.exists(dir + "/.git/rebase-merge") ? "rebase"
+          : sh.fs.exists(dir + "/.git/CHERRY_PICK_HEAD") ? "cherry-pick" : null;
+      },
     };
     return api;
   }
+  // A repository on the pretend GitHub, by "owner/name".
+  async function github(full) {
+    const dir = `${GH_API.GH}/${full}`;
+    if (!sh.fs.isDir(dir + "/.git")) throw new AssertionError(`There's no repository ${full} on GitHub yet.`);
+    const commitList = async (ref) => {
+      const oid = await resolveCommit(sh, dir, ref).catch(() => null);
+      if (!oid) return [];
+      return (await logCommits(sh, dir, oid, {})).map(({ oid, commit }) => ({ oid, message: commit.message.replace(/\n$/, ""), subject: commit.message.split("\n")[0], parents: commit.parent, author: commit.author, committer: commit.committer }));
+    };
+    return {
+      dir,
+      defaultBranch: GH_API.defaultBranchOf(sh, dir),
+      async branches() { return [...(await GH_API.branchesOf(sh, dir)).keys()]; },
+      async resolve(ref) { return resolveCommit(sh, dir, ref).catch(() => null); },
+      log: commitList,
+      async files(ref) { const oid = await resolveCommit(sh, dir, ref ?? GH_API.defaultBranchOf(sh, dir)).catch(() => null); return oid ? Object.fromEntries(await filesAt(sh, dir, oid)) : {}; },
+      pulls() { return GH_API.ghLoad(sh, dir).pulls; },
+      rulesets() { return GH_API.ghLoad(sh, dir).rulesets; },
+      releases() { return GH_API.ghLoad(sh, dir).releases ?? []; },
+      async tag(name) {
+        const oid = await git.resolveRef({ fs: sh.fs, dir, ref: `refs/tags/${name}` }).catch(() => null);
+        if (!oid) return null;
+        const obj = await git.readObject({ fs: sh.fs, dir, oid });
+        return obj.type === "tag" ? { annotated: true, commit: obj.object.object, message: obj.object.message.replace(/\n$/, "") } : { annotated: false, commit: oid, message: null };
+      },
+      async tags() { return (await git.listTags({ fs: sh.fs, dir })).sort(); },
+    };
+  }
   const commands = () => sh.history.slice();
   return {
-    repo, commands,
+    repo, github, commands,
     ran: (re) => sh.history.some((c) => (re instanceof RegExp ? re.test(c) : c.includes(re))),
     read: (path) => sh.fs.text(sh.abs(path)),
     exists: (path) => sh.fs.exists(sh.abs(path)),

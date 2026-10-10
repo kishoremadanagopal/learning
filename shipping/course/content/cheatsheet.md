@@ -109,3 +109,97 @@ git cat-file -p HEAD:prices.txt  # one file's contents (a blob)
 ```
 
 Commits are snapshots named by the hash of their contents, so a commit can't change: `--amend` makes a new one. A branch is a file holding one commit id, so branches are cheap.
+
+## Branches and stashes [7]
+
+```bash
+git branch                       # list branches (* = current); -v adds the latest commit
+git switch -c add-tubes          # create a branch here and switch to it
+git switch main                  # switch (git switch - goes back to the previous one)
+git log --oneline --graph --all  # every branch, as a graph
+git stash                        # put uncommitted changes aside (-u: untracked files too)
+git stash list                   # saved stashes, newest is stash@{0}
+git stash pop                    # bring the newest back and drop it
+git branch -d add-tubes          # delete a merged branch (-D: delete anyway)
+```
+
+## Merging and conflicts [8]
+
+```bash
+git merge add-tubes              # bring add-tubes into the branch you're on
+git merge --no-ff add-tubes      # always make a merge commit
+git merge --abort                # give up during a conflict
+```
+
+A conflict looks like this; edit the file to the right result, delete the markers, then `git add` the file and `git commit`:
+
+```text
+<<<<<<< HEAD
+your branch's version
+=======
+the other branch's version
+>>>>>>> add-tubes
+```
+
+## Remotes and GitHub [9]
+
+```bash
+gh auth login                                  # sign in (own computer)
+gh repo create shop --public --source=. --push # create on GitHub, add origin, push
+git remote -v                                  # list remotes
+git clone https://github.com/ada/shop.git      # copy a repository
+git push -u origin add-tubes                   # first push of a new branch (sets the upstream)
+git push                                       # later pushes
+git fetch                                      # download; moves origin/* only
+git pull                                       # fetch + integrate into your branch
+git status                                     # ahead / behind origin/main (as last fetched)
+```
+
+| Name | Means |
+|---|---|
+| `origin` | the main remote (usually GitHub) |
+| `origin/main` | where `main` was on `origin` when you last fetched or pushed |
+| upstream | the remote branch your branch is paired with (`git branch -vv`) |
+
+## Keeping in sync [10]
+
+```bash
+git pull --rebase                       # replay your unpushed commits on top of the remote's
+git config --global pull.rebase true    # make that the default
+git rebase origin/main                  # update a feature branch with the latest main
+git rebase --continue                   # after resolving a conflict and git add
+git rebase --abort                      # give up, back to before
+git push --force-with-lease             # push a rewritten branch, safely
+git cherry-pick <commit>                # copy one commit onto the current branch
+git rebase -i HEAD~3                    # reword, squash or drop recent commits (own computer)
+```
+
+Rewrite (rebase, amend, reset, force-push) only commits nobody else has built on. Never on a shared `main`.
+
+## Pull requests [11]
+
+```bash
+gh pr create --title "…" --body "…" --reviewer grace   # open (--draft for early feedback)
+gh pr list          gh pr view 1         gh pr diff 1
+gh pr review 1 --approve                 # or --request-changes / --comment with --body "…"
+gh pr merge 1 --squash --delete-branch   # or --merge / --rebase
+gh pr checkout 1                         # get someone's PR branch locally
+```
+
+| Merge method | Lands on `main` |
+|---|---|
+| merge commit | all the branch's commits + a merge commit |
+| squash and merge | one commit with all the changes (then `git branch -D` the local branch) |
+| rebase and merge | each commit, replayed; no merge commit |
+
+## Protecting main, workflows and releases [12]
+
+```bash
+gh api repos/OWNER/REPO/rulesets --method POST --input ruleset.json   # create a ruleset
+git tag -a v1.2.0 -m "Release 1.2.0"     # annotated tag
+git push origin v1.2.0                   # tags aren't pushed with branches (--tags: all)
+gh release create v1.2.0 --generate-notes
+git fetch upstream                       # forks: upstream = the original repository
+```
+
+SemVer `MAJOR.MINOR.PATCH`: breaking change → MAJOR, new feature → MINOR, bug fix → PATCH. Usual ruleset for `main`: require a pull request with 1+ approvals, block force pushes, restrict deletions, require status checks (Part 3).

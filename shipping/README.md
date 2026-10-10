@@ -1,6 +1,6 @@
 # Shipping software: Git, CI/CD, Docker, Kafka, Kubernetes, the cloud and observability
 
-A hands-on course that starts from zero: 6 lessons on how code gets from your computer to users and stays healthy there: version control with Git and GitHub, automated testing and deployment with GitHub Actions, containers with Docker, event streaming with Kafka, running containers with Kubernetes, deploying to the cloud, and observing running systems with logs, metrics and traces, ending with a project that ships a small service end to end.
+A hands-on course that starts from zero: 12 lessons on how code gets from your computer to users and stays healthy there: version control with Git and GitHub, automated testing and deployment with GitHub Actions, containers with Docker, event streaming with Kafka, running containers with Kubernetes, deploying to the cloud, and observing running systems with logs, metrics and traces, ending with a project that ships a small service end to end.
 
 Every engineering and data team uses these tools every day. AI engineers ship models and agents as containerised services behind CI/CD pipelines; analysts version their SQL and notebooks with Git and schedule pipelines that read event streams. Knowing them is what turns code that works on your laptop into software other people can rely on.
 
@@ -8,9 +8,9 @@ Every engineering and data team uses these tools every day. AI engineers ship mo
 
 The sandbox is a terminal in your browser. Type real `git` commands: a real Git engine runs in the page, with branches, merges, conflicts and a pretend GitHub. Docker, Kubernetes, Kafka and cloud commands run against faithful simulations, and you write real Dockerfiles, workflow files and manifests that are checked automatically. Nothing to install and no sign-up. Lessons also include **Try it on your own computer** labs, with official download links, for when you want to run the real tools.
 
-- every lesson, with **20 examples** you can run and change
-- **12 exercises** with automatic checks, each with an approach, hints and a walkthrough
-- **24 quiz questions**, with explanations
+- every lesson, with **48 examples** you can run and change
+- **24 exercises** with automatic checks, each with an approach, hints and a walkthrough
+- **48 quiz questions**, with explanations
 - your progress and work saved in your own browser
 
 **Before you start:** nothing. Lesson 1 teaches the few terminal commands you need. Some later examples read short Python or JavaScript programs; you don't need to write either.
@@ -19,7 +19,7 @@ The sandbox is a terminal in your browser. Type real `git` commands: a real Git 
 
 | | |
 |---|---|
-| 📘 [Lessons](#lessons) | 6 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
+| 📘 [Lessons](#lessons) | 12 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
 | 📖 [Glossary](glossary.md) | every term used in the course, defined in plain English |
 | 🧾 [Cheat sheet](cheatsheet.md) | the syntax and patterns on one page, and every task at a glance |
 
@@ -43,11 +43,21 @@ The sandbox is a terminal in your browser. Type real `git` commands: a real Git 
 | 5 | [Undoing things safely](lessons/05-undoing.md) | choosing an undo by what you want to change, git restore to discard working-tree changes, git restore --staged to unstage, git restore --source to bring back an old version, git commit --amend to fix the last message or add a forgotten file, git reset --soft, --mixed and --hard with what each moves, git revert to undo a commit with a new commit, reverting an older commit, the golden rule about shared history, the reflog and recovering after reset --hard, why uncommitted work can't be recovered | 9–10 |
 | 6 | [How Git stores your work](lessons/06-inside-git.md) | what's in the .git folder (HEAD, config, objects, refs, index), the four object types (blob, tree, commit, annotated tag), content-addressed storage, hashes and the same content giving the same id, SHA-1 today and SHA-256 as the Git 3.0 default, snapshots rather than diffs, loose objects and packfiles, refs and HEAD as small text files, symbolic refs, git cat-file -t and -p, git rev-parse, rev:path and ^{tree}, why branches are cheap, why commits can't change and --amend makes a new one | 11–12 |
 
+### Part 2: Branches, GitHub and pull requests (Intermediate)
+
+| # | Lesson | Topics | Sandbox |
+|---|---|---|---|
+| 7 | [Branches and stashes](lessons/07-branches.md) | what a branch is (a movable name for a commit), HEAD and the current branch, git branch, git switch -c, git switch -, git checkout -b in older guides, how switching rewrites files, uncommitted changes when switching, git branch -v, git log --oneline --graph --all, git stash, stash list, pop, apply and -u, naming conventions and prefixes, git branch -d and -D, detached HEAD | 13–14 |
+| 8 | [Merging and conflicts](lessons/08-merging.md) | git merge, fast-forward merges, the merge base, three-way merges, merge commits with two parents, the default merge message and --no-edit, --no-ff and --ff-only, reading merges in git log --graph, merge conflicts, conflict markers (<<<<<<< ======= >>>>>>>), resolving and marking resolved with git add, finishing with git commit, git merge --abort, conflictStyle zdiff3, editor merge tools, keeping conflicts rare | 15–16 |
+| 9 | [GitHub and remotes: clone, push and pull](lessons/09-remotes.md) | remote repositories and hosting (GitHub, GitLab, Bitbucket), remotes and origin, gh repo create with --source and --push, git remote add and -v, public and private repositories, git clone, remote-tracking branches such as origin/main, origin/HEAD, upstream branches and -u, ahead and behind in git status, git push, pushing new branches, push.autoSetupRemote, git fetch, git pull, rejected pushes (fetch first), signing in with gh auth login, Git Credential Manager and SSH keys, never storing tokens in URLs | 17–18 |
+| 10 | [Keeping in sync: rebase, pull and force-with-lease](lessons/10-syncing.md) | diverged branches, git pull's divergent-branches message, git pull --no-rebase (merge) and --rebase, pull.rebase and pull.ff settings, why rebased commits get new ids, git rebase origin/main on a feature branch, conflicts during a rebase, git rebase --continue, --skip and --abort, which side HEAD is during a rebase, git push --force-with-lease versus --force, --force-if-includes, when rewriting history is safe, git cherry-pick, interactive rebase on your own computer (reword, squash, fixup, drop), rebase.autoStash | 19–20 |
+| 11 | [Pull requests and code review](lessons/11-pull-requests.md) | what a pull request is, merge requests on GitLab, the pull request workflow, gh pr create with title, body, reviewer and draft, gh pr list and view, what a good PR description contains, Closes #12, small pull requests, reviewing (comment, approve, request changes), not approving your own PR, gh auth switch, gh pr diff and gh pr review, review etiquette, AI reviewers such as Copilot code review, merge methods (merge commit, squash and merge, rebase and merge), gh pr merge --delete-branch, updating main afterwards, git branch -D after a squash merge, fetch --prune | 21–22 |
+| 12 | [Protecting main, workflows and releases](lessons/12-team-workflows.md) | rulesets and what they enforce (require a pull request and approvals, block force pushes, restrict deletions, require status checks, require linear history), creating rulesets in Settings or with gh api, ~DEFAULT_BRANCH, branch protection rules, plan availability, rescuing a commit made on a protected main, admin bypass, GitHub flow, trunk-based development and feature flags, Git flow, forks and the upstream remote, semantic versioning, annotated tags and pushing them, GitHub releases with gh release create and --generate-notes, never moving published tags, Conventional Commits and release tools | 23–24 |
+
 ### Coming next
 
 The course is being written one part at a time. Still to come:
 
-2. Branches, GitHub and pull requests: branching, merging and conflicts, remotes, push and pull, code review
 3. CI/CD with GitHub Actions: workflows, jobs and steps, tests on every push, secrets, deploying automatically
 4. Docker: images and containers, writing a Dockerfile, layers and caching, volumes, networks and Compose
 5. Kafka and event streaming: topics, partitions, producers, consumers and consumer groups

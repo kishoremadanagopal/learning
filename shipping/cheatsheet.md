@@ -110,6 +110,100 @@ git cat-file -p HEAD:prices.txt  # one file's contents (a blob)
 
 Commits are snapshots named by the hash of their contents, so a commit can't change: `--amend` makes a new one. A branch is a file holding one commit id, so branches are cheap.
 
+## Branches and stashes [7]
+
+```bash
+git branch                       # list branches (* = current); -v adds the latest commit
+git switch -c add-tubes          # create a branch here and switch to it
+git switch main                  # switch (git switch - goes back to the previous one)
+git log --oneline --graph --all  # every branch, as a graph
+git stash                        # put uncommitted changes aside (-u: untracked files too)
+git stash list                   # saved stashes, newest is stash@{0}
+git stash pop                    # bring the newest back and drop it
+git branch -d add-tubes          # delete a merged branch (-D: delete anyway)
+```
+
+## Merging and conflicts [8]
+
+```bash
+git merge add-tubes              # bring add-tubes into the branch you're on
+git merge --no-ff add-tubes      # always make a merge commit
+git merge --abort                # give up during a conflict
+```
+
+A conflict looks like this; edit the file to the right result, delete the markers, then `git add` the file and `git commit`:
+
+```text
+<<<<<<< HEAD
+your branch's version
+=======
+the other branch's version
+>>>>>>> add-tubes
+```
+
+## Remotes and GitHub [9]
+
+```bash
+gh auth login                                  # sign in (own computer)
+gh repo create shop --public --source=. --push # create on GitHub, add origin, push
+git remote -v                                  # list remotes
+git clone https://github.com/ada/shop.git      # copy a repository
+git push -u origin add-tubes                   # first push of a new branch (sets the upstream)
+git push                                       # later pushes
+git fetch                                      # download; moves origin/* only
+git pull                                       # fetch + integrate into your branch
+git status                                     # ahead / behind origin/main (as last fetched)
+```
+
+| Name | Means |
+|---|---|
+| `origin` | the main remote (usually GitHub) |
+| `origin/main` | where `main` was on `origin` when you last fetched or pushed |
+| upstream | the remote branch your branch is paired with (`git branch -vv`) |
+
+## Keeping in sync [10]
+
+```bash
+git pull --rebase                       # replay your unpushed commits on top of the remote's
+git config --global pull.rebase true    # make that the default
+git rebase origin/main                  # update a feature branch with the latest main
+git rebase --continue                   # after resolving a conflict and git add
+git rebase --abort                      # give up, back to before
+git push --force-with-lease             # push a rewritten branch, safely
+git cherry-pick <commit>                # copy one commit onto the current branch
+git rebase -i HEAD~3                    # reword, squash or drop recent commits (own computer)
+```
+
+Rewrite (rebase, amend, reset, force-push) only commits nobody else has built on. Never on a shared `main`.
+
+## Pull requests [11]
+
+```bash
+gh pr create --title "…" --body "…" --reviewer grace   # open (--draft for early feedback)
+gh pr list          gh pr view 1         gh pr diff 1
+gh pr review 1 --approve                 # or --request-changes / --comment with --body "…"
+gh pr merge 1 --squash --delete-branch   # or --merge / --rebase
+gh pr checkout 1                         # get someone's PR branch locally
+```
+
+| Merge method | Lands on `main` |
+|---|---|
+| merge commit | all the branch's commits + a merge commit |
+| squash and merge | one commit with all the changes (then `git branch -D` the local branch) |
+| rebase and merge | each commit, replayed; no merge commit |
+
+## Protecting main, workflows and releases [12]
+
+```bash
+gh api repos/OWNER/REPO/rulesets --method POST --input ruleset.json   # create a ruleset
+git tag -a v1.2.0 -m "Release 1.2.0"     # annotated tag
+git push origin v1.2.0                   # tags aren't pushed with branches (--tags: all)
+gh release create v1.2.0 --generate-notes
+git fetch upstream                       # forks: upstream = the original repository
+```
+
+SemVer `MAJOR.MINOR.PATCH`: breaking change → MAJOR, new feature → MINOR, bug fix → PATCH. Usual ruleset for `main`: require a pull request with 1+ approvals, block force pushes, restrict deletions, require status checks (Part 3).
+
 ## Every task at a glance
 
 Generated from the **At a glance** table at the end of each lesson. The number in brackets links to the lesson.
@@ -148,3 +242,31 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | Turn a name into an id | git rev-parse HEAD~1 | nothing | — | [6](lessons/06-inside-git.md) |
 | Where does a branch point? | cat .git/refs/heads/main | nothing | — | [6](lessons/06-inside-git.md) |
 | What is HEAD? | cat .git/HEAD | nothing | — | [6](lessons/06-inside-git.md) |
+| Create a branch and switch to it | git switch -c add-tubes | new branch name; HEAD | git switch main; git branch -d add-tubes | [7](lessons/07-branches.md) |
+| Switch branches | git switch main (git switch - for the previous one) | HEAD and your files | git switch - | [7](lessons/07-branches.md) |
+| See all branches | git log --oneline --graph --all | nothing | — | [7](lessons/07-branches.md) |
+| Put work aside | git stash (-u for untracked files) | working tree and the stash | git stash pop | [7](lessons/07-branches.md) |
+| Delete a merged branch | git branch -d add-tubes | the branch name | git branch add-tubes <commit> | [7](lessons/07-branches.md) |
+| Merge a branch into the current one | git merge add-tubes | current branch (and a merge commit) | git reset --hard ORIG_HEAD (not pushed yet) | [8](lessons/08-merging.md) |
+| Always record a merge | git merge --no-ff add-tubes | current branch, new merge commit | git reset --hard ORIG_HEAD | [8](lessons/08-merging.md) |
+| Resolve a conflict | edit the file, git add file, git commit | the merge result | git merge --abort before committing | [8](lessons/08-merging.md) |
+| Give up on a merge | git merge --abort | files and branch back to before | — | [8](lessons/08-merging.md) |
+| Publish a repository | gh repo create shop --public --source=. --push | a GitHub repository, origin, upstream | gh repo delete (own computer) | [9](lessons/09-remotes.md) |
+| Copy a repository | git clone https://github.com/ada/shop.git | a new folder with origin | rm -r shop | [9](lessons/09-remotes.md) |
+| Send commits | git push (first time: git push -u origin branch) | the remote branch | git revert, then push | [9](lessons/09-remotes.md) |
+| Check for new work | git fetch, then git status | origin/* only | — | [9](lessons/09-remotes.md) |
+| Get and integrate new work | git pull | your branch and files | git reset --hard ORIG_HEAD (not pushed yet) | [9](lessons/09-remotes.md) |
+| Integrate remote work, keep history straight | git pull --rebase | your unpushed commits get new ids | git reset --hard ORIG_HEAD | [10](lessons/10-syncing.md) |
+| Make rebase the default for pull | git config --global pull.rebase true | ~/.gitconfig | git config --global --unset pull.rebase | [10](lessons/10-syncing.md) |
+| Update a feature branch | git fetch; git rebase origin/main | the branch's commits are rewritten | git rebase --abort (during) | [10](lessons/10-syncing.md) |
+| Push a rewritten branch | git push --force-with-lease | the remote branch | push the old commit back with --force-with-lease | [10](lessons/10-syncing.md) |
+| Copy one commit | git cherry-pick <commit> | adds a commit to the current branch | git reset --hard HEAD~1 (not pushed yet) | [10](lessons/10-syncing.md) |
+| Open a pull request | git push -u origin branch; gh pr create --title "…" --body "…" | a PR on GitHub | gh pr close <number> | [11](lessons/11-pull-requests.md) |
+| Review | gh pr diff <n>; gh pr review <n> --approve (or --request-changes, --comment) | the PR's reviews | submit a new review | [11](lessons/11-pull-requests.md) |
+| Merge and tidy up | gh pr merge <n> --squash --delete-branch | base branch on GitHub; branches deleted | git revert the merge commit, in a new PR | [11](lessons/11-pull-requests.md) |
+| Get someone's PR locally | gh pr checkout <n> | a local branch | git switch main; git branch -D branch | [11](lessons/11-pull-requests.md) |
+| Protect main | ruleset: pull request + approvals, block force pushes (Settings or gh api) | what GitHub accepts | disable or delete the ruleset | [12](lessons/12-team-workflows.md) |
+| Undo a commit made on protected main | git switch -c fix; git branch -f main origin/main | your local branches | — | [12](lessons/12-team-workflows.md) |
+| Tag a version | git tag -a v1.0.0 -m "First release" | a tag object | git tag -d v1.0.0 (before pushing) | [12](lessons/12-team-workflows.md) |
+| Publish the tag | git push origin v1.0.0 | the tag on GitHub | git push origin --delete v1.0.0 (avoid once used) | [12](lessons/12-team-workflows.md) |
+| Create a release | gh release create v1.0.0 --generate-notes | a release page | gh release delete v1.0.0 (own computer) | [12](lessons/12-team-workflows.md) |

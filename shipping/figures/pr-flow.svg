@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="424.656pt" height="308.232pt" viewBox="0 0 424.656 308.232" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 308.232 
+L 424.656 308.232 
+L 424.656 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 25.4952 129.168 
+L 127.5048 129.168 
+Q 131.94 129.168 131.94 124.7328 
+L 131.94 36.5832 
+Q 131.94 32.148 127.5048 32.148 
+L 25.4952 32.148 
+Q 21.06 32.148 21.06 36.5832 
+L 21.06 124.7328 
+Q 21.06 129.168 25.4952 129.168 
+z
+" clip-path="url(#p0a6f8f3b6a)" style="fill: #e3eef8; stroke: #1f6fb2; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 161.3232 129.168 
+L 263.3328 129.168 
+Q 267.768 129.168 267.768 124.7328 
+L 267.768 36.5832 
+Q 267.768 32.148 263.3328 32.148 
+L 161.3232 32.148 
+Q 156.888 32.148 156.888 36.5832 
+L 156.888 124.7328 
+Q 156.888 129.168 161.3232 129.168 
+z
+" clip-path="url(#p0a6f8f3b6a)" style="fill: #e3eef8; stroke: #1f6fb2; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 136.158299 80.658 
+Q 144.413268 80.658 150.879382 80.658 
+" clip-path="url(#p0a6f8f3b6a)" style="fill: none; stroke: #1f2933; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 145.279382 77.858 
+L 150.879382 80.658 
+L 145.279382 83.458 
+z
+" clip-path="url(#p0a6f8f3b6a)" style="fill: #1f2933; stroke: #1f2933; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 297.1512 129.168 
+L 399.1608 129.168 
+Q 403.596 129.168 403.596 124.7328 
+L 403.596 36.5832 
+Q 403.596 32.148 399.1608 32.148 
+L 297.1512 32.148 
+Q 292.716 32.148 292.716 36.5832 
+L 292.716 124.7328 
+Q 292.716 129.168 297.1512 129.168 
+z
+" clip-path="url(#p0a6f8f3b6a)" style="fill: #dcf3ee; stroke: #159a7f; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 271.986299 80.658 
+Q 280.241268 80.658 286.707382 80.658 
+" clip-path="url(#p0a6f8f3b6a)" style="fill: none; stroke: #1f2933; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 281.107382 77.858 
+L 286.707382 80.658 
+L 281.107382 83.458 
+z
+" clip-path="url(#p0a6f8f3b6a)" style="fill: #1f2933; stroke: #1f2933; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 297.1512 259.452 
+L 399.1608 259.452 
+Q 403.596 259.452 403.596 255.0168 
+L 403.596 166.8672 
+Q 403.596 162.432 399.1608 162.432 
+L 297.1512 162.432 
+Q 292.716 162.432 292.716 166.8672 
+L 292.716 255.0168 
+Q 292.716 259.452 297.1512 259.452 
+z
+" clip-path="url(#p0a6f8f3b6a)" style="fill: #ece6f8; stroke: #7a5ac8; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 348.156 133.387991 
+Q 348.156 145.800772 348.156 156.424699 
+" clip-path="url(#p0a6f8f3b6a)" style="fill: none; stroke: #1f2933; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 350.956 150.824699 
+L 348.156 156.424699 
+L 345.356 150.824699 
+z
+" clip-path="url(#p0a6f8f3b6a)" style="fill: #1f2933; stroke: #1f2933; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 161.3232 259.452 
+L 263.3328 259.452 
+Q 267.768 259.452 267.768 255.0168 
+L 267.768 166.8672 
+Q 267.768 162.432 263.3328 162.432 
+L 161.3232 162.432 
+Q 156.888 162.432 156.888 166.8672 
+L 156.888 255.0168 
+Q 156.888 259.452 161.3232 259.452 
+z
+" clip-path="url(#p0a6f8f3b6a)" style="fill: #fdecd6; stroke: #e07b00; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 288.497701 210.942 
+Q 280.242732 210.942 273.776618 210.942 
+" clip-path="url(#p0a6f8f3b6a)" style="fill: none; stroke: #1f2933; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 279.376618 213.742 
+L 273.776618 210.942 
+L 279.376618 208.142 
+z
+" clip-path="url(#p0a6f8f3b6a)" style="fill: #1f2933; stroke: #1f2933; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 25.4952 259.452 
+L 127.5048 259.452 
+Q 131.94 259.452 131.94 255.0168 
+L 131.94 166.8672 
+Q 131.94 162.432 127.5048 162.432 
+L 25.4952 162.432 
+Q 21.06 162.432 21.06 166.8672 
+L 21.06 255.0168 
+Q 21.06 259.452 25.4952 259.452 
+z
+" clip-path="url(#p0a6f8f3b6a)" style="fill: #e3eef8; stroke: #1f6fb2; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 152.669701 210.942 
+Q 144.414732 210.942 137.948618 210.942 
+" clip-path="url(#p0a6f8f3b6a)" style="fill: none; stroke: #1f2933; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 143.548618 213.742 
+L 137.948618 210.942 
+L 143.548618 208.142 
+z
+" clip-path="url(#p0a6f8f3b6a)" style="fill: #1f2933; stroke: #1f2933; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f6fb2" x="76.5" y="52.924113" transform="rotate(-0 76.5 52.924113)">1. branch</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; fill: #1f2933" transform="translate(37.367969 87.454219)">git switch -c</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; fill: #1f2933" transform="translate(49.408594 98.784531)">add-tubes</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f6fb2" x="212.328" y="52.924113" transform="rotate(-0 212.328 52.924113)">2. push</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; fill: #1f2933" transform="translate(179.216281 87.419844)">git push -u</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; fill: #1f2933" transform="translate(164.1655 98.750156)">origin add-tubes</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #159a7f" x="348.156" y="52.924113" transform="rotate(-0 348.156 52.924113)">3. open a PR</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="348.156" y="93.085" transform="rotate(-0 348.156 93.085)">gh pr create</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #7a5ac8" x="348.156" y="183.208112" transform="rotate(-0 348.156 183.208112)">4. review</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; fill: #1f2933" transform="translate(312.034125 217.738219)">gh pr review</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; fill: #1f2933" transform="translate(315.044281 229.068531)">+ CI checks</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #e07b00" x="212.328" y="183.122175" transform="rotate(-0 212.328 183.122175)">5. merge</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; fill: #1f2933" transform="translate(179.216281 217.728062)">gh pr merge</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; fill: #1f2933" transform="translate(179.216281 229.058375)">--squash -d</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f6fb2" x="76.5" y="183.208112" transform="rotate(-0 76.5 183.208112)">6. update</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; fill: #1f2933" transform="translate(31.347656 217.703844)">git switch main</text>
+    <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; fill: #1f2933" transform="translate(52.41875 229.034156)">git pull</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #52606d" x="212.328" y="287.435312" transform="rotate(-0 212.328 287.435312)">Changes reach main only through a reviewed pull request</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p0a6f8f3b6a">
+   <rect x="7.2" y="7.2" width="410.256" height="293.832"/>
+  </clipPath>
+ </defs>
+</svg>

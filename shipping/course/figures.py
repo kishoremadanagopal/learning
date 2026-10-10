@@ -127,6 +127,170 @@ def git_objects_fig():
     label(ax, 5.5, 0.35, "Each object is stored under the SHA-1 hash of its content: the same content always has the same name", size=9.5)
     return f
 
+# ---------------------------------------------------------------- Part 2: branches, GitHub and pull requests
+
+def commit_dot(ax, x, y, text, color=TEAL, sub=None):
+    ax.add_patch(Circle((x, y), 0.32, facecolor=SOFT[color], edgecolor=color, linewidth=1.8, zorder=3))
+    label(ax, x, y, text, size=8.5, mono=True, bold=True)
+    if sub:
+        label(ax, x, y - 0.55, sub, size=8, color=MUTED)
+
+
+def tag(ax, x, y, text, color=ORANGE, w=None):
+    w = w or 0.22 + 0.105 * len(text)
+    sbox(ax, x - w / 2, y - 0.2, w, 0.4, text, color=color, mono=True, fontsize=8.5)
+
+
+def link(ax, x1, y1, x2, y2, color=INK):
+    """An arrow from a commit to its parent (pointing back in time)."""
+    ax.add_patch(FancyArrowPatch((x1, y1), (x2, y2), arrowstyle="-|>", mutation_scale=12, color=color, linewidth=1.4,
+                                 shrinkA=17, shrinkB=17, zorder=2))
+
+
+@fig("branches")
+def branches_fig():
+    f, ax = diag.canvas(11.0, 3.9)
+    commit_dot(ax, 1.0, 1.6, "A")
+    commit_dot(ax, 3.0, 1.6, "B")
+    commit_dot(ax, 5.0, 1.6, "C", sub="Add opening hours")
+    commit_dot(ax, 5.0, 3.0, "D", color=BLUE, sub=None)
+    label(ax, 5.0, 3.55, "Add inner tubes", size=8, color=MUTED)
+    link(ax, 3.0, 1.6, 1.0, 1.6)
+    link(ax, 5.0, 1.6, 3.0, 1.6)
+    link(ax, 5.0, 3.0, 3.0, 1.6, color=BLUE)
+    tag(ax, 6.6, 1.6, "main")
+    arrow(ax, 6.12, 1.6, 5.38, 1.6, color=ORANGE)
+    tag(ax, 6.9, 3.0, "add-tubes", color=BLUE)
+    arrow(ax, 6.28, 3.0, 5.38, 3.0, color=BLUE)
+    tag(ax, 8.6, 3.0, "HEAD", color=PURPLE)
+    arrow(ax, 8.2, 3.0, 7.55, 3.0, color=PURPLE)
+    label(ax, 9.6, 1.95, "A branch is a pointer to a commit.", size=9, ha="center")
+    label(ax, 9.6, 1.6, "Committing moves the branch HEAD", size=9, ha="center")
+    label(ax, 9.6, 1.25, "points to; the others stay put.", size=9, ha="center")
+    label(ax, 2.0, 0.55, "arrows point to each commit's parent", size=8.5, color=MUTED)
+    return f
+
+
+@fig("merge-types")
+def merge_types_fig():
+    f, ax = diag.canvas(11.0, 5.4)
+    # fast-forward
+    label(ax, 0.2, 5.05, "Fast-forward: main hasn't moved, so Git just moves the pointer", size=10, bold=True, ha="left")
+    for x, t in [(1.0, "A"), (2.8, "B")]:
+        commit_dot(ax, x, 3.9, t)
+    commit_dot(ax, 4.6, 3.9, "C", color=BLUE)
+    link(ax, 2.8, 3.9, 1.0, 3.9)
+    link(ax, 4.6, 3.9, 2.8, 3.9, color=BLUE)
+    tag(ax, 2.8, 3.05, "main before", color=GREY)
+    arrow(ax, 2.8, 3.27, 2.8, 3.55, color=GREY)
+    tag(ax, 4.6, 4.75, "main, add-tubes", color=ORANGE)
+    arrow(ax, 4.6, 4.53, 4.6, 4.25, color=ORANGE)
+    label(ax, 8.2, 3.9, "git merge add-tubes\nUpdating …  Fast-forward\n(no new commit)", size=9, mono=True)
+    # three-way
+    label(ax, 0.2, 2.6, "Three-way merge: both moved, so Git makes a merge commit with two parents", size=10, bold=True, ha="left")
+    commit_dot(ax, 1.0, 1.3, "A")
+    commit_dot(ax, 2.8, 1.3, "B")
+    commit_dot(ax, 4.6, 0.6, "C", color=TEAL)
+    commit_dot(ax, 4.6, 2.0, "D", color=BLUE)
+    commit_dot(ax, 6.4, 1.3, "M", color=ORANGE)
+    link(ax, 2.8, 1.3, 1.0, 1.3)
+    link(ax, 4.6, 0.6, 2.8, 1.3)
+    link(ax, 4.6, 2.0, 2.8, 1.3, color=BLUE)
+    link(ax, 6.4, 1.3, 4.6, 0.6, color=ORANGE)
+    link(ax, 6.4, 1.3, 4.6, 2.0, color=ORANGE)
+    tag(ax, 7.6, 1.3, "main")
+    arrow(ax, 7.15, 1.3, 6.75, 1.3, color=ORANGE)
+    label(ax, 2.8, 0.55, "merge base", size=8, color=MUTED)
+    label(ax, 9.5, 1.3, "Git combines the changes\nB→C and B→D;\nif both changed the same\nlines, that's a conflict", size=8.5)
+    return f
+
+
+@fig("merge-vs-rebase")
+def merge_vs_rebase_fig():
+    f, ax = diag.canvas(11.0, 6.0)
+    label(ax, 0.2, 5.7, "Before: your main and GitHub's main have diverged", size=10, bold=True, ha="left")
+    commit_dot(ax, 1.0, 4.6, "A")
+    commit_dot(ax, 2.8, 4.6, "B")
+    commit_dot(ax, 4.6, 5.1, "G", color=PURPLE)
+    commit_dot(ax, 4.6, 4.1, "Y", color=BLUE)
+    link(ax, 2.8, 4.6, 1.0, 4.6)
+    link(ax, 4.6, 5.1, 2.8, 4.6, color=PURPLE)
+    link(ax, 4.6, 4.1, 2.8, 4.6, color=BLUE)
+    tag(ax, 6.1, 5.1, "origin/main", color=PURPLE)
+    tag(ax, 5.8, 4.1, "main", color=BLUE)
+    label(ax, 8.8, 4.6, "G: Grace's commit (pushed)\nY: your commit (not pushed)", size=8.5)
+    # merge
+    label(ax, 0.2, 3.3, "git pull --no-rebase: a merge commit joins them", size=10, bold=True, ha="left")
+    commit_dot(ax, 1.0, 2.2, "A")
+    commit_dot(ax, 2.8, 2.2, "B")
+    commit_dot(ax, 4.6, 2.7, "G", color=PURPLE)
+    commit_dot(ax, 4.6, 1.7, "Y", color=BLUE)
+    commit_dot(ax, 6.4, 2.2, "M", color=ORANGE)
+    link(ax, 2.8, 2.2, 1.0, 2.2)
+    link(ax, 4.6, 2.7, 2.8, 2.2, color=PURPLE)
+    link(ax, 4.6, 1.7, 2.8, 2.2, color=BLUE)
+    link(ax, 6.4, 2.2, 4.6, 2.7, color=ORANGE)
+    link(ax, 6.4, 2.2, 4.6, 1.7, color=ORANGE)
+    tag(ax, 7.6, 2.2, "main")
+    # rebase
+    label(ax, 0.2, 1.0, "git pull --rebase: your commit is replayed on top, as a new commit Y′", size=10, bold=True, ha="left")
+    commit_dot(ax, 1.0, 0.0, "A")
+    commit_dot(ax, 2.8, 0.0, "B")
+    commit_dot(ax, 4.6, 0.0, "G", color=PURPLE)
+    commit_dot(ax, 6.4, 0.0, "Y′", color=BLUE)
+    link(ax, 2.8, 0.0, 1.0, 0.0)
+    link(ax, 4.6, 0.0, 2.8, 0.0, color=PURPLE)
+    link(ax, 6.4, 0.0, 4.6, 0.0, color=BLUE)
+    tag(ax, 7.6, 0.0, "main")
+    label(ax, 9.4, 0.0, "a straight line; Y′ has\na new id (Y is left behind)", size=8.5)
+    ax.set_ylim(-0.7, 6.0)
+    return f
+
+
+@fig("remotes")
+def remotes_fig():
+    f, ax = diag.canvas(11.0, 4.6)
+    sbox(ax, 0.2, 0.4, 4.4, 3.6, "", color=BLUE)
+    label(ax, 2.4, 3.7, "your computer: ~/shop", size=10.5, bold=True, color=BLUE)
+    sbox(ax, 0.5, 2.55, 3.8, 0.75, "main  (your branch)", color=BLUE, mono=True, fontsize=9)
+    sbox(ax, 0.5, 1.45, 3.8, 0.75, "origin/main  (last seen on GitHub)", color=PURPLE, mono=True, fontsize=9)
+    label(ax, 2.4, 0.85, "working tree + .git", size=8.5, color=MUTED)
+    sbox(ax, 6.6, 0.9, 4.2, 2.6, "", color=TEAL)
+    label(ax, 8.7, 3.2, "GitHub: ada/shop", size=10.5, bold=True, color=TEAL)
+    sbox(ax, 7.0, 1.9, 3.4, 0.75, "main", color=TEAL, mono=True, fontsize=9)
+    label(ax, 8.7, 1.35, "the remote called origin", size=8.5, color=MUTED)
+    arrow(ax, 4.4, 3.0, 6.95, 2.4, color=INK)
+    label(ax, 5.6, 3.05, "git push", size=9, mono=True, bold=True)
+    arrow(ax, 6.95, 2.1, 4.4, 1.8, color=INK)
+    label(ax, 5.6, 1.6, "git fetch", size=9, mono=True, bold=True)
+    label(ax, 5.5, 0.05, "git pull = git fetch, then merge (or rebase) origin/main into main", size=9.5)
+    return f
+
+
+@fig("pr-flow")
+def pr_flow_fig():
+    f, ax = diag.canvas(7.4, 5.3)
+    steps = [("1", "branch", "git switch -c\nadd-tubes", BLUE), ("2", "push", "git push -u\norigin add-tubes", BLUE),
+             ("3", "open a PR", "gh pr create", TEAL), ("4", "review", "gh pr review\n+ CI checks", PURPLE),
+             ("5", "merge", "gh pr merge\n--squash -d", ORANGE), ("6", "update", "git switch main\ngit pull", BLUE)]
+    w, h, gap = 2.0, 1.75, 0.45
+    for i, (n, title, cmd, c) in enumerate(steps):
+        col = i if i < 3 else 5 - i            # snake: 1 2 3 on top, then 4 5 6 right to left
+        x = 0.25 + col * (w + gap)
+        y = 3.1 if i < 3 else 0.75
+        sbox(ax, x, y, w, h, "", color=c)
+        label(ax, x + w / 2, y + h - 0.32, f"{n}. {title}", size=11, bold=True, color=c)
+        label(ax, x + w / 2, y + 0.7, cmd, size=10, mono=True)
+        if i in (1, 2):
+            arrow(ax, x - gap + 0.04, y + h / 2, x - 0.04, y + h / 2, color=INK)
+        if i in (4, 5):
+            arrow(ax, x + w + gap - 0.04, y + h / 2, x + w + 0.04, y + h / 2, color=INK)
+        if i == 3:
+            arrow(ax, x + w / 2, 3.1 - 0.04, x + w / 2, y + h + 0.04, color=INK)
+    label(ax, 3.7, 0.3, "Changes reach main only through a reviewed pull request", size=11, color=MUTED)
+    return f
+
+
 def main(names):
     OUT.mkdir(exist_ok=True)
     for name in names or FIGS:

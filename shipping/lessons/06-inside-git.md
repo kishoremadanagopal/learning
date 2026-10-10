@@ -344,4 +344,4 @@ cat ~/main.txt ~/head.txt
 </details>
 
 ---
-Previous: [Lesson 5](05-undoing.md) · Back to the [course home](../README.md)
+Previous: [Lesson 5](05-undoing.md) · Next: [Lesson 7: Branches and stashes](07-branches.md)
