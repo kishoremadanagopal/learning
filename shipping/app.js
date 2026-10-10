@@ -306,7 +306,11 @@
     const errLine = (line) => /^(fatal|error|bash|remote: error|ERROR|X |failed|Sandbox error|warning|Could not apply|aborted|must provide|unknown|could not|gh: )\b|^ ! |^(Usage|usage): /.test(line) ? "err"
       : /^hint:/.test(line) ? "hint" : "";
     const errText = (t) => t.split(/(?<=\n)/).map((line) => { const c = errLine(line); return c ? `<span class="${c}">${esc(line)}</span>` : esc(line); }).join("");
-    let h = (res.parts || []).map(([k, t]) => k === "err" ? errText(t) : k === "cmd" ? `<span class="cmd">${esc(t)}</span>` : esc(t)).join("");
+    // Standard output gets the colours a real terminal shows: test results, gh's ✓ and X, Actions log markers.
+    const outLine = (line) => /^\s*✖ |^X |\t##\[error\]|^##\[error\]|^npm error|^E: /.test(line) ? "err"
+      : /^\s*✔ |^✓ /.test(line) ? "pass" : /^! |\t##\[warning\]|^##\[warning\]/.test(line) ? "warn" : "";
+    const outText = (t) => t.split(/(?<=\n)/).map((line) => { const c = outLine(line); return c ? `<span class="${c}">${esc(line)}</span>` : esc(line); }).join("");
+    let h = (res.parts || []).map(([k, t]) => k === "err" ? errText(t) : k === "cmd" ? `<span class="cmd">${esc(t)}</span>` : outText(t)).join("");
     (res.figures || []).forEach((f, i) => { h += `<img alt="Chart ${i + 1} drawn by your code" src="data:image/png;base64,${f}">`; });
     return h;
   }

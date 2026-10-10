@@ -18,6 +18,9 @@ NODE_BIN=/path/to/node22-or-newer python course/build.py --test
 | `figures.py` | draws the lesson diagrams in `figures/` |
 | `shell.js` | the sandbox terminal: an in-memory file system, a small shell, and git's command-line interface on top of isomorphic-git; later parts register simulated tools |
 | `github.js` | everything with more than one repository: clone, remote, fetch, push, pull, rebase, cherry-pick, and the pretend GitHub with the `gh` command (repositories live under `/github.com/<owner>/<name>`; you're signed in as `ada`, with a second account `grace`) |
+| `nodejs.js` | the `node` and `npm` commands: runs JavaScript files with ES modules and a few built-in modules, `node --test` with Node.js's spec reporter (fixed durations), and package.json scripts |
+| `actions.js` | GitHub Actions on the pretend GitHub: workflows start on push, pull requests, releases and `gh workflow run`; jobs run in a fresh runner shell; expressions, matrices, needs, outputs, secrets, artifacts, caches, environments, Pages deployments; `gh run`, `gh workflow`, `gh secret`, `gh variable`, `gh pr checks`, `actionlint` and `curl` for Pages sites |
+| `yamllib.js` | yaml 2.9.1 (eemeli/yaml), bundled with esbuild, for reading workflow files |
 | `gitlib.js` | isomorphic-git 1.42.2 with a Buffer polyfill, bundled with esbuild (`esbuild entry.js --bundle --format=esm --minify --inject:shim.js`) |
 | `runner.js` | runs JavaScript examples and checks (shared with the JavaScript course) |
 | `harness.mjs` | the Node.js test harness |

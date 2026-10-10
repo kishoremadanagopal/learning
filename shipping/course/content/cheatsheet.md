@@ -203,3 +203,65 @@ git fetch upstream                       # forks: upstream = the original reposi
 ```
 
 SemVer `MAJOR.MINOR.PATCH`: breaking change → MAJOR, new feature → MINOR, bug fix → PATCH. Usual ruleset for `main`: require a pull request with 1+ approvals, block force pushes, restrict deletions, require status checks (Part 3).
+
+## CI/CD with GitHub Actions [13–18]
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['**.md']
+  pull_request:
+  workflow_dispatch:                       # a Run workflow button / gh workflow run
+permissions:
+  contents: read                           # least privilege for the GITHUB_TOKEN
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true                 # false for deployments
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node: [22, 24, 26]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm test
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      API_TOKEN: ${{ secrets.API_TOKEN }}  # secrets through env:, never pasted into run:
+    steps:
+      - run: ./deploy.sh
+```
+
+| Task | Command |
+|---|---|
+| list runs / one run / its log | `gh run list`, `gh run view <ID>`, `gh run view <ID> --log` (`--log-failed`) |
+| wait for a run | `gh run watch <ID> --exit-status` |
+| run again | `gh run rerun <ID>` (`--failed` for failed jobs only) |
+| start a manual run | `gh workflow run <file> -f name=value` |
+| a pull request's checks | `gh pr checks` |
+| secrets and variables | `gh secret set NAME --body "…"`, `gh variable set NAME --body "…"`, `gh secret list` |
+| download artifacts | `gh run download <ID> --name <artifact>` |
+| check workflow files | `actionlint` |
+
+| Expression | Means |
+|---|---|
+| `${{ github.ref }}`, `${{ github.sha }}`, `${{ github.actor }}` | the event's ref, commit and user |
+| `${{ matrix.node }}`, `${{ inputs.reason }}` | matrix value, workflow input |
+| `${{ steps.<id>.outputs.x }}`, `${{ needs.<job>.outputs.x }}` | outputs (`echo "x=1" >> "$GITHUB_OUTPUT"`) |
+| `${{ secrets.NAME }}`, `${{ vars.NAME }}` | secret (masked as `***`), configuration variable |
+| `if: failure()`, `if: always()` | run after a failure / whatever happened |
+| `${{ hashFiles('package-lock.json') }}` | a fingerprint for cache keys |
+
+Pages deployment: `gh api repos/{owner}/{repo}/pages -X POST -f build_type=workflow` once, then a build job ending in `actions/upload-pages-artifact@v5` (`path: dist`) and a deploy job with `needs: build`, `permissions: pages: write, id-token: write`, `environment: github-pages` and `actions/deploy-pages@v5`.

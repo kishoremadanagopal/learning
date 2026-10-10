@@ -40,7 +40,7 @@ DATA = ROOT / "data"
 FIGURES = ROOT / "figures"
 NODE = os.environ.get("NODE_BIN", "node")
 RUNNABLE = ("sh", "js")            # fences that become runnable examples (sh: the sandbox terminal; js: JavaScript)
-SANDBOX_FILES = ("app.js", "worker.js", "runner.js", "shell.js", "github.js", "gitlib.js")
+SANDBOX_FILES = ("app.js", "worker.js", "runner.js", "shell.js", "github.js", "nodejs.js", "actions.js", "gitlib.js", "yamllib.js")
 STATIC_LANG = {"js-static": "js", "json": "json", "bash": "bash", "yaml": "yaml", "dockerfile": "dockerfile", "ini": "ini",
                "python": "python", "properties": "properties", "toml": "toml", "diff": "diff", "console": "bash"}
 SETUPS = {}                        # named setup scripts from content/setups.md, used with setup=<name>
@@ -92,7 +92,8 @@ def setup_script(name):
         return ""
     if name not in SETUPS:
         raise ValueError(f"Unknown setup {name!r}: define it in content/setups.md")
-    return SETUPS[name]
+    # a line "@include other-setup" stands for that setup's commands
+    return re.sub(r"^@include (\S+)$", lambda m: setup_script(m.group(1)), SETUPS[name], flags=re.M)
 
 
 def load_setups():
@@ -536,6 +537,9 @@ NODE_BIN=/path/to/node22-or-newer python course/build.py --test
 | `figures.py` | draws the lesson diagrams in `figures/` |
 | `shell.js` | the sandbox terminal: an in-memory file system, a small shell, and git's command-line interface on top of isomorphic-git; later parts register simulated tools |
 | `github.js` | everything with more than one repository: clone, remote, fetch, push, pull, rebase, cherry-pick, and the pretend GitHub with the `gh` command (repositories live under `/github.com/<owner>/<name>`; you're signed in as `ada`, with a second account `grace`) |
+| `nodejs.js` | the `node` and `npm` commands: runs JavaScript files with ES modules and a few built-in modules, `node --test` with Node.js's spec reporter (fixed durations), and package.json scripts |
+| `actions.js` | GitHub Actions on the pretend GitHub: workflows start on push, pull requests, releases and `gh workflow run`; jobs run in a fresh runner shell; expressions, matrices, needs, outputs, secrets, artifacts, caches, environments, Pages deployments; `gh run`, `gh workflow`, `gh secret`, `gh variable`, `gh pr checks`, `actionlint` and `curl` for Pages sites |
+| `yamllib.js` | yaml 2.9.1 (eemeli/yaml), bundled with esbuild, for reading workflow files |
 | `gitlib.js` | isomorphic-git 1.42.2 with a Buffer polyfill, bundled with esbuild (`esbuild entry.js --bundle --format=esm --minify --inject:shim.js`) |
 | `runner.js` | runs JavaScript examples and checks (shared with the JavaScript course) |
 | `harness.mjs` | the Node.js test harness |
@@ -598,7 +602,10 @@ def assemble(data):
     (SITE / "lessons.js").write_text(lessons_js)
     for f in SANDBOX_FILES:
         if (ROOT / f).resolve() != (SITE / f).resolve():
-            shutil.copy(ROOT / f, SITE / f)
+            text = (ROOT / f).read_text()
+            # version the modules' own imports too, so a cached old module never meets a new one
+            text = re.sub(r'(from\s+"\./[\w-]+\.js)(")', lambda m: f"{m.group(1)}?v={version}{m.group(2)}", text)
+            (SITE / f).write_text(text)
     if DATA.exists() and DATA.resolve() != (SITE / "data").resolve():
         if (SITE / "data").exists():
             shutil.rmtree(SITE / "data")

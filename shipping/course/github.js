@@ -19,6 +19,8 @@ export function installGitHub(api) {
     grace: { name: "Grace Hopper", email: "grace@example.com" },
   };
   const GITHUB_BOT = { name: "GitHub", email: "noreply@github.com" };
+  // Other parts of the sandbox (GitHub Actions in actions.js) plug in here.
+  const hooks = { afterRefUpdate: [], prEvent: null, releaseEvent: null, checksFor: null, ghCommands: {}, prSubcommands: {}, apiRoutes: [] };
 
   const refOid = (sh, dir, ref) => git.resolveRef({ fs: sh.fs, dir, ref }).catch(() => null);
   const currentBranch = (sh, dir) => git.currentBranch({ fs: sh.fs, dir, fullname: false }).catch(() => undefined);
@@ -121,7 +123,7 @@ export function installGitHub(api) {
   function rulesFor(sh, dir, branch) {
     const data = ghLoad(sh, dir);
     const def = defaultBranchOf(sh, dir);
-    const out = { pr: null, noForce: false, noDelete: false };
+    const out = { pr: null, noForce: false, noDelete: false, checks: [] };
     for (const rs of data.rulesets || []) {
       if (rs.enforcement !== "active") continue;
       const inc = rs.conditions?.ref_name?.include ?? [];
@@ -133,6 +135,7 @@ export function installGitHub(api) {
         if (r.type === "pull_request") out.pr = Math.max(out.pr ?? 0, r.parameters?.required_approving_review_count ?? 0);
         if (r.type === "non_fast_forward") out.noForce = true;
         if (r.type === "deletion") out.noDelete = true;
+        if (r.type === "required_status_checks") for (const c of r.parameters?.required_status_checks ?? []) if (c?.context && !out.checks.includes(c.context)) out.checks.push(c.context);
       }
     }
     return out;
@@ -396,7 +399,7 @@ export function installGitHub(api) {
       const fromLabel = src ? bare(src) : null;
       const old = await refOid(sh, r.dir, dstRef);
       const res = { from: fromLabel, to: dstName, dstRef, newOid: srcOid, srcBranch, ok: false, isTag };
-      const rules = r.github && !isTag ? rulesFor(sh, r.dir, dstName) : { pr: null, noForce: false, noDelete: false };
+      const rules = r.github && !isTag ? rulesFor(sh, r.dir, dstName) : { pr: null, noForce: false, noDelete: false, checks: [] };
       const ruleBlock = (why) => {
         remoteMsgs.push(`remote: error: GH013: Repository rule violations found for ${dstRef}.\nremote: Review all repository rules at https://github.com/${r.owner}/${r.repo}/rules?ref=${encodeURIComponent(dstRef)}\nremote: \nremote: - ${why}\nremote: \n`);
         Object.assign(res, { flag: "!", summary: "[remote rejected]", msg: "push declined due to repository rule violations" });
@@ -425,6 +428,8 @@ export function installGitHub(api) {
           Object.assign(res, { flag: "!", summary: "[rejected]", msg: "stale info" });
         } else if (rules.pr !== null) {
           ruleBlock("Changes must be made through a pull request.");
+        } else if (rules.checks.length) {
+          ruleBlock(rules.checks.map((c) => `Required status check "${c}" is expected.`).join("\nremote: - "));
         } else if (!ff && rules.noForce) {
           ruleBlock("Cannot force-push to this branch");
         } else if (ff) {
@@ -458,6 +463,10 @@ export function installGitHub(api) {
       if (r.github && x.created && !x.isTag && x.to !== def && !(await openPullFor(sh, r.dir, x.to))) {
         remoteMsgs.push(`remote: \nremote: Create a pull request for '${x.to}' on GitHub by visiting:\nremote:      https://github.com/${r.owner}/${r.repo}/pull/new/${x.to}\nremote: \n`);
       }
+    }
+    if (r.github) {
+      const updates = changed.filter((x) => x.ok).map((x) => ({ ref: x.dstRef, before: x.old, after: x.deleted ? null : x.newOid, deleted: !!x.deleted }));
+      for (const h of hooks.afterRefUpdate) await h(sh, r.dir, updates, ghState(sh).user);
     }
     if (!opts["-q"] || changed.some((x) => !x.ok)) {
       let out = remoteMsgs.join("") + `To ${r.url}\n`;
@@ -976,7 +985,12 @@ export function installGitHub(api) {
     const approvals = [...states.values()].filter((s) => s === "APPROVED").length;
     const changesRequested = [...states.values()].some((s) => s === "CHANGES_REQUESTED");
     const rules = rulesFor(sh, repo.dir, pr.base);
-    const blocked = !opts.admin && ((rules.pr !== null && approvals < rules.pr) || (rules.pr !== null && changesRequested));
+    let checksOk = true;
+    if (rules.checks.length && hooks.checksFor) {
+      const info = await hooks.checksFor(sh, repo.dir, pr);
+      checksOk = rules.checks.every((name) => info.list.some((c) => c.name === name && (c.bucket === "pass" || c.bucket === "skipping")));
+    }
+    const blocked = !opts.admin && ((rules.pr !== null && approvals < rules.pr) || (rules.pr !== null && changesRequested) || !checksOk);
     const mergeTree = await mergeTreesOnServer(sh, repo.dir, st.mergeBase, st.base, st.head);
     const fail = (reason, conflicts) => {
       let msg = `X Pull request ${repo.full}#${pr.number} is not mergeable: ${reason}.\nTo have the pull request merged after all the requirements have been met, add the \`--auto\` flag.\n`;
@@ -1014,6 +1028,9 @@ export function installGitHub(api) {
     }
     await git.writeRef({ fs: sh.fs, dir: repo.dir, ref: `refs/heads/${pr.base}`, value: newBase, force: true });
     pr.state = "MERGED";
+    await ghSave(sh, repo.dir, data);
+    for (const h of hooks.afterRefUpdate) await h(sh, repo.dir, [{ ref: `refs/heads/${pr.base}`, before: st.base, after: newBase }], user);
+    Object.assign(data, ghLoad(sh, repo.dir), { pulls: data.pulls });
     pr.stats = { commits: st.commits, additions: st.additions, deletions: st.deletions };
     pr.mergedBy = user;
     pr.mergeCommit = newBase;
@@ -1054,10 +1071,14 @@ USAGE
 
 COMMANDS IN THIS SANDBOX
   auth:       status, switch, login
-  pr:         create, list, view, diff, checkout, review, merge, close, ready
+  pr:         create, list, view, diff, checkout, review, merge, close, ready, checks
   release:    create, list, view
   repo:       create, clone, view
-  api:        repos/{owner}/{repo}/rulesets (GET and POST)
+  api:        repos/{owner}/{repo}/rulesets (GET and POST), repos/{owner}/{repo}/pages
+  run:        list, view, watch, rerun, download, delete
+  workflow:   list, run, view, enable, disable
+  secret:     set, list, delete
+  variable:   set, list, delete
 `;
 
   registerCommand("gh", async (sh, args, io) => {
@@ -1083,6 +1104,7 @@ COMMANDS IN THIS SANDBOX
     if (cmd === "pr") return ghPr(sh, sub, rest, io, state);
     if (cmd === "api") return ghApi(sh, [sub, ...rest], io, state);
     if (cmd === "release") return ghRelease(sh, sub, rest, io, state);
+    if (hooks.ghCommands[cmd]) return hooks.ghCommands[cmd](sh, sub, rest, io, state);
     throw new GhError(`unknown command "${cmd}" for "gh"\n\nUsage:  gh <command> <subcommand> [flags]\n\nRun 'gh help' to see the commands this sandbox supports.`);
   }
 
@@ -1173,6 +1195,7 @@ COMMANDS IN THIS SANDBOX
   }
 
   async function ghPr(sh, sub, rest, io, state) {
+    if (hooks.prSubcommands[sub]) return hooks.prSubcommands[sub](sh, rest, io, state);
     const repo = await baseRepo(sh);
     if (sub === "create") {
       const { opts } = parseOpts(rest, { "-t|--title": "value", "-b|--body": "value", "-B|--base": "value", "-H|--head": "value", "-d|--draft": "bool",
@@ -1206,6 +1229,7 @@ COMMANDS IN THIS SANDBOX
         createdAt: clockNow(sh), reviews: [], requested: reviewers, comments: [] };
       data.pulls.push(pr);
       await ghSave(sh, repo.dir, data);
+      if (hooks.prEvent) await hooks.prEvent(sh, repo.dir, pr, "opened", state.user);
       io.err(`\nCreating ${pr.draft ? "draft " : ""}pull request for ${head} into ${base} in ${repo.full}\n\n`);
       io.out(`https://github.com/${repo.full}/pull/${pr.number}\n`);
       return 0;
@@ -1231,7 +1255,12 @@ COMMANDS IN THIS SANDBOX
       const verb = pr.state === "MERGED" ? "merged" : "wants to merge";
       let out = `${pr.title} ${repo.full}#${pr.number}\n`;
       out += `${stateTitle} • ${pr.author} ${verb} ${st.commits} commit${st.commits === 1 ? "" : "s"} into ${pr.base} from ${pr.head} • ${fuzzyAgo(sh, pr.createdAt)}\n`;
-      out += `+${st.additions} -${st.deletions} • No checks\n`;
+      let checks = "No checks";
+      if (hooks.checksFor && pr.state === "OPEN") {
+        const c = await hooks.checksFor(sh, repo.dir, pr);
+        if (c.total) checks = c.failing ? (c.failing === c.total ? "× All checks failing" : `× ${c.failing}/${c.total} checks failing`) : c.pending ? "- Checks pending" : c.passing === c.total ? "✓ Checks passing" : "No checks";
+      }
+      out += `+${st.additions} -${st.deletions} • ${checks}\n`;
       const states = reviewStates(pr);
       if (states.size) {
         const label = { APPROVED: "Approved", CHANGES_REQUESTED: "Changes requested", COMMENTED: "Commented", REQUESTED: "Requested" };
@@ -1332,6 +1361,7 @@ COMMANDS IN THIS SANDBOX
       if (data.releases.some((x) => x.tag === tag)) throw new GhError(`a release with the same tag name already exists: ${tag}`);
       if (opts["-n"] === undefined && !opts["--generate-notes"]) throw new GhError("`--notes` or `--generate-notes` required when not running interactively");
       let target = await refOid(sh, repo.dir, `refs/tags/${tag}`);
+      const createdTag = !target;
       if (!target) {
         // like GitHub, create the tag from the target branch (the default branch unless --target)
         const branchName = opts["--target"] ?? defaultBranchOf(sh, repo.dir);
@@ -1350,6 +1380,8 @@ COMMANDS IN THIS SANDBOX
       data.releases.push({ tag, title: opts["-t"] ?? tag, notes, draft: !!opts["-d"], prerelease: !!opts["-p"], author: state.user, createdAt: clockNow(sh),
         lastPull: Math.max(0, ...data.pulls.filter((p) => p.state === "MERGED").map((p) => p.number)) });
       await ghSave(sh, repo.dir, data);
+      if (createdTag) for (const h of hooks.afterRefUpdate) await h(sh, repo.dir, [{ ref: `refs/tags/${tag}`, before: null, after: target }], state.user);
+      if (!opts["-d"] && hooks.releaseEvent) await hooks.releaseEvent(sh, repo.dir, data.releases.at(-1), target, state.user);
       if (repo.local) await doFetch(sh, repo.local, repo.remote, { out: () => {}, err: () => {} }, { quiet: true }).catch(() => {});
       io.out(`https://github.com/${repo.full}/releases/tag/${tag}\n`);
       return 0;
@@ -1381,6 +1413,10 @@ COMMANDS IN THIS SANDBOX
       path = path.replace("{owner}", b.owner).replace("{repo}", b.repo);
     }
     const m = /^\/?repos\/([^/]+)\/([^/]+)\/rulesets\/?$/.exec(path);
+    if (!m) {
+      const method0 = (opts["-X"] ?? (opts["--input"] || opts["-f"] || opts["-F"] ? "POST" : "GET")).toUpperCase();
+      for (const route of hooks.apiRoutes) { const res = await route(sh, path, opts, io, method0); if (res !== null && res !== undefined) return res; }
+    }
     if (!m) throw new GhError(`the sandbox's gh api only supports repos/{owner}/{repo}/rulesets (got "${path}")`);
     const rdir = `${GH}/${m[1]}/${m[2]}`;
     if (!sh.fs.isDir(rdir + "/.git")) throw new GhError("gh: Not Found (HTTP 404)");
@@ -1430,5 +1466,6 @@ COMMANDS IN THIS SANDBOX
   }
 
   // For exercise checks: read what's on the pretend GitHub.
-  return { ghLoad, defaultBranchOf, branchesOf, GH };
+  return { ghLoad, ghSave, defaultBranchOf, branchesOf, GH, hooks, GhError, fuzzyAgo, table, baseRepo, ghState, copyObjects, findPull,
+    mergeTreesOnServer, writeCommitFromFiles, rulesFor };
 }

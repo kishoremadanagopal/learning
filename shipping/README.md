@@ -1,6 +1,6 @@
 # Shipping software: Git, CI/CD, Docker, Kafka, Kubernetes, the cloud and observability
 
-A hands-on course that starts from zero: 12 lessons on how code gets from your computer to users and stays healthy there: version control with Git and GitHub, automated testing and deployment with GitHub Actions, containers with Docker, event streaming with Kafka, running containers with Kubernetes, deploying to the cloud, and observing running systems with logs, metrics and traces, ending with a project that ships a small service end to end.
+A hands-on course that starts from zero: 18 lessons on how code gets from your computer to users and stays healthy there: version control with Git and GitHub, automated testing and deployment with GitHub Actions, containers with Docker, event streaming with Kafka, running containers with Kubernetes, deploying to the cloud, and observing running systems with logs, metrics and traces, ending with a project that ships a small service end to end.
 
 Every engineering and data team uses these tools every day. AI engineers ship models and agents as containerised services behind CI/CD pipelines; analysts version their SQL and notebooks with Git and schedule pipelines that read event streams. Knowing them is what turns code that works on your laptop into software other people can rely on.
 
@@ -8,9 +8,9 @@ Every engineering and data team uses these tools every day. AI engineers ship mo
 
 The sandbox is a terminal in your browser. Type real `git` commands: a real Git engine runs in the page, with branches, merges, conflicts and a pretend GitHub. Docker, Kubernetes, Kafka and cloud commands run against faithful simulations, and you write real Dockerfiles, workflow files and manifests that are checked automatically. Nothing to install and no sign-up. Lessons also include **Try it on your own computer** labs, with official download links, for when you want to run the real tools.
 
-- every lesson, with **48 examples** you can run and change
-- **24 exercises** with automatic checks, each with an approach, hints and a walkthrough
-- **48 quiz questions**, with explanations
+- every lesson, with **68 examples** you can run and change
+- **36 exercises** with automatic checks, each with an approach, hints and a walkthrough
+- **72 quiz questions**, with explanations
 - your progress and work saved in your own browser
 
 **Before you start:** nothing. Lesson 1 teaches the few terminal commands you need. Some later examples read short Python or JavaScript programs; you don't need to write either.
@@ -19,7 +19,7 @@ The sandbox is a terminal in your browser. Type real `git` commands: a real Git 
 
 | | |
 |---|---|
-| 📘 [Lessons](#lessons) | 12 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
+| 📘 [Lessons](#lessons) | 18 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
 | 📖 [Glossary](glossary.md) | every term used in the course, defined in plain English |
 | 🧾 [Cheat sheet](cheatsheet.md) | the syntax and patterns on one page, and every task at a glance |
 
@@ -54,11 +54,21 @@ The sandbox is a terminal in your browser. Type real `git` commands: a real Git 
 | 11 | [Pull requests and code review](lessons/11-pull-requests.md) | what a pull request is, merge requests on GitLab, the pull request workflow, gh pr create with title, body, reviewer and draft, gh pr list and view, what a good PR description contains, Closes #12, small pull requests, reviewing (comment, approve, request changes), not approving your own PR, gh auth switch, gh pr diff and gh pr review, review etiquette, AI reviewers such as Copilot code review, merge methods (merge commit, squash and merge, rebase and merge), gh pr merge --delete-branch, updating main afterwards, git branch -D after a squash merge, fetch --prune | 21–22 |
 | 12 | [Protecting main, workflows and releases](lessons/12-team-workflows.md) | rulesets and what they enforce (require a pull request and approvals, block force pushes, restrict deletions, require status checks, require linear history), creating rulesets in Settings or with gh api, ~DEFAULT_BRANCH, branch protection rules, plan availability, rescuing a commit made on a protected main, admin bypass, GitHub flow, trunk-based development and feature flags, Git flow, forks and the upstream remote, semantic versioning, annotated tags and pushing them, GitHub releases with gh release create and --generate-notes, never moving published tags, Conventional Commits and release tools | 23–24 |
 
+### Part 3: CI/CD with GitHub Actions (Intermediate)
+
+| # | Lesson | Topics | Sandbox |
+|---|---|---|---|
+| 13 | [CI/CD and your first workflow](lessons/13-ci-cd.md) | what continuous integration, continuous delivery and continuous deployment are, pipelines, why small frequent changes break less (DORA research), the Node.js project (package.json, scripts, prices.js and its tests), npm test and exit statuses, GitHub Actions' building blocks (workflow, event, job, step, runner, action), hosted runner labels and the 2026 image changes, free minutes, YAML maps, lists, block strings and its traps, writing and pushing a first workflow, actions/checkout and actions/setup-node, gh run list and gh run view, reading a run's log, actionlint, act and the VS Code extension | 25–26 |
+| 14 | [When the build fails](lessons/14-failing-builds.md) | reading a failed run (gh run view, annotations, --log-failed), the test runner's failure report, reproducing failures locally, fixing forward and reverting, never rewriting shared history, re-running runs and failed jobs, flaky tests, choosing events (push, pull_request, branches, branches-ignore, tags, paths), filter patterns, the merge commit a pull request run tests, gh pr checks, required status checks in rulesets, strict checks, status badges, notifications | 27–28 |
+| 15 | [Jobs, matrices and expressions](lessons/15-workflow-syntax.md) | several jobs and needs, parallel jobs and skipped dependants, matrices (combinations, include, exclude, fail-fast), supported Node.js versions in October 2026, expressions and ${{ }}, contexts (github, env, vars, secrets, matrix, strategy, steps, needs, runner), operators and functions, if conditions and the implicit success(), status functions, env at three levels, GITHUB_ENV, GITHUB_OUTPUT and step outputs, job outputs and needs, workflow commands (notice, warning, error, group, add-mask), actionlint and its rules, debug logging | 29–30 |
+| 16 | [Secrets, permissions and safe workflows](lessons/16-secrets-security.md) | env, configuration variables and secrets, gh variable set and gh secret set, masking and its limits, environment secrets, secrets and fork pull requests, the GITHUB_TOKEN, default read-only permissions, the permissions key and least privilege, script injection through expressions and the env fix, third-party actions as a supply-chain risk, the tj-actions compromise of March 2025, pinning to commit SHAs, Dependabot for actions, SHA-pinning policies, pull_request_target and pwn requests, checkout v7's refusal of fork code, OIDC instead of stored cloud keys, zizmor | 31–32 |
+| 17 | [Continuous delivery with GitHub Actions](lessons/17-deploying.md) | building once and deploying what was tested, artifacts (upload-artifact, download-artifact, retention, gh run download), GitHub Pages and the GitHub Actions source, upload-pages-artifact and deploy-pages, pages and id-token permissions, the github-pages environment, smoke tests with curl, environments and protection rules (required reviewers, wait timers, deployment branches, environment secrets), workflow_dispatch with typed inputs, deploying on releases and tags, concurrency for deployments, rolling back by reverting or re-running, other static hosts | 33–34 |
+| 18 | [Fast, reusable pipelines](lessons/18-pipelines.md) | why speed matters, caching with actions/cache, keys, restore keys and hashFiles, setup-node's npm cache, cache scope, size and expiry, path filters and required checks, concurrency with cancel-in-progress, timeout-minutes, reusable workflows (workflow_call, inputs, secrets), composite actions, sharing from an organisation repository, scheduled workflows (cron fields, UTC, the timezone key, limits, the 60-day rule), what Actions costs in 2026 (included minutes, per-minute prices, larger runners), self-hosted runners and their risks, other CI systems, CI for analysts and AI engineers (SQL tests, notebooks, data contracts, evaluation gates) | 35–36 |
+
 ### Coming next
 
 The course is being written one part at a time. Still to come:
 
-3. CI/CD with GitHub Actions: workflows, jobs and steps, tests on every push, secrets, deploying automatically
 4. Docker: images and containers, writing a Dockerfile, layers and caching, volumes, networks and Compose
 5. Kafka and event streaming: topics, partitions, producers, consumers and consumer groups
 6. Kubernetes basics: pods, deployments, services, configuration and scaling

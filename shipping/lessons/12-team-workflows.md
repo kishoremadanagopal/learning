@@ -371,4 +371,4 @@ gh release list
 </details>
 
 ---
-Previous: [Lesson 11](11-pull-requests.md) · Back to the [course home](../README.md)
+Previous: [Lesson 11](11-pull-requests.md) · Next: [Lesson 13: CI/CD and your first workflow](13-ci-cd.md)

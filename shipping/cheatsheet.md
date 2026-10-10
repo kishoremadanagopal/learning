@@ -204,6 +204,68 @@ git fetch upstream                       # forks: upstream = the original reposi
 
 SemVer `MAJOR.MINOR.PATCH`: breaking change → MAJOR, new feature → MINOR, bug fix → PATCH. Usual ruleset for `main`: require a pull request with 1+ approvals, block force pushes, restrict deletions, require status checks (Part 3).
 
+## CI/CD with GitHub Actions [13–18]
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['**.md']
+  pull_request:
+  workflow_dispatch:                       # a Run workflow button / gh workflow run
+permissions:
+  contents: read                           # least privilege for the GITHUB_TOKEN
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true                 # false for deployments
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node: [22, 24, 26]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm test
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      API_TOKEN: ${{ secrets.API_TOKEN }}  # secrets through env:, never pasted into run:
+    steps:
+      - run: ./deploy.sh
+```
+
+| Task | Command |
+|---|---|
+| list runs / one run / its log | `gh run list`, `gh run view <ID>`, `gh run view <ID> --log` (`--log-failed`) |
+| wait for a run | `gh run watch <ID> --exit-status` |
+| run again | `gh run rerun <ID>` (`--failed` for failed jobs only) |
+| start a manual run | `gh workflow run <file> -f name=value` |
+| a pull request's checks | `gh pr checks` |
+| secrets and variables | `gh secret set NAME --body "…"`, `gh variable set NAME --body "…"`, `gh secret list` |
+| download artifacts | `gh run download <ID> --name <artifact>` |
+| check workflow files | `actionlint` |
+
+| Expression | Means |
+|---|---|
+| `${{ github.ref }}`, `${{ github.sha }}`, `${{ github.actor }}` | the event's ref, commit and user |
+| `${{ matrix.node }}`, `${{ inputs.reason }}` | matrix value, workflow input |
+| `${{ steps.<id>.outputs.x }}`, `${{ needs.<job>.outputs.x }}` | outputs (`echo "x=1" >> "$GITHUB_OUTPUT"`) |
+| `${{ secrets.NAME }}`, `${{ vars.NAME }}` | secret (masked as `***`), configuration variable |
+| `if: failure()`, `if: always()` | run after a failure / whatever happened |
+| `${{ hashFiles('package-lock.json') }}` | a fingerprint for cache keys |
+
+Pages deployment: `gh api repos/{owner}/{repo}/pages -X POST -f build_type=workflow` once, then a build job ending in `actions/upload-pages-artifact@v5` (`path: dist`) and a deploy job with `needs: build`, `permissions: pages: write, id-token: write`, `environment: github-pages` and `actions/deploy-pages@v5`.
+
 ## Every task at a glance
 
 Generated from the **At a glance** table at the end of each lesson. The number in brackets links to the lesson.
@@ -270,3 +332,35 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | Tag a version | git tag -a v1.0.0 -m "First release" | a tag object | git tag -d v1.0.0 (before pushing) | [12](lessons/12-team-workflows.md) |
 | Publish the tag | git push origin v1.0.0 | the tag on GitHub | git push origin --delete v1.0.0 (avoid once used) | [12](lessons/12-team-workflows.md) |
 | Create a release | gh release create v1.0.0 --generate-notes | a release page | gh release delete v1.0.0 (own computer) | [12](lessons/12-team-workflows.md) |
+| Run the project's tests | npm test | nothing | — | [13](lessons/13-ci-cd.md) |
+| Start CI on every push to main | .github/workflows/ci.yml with on: push: branches: [main] | a file in the repository | delete the file, or gh workflow disable CI | [13](lessons/13-ci-cd.md) |
+| List recent runs | gh run list | nothing | — | [13](lessons/13-ci-cd.md) |
+| See a run's jobs | gh run view <ID> | nothing | — | [13](lessons/13-ci-cd.md) |
+| Read a run's log | gh run view <ID> --log | nothing | — | [13](lessons/13-ci-cd.md) |
+| See why a run failed | gh run view <ID> --log-failed | nothing | — | [14](lessons/14-failing-builds.md) |
+| Run a workflow again | gh run rerun <ID> --failed | a new attempt of the run | — | [14](lessons/14-failing-builds.md) |
+| Undo the commit that broke main | git revert <commit>; git push | adds a commit | git revert the revert | [14](lessons/14-failing-builds.md) |
+| Test pull requests | on: pull_request in the workflow | the workflow file | remove the trigger | [14](lessons/14-failing-builds.md) |
+| See a pull request's checks | gh pr checks | nothing | — | [14](lessons/14-failing-builds.md) |
+| Require tests to pass | a ruleset with required_status_checks | repository rules | delete or disable the ruleset | [14](lessons/14-failing-builds.md) |
+| Run jobs in order | needs: <job> | the workflow file | remove needs | [15](lessons/15-workflow-syntax.md) |
+| Test on several versions | strategy: matrix: node: [22, 24, 26] | the workflow file | remove the matrix | [15](lessons/15-workflow-syntax.md) |
+| Run a step only on main | if: github.ref == 'refs/heads/main' | the workflow file | remove the if | [15](lessons/15-workflow-syntax.md) |
+| Pass a value to later steps | echo "name=value" >> "$GITHUB_OUTPUT" | the step's outputs | — | [15](lessons/15-workflow-syntax.md) |
+| Check workflow files | actionlint | nothing | — | [15](lessons/15-workflow-syntax.md) |
+| Store a secret | gh secret set NAME --body "…" | encrypted repository secret | gh secret delete NAME | [16](lessons/16-secrets-security.md) |
+| Store a setting | gh variable set NAME --body "…" | repository variable | gh variable delete NAME | [16](lessons/16-secrets-security.md) |
+| Give a step a secret | env: NAME: ${{ secrets.NAME }} | the workflow file | remove it | [16](lessons/16-secrets-security.md) |
+| Limit the token | permissions: contents: read | the workflow file | remove the permissions block | [16](lessons/16-secrets-security.md) |
+| Use untrusted text safely | env: X: ${{ … }}, then "$X" in the script | the workflow file | — | [16](lessons/16-secrets-security.md) |
+| Pin an action | uses: owner/action@<full SHA> # vX.Y.Z | the workflow file | use the tag again | [16](lessons/16-secrets-security.md) |
+| Pass files between jobs | actions/upload-artifact, then actions/download-artifact | the run's artifacts | they expire (90 days by default) | [17](lessons/17-deploying.md) |
+| Turn on Pages for workflows | gh api repos/{owner}/{repo}/pages -X POST -f build_type=workflow | repository settings | gh api … -X DELETE | [17](lessons/17-deploying.md) |
+| Deploy a static site | upload-pages-artifact + deploy-pages, with pages and id-token write | the live site | deploy an older commit | [17](lessons/17-deploying.md) |
+| Deploy by hand | gh workflow run <file> -f name=value | starts a run | — | [17](lessons/17-deploying.md) |
+| Check a live page | curl -sSf <url> | nothing | — | [17](lessons/17-deploying.md) |
+| Cache a folder | actions/cache with path and key: ${{ hashFiles(…) }} | the repository's caches | gh cache delete <key> | [18](lessons/18-pipelines.md) |
+| Skip docs-only changes | paths-ignore: ['**.md'] | the workflow file | remove the filter | [18](lessons/18-pipelines.md) |
+| Cancel outdated runs | concurrency: group + cancel-in-progress: true | the workflow file | remove concurrency | [18](lessons/18-pipelines.md) |
+| Share a job | on: workflow_call, then uses: ./.github/workflows/x.yml | workflow files | inline the job again | [18](lessons/18-pipelines.md) |
+| Run on a schedule | on: schedule: - cron: "30 2 * * *" | the workflow file | gh workflow disable <name> | [18](lessons/18-pipelines.md) |

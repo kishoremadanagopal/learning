@@ -291,6 +291,66 @@ def pr_flow_fig():
     return f
 
 
+@fig("actions-anatomy")
+def actions_anatomy_fig():
+    f, ax = diag.canvas(7.6, 6.6)
+    sbox(ax, 2.55, 5.55, 2.5, 0.85, "", color=ORANGE)
+    label(ax, 3.8, 6.12, "event", size=11, bold=True, color=ORANGE)
+    label(ax, 3.8, 5.78, "push to main", size=10, mono=True)
+    arrow(ax, 3.8, 5.5, 3.8, 5.12, color=INK)
+    sbox(ax, 0.15, 0.55, 7.3, 4.5, "", color=BLUE)
+    label(ax, 3.8, 4.72, "workflow: .github/workflows/ci.yml", size=10.5, bold=True, color=BLUE, mono=True)
+    for x, title, runner, steps, color in [(0.4, "job: test", "runs on ubuntu-24.04", ["checkout", "setup-node", "npm test"], TEAL),
+                                           (4.0, "job: deploy", "needs: test", ["download-artifact", "deploy-pages", "curl the site"], PURPLE)]:
+        sbox(ax, x, 0.8, 3.2, 3.6, "", color=color)
+        label(ax, x + 1.6, 4.05, title, size=11, bold=True, color=color, mono=True)
+        label(ax, x + 1.6, 3.65, runner, size=9.5, color=MUTED, mono=True)
+        for k, step in enumerate(steps):
+            sbox(ax, x + 0.25, 2.65 - k * 0.7, 2.7, 0.55, step, color=GREY, mono=True, fontsize=10)
+    arrow(ax, 3.62, 2.6, 3.98, 2.6, color=INK)
+    label(ax, 3.8, 0.18, "Each job gets a fresh runner and runs its steps in order.", size=10, color=MUTED)
+    return f
+
+
+@fig("ci-cd-stages")
+def ci_cd_stages_fig():
+    f, ax = diag.canvas(7.6, 6.0)
+    stages = [("commit", "git push", BLUE), ("build & test", "npm ci, npm test", TEAL), ("artifact", "a tested build", ORANGE), ("deploy", "to production", PURPLE)]
+    ys = [4.8, 3.45, 2.1, 0.75]
+    for (title, sub, color), y in zip(stages, ys):
+        sbox(ax, 0.2, y, 2.9, 0.95, "", color=color)
+        label(ax, 1.65, y + 0.63, title, size=11, bold=True, color=color)
+        label(ax, 1.65, y + 0.27, sub, size=9.5, mono=title != "artifact" and title != "deploy")
+    for y1, y2 in zip(ys, ys[1:]):
+        arrow(ax, 1.65, y1 - 0.03, 1.65, y2 + 0.98, color=INK)
+    def bracket(x, bottom_row, lines, color):
+        top, bottom = ys[0] + 0.9, ys[bottom_row] + 0.47
+        ax.plot([x - 0.12, x, x, 4.1], [top, top, bottom, bottom], color=color, lw=1.6)
+        for k, line in enumerate(lines):
+            label(ax, 4.2, bottom + 0.2 - k * 0.4, line, size=10, color=color, bold=k == 0, ha="left")
+    bracket(3.35, 1, ["continuous integration", "every change built and tested"], TEAL)
+    bracket(3.6, 2, ["continuous delivery", "ready to ship; a person deploys"], ORANGE)
+    bracket(3.85, 3, ["continuous deployment", "every passing change ships"], PURPLE)
+    return f
+
+
+@fig("job-graph")
+def job_graph_fig():
+    f, ax = diag.canvas(7.6, 5.0)
+    for k, v in enumerate(["22", "24", "26"]):
+        sbox(ax, 0.2, 3.3 - k * 1.1, 2.0, 0.75, f"test ({v})", color=TEAL, mono=True, fontsize=10.5)
+        arrow(ax, 2.25, 3.68 - k * 1.1, 2.95, 2.78 - k * 0.12, color=INK)
+    label(ax, 1.2, 4.4, "matrix: node", size=10, color=TEAL, mono=True)
+    sbox(ax, 3.0, 2.3, 1.8, 0.75, "build", color=ORANGE, mono=True, fontsize=10.5)
+    label(ax, 3.9, 3.35, "needs: test", size=10, color=ORANGE, mono=True)
+    arrow(ax, 4.85, 2.68, 5.45, 2.68, color=INK)
+    sbox(ax, 5.5, 2.3, 1.9, 0.75, "deploy", color=PURPLE, mono=True, fontsize=10.5)
+    label(ax, 6.45, 3.35, "needs: build", size=10, color=PURPLE, mono=True)
+    label(ax, 6.45, 1.9, "if: on main", size=10, color=MUTED, mono=True)
+    label(ax, 3.8, 0.2, "Jobs run in parallel unless needs: chains them.", size=10, color=MUTED)
+    return f
+
+
 def main(names):
     OUT.mkdir(exist_ok=True)
     for name in names or FIGS:
