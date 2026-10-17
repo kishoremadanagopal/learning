@@ -9,12 +9,12 @@ import { inspect } from "./runner.js";
 
 export const NODE_RELEASES = {
   22: { version: "v22.23.3", npm: "10.9.9" },
-  24: { version: "v24.21.0", npm: "11.19.0" },
-  26: { version: "v26.11.1", npm: "11.20.0" },
+  24: { version: "v24.22.0", npm: "11.19.1" },
+  26: { version: "v26.12.0", npm: "11.20.0" },
 };
 export const DEFAULT_NODE = 24;
 
-export function installNode({ registerCommand, ExitSignal }) {
+export function installNode({ registerCommand, ExitSignal, NET }) {
   const AsyncFunction = (async () => {}).constructor;
   const release = (sh) => NODE_RELEASES[sh.nodeMajor ?? DEFAULT_NODE] ?? NODE_RELEASES[DEFAULT_NODE];
 
@@ -35,9 +35,12 @@ export function installNode({ registerCommand, ExitSignal }) {
     const lines = String(err && err.stack || "").split("\n").slice(1);
     const frames = [];
     for (const ln of lines) {
+      // built-in functions that threw, like JSON.parse, stay in the stack as Node.js shows them
+      const native = /^\s*at (JSON\.(?:parse|stringify)) \(<anonymous>\)$/.exec(ln);
+      if (native && !frames.length) { frames.push({ fn: native[1], native: true }); continue; }
       const m = /^\s*at (?:(.*?) \()?(file:\/\/[^)\s]+?):(\d+):(\d+)\)?$/.exec(ln);
       if (!m) continue;
-      if (!/^file:\/\/(\/home\/learner\/|\/home\/runner\/|\/tmp\/\[eval\])/.test(m[2])) continue;   // only the sandbox's own files
+      if (!/^file:\/\/\//.test(m[2]) || /^file:\/\/\/home\/claude\//.test(m[2])) continue;   // only the sandbox's own files (not the engine's)
       const line = Number(m[3]) - 2;     // the AsyncFunction wrapper adds two lines
       let fn = m[1] || "";
       if (/^(async )?(anonymous|Object\.<anonymous>)$/.test(fn) || /\beval\b/.test(fn)) fn = "";
@@ -47,6 +50,7 @@ export function installNode({ registerCommand, ExitSignal }) {
   }
   function formatFrames(frames, testFn = false) {
     return frames.map((f, k) => {
+      if (f.native) return `    at ${f.fn} (<anonymous>)`;
       let fn = f.fn;
       if (testFn && k === frames.length - 1 && !fn) fn = "TestContext.<anonymous>";
       return `    at ${fn ? `${fn} (${f.file}:${f.line}:${f.col})` : `${f.file}:${f.line}:${f.col}`}`;
@@ -60,6 +64,10 @@ export function installNode({ registerCommand, ExitSignal }) {
     const frames = formatFrames(userFrames(err), testFn);
     if (frames) text += "\n" + frames;
     const keys = Object.keys(err).filter((k) => k !== "name");
+    if (err.cause instanceof Error) {
+      const inner = inspectError(err.cause).replace(/\n/g, "\n  ");
+      return text + ` {\n  [cause]: ${inner}\n}`;
+    }
     if (keys.length) {
       // util.inspect shows the properties one level deep: nested objects and arrays as [Object] and [Array]
       const prop = (v) => (Array.isArray(v) ? "[Array]" : v && typeof v === "object" && !(v instanceof RegExp) && !(v instanceof Date) ? `[${v.constructor?.name ?? "Object"}]` : inspect(v, 0, new Set(), false));
@@ -416,6 +424,8 @@ export function installNode({ registerCommand, ExitSignal }) {
   /* ------------------------------------------------------------ a Node.js process */
 
   async function runProcess(sh, io, argv, { mode = "run", files = [] } = {}) {
+    // a container's main process writes straight to the container's log, even after its command line has finished
+    if (sh.liveIO && mode === "run") io = sh.liveIO;
     const rel = release(sh);
     const cache = new Map();
     let exitCode = 0;
@@ -429,18 +439,31 @@ export function installNode({ registerCommand, ExitSignal }) {
       table: (rows) => io.out(inspect(rows, 2, new Set(), false) + "\n"),
     };
     const env = { ...sh.env };
+    // the process's lifetime: servers keep it running; signal handlers (process.on("SIGTERM")) are kept for docker stop
+    const proc = { servers: new Set(), signals: {}, ended: false, exitCode: null, io, sh };
+    proc.end = (code) => {
+      if (proc.ended) return;
+      proc.ended = true;
+      proc.exitCode = code;
+      for (const s of [...proc.servers]) s._drop();
+      if (proc.onEnd) proc.onEnd(code);
+    };
+    proc.crash = (e) => { proc.end(e instanceof NodeExit ? e.code : reportUncaught(e)); };
+    proc.idle = () => { if (!proc.servers.size && proc.alive) proc.end(exitCode ?? 0); };
     const processObj = {
       argv: ["/usr/local/bin/node", ...argv], env, platform: "linux", arch: "x64", version: rel.version,
-      versions: { node: rel.version.slice(1) }, pid: 4242,
+      versions: { node: rel.version.slice(1) }, pid: sh.pid ?? 4242,
       cwd: () => sh.cwd,
       exit: (code = exitCode) => { throw new NodeExit(code ?? 0); },
       get exitCode() { return exitCode; }, set exitCode(v) { exitCode = v; },
       stdout: { write: (t) => { io.out(String(t)); return true; }, isTTY: false },
       stderr: { write: (t) => { io.err(String(t)); return true; }, isTTY: false },
-      on: () => processObj, once: () => processObj, nextTick: (fn, ...a) => queueMicrotask(() => fn(...a)),
+      on: (ev, fn) => { (proc.signals[ev] ??= []).push(fn); return processObj; }, once: (ev, fn) => processObj.on(ev, fn),
+      off: (ev, fn) => { proc.signals[ev] = (proc.signals[ev] ?? []).filter((f) => f !== fn); return processObj; },
+      nextTick: (fn, ...a) => queueMicrotask(() => fn(...a)),
       hrtime: { bigint: () => BigInt(Date.now()) * 1000000n },
     };
-    const st = (fn, ms, ...a) => { const id = setTimeout(() => { timers.delete(id); fn(...a); }, Math.min(ms ?? 0, 2000)); timers.add(id); return id; };
+    const st = (fn, ms, ...a) => { const id = setTimeout(() => { timers.delete(id); if (proc.ended) return; try { fn(...a); } catch (e) { if (proc.alive) proc.crash(e); else throw e; } }, Math.min(ms ?? 0, 2000)); timers.add(id); return id; };
     const ct = (id) => { clearTimeout(id); timers.delete(id); };
     const si = () => { throw new Error("setInterval isn't available in the sandbox's node; use setTimeout"); };
     const runner = mode === "test" ? makeTestRunner((k, t) => (k === "err" ? io.err(t) : io.out(t))) : null;
@@ -496,6 +519,161 @@ export function installNode({ registerCommand, ExitSignal }) {
       const r = makeTestRunner((k, t) => (k === "err" ? io.err(t) : io.out(t)));
       return r.api;
     })();
+    /* node:http and fetch, over the sandbox's pretend network (docker.js): servers listen in this shell's network
+       namespace (the host's, or a container's), and curl, wget and fetch reach them by host name and port */
+    const STATUS = { 200: "OK", 201: "Created", 204: "No Content", 301: "Moved Permanently", 302: "Found", 304: "Not Modified", 400: "Bad Request", 401: "Unauthorized", 403: "Forbidden", 404: "Not Found", 405: "Method Not Allowed", 409: "Conflict", 418: "I'm a Teapot", 422: "Unprocessable Entity", 429: "Too Many Requests", 500: "Internal Server Error", 502: "Bad Gateway", 503: "Service Unavailable", 504: "Gateway Timeout" };
+    const emitter = (obj) => {
+      const ls = {};
+      obj.on = (ev, fn) => { (ls[ev] ??= []).push(fn); return obj; };
+      obj.once = (ev, fn) => { const w = (...a) => { obj.off(ev, w); fn(...a); }; return obj.on(ev, w); };
+      obj.off = obj.removeListener = (ev, fn) => { ls[ev] = (ls[ev] ?? []).filter((f) => f !== fn); return obj; };
+      obj.emit = (ev, ...a) => { const fns = ls[ev] ?? []; for (const f of [...fns]) f(...a); return fns.length > 0; };
+      obj.listenerCount = (ev) => (ls[ev] ?? []).length;
+      obj._listeners = (ev) => [...(ls[ev] ?? [])];
+      return obj;
+    };
+    // network errors with the properties (and property order) Node.js gives them
+    const netErr = (code, syscall, address, port) => {
+      if (code === "EADDRINUSE") return Object.assign(new Error(`listen EADDRINUSE: address already in use ${address}:${port}`), { code, errno: -98, syscall, address, port });
+      if (code === "ENOTFOUND") return Object.assign(new Error(`getaddrinfo ENOTFOUND ${address}`), { errno: -3008, code, syscall: "getaddrinfo", hostname: address });
+      return Object.assign(new Error(`connect ${code} ${address}:${port}`), { errno: -111, code, syscall: "connect", address, port });
+    };
+    function createServer(optsOrHandler, maybeHandler) {
+      const handler = typeof optsOrHandler === "function" ? optsOrHandler : maybeHandler;
+      const server = emitter({ listening: false });
+      if (handler) server.on("request", handler);
+      let bound = null;
+      server.listen = (...args) => {
+        const cb = typeof args[args.length - 1] === "function" ? args.pop() : null;
+        let port = args[0], host = args[1];
+        if (port && typeof port === "object") { host = port.host; port = port.port; }
+        port = port === undefined || port === null ? 0 : Number(port);
+        if (cb) server.once("listening", cb);
+        const ns = NET && NET.ns(sh);
+        if (!ns) { setTimeout(() => server.emit("listening")); return server; }
+        if (!port) port = 30000 + (ns.listeners.size * 7919) % 30000;
+        st(() => {
+          const err = ns.listeners.has(port) ? netErr("EADDRINUSE", "listen", host ?? "::", port) : null;
+          if (err) { if (!server.emit("error", err)) proc.crash(err); return; }
+          bound = { port, host: host ?? null };
+          ns.listeners.set(port, { host: bound.host, handle: (r) => handle(r), proc });
+          server.listening = true;
+          proc.servers.add(server);
+          server.emit("listening");
+        }, 0);
+        return server;
+      };
+      server.address = () => (bound ? { address: bound.host ?? "::", family: !bound.host || bound.host.includes(":") ? "IPv6" : "IPv4", port: bound.port } : null);
+      server._drop = () => {
+        if (!bound) return;
+        const ns = NET && NET.ns(sh);
+        if (ns && ns.listeners.get(bound.port)?.proc === proc) ns.listeners.delete(bound.port);
+        bound = null;
+        server.listening = false;
+        proc.servers.delete(server);
+      };
+      server.close = (cb) => {
+        server._drop();
+        setTimeout(() => { try { server.emit("close"); if (cb) cb(); proc.idle(); } catch (e) { proc.crash(e); } }, 0);
+        return server;
+      };
+      server.closeAllConnections = server.closeIdleConnections = () => {};
+      // one request: resolves with the response, or { error: "empty" } when the process died on it
+      function handle({ method = "GET", url = "/", headers = {}, body = "", remote = "172.17.0.1", now = 0 }) {
+        return new Promise((resolve) => {
+          const req = emitter({ method, url, headers: Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v])), httpVersion: "1.1", socket: { remoteAddress: remote }, complete: false });
+          req.setEncoding = () => req;
+          req[Symbol.asyncIterator] = async function* () { if (body) yield new TextEncoder().encode(body); };
+          const res = emitter({ statusCode: 200, statusMessage: undefined, headersSent: false, writableEnded: false });
+          const hdrs = new Map();
+          let chunks = [], chunked = false, done = false;
+          res.setHeader = (k, v) => { hdrs.set(String(k).toLowerCase(), [String(k), v]); return res; };
+          res.getHeader = (k) => hdrs.get(String(k).toLowerCase())?.[1];
+          res.getHeaders = () => Object.fromEntries([...hdrs.values()].map(([k, v]) => [k.toLowerCase(), v]));
+          res.hasHeader = (k) => hdrs.has(String(k).toLowerCase());
+          res.removeHeader = (k) => { hdrs.delete(String(k).toLowerCase()); };
+          res.writeHead = (code, msg, h) => {
+            if (typeof msg === "object") { h = msg; msg = undefined; }
+            res.statusCode = code;
+            if (msg) res.statusMessage = msg;
+            if (h) for (const [k, v] of Object.entries(h)) res.setHeader(k, v);
+            res.headersSent = true;
+            return res;
+          };
+          res.write = (c) => { if (!done) { chunked = true; res.headersSent = true; chunks.push(String(c)); } return true; };
+          res.end = (c, cb) => {
+            if (done) return res;
+            if (typeof c === "function") { cb = c; c = undefined; }
+            if (c !== undefined && c !== null) chunks.push(typeof c === "string" ? c : new TextDecoder().decode(c));
+            done = true;
+            res.writableEnded = res.headersSent = true;
+            const text = chunks.join("");
+            const out = [...hdrs.values()].map(([k, v]) => [k, Array.isArray(v) ? v.join(", ") : String(v)]);
+            out.push(["Date", new Date(now * 1000).toUTCString()], ["Connection", "keep-alive"], ["Keep-Alive", "timeout=5"]);
+            if (!hdrs.has("content-length")) out.push(chunked ? ["Transfer-Encoding", "chunked"] : ["Content-Length", String(new TextEncoder().encode(text).length)]);
+            settle({ status: res.statusCode, statusMessage: res.statusMessage ?? STATUS[res.statusCode] ?? "unknown", headers: out, body: text });
+            setTimeout(() => { try { if (cb) cb(); res.emit("finish"); } catch (e) { proc.crash(e); } }, 0);
+            return res;
+          };
+          res.json = undefined;
+          let tmo = null;
+          const settle = (v) => { clearTimeout(tmo); resolve(v); };
+          const fail = (e) => { if (!done) { done = true; settle({ error: "empty" }); } proc.crash(e); };
+          try {
+            // errors in async handlers: an unhandled rejection crashes Node.js (the default since Node.js 15)
+            for (const f of server._listeners("request")) { const r = f(req, res); if (r && typeof r.then === "function") r.then(null, fail); }
+          } catch (e) { fail(e); return; }
+          // the body arrives after the handler has had a chance to listen for it
+          setTimeout(() => { try { if (body) req.emit("data", body); req.complete = true; req.emit("end"); } catch (e) { fail(e); } }, 0);
+          tmo = setTimeout(() => { if (!done && !proc.ended) { done = true; resolve({ error: "timeout" }); } }, 1500);
+        });
+      }
+      return server;
+    }
+    const httpMod = { createServer, STATUS_CODES: STATUS, METHODS: ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"] };
+    // fetch() in the sandbox reaches the sandbox's own servers only (http://host:port), like a machine with no internet
+    // Promises from fetch() remember whether anything handles their rejection, so an unhandled one ends the process
+    // like Node.js does (unhandled rejections are fatal since Node.js 15).
+    const tracked = new Set();
+    let internal = false;
+    class TrackedPromise extends Promise {
+      constructor(executor) {
+        const st = { rejected: false, err: undefined };
+        super((res, rej) => executor(res, (e) => { st.rejected = true; st.err = e; rej(e); }));
+        this._st = st;
+        this._handled = false;
+        if (internal) return;
+        tracked.add(this);
+        // the sandbox reports it itself; keep the browser (or Node.js running the tests) from reporting it too
+        internal = true;
+        try { Promise.prototype.then.call(this, undefined, () => {}); } finally { internal = false; }
+      }
+      then(a, b) { this._handled = true; return super.then(a, b); }
+    }
+    const unhandledRejection = () => { for (const p of tracked) if (p._st.rejected && !p._handled) return p._st; return null; };
+    function sandboxFetch(input, init) {
+      const p = new TrackedPromise((res, rej) => { fetchImpl(input, init).then(res, rej); });
+      pending.add(Promise.prototype.then.call(p, () => {}, () => {}));
+      return p;
+    }
+    async function fetchImpl(input, init = {}) {
+      const url = String(input && input.url ? input.url : input);
+      const r = NET ? await NET.request(sh, { url, method: (init.method ?? "GET").toUpperCase(), headers: init.headers ?? {}, body: init.body ?? "" }) : { error: "dns", host: url };
+      if (r.error) {
+        const u = /^[a-z]+:\/\/([^/:]+)(?::(\d+))?/i.exec(url) ?? [];
+        const cause = r.error === "dns" ? netErr("ENOTFOUND", "getaddrinfo", u[1] ?? url)
+          : r.error === "refused" ? netErr("ECONNREFUSED", "connect", r.ip ?? u[1], r.port ?? Number(u[2] ?? 80))
+          : Object.assign(new Error("other side closed"), { code: "UND_ERR_SOCKET" });
+        throw new TypeError("fetch failed", { cause });
+      }
+      const hmap = new Map(r.headers.map(([k, v]) => [k.toLowerCase(), v]));
+      return {
+        ok: r.status >= 200 && r.status < 300, status: r.status, statusText: r.statusMessage, url,
+        headers: { get: (k) => hmap.get(String(k).toLowerCase()) ?? null, has: (k) => hmap.has(String(k).toLowerCase()), entries: () => hmap.entries() },
+        text: async () => r.body,
+        json: async () => JSON.parse(r.body),
+      };
+    }
     const builtins = {
       "node:assert": { default: assert, ...assert, strict: assert },
       "node:assert/strict": { default: assert, ...assert },
@@ -505,7 +683,8 @@ export function installNode({ registerCommand, ExitSignal }) {
       "node:path": { default: pathMod, ...pathMod },
       "node:url": { default: urlMod, ...urlMod },
       "node:process": { default: processObj, ...processObj },
-      "node:os": { default: { EOL: "\n", platform: () => "linux", homedir: () => sh.env.HOME }, EOL: "\n", platform: () => "linux", homedir: () => sh.env.HOME },
+      "node:os": (() => { const os = { EOL: "\n", platform: () => "linux", homedir: () => sh.env.HOME, hostname: () => sh.env.HOSTNAME ?? "sandbox", cpus: () => [{}, {}] }; return { default: os, ...os }; })(),
+      "node:http": { default: httpMod, ...httpMod },
     };
     for (const k of Object.keys(builtins)) if (k !== "node:test") builtins[k.slice(5)] = builtins[k];
 
@@ -542,7 +721,7 @@ export function installNode({ registerCommand, ExitSignal }) {
         "setTimeout", "clearTimeout", "setInterval", "clearInterval", "fetch",
         code + "\n//# sourceURL=" + fileUrl(absPath));
       if (esm) mod.exports = exportsObj;
-      await fn(importer, exportsObj, requireFn, mod, mod.exports, absPath, dir, processObj, consoleObj, st, ct, si, ct, undefined);
+      await fn(importer, exportsObj, requireFn, mod, mod.exports, absPath, dir, processObj, consoleObj, st, ct, si, ct, sandboxFetch);
       if (!esm && mod.exports && typeof mod.exports === "object" && !("default" in mod.exports)) mod.exports = { ...mod.exports, default: mod.exports };
       return mod.exports;
     }
@@ -560,23 +739,35 @@ export function installNode({ registerCommand, ExitSignal }) {
       if (err instanceof NodeExit) return err.code;
       const frames = userFrames(err);
       let head = "";
-      if (frames[0]) {
-        const lines = (sh.fs.text(frames[0].file.slice(7)) ?? "").split("\n");
-        const srcLine = lines[frames[0].line - 1];
-        if (srcLine !== undefined) head = `${frames[0].file}:${frames[0].line}\n${srcLine}\n${" ".repeat(Math.max(0, frames[0].col - 1))}^\n\n`;
+      const top = frames.find((f) => !f.native);
+      if (top) {
+        const lines = (sh.fs.text(top.file.slice(7)) ?? "").split("\n");
+        const srcLine = lines[top.line - 1];
+        if (srcLine !== undefined) head = `${top.file}:${top.line}\n${srcLine}\n${" ".repeat(Math.max(0, top.col - 1))}^\n\n`;
       }
       if (err instanceof SyntaxError && !frames.length) head = "";
+      if (err instanceof TypeError && err.message === "fetch failed" && !frames.length) head = "node:internal/deps/undici/undici:16416\n      Error.captureStackTrace(err);\n            ^\n\n";
       let body;
       if (err && err.code === "ERR_MODULE_NOT_FOUND") body = `node:internal/modules/run_main:123\n    triggerUncaughtException(\n    ^\n\n${err.name} [ERR_MODULE_NOT_FOUND]: ${err.message}\n    at file:///home (sandbox) {\n  code: 'ERR_MODULE_NOT_FOUND'\n}`;
       else body = inspectError(err);
+      if (err instanceof TypeError && err.message === "fetch failed" && !frames.length) {
+        body = body.replace(/^TypeError: fetch failed/, "TypeError: fetch failed\n    at node:internal/deps/undici/undici:16416:13\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)")
+          .replace(/(\[cause\]: Error: getaddrinfo [^\n]*?)( \{)/, "$1\n      at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)$2")
+          .replace(/(\[cause\]: Error: connect [^\n]*?)( \{)/, "$1\n      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1636:16)$2");
+      }
       io.err(`${head}${body}\n\nNode.js ${rel.version}\n`);
       return 1;
     };
 
     const finish = async () => {
-      for (let k = 0; k < 50 && timers.size; k++) await new Promise((r) => setTimeout(r, 25));
-      for (const id of timers) clearTimeout(id);
-      await Promise.all(pending);
+      for (let round = 0; round < 3; round++) {
+        for (let k = 0; k < 50 && timers.size; k++) await new Promise((r) => setTimeout(r, 25));
+        await Promise.all(pending);
+        await new Promise((r) => setTimeout(r, 0));
+      }
+      if (!proc.alive) for (const id of timers) clearTimeout(id);
+      const u = unhandledRejection();
+      if (u) throw u.err;
     };
 
     if (mode === "run") {
@@ -589,10 +780,19 @@ export function installNode({ registerCommand, ExitSignal }) {
       try {
         await load(abs);
         await finish();
+        if (proc.ended) return proc.exitCode;
+        if (proc.servers.size) {
+          // a listening server keeps Node.js running: in a container it stays up; in the sandbox's own terminal it's stopped
+          if (sh.keepServers) { proc.alive = true; sh.proc = proc; return exitCode ?? 0; }
+          for (const s of [...proc.servers]) s._drop();
+          io.out("\n(The sandbox stopped node here. A server keeps running until you press Ctrl+C, and the terminal waits for it; to keep one running, start it in a container with docker run -d.)\n");
+        }
         return exitCode;
       } catch (e) {
         await finish().catch(() => {});
-        return reportUncaught(e);
+        const code = e instanceof NodeExit ? e.code : reportUncaught(e);
+        proc.end(code);
+        return code;
       }
     }
 

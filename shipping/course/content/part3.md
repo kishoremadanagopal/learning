@@ -771,7 +771,7 @@ walkthrough:
 - `strategy: matrix: node: [22, 24, 26]` defines three combinations.
 - `${{ matrix.node }}` is replaced per job, so each job installs a different version.
 
-**Trace:** the setup-node logs show `node: v22.23.3`, `node: v24.21.0` and `node: v26.11.1`.
+**Trace:** the setup-node logs show `node: v22.23.3`, `node: v24.22.0` and `node: v26.12.0`.
 
 **Common wrong approach:** writing `node-version: matrix.node` without `${{ }}`: setup-node receives the text `matrix.node` and fails with `Unable to find Node version 'matrix.node'`.
 :::

@@ -303,12 +303,12 @@
   function renderResult(res) {
     // Git writes progress and success messages to stderr too, so colour stderr by what each line says:
     // errors in red, hints muted, everything else like normal output.
-    const errLine = (line) => /^(fatal|error|bash|remote: error|ERROR|X |failed|Sandbox error|warning|Could not apply|aborted|must provide|unknown|could not|gh: )\b|^ ! |^(Usage|usage): /.test(line) ? "err"
-      : /^hint:/.test(line) ? "hint" : "";
+    const errLine = (line) => /^(fatal|error|bash|remote: error|ERROR|X |failed|Sandbox error|warning|Could not apply|aborted|must provide|unknown|could not|gh: |docker: |Error|OCI runtime|curl: \(|wget: |sh: |\/bin\/sh: |dependency failed|unauthorized|denied|TypeError|ReferenceError|SyntaxError|node:internal|service ")\b|^ ! |^(Usage|usage): |^\s+\d+ \| >>> /.test(line) ? "err"
+      : /^(hint:|WARN\[|WARNING!)/.test(line) ? "hint" : "";
     const errText = (t) => t.split(/(?<=\n)/).map((line) => { const c = errLine(line); return c ? `<span class="${c}">${esc(line)}</span>` : esc(line); }).join("");
     // Standard output gets the colours a real terminal shows: test results, gh's ✓ and X, Actions log markers.
-    const outLine = (line) => /^\s*✖ |^X |\t##\[error\]|^##\[error\]|^npm error|^E: /.test(line) ? "err"
-      : /^\s*✔ |^✓ /.test(line) ? "pass" : /^! |\t##\[warning\]|^##\[warning\]/.test(line) ? "warn" : "";
+    const outLine = (line) => /^\s*✖ |^X |\t##\[error\]|^##\[error\]|^npm error|^E: |^#\d+ ERROR: | Error /.test(line) ? "err"
+      : /^\s*✔ |^✓ /.test(line) ? "pass" : /^! |\t##\[warning\]|^##\[warning\]|^#\d+ WARN: |^ \d+ warnings? found|^ - [A-Z]\w+: /.test(line) ? "warn" : "";
     const outText = (t) => t.split(/(?<=\n)/).map((line) => { const c = outLine(line); return c ? `<span class="${c}">${esc(line)}</span>` : esc(line); }).join("");
     let h = (res.parts || []).map(([k, t]) => k === "err" ? errText(t) : k === "cmd" ? `<span class="cmd">${esc(t)}</span>` : outText(t)).join("");
     (res.figures || []).forEach((f, i) => { h += `<img alt="Chart ${i + 1} drawn by your code" src="data:image/png;base64,${f}">`; });

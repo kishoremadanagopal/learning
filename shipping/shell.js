@@ -12,10 +12,11 @@
    Everything is deterministic: the clock starts at 2026-10-01 09:00 UTC and moves one minute per commit, so
    commit hashes in lessons are the same every time. */
 
-import { git, Buffer } from "./gitlib.js?v=576fafd92b";
-import { installGitHub } from "./github.js?v=576fafd92b";
-import { installNode } from "./nodejs.js?v=576fafd92b";
-import { installActions } from "./actions.js?v=576fafd92b";
+import { git, Buffer } from "./gitlib.js?v=11948bf18f";
+import { installGitHub } from "./github.js?v=11948bf18f";
+import { installNode } from "./nodejs.js?v=11948bf18f";
+import { installActions } from "./actions.js?v=11948bf18f";
+import { installDocker } from "./docker.js?v=11948bf18f";
 
 const HOME = "/home/learner";
 const START = Date.UTC(2026, 9, 1, 9, 0, 0) / 1000;      // 1 October 2026, 09:00 UTC
@@ -248,6 +249,12 @@ export function gitDate(seconds, offsetMinutes = 0) {
 
 const extraCommands = new Map();
 export function registerCommand(name, fn) { extraCommands.set(name, fn); }
+export function registeredCommand(name) { return extraCommands.get(name); }
+// Checks can use helpers that later parts add (docker.js adds docker() and registry()).
+const helperHooks = [];
+export function addHelpers(fn) { helperHooks.push(fn); }
+// Commands every shell has built in, even in a container where `commands` limits what's installed.
+const SHELL_BUILTINS = new Set(["cd", "echo", "printf", "pwd", "export", "unset", "set", "exit", "test", "[", "true", "false", "source", ".", "sh", "bash"]);
 
 export class Shell {
   constructor() {
@@ -615,6 +622,12 @@ export class Shell {
 
   async exec(argv, io) {
     const [cmd, ...args] = argv;
+    // in a container, only the programs its image has (docker.js sets `commands`)
+    if (this.commands && !cmd.includes("/") && !this.commands.has(cmd) && !(SHELL_BUILTINS.has(cmd) && (cmd !== "bash" || this.commands.has("bash")))) {
+      io.err(this.notFound ? this.notFound(cmd) : `sh: ${cmd}: not found\n`);
+      return 127;
+    }
+    if (this.programs && this.programs[cmd]) { const r = await this.programs[cmd](this, args, io); if (r !== null) return r; }   // null: run it the usual way
     if (cmd.includes("/")) return runExecutable(this, cmd, args, io);
     if (cmd === "git") return runGit(this, args, io);
     if (BUILTINS[cmd]) return BUILTINS[cmd](this, args, io);
@@ -975,6 +988,7 @@ function regexSource(pattern, extended) {
 
 // One line of ls -l: permissions, owner, size, date and name.
 function longLine(sh, full, name) {
+  if (sh.longLine) return sh.longLine(full, name);    // a container's ls (BusyBox), from docker.js
   const n = sh.fs.get(full);
   const dir = n.type === "dir";
   const mode = dir ? 0o755 : n.mode & 0o777;
@@ -1122,7 +1136,7 @@ const BUILTINS = {
     }
     return 0;
   },
-  async sleep() { return 0; },
+  async sleep(sh, args) { const n = parseFloat(args[0] ?? "0"); if (n > 0) sh.slept = (sh.slept ?? 0) + n; return 0; },
   async basename(sh, args, io) {
     let b = (args[0] ?? "").replace(/\/+$/, "");
     b = b.slice(b.lastIndexOf("/") + 1);
@@ -3228,9 +3242,12 @@ const GH_API = installGitHub({
   identity, writeWork, registerCommand, ancestors, upstreamOf, getConfigValue, findRoot, gitDate, conflictedPaths, summaryLine,
   diffLines, splitLines, START,
 });
-const ACTIONS_API = installActions(GH_API, { git, Shell, registerCommand, parseOpts, filesAt, START });
+const NET = {};            // the pretend network, filled in by docker.js and used by node:http, fetch, curl and wget
+const DOCKER_ACTIONS = {}; // the docker/* actions GitHub Actions simulates, filled in by docker.js
+const ACTIONS_API = installActions(GH_API, { git, Shell, registerCommand, parseOpts, filesAt, START, dockerActions: DOCKER_ACTIONS });
 
-installNode({ registerCommand, ExitSignal });
+installNode({ registerCommand, ExitSignal, NET });
+installDocker({ Shell, MemFS, registerCommand, registeredCommand, ExitSignal, NET, dockerActions: DOCKER_ACTIONS, addHelpers, tokenize, START, filesAt });
 export const gitCommands = GIT_COMMANDS;
 export { GitError, resolveCommit, treeFiles, blobText, statusInfo, findRoot, filesAt, unifiedDiff, headOid };
 
@@ -3365,7 +3382,9 @@ function makeShellHelpers(sh) {
     };
   }
   const commands = () => sh.history.slice();
+  const extra = Object.assign({}, ...helperHooks.map((h) => h(sh, AssertionError)));
   return {
+    ...extra,
     repo, github, commands,
     // read a workflow file like GitHub: { wf (the YAML as an object), errors (actionlint's) }
     workflow(path) { const text = sh.fs.text(sh.abs(path)); if (text === null) throw new AssertionError(`There's no file ${path} yet.`); return ACTIONS_API.readWorkflow(path, text); },

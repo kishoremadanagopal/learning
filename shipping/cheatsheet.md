@@ -266,6 +266,64 @@ jobs:
 
 Pages deployment: `gh api repos/{owner}/{repo}/pages -X POST -f build_type=workflow` once, then a build job ending in `actions/upload-pages-artifact@v5` (`path: dist`) and a deploy job with `needs: build`, `permissions: pages: write, id-token: write`, `environment: github-pages` and `actions/deploy-pages@v5`.
 
+## Docker [19–24]
+
+```dockerfile
+# Dockerfile: test in one stage, ship a small non-root image from another
+FROM node:24-alpine AS test
+WORKDIR /app
+COPY package*.json ./                 # dependency files first: the install stays cached
+RUN npm ci
+COPY . .
+RUN npm test
+
+FROM node:24-alpine
+ENV NODE_ENV=production
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY --from=test /app/prices.js /app/server.js ./
+RUN mkdir -p data && chown node:node data
+USER node
+EXPOSE 3000
+HEALTHCHECK --interval=10s CMD wget -qO- http://localhost:3000/health || exit 1
+CMD ["node", "server.js"]             # exec form, so docker stop's SIGTERM reaches node
+```
+
+```yaml
+# compose.yaml
+services:
+  api:
+    build: .
+    volumes: [orders:/app/data]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 5s
+  web:
+    build: ./web
+    ports: ["8080:8080"]
+    environment:
+      API_URL: http://api:3000          # service names are host names; localhost is the container itself
+    depends_on:
+      api:
+        condition: service_healthy
+volumes:
+  orders:
+```
+
+| Task | Command |
+|---|---|
+| run a throwaway command | `docker run --rm node:24-alpine node --version` |
+| run a server | `docker run -d -p 8080:3000 --name shop -e SHOP_NAME=… -v shop-data:/app/data --restart unless-stopped shop:1.0` |
+| list | `docker ps` (`-a`), `docker images`, `docker volume ls`, `docker network ls` |
+| look inside | `docker logs shop` (`-f`, `--tail 20`), `docker exec shop ls`, `docker inspect -f '{{.State.Status}}' shop`, `docker stats --no-stream` |
+| stop and clean up | `docker stop shop`, `docker rm -f shop`, `docker container prune -f`, `docker rmi IMAGE`, `docker image prune` |
+| build | `docker build -t shop:1.0 .` (`-q`, `--no-cache`, `--target test`, `--progress=plain`), `docker build --check .`, `docker history shop:1.0` |
+| Compose | `docker compose up -d` (`--build`), `docker compose ps`, `docker compose logs api`, `docker compose exec web sh -c "…"`, `docker compose down` (`-v`), `docker compose config` |
+| publish | `docker tag shop:1.0 ghcr.io/ada/shop:1.0`, `echo "$CR_PAT" \| docker login ghcr.io -u ada --password-stdin`, `docker push ghcr.io/ada/shop:1.0` |
+
+Exit codes: 0 ended normally, 1 failed, 137 killed (SIGKILL: stop timeout or out of memory), 143 SIGTERM, 125–127 Docker couldn't run it. In CI: `permissions: packages: write`, then `docker/login-action@v4` (`password: ${{ secrets.GITHUB_TOKEN }}`), `docker/metadata-action@v6` and `docker/build-push-action@v7` with `push: true`.
+
 ## Every task at a glance
 
 Generated from the **At a glance** table at the end of each lesson. The number in brackets links to the lesson.
@@ -364,3 +422,41 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | Cancel outdated runs | concurrency: group + cancel-in-progress: true | the workflow file | remove concurrency | [18](lessons/18-pipelines.md) |
 | Share a job | on: workflow_call, then uses: ./.github/workflows/x.yml | workflow files | inline the job again | [18](lessons/18-pipelines.md) |
 | Run on a schedule | on: schedule: - cron: "30 2 * * *" | the workflow file | gh workflow disable <name> | [18](lessons/18-pipelines.md) |
+| Run a command in a new container | docker run --rm IMAGE COMMAND | pulls the image if needed | — | [19](lessons/19-containers.md) |
+| Run a server in the background | docker run -d -p 8080:80 --name web IMAGE | creates and starts a container | docker stop web; docker rm web | [19](lessons/19-containers.md) |
+| List running / all containers | docker ps / docker ps -a | nothing | — | [19](lessons/19-containers.md) |
+| List images | docker images | nothing | — | [19](lessons/19-containers.md) |
+| Show a container's output | docker logs NAME | nothing | — | [19](lessons/19-containers.md) |
+| Remove stopped containers | docker container prune -f | deletes containers | — | [19](lessons/19-containers.md) |
+| Remove an image | docker rmi IMAGE | deletes the image | docker pull IMAGE | [19](lessons/19-containers.md) |
+| Build an image | docker build -t NAME:TAG . | adds an image | docker rmi NAME:TAG | [20](lessons/20-dockerfile.md) |
+| Build and print only the ID | docker build -q -t NAME:TAG . | adds an image | docker rmi NAME:TAG | [20](lessons/20-dockerfile.md) |
+| Check a Dockerfile | docker build --check . | nothing | — | [20](lessons/20-dockerfile.md) |
+| Leave files out of the image | .dockerignore | the build context | edit the file | [20](lessons/20-dockerfile.md) |
+| Run a command instead of CMD | docker run --rm IMAGE COMMAND | nothing (with --rm) | — | [20](lessons/20-dockerfile.md) |
+| See an image's layers | docker history IMAGE | nothing | — | [21](lessons/21-layers.md) |
+| Build without the cache | docker build --no-cache -t NAME . | adds an image | — | [21](lessons/21-layers.md) |
+| Build one stage | docker build --target test . | nothing (untagged) | — | [21](lessons/21-layers.md) |
+| Copy from a stage | COPY --from=test /app/file ./ | the final image | edit the Dockerfile | [21](lessons/21-layers.md) |
+| Run as a non-root user | USER node | the image's default user | remove the line | [21](lessons/21-layers.md) |
+| Set a variable | docker run -e NAME=value … | the new container | — | [22](lessons/22-running.md) |
+| Follow a container's log | docker logs -f NAME | nothing | Ctrl+C | [22](lessons/22-running.md) |
+| Run a command inside | docker exec NAME COMMAND | depends on the command | — | [22](lessons/22-running.md) |
+| Read one setting | docker inspect -f '{{.State.Status}}' NAME | nothing | — | [22](lessons/22-running.md) |
+| Stop / kill | docker stop NAME / docker kill NAME | stops the container | docker start NAME | [22](lessons/22-running.md) |
+| Restart after crashes | docker run --restart unless-stopped … | the container's policy | docker update --restart no NAME | [22](lessons/22-running.md) |
+| Keep data | docker run -v NAME:/path … | creates a volume | docker volume rm NAME | [22](lessons/22-running.md) |
+| Limit resources | docker run --memory 256m --cpus 0.5 … | the container's limits | docker update | [22](lessons/22-running.md) |
+| Start the app in the background | docker compose up -d | builds, creates and starts | docker compose down | [23](lessons/23-compose.md) |
+| Rebuild and start | docker compose up -d --build | new images and containers | — | [23](lessons/23-compose.md) |
+| See the services | docker compose ps | nothing | — | [23](lessons/23-compose.md) |
+| Read the logs | docker compose logs [SERVICE] | nothing | — | [23](lessons/23-compose.md) |
+| Run a command in a service | docker compose exec SERVICE COMMAND | depends on the command | — | [23](lessons/23-compose.md) |
+| Stop and remove everything | docker compose down | removes containers and network | docker compose up -d | [23](lessons/23-compose.md) |
+| Check the resolved file | docker compose config | nothing | — | [23](lessons/23-compose.md) |
+| Name an image for a registry | docker tag SOURCE ghcr.io/OWNER/NAME:TAG | adds a name | docker rmi ghcr.io/OWNER/NAME:TAG | [24](lessons/24-publishing.md) |
+| Log in to a registry | docker login ghcr.io -u USER --password-stdin (token on standard input) | stores credentials | docker logout ghcr.io | [24](lessons/24-publishing.md) |
+| Upload an image | docker push ghcr.io/OWNER/NAME:TAG | the registry | delete the version on GitHub | [24](lessons/24-publishing.md) |
+| Download an image | docker pull IMAGE | adds an image | docker rmi IMAGE | [24](lessons/24-publishing.md) |
+| Build and push in CI | docker/build-push-action with push: true | the registry | — | [24](lessons/24-publishing.md) |
+| Release a version | git tag v1.2.0; git push origin v1.2.0 | starts the workflow | — | [24](lessons/24-publishing.md) |

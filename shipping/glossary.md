@@ -9,35 +9,57 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Amend** | Replaces the last commit with a new one that has your fixes. [5] |
 | **Annotation** | A message attached to a run, such as an error from a step. [14] |
 | **Artifact** | Files a job uploads so later jobs, or people, can download them. [17] |
+| **Base image** | The image a Dockerfile starts FROM. [21] |
+| **Bind mount** | A folder of the host mounted into a container. [22] |
 | **Blob** | An object holding a file's contents (without its name). [6] |
 | **Branch** | A movable name that points to a commit; committing moves the current branch forward. [7] |
+| **Build cache** | Layers BuildKit reuses when a step and its inputs haven't changed. [21] |
+| **Build check** | A BuildKit rule that warns about Dockerfile problems, such as JSONArgsRecommended. [20] |
+| **Build context** | The folder (minus .dockerignore) that docker build sends to the builder; COPY copies from it. [20] |
+| **BuildKit** | Docker's builder; it runs the steps, caches them and checks the Dockerfile. [20] |
+| **Build secret** | A secret mounted into one RUN step without being stored in the image. [21] |
 | **Cache** | Saved files restored into later jobs, looked up by a key. [18] |
+| **Cache invalidation** | A changed step makes every later step run again. [21] |
 | **Cache key** | The name a cache is saved under, usually including a hash of the files it depends on. [18] |
 | **Check** | The result of one job on a commit, shown on pull requests. [14] |
 | **Cherry-pick** | Apply the change from one commit onto the current branch as a new commit. [10] |
 | **Commit** | A saved snapshot of the staged files, with an id, author, date, message and a link to its parent. [2] |
 | **Commit id (hash)** | A 40-character code that names a commit uniquely; the first 7 characters are usually enough. [2] |
+| **Compose watch** | Keeping containers in sync with files you edit, by copying or rebuilding. [23] |
 | **Composite action** | An action made of steps, defined in an `action.yml`. [18] |
 | **Concurrency group** | A name that makes runs queue (or cancel each other) instead of overlapping. [17] |
 | **Configuration variable** | A non-secret value stored on GitHub, read as `${{ vars.NAME }}`. [16] |
 | **Conflict markers** | The `<<<<<<<`, `=======` and `>>>>>>>` lines Git writes around each clash. [8] |
+| **Container** | A running or stopped instance of an image: an isolated process with its own file system and network. [19] |
 | **Content-addressed storage** | Storing data under a name computed from the data itself, its hash. [6] |
 | **Context** | An object of information available to expressions, like `github` or `matrix`. [15] |
 | **Continuous delivery** | Every change that passes is ready to release with one action. [13] |
 | **Continuous deployment** | Every change that passes is released automatically. [13] |
 | **Continuous integration (CI)** | Merging small changes often, with every change built and tested automatically. [13] |
+| **Credential helper** | A program that stores registry logins in the operating system's keychain. [24] |
 | **Cron** | A five-field schedule format: minute, hour, day of month, month, day of week. [18] |
 | **Current branch** | The branch `HEAD` points to; new commits go onto it. [7] |
 | **Default branch** | The branch GitHub shows first and merges pull requests into by default, usually `main`. [12] |
 | **Dependabot** | GitHub's bot that opens pull requests to update dependencies, including actions. [16] |
+| **depends_on** | Start-order rules between services, optionally waiting for health. [23] |
+| **Detached** | Running in the background (-d), with the terminal free for other commands. [19] |
 | **Detached HEAD** | `HEAD` pointing straight at a commit instead of a branch; new commits there belong to no branch. [7] |
 | **Diff** | The differences between two versions, shown line by line. [3] |
+| **Digest** | A sha256 hash that identifies an image's exact content and never changes. [19] |
 | **Distributed** | Every copy of a Git repository holds the full history, so most commands work offline. [1] |
+| **Distroless image** | An image with only the runtime and the app, without a shell or package manager. [21] |
 | **Diverged** | Two copies of a branch each have commits the other doesn't. [10] |
+| **Docker Compose** | A tool that runs a multi-container app described in compose.yaml. [23] |
+| **Docker Engine** | The background service (daemon) that builds images and runs containers. [19] |
+| **Dockerfile** | A text file of instructions for building an image. [20] |
+| **.dockerignore** | A file listing paths to leave out of the build context. [20] |
 | **Draft pull request** | A PR shared for early feedback that can't be merged until it's marked ready. [11] |
+| **ENTRYPOINT** | The program a container runs; CMD then supplies its default arguments. [20] |
 | **Environment** | A named deployment target with its own protection rules and secrets. [17] |
+| **Environment variable** | A named setting a container's process reads at run time. [22] |
 | **Evaluation gate** | A CI step that fails when a model's quality score drops below a threshold. [18] |
 | **Event** | Something that starts a workflow, such as a push or a pull request. [13] |
+| **Exec form** | CMD ["node", "server.js"], a JSON list that runs the program directly. [20] |
 | **Exit status** | The number a command returns when it ends: 0 for success, anything else for failure. [13] |
 | **Expression** | Code between `${{` and `}}`, evaluated by GitHub before a step runs. [15] |
 | **fail-fast** | Cancelling the rest of a matrix when one job fails (on by default). [15] |
@@ -57,23 +79,28 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **GitHub CLI (`gh`)** | GitHub's official command-line tool for repositories, pull requests, releases and more. [9] |
 | **GitHub flow** | Short-lived branches merged into an always-deployable `main` through pull requests. [12] |
 | **GitHub Pages** | GitHub's hosting for static websites, at `https://<owner>.github.io/<repository>/`. [17] |
-| **GITHUB_TOKEN** | The short-lived token each job gets to use GitHub's API for its repository. [16] |
+| **GITHUB_TOKEN** | The short-lived token each job gets to use GitHub's API for its repository. [16, 24] |
 | **`.gitignore`** | A file listing patterns for files Git should not track. [4] |
 | **Git LFS (Large File Storage)** | An extension that stores large files outside the repository and keeps small pointers in it. [4] |
 | **`git reset`** | Moves the current branch to another commit; `--soft`, `--mixed` and `--hard` decide what happens to the staging area and files. [5] |
 | **`git restore`** | Puts a file back to the version in the staging area (or, with `--staged`, unstages it). [5] |
 | **`git revert`** | Makes a new commit that undoes an earlier commit, keeping the history. [5] |
 | **`git switch`** | Changes the current branch and updates your files to match it; `-c` creates the branch first. [7] |
+| **Graceful shutdown** | Finishing work in progress and exiting cleanly on SIGTERM. [22] |
 | **Hash** | A fixed-length fingerprint of data; Git uses SHA-1 now, and SHA-256 in new repositories from Git 3.0. [6] |
 | **`hashFiles()`** | An expression function that returns a fingerprint of matching files. [18] |
 | **`HEAD`** | The commit you're on now, usually the newest commit of the current branch. [3] |
 | **Head branch / base branch** | The branch with the changes, and the branch it should merge into. [11] |
 | **`HEAD~n`** | The commit n steps back from `HEAD` along first parents. [3] |
+| **Health check** | A command Docker runs inside a container to see if the app works. [22] |
 | **Here-document** | Several lines of text given to a command, written between `<<'EOF'` and a line holding only `EOF`. [1] |
 | **Hunk** | One block of changes in a diff, starting with a header such as `@@ -1,3 +1,4 @@`. [3] |
+| **Image** | A read-only package of a program and everything it needs to run, built from layers. [19] |
 | **Interactive rebase** | `git rebase -i`, which lets you reword, squash, reorder or drop your recent commits. [10] |
+| **Interpolation** | Filling ${VAR} in compose.yaml from the environment or .env. [23] |
 | **Job** | A set of steps that run in order on one runner. [13] |
 | **Job output** | A value a job exposes to the jobs that need it. [15] |
+| **Layer** | One set of file changes in an image; images share the layers they have in common. [19] |
 | **Least privilege** | Giving a token or person only the permissions they need. [16] |
 | **Masking** | Replacing a secret's value with `***` in logs. [16] |
 | **Matrix** | A set of values that runs a job once per combination. [15] |
@@ -82,31 +109,41 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Merge commit** | A commit with two parents that joins two lines of history. [8] |
 | **Merge conflict** | Both branches changed the same lines differently; Git stops and asks you to decide. [8] |
 | **Merge ref** | `refs/pull/N/merge`, the test merge of a pull request into its base that `pull_request` runs test. [14] |
+| **Multi-platform image** | One name with variants for several CPU architectures, such as amd64 and arm64. [24] |
+| **Multi-stage build** | A Dockerfile with several FROM stages, where the final stage copies results from earlier ones. [21] |
 | **`needs:`** | A job setting that makes the job wait for other jobs, and skips it if they fail. [15] |
 | **Negation (`!`)** | A pattern that re-includes something an earlier pattern ignored. [4] |
+| **Non-root user** | Running the container's process as an ordinary user (USER node) instead of root. [21] |
 | **Object** | A piece of data Git stores under its hash: a blob, tree, commit or tag. [6] |
 | **OIDC (OpenID Connect)** | A standard for short-lived identity tokens; clouds accept a job's OIDC token instead of a stored key. [16] |
 | **`origin`** | The conventional name for the main remote; `git clone` sets it up. [9] |
 | **Packfile** | A compressed file holding many objects, with similar objects stored as deltas. [6] |
 | **Path filter** | `paths` or `paths-ignore` in a trigger, which skips runs that don't touch matching files. [18] |
 | **Pattern** | A name with wildcards: `*` matches anything except `/`, `**` matches any number of folders. [4] |
+| **Personal access token (classic)** | A GitHub token with scopes, which ghcr.io accepts as a password. [24] |
+| **PID 1** | The first process in a container, its main process; signals have no default effect on it. [22] |
 | **Pinning** | Referring to an exact, unchangeable version, such as a full commit SHA. [16] |
 | **Pipeline** | The automated sequence of steps (build, test, deploy) a change goes through. [13] |
+| **Project** | A Compose app; its name (the folder by default) prefixes containers, networks and volumes. [23] |
 | **Protection rule** | A condition a job must meet before deploying to an environment, such as a reviewer's approval. [17] |
-| **Pull** | Fetch, then integrate the remote branch into your current branch (by merging or rebasing). [9] |
+| **Provenance attestation** | A record of how and where an image was built, attached to it. [24] |
+| **Publish a port** | Connect a port on the host to a port in a container (-p host:container). [19] |
+| **Pull** | Fetch, then integrate the remote branch into your current branch (by merging or rebasing). [9, 24] |
 | **Pull request (PR)** | A proposal to merge one branch into another, with a place for review, discussion and automated checks. [11] |
-| **Push** | Send your commits to a remote branch. [9] |
+| **Push** | Send your commits to a remote branch. [9, 24] |
 | **Rebase** | Replay a branch's commits on top of another commit, creating new commits with new ids. [10] |
 | **Rebase and merge** | Merging a PR by replaying each of its commits onto the base branch. [11] |
 | **Red / green build** | A failed / passed run. [14] |
 | **Redirection** | Sending a command's output into a file: `>` replaces the file, `>>` adds to the end. [1] |
 | **Ref** | A name that points to a commit, such as `refs/heads/main`, stored as a small file. [6] |
 | **Reflog** | Git's local log of where `HEAD` and each branch have been, used to find "lost" commits. [5] |
+| **Registry** | A server that stores and serves images, such as Docker Hub or ghcr.io. [19] |
 | **Release** | A GitHub page for a tag, with notes and downloadable files. [12] |
 | **Remote** | A named link to another copy of the repository, usually on GitHub. [9] |
 | **Remote-tracking branch** | Your repository's record of a branch on a remote, such as `origin/main`; it moves only when you fetch, pull or push. [9] |
 | **Repository (repo)** | A project folder whose history Git tracks; the history lives in its `.git` folder. [2] |
 | **Required status check** | A check that must pass before a branch can be merged into (or pushed to) a protected branch. [14] |
+| **Restart policy** | When Docker restarts a container whose process ended. [22] |
 | **Reusable workflow** | A workflow triggered by `workflow_call`, used as a job by other workflows. [18] |
 | **Reviewer** | A person asked to read the changes and comment, approve or request changes. [11] |
 | **`rev:path`** | A file as it was in a given commit, such as `HEAD~2:prices.txt`. [3] |
@@ -117,14 +154,22 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Ruleset** | A set of rules GitHub enforces on matching branches or tags, such as requiring pull requests. [12] |
 | **Run** | One execution of a workflow, with an ID. [13] |
 | **Runner** | The machine, usually a fresh virtual machine, that runs a job. [13] |
+| **SBOM** | A software bill of materials, the list of packages inside an image. [21] |
 | **Script injection** | Untrusted text ending up inside a script and running as code. [16] |
 | **Secret** | A password, API key or token that gives access to something. [4, 16] |
 | **Secret scanning** | A service that finds secrets in code; push protection blocks a push that contains one. [4] |
 | **Self-hosted runner** | Your own machine running GitHub's runner program. [18] |
 | **Semantic Versioning (SemVer)** | `MAJOR.MINOR.PATCH` version numbers that say whether a release breaks, adds or fixes. [12] |
+| **Semantic version tags** | 1.2.0, 1.2 and 1 tags computed from a Git tag v1.2.0. [24] |
+| **Service** | One container definition in a Compose file. [23] |
+| **Service discovery** | Finding another service by its name on the project network. [23] |
+| **Shell form** | CMD node server.js, which runs the command through /bin/sh -c. [20] |
 | **Short id** | The first few characters of a commit id, enough to name it while it's unique. [3] |
+| **SIGKILL** | The signal that ends a process immediately; exit code 137. [22] |
+| **SIGTERM** | The signal docker stop sends to ask a process to finish. [22] |
 | **Smoke test** | A quick check that a deployment basically works, such as fetching its home page. [17] |
 | **Squash and merge** | Merging a PR as one new commit containing all its changes. [11] |
+| **Stage** | The part of a Dockerfile from one FROM to the next; AS gives it a name. [21] |
 | **Staging area (index)** | The list of changes that will go into the next commit. [2] |
 | **Stash** | A saved set of uncommitted changes, kept aside so you can switch with a clean working tree. [7] |
 | **Status function** | `success()`, `failure()`, `always()` or `cancelled()` in an `if:`. [15] |
@@ -132,6 +177,7 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Step output** | A value a step writes to `$GITHUB_OUTPUT`, read as `steps.<id>.outputs.<name>`. [15] |
 | **Supply-chain attack** | An attack through software you depend on, such as a compromised action. [16] |
 | **Symbolic ref** | A ref that points to another ref; `HEAD` usually holds `ref: refs/heads/main`. [6] |
+| **Tag** | A movable name for an image version, like 24-alpine. [19] |
 | **Terminal** | A window where you type commands as text; the program inside it that runs them is the **shell**. [1] |
 | **Tracked file** | A file that's in the last commit or the staging area. [2] |
 | **Tree** | An object listing names, modes and the ids of blobs and other trees: a folder. [6] |
@@ -141,6 +187,7 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Untracked file** | A file in the folder that Git has never been told to track. [2] |
 | **Upstream** | The remote branch a local branch is paired with, used by plain `git push`, `git pull` and `git status`. [9] |
 | **Version control** | A system that records every saved version of a project, who made it and why, so you can compare, undo and work together. [1] |
+| **Volume** | Storage managed by Docker that outlives containers, mounted at a path. [22] |
 | **Workflow** | An automated process defined in a YAML file in `.github/workflows/`. [13] |
 | **Workflow command** | A line starting with `::` that a step prints to talk to the runner. [15] |
 | **workflow_dispatch** | The event for starting a workflow by hand, with optional inputs. [17] |

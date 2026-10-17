@@ -351,6 +351,78 @@ def job_graph_fig():
     return f
 
 
+@fig("containers-vs-vms")
+def containers_vs_vms_fig():
+    f, ax = diag.canvas(7.6, 5.4)
+    def stack(x0, title, rows, apps, color):
+        label(ax, x0 + 1.75, 5.15, title, size=11.5, bold=True, color=color)
+        y = 0.3
+        for text, c in rows:
+            sbox(ax, x0, y, 3.5, 0.55, text, color=c, fontsize=10)
+            y += 0.65
+        w = (3.5 - 0.1 * (len(apps) - 1)) / len(apps)
+        for k, layers in enumerate(apps):
+            yy = y
+            for text, c in layers:
+                sbox(ax, x0 + k * (w + 0.1), yy, w, 0.55, text, color=c, fontsize=9, mono=text.startswith("app"))
+                yy += 0.65
+    stack(0.1, "Virtual machines", [("hardware", GREY), ("host operating system", BLUE), ("hypervisor", PURPLE)],
+          [[("guest OS", CRIMSON), ("libraries", ORANGE), ("app A", TEAL)], [("guest OS", CRIMSON), ("libraries", ORANGE), ("app B", TEAL)]], PURPLE)
+    stack(4.0, "Containers", [("hardware", GREY), ("host OS (Linux kernel)", BLUE), ("container engine", PURPLE)],
+          [[("libraries", ORANGE), ("app A", TEAL)], [("libraries", ORANGE), ("app B", TEAL)], [("libraries", ORANGE), ("app C", TEAL)]], TEAL)
+    label(ax, 1.85, 4.6, "each VM boots its own OS", size=9.5, color=MUTED)
+    label(ax, 5.75, 3.95, "containers share the host's kernel", size=9.5, color=MUTED)
+    return f
+
+
+@fig("image-layers")
+def image_layers_fig():
+    f, ax = diag.canvas(7.6, 6.9)
+    layers = [("ADD alpine-minirootfs (alpine 3.24)", "8.79MB", GREY), ("RUN install Node.js 24.22.0", "157MB", GREY), ("RUN install Yarn", "5.34MB", GREY),
+              ("COPY docker-entrypoint.sh", "388B", GREY), ("WORKDIR /app", "0B", BLUE), ("COPY package*.json ./", "311B", BLUE),
+              ("RUN npm ci --omit=dev", "4.1kB", BLUE), ("COPY . .", "2.18kB", ORANGE)]
+    y = 0.35
+    for text, size, color in layers:
+        sbox(ax, 0.2, y, 4.6, 0.52, text, color=color, mono=True, fontsize=9.5)
+        label(ax, 5.25, y + 0.26, size, size=9.5, color=MUTED, mono=True)
+        y += 0.6
+    sbox(ax, 0.2, y + 0.1, 4.6, 0.52, "container's writable layer", color=CRIMSON, fontsize=9.5)
+    ax.plot([5.9, 6.0, 6.0, 5.9], [0.35, 0.35, 2.67, 2.67], color=GREY, lw=1.5)
+    label(ax, 6.15, 1.5, "node:24-alpine", size=9.5, color=MUTED, mono=True, ha="left")
+    ax.plot([5.9, 6.0, 6.0, 5.9], [2.75, 2.75, 5.07, 5.07], color=BLUE, lw=1.5)
+    label(ax, 6.15, 4.08, "your build", size=9.5, color=BLUE, ha="left")
+    label(ax, 6.15, 3.75, "steps", size=9.5, color=BLUE, ha="left")
+    label(ax, 3.8, 6.6, "Each step adds a read-only layer; a change rebuilds", size=10, color=MUTED)
+    label(ax, 3.8, 6.3, "from the first changed step upward.", size=10, color=MUTED)
+    return f
+
+
+@fig("compose-network")
+def compose_network_fig():
+    f, ax = diag.canvas(7.6, 5.6)
+    sbox(ax, 0.1, 4.2, 2.3, 0.9, "", color=GREY)
+    label(ax, 1.25, 4.8, "your computer", size=10.5, bold=True)
+    label(ax, 1.25, 4.45, "curl localhost:8080", size=9.5, mono=True)
+    sbox(ax, 0.1, 0.35, 7.4, 3.35, "", color=BLUE)
+    label(ax, 3.8, 3.4, "network shop_default", size=10.5, bold=True, color=BLUE, mono=True)
+    sbox(ax, 0.45, 1.2, 2.6, 1.6, "", color=TEAL)
+    label(ax, 1.75, 2.45, "web", size=11, bold=True, color=TEAL, mono=True)
+    label(ax, 1.75, 2.05, "listens on 8080", size=9.5, color=MUTED)
+    label(ax, 1.75, 1.6, "ports: 8080:8080", size=9.5, mono=True)
+    sbox(ax, 4.3, 1.2, 2.8, 1.6, "", color=ORANGE)
+    label(ax, 5.7, 2.45, "api", size=11, bold=True, color=ORANGE, mono=True)
+    label(ax, 5.7, 2.05, "listens on 3000", size=9.5, color=MUTED)
+    label(ax, 5.7, 1.6, "not published", size=9.5, color=MUTED)
+    arrow(ax, 1.25, 4.15, 1.4, 2.85, color=INK)
+    label(ax, 2.3, 3.95, "published port", size=9, color=MUTED)
+    arrow(ax, 3.1, 2.0, 4.25, 2.0, color=INK)
+    label(ax, 3.68, 2.25, "http://api:3000", size=8.5, mono=True)
+    sbox(ax, 4.6, 0.5, 2.2, 0.5, "volume shop_data", color=PURPLE, fontsize=9, mono=True)
+    ax.plot([5.7, 5.7], [1.0, 1.2], color=PURPLE, lw=1.6)
+    label(ax, 3.8, 0.1, "Services find each other by name on the project's network.", size=9.5, color=MUTED)
+    return f
+
+
 def main(names):
     OUT.mkdir(exist_ok=True)
     for name in names or FIGS:

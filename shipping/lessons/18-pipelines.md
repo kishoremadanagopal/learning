@@ -661,4 +661,4 @@ gh run list
 </details>
 
 ---
-Previous: [Lesson 17](17-deploying.md) · Back to the [course home](../README.md)
+Previous: [Lesson 17](17-deploying.md) · Next: [Lesson 19: Containers and images](19-containers.md)

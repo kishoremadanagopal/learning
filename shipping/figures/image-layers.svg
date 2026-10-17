@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="435.744pt" height="396.936pt" viewBox="0 0 435.744 396.936" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 396.936 
+L 435.744 396.936 
+L 435.744 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 22.7232 370.332 
+L 268.8768 370.332 
+Q 273.312 370.332 273.312 365.8968 
+L 273.312 345.9384 
+Q 273.312 341.5032 268.8768 341.5032 
+L 22.7232 341.5032 
+Q 18.288 341.5032 18.288 345.9384 
+L 18.288 365.8968 
+Q 18.288 370.332 22.7232 370.332 
+z
+" clip-path="url(#pf3ba820d83)" style="fill: #eef1f4; stroke: #9aa5b1; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 22.7232 337.068 
+L 268.8768 337.068 
+Q 273.312 337.068 273.312 332.6328 
+L 273.312 312.6744 
+Q 273.312 308.2392 268.8768 308.2392 
+L 22.7232 308.2392 
+Q 18.288 308.2392 18.288 312.6744 
+L 18.288 332.6328 
+Q 18.288 337.068 22.7232 337.068 
+z
+" clip-path="url(#pf3ba820d83)" style="fill: #eef1f4; stroke: #9aa5b1; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 22.7232 303.804 
+L 268.8768 303.804 
+Q 273.312 303.804 273.312 299.3688 
+L 273.312 279.4104 
+Q 273.312 274.9752 268.8768 274.9752 
+L 22.7232 274.9752 
+Q 18.288 274.9752 18.288 279.4104 
+L 18.288 299.3688 
+Q 18.288 303.804 22.7232 303.804 
+z
+" clip-path="url(#pf3ba820d83)" style="fill: #eef1f4; stroke: #9aa5b1; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 22.7232 270.54 
+L 268.8768 270.54 
+Q 273.312 270.54 273.312 266.1048 
+L 273.312 246.1464 
+Q 273.312 241.7112 268.8768 241.7112 
+L 22.7232 241.7112 
+Q 18.288 241.7112 18.288 246.1464 
+L 18.288 266.1048 
+Q 18.288 270.54 22.7232 270.54 
+z
+" clip-path="url(#pf3ba820d83)" style="fill: #eef1f4; stroke: #9aa5b1; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 22.7232 237.276 
+L 268.8768 237.276 
+Q 273.312 237.276 273.312 232.8408 
+L 273.312 212.8824 
+Q 273.312 208.4472 268.8768 208.4472 
+L 22.7232 208.4472 
+Q 18.288 208.4472 18.288 212.8824 
+L 18.288 232.8408 
+Q 18.288 237.276 22.7232 237.276 
+z
+" clip-path="url(#pf3ba820d83)" style="fill: #e3eef8; stroke: #1f6fb2; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 22.7232 204.012 
+L 268.8768 204.012 
+Q 273.312 204.012 273.312 199.5768 
+L 273.312 179.6184 
+Q 273.312 175.1832 268.8768 175.1832 
+L 22.7232 175.1832 
+Q 18.288 175.1832 18.288 179.6184 
+L 18.288 199.5768 
+Q 18.288 204.012 22.7232 204.012 
+z
+" clip-path="url(#pf3ba820d83)" style="fill: #e3eef8; stroke: #1f6fb2; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 22.7232 170.748 
+L 268.8768 170.748 
+Q 273.312 170.748 273.312 166.3128 
+L 273.312 146.3544 
+Q 273.312 141.9192 268.8768 141.9192 
+L 22.7232 141.9192 
+Q 18.288 141.9192 18.288 146.3544 
+L 18.288 166.3128 
+Q 18.288 170.748 22.7232 170.748 
+z
+" clip-path="url(#pf3ba820d83)" style="fill: #e3eef8; stroke: #1f6fb2; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 22.7232 137.484 
+L 268.8768 137.484 
+Q 273.312 137.484 273.312 133.0488 
+L 273.312 113.0904 
+Q 273.312 108.6552 268.8768 108.6552 
+L 22.7232 108.6552 
+Q 18.288 108.6552 18.288 113.0904 
+L 18.288 133.0488 
+Q 18.288 137.484 22.7232 137.484 
+z
+" clip-path="url(#pf3ba820d83)" style="fill: #fdecd6; stroke: #e07b00; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 22.7232 98.676 
+L 268.8768 98.676 
+Q 273.312 98.676 273.312 94.2408 
+L 273.312 74.2824 
+Q 273.312 69.8472 268.8768 69.8472 
+L 22.7232 69.8472 
+Q 18.288 69.8472 18.288 74.2824 
+L 18.288 94.2408 
+Q 18.288 98.676 22.7232 98.676 
+z
+" clip-path="url(#pf3ba820d83)" style="fill: #f8e1e8; stroke: #b42357; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 334.296 370.332 
+L 339.84 370.332 
+L 339.84 241.7112 
+L 334.296 241.7112 
+" clip-path="url(#pf3ba820d83)" style="fill: none; stroke: #9aa5b1; stroke-width: 1.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 334.296 237.276 
+L 339.84 237.276 
+L 339.84 108.6552 
+L 334.296 108.6552 
+" clip-path="url(#pf3ba820d83)" style="fill: none; stroke: #1f6fb2; stroke-width: 1.5; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="145.8" y="358.564241" transform="rotate(-0 145.8 358.564241)">ADD alpine-minirootfs (alpine 3.24)</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #52606d" x="298.26" y="358.564241" transform="rotate(-0 298.26 358.564241)">8.79MB</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="145.8" y="325.300241" transform="rotate(-0 145.8 325.300241)">RUN install Node.js 24.22.0</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #52606d" x="298.26" y="325.300241" transform="rotate(-0 298.26 325.300241)">157MB</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="145.8" y="292.036241" transform="rotate(-0 145.8 292.036241)">RUN install Yarn</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #52606d" x="298.26" y="292.036241" transform="rotate(-0 298.26 292.036241)">5.34MB</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="145.8" y="258.772241" transform="rotate(-0 145.8 258.772241)">COPY docker-entrypoint.sh</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #52606d" x="298.26" y="258.772241" transform="rotate(-0 298.26 258.772241)">388B</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="145.8" y="225.508241" transform="rotate(-0 145.8 225.508241)">WORKDIR /app</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #52606d" x="298.26" y="225.508241" transform="rotate(-0 298.26 225.508241)">0B</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="145.8" y="192.18635" transform="rotate(-0 145.8 192.18635)">COPY package*.json ./</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #52606d" x="298.26" y="192.244241" transform="rotate(-0 298.26 192.244241)">311B</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="145.8" y="158.980241" transform="rotate(-0 145.8 158.980241)">RUN npm ci --omit=dev</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #52606d" x="298.26" y="158.980241" transform="rotate(-0 298.26 158.980241)">4.1kB</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="145.8" y="125.716241" transform="rotate(-0 145.8 125.716241)">COPY . .</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #52606d" x="298.26" y="125.716241" transform="rotate(-0 298.26 125.716241)">2.18kB</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="145.8" y="86.883006" transform="rotate(-0 145.8 86.883006)">container's writable layer</text>
+   </g>
+   <g id="text_18">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start; fill: #52606d" x="348.156" y="309.222641" transform="rotate(-0 348.156 309.222641)">node:24-alpine</text>
+   </g>
+   <g id="text_19">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: start; fill: #1f6fb2" x="348.156" y="166.162206" transform="rotate(-0 348.156 166.162206)">your build</text>
+   </g>
+   <g id="text_20">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: start; fill: #1f6fb2" x="348.156" y="184.457406" transform="rotate(-0 348.156 184.457406)">steps</text>
+   </g>
+   <g id="text_21">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #52606d" x="217.872" y="26.591375" transform="rotate(-0 217.872 26.591375)">Each step adds a read-only layer; a change rebuilds</text>
+   </g>
+   <g id="text_22">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #52606d" x="217.872" y="43.223375" transform="rotate(-0 217.872 43.223375)">from the first changed step upward.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pf3ba820d83">
+   <rect x="7.2" y="7.2" width="421.344" height="382.536"/>
+  </clipPath>
+ </defs>
+</svg>

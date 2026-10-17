@@ -1,6 +1,6 @@
 # Shipping software: Git, CI/CD, Docker, Kafka, Kubernetes, the cloud and observability
 
-A hands-on course that starts from zero: 18 lessons on how code gets from your computer to users and stays healthy there: version control with Git and GitHub, automated testing and deployment with GitHub Actions, containers with Docker, event streaming with Kafka, running containers with Kubernetes, deploying to the cloud, and observing running systems with logs, metrics and traces, ending with a project that ships a small service end to end.
+A hands-on course that starts from zero: 24 lessons on how code gets from your computer to users and stays healthy there: version control with Git and GitHub, automated testing and deployment with GitHub Actions, containers with Docker, event streaming with Kafka, running containers with Kubernetes, deploying to the cloud, and observing running systems with logs, metrics and traces, ending with a project that ships a small service end to end.
 
 Every engineering and data team uses these tools every day. AI engineers ship models and agents as containerised services behind CI/CD pipelines; analysts version their SQL and notebooks with Git and schedule pipelines that read event streams. Knowing them is what turns code that works on your laptop into software other people can rely on.
 
@@ -8,9 +8,9 @@ Every engineering and data team uses these tools every day. AI engineers ship mo
 
 The sandbox is a terminal in your browser. Type real `git` commands: a real Git engine runs in the page, with branches, merges, conflicts and a pretend GitHub. Docker, Kubernetes, Kafka and cloud commands run against faithful simulations, and you write real Dockerfiles, workflow files and manifests that are checked automatically. Nothing to install and no sign-up. Lessons also include **Try it on your own computer** labs, with official download links, for when you want to run the real tools.
 
-- every lesson, with **68 examples** you can run and change
-- **36 exercises** with automatic checks, each with an approach, hints and a walkthrough
-- **72 quiz questions**, with explanations
+- every lesson, with **105 examples** you can run and change
+- **48 exercises** with automatic checks, each with an approach, hints and a walkthrough
+- **96 quiz questions**, with explanations
 - your progress and work saved in your own browser
 
 **Before you start:** nothing. Lesson 1 teaches the few terminal commands you need. Some later examples read short Python or JavaScript programs; you don't need to write either.
@@ -19,7 +19,7 @@ The sandbox is a terminal in your browser. Type real `git` commands: a real Git 
 
 | | |
 |---|---|
-| 📘 [Lessons](#lessons) | 18 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
+| 📘 [Lessons](#lessons) | 24 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
 | 📖 [Glossary](glossary.md) | every term used in the course, defined in plain English |
 | 🧾 [Cheat sheet](cheatsheet.md) | the syntax and patterns on one page, and every task at a glance |
 
@@ -65,11 +65,21 @@ The sandbox is a terminal in your browser. Type real `git` commands: a real Git 
 | 17 | [Continuous delivery with GitHub Actions](lessons/17-deploying.md) | building once and deploying what was tested, artifacts (upload-artifact, download-artifact, retention, gh run download), GitHub Pages and the GitHub Actions source, upload-pages-artifact and deploy-pages, pages and id-token permissions, the github-pages environment, smoke tests with curl, environments and protection rules (required reviewers, wait timers, deployment branches, environment secrets), workflow_dispatch with typed inputs, deploying on releases and tags, concurrency for deployments, rolling back by reverting or re-running, other static hosts | 33–34 |
 | 18 | [Fast, reusable pipelines](lessons/18-pipelines.md) | why speed matters, caching with actions/cache, keys, restore keys and hashFiles, setup-node's npm cache, cache scope, size and expiry, path filters and required checks, concurrency with cancel-in-progress, timeout-minutes, reusable workflows (workflow_call, inputs, secrets), composite actions, sharing from an organisation repository, scheduled workflows (cron fields, UTC, the timezone key, limits, the 60-day rule), what Actions costs in 2026 (included minutes, per-minute prices, larger runners), self-hosted runners and their risks, other CI systems, CI for analysts and AI engineers (SQL tests, notebooks, data contracts, evaluation gates) | 35–36 |
 
+### Part 4: Docker (Intermediate)
+
+| # | Lesson | Topics | Sandbox |
+|---|---|---|---|
+| 19 | [Containers and images](lessons/19-containers.md) | "it works on my machine", what images, containers, layers and registries are, containers versus virtual machines (namespaces and cgroups, Docker Desktop's Linux VM), the OCI standard, docker run and what it does (pull, create, start), running commands in images (--rm), image names, tags, variants (alpine, slim, Debian) and digests, Node.js LTS tags in October 2026, Docker 29's docker images view (disk usage, content size, in use), docker ps and docker ps -a, container names, docker container prune, docker rm and docker rmi, running a server detached with a published port (-d, -p, --name), docker logs, docker stop, installing Docker Desktop or Docker Engine and its license, alternatives (Podman, Rancher Desktop, Colima, OrbStack), Docker Hub pull limits | 37–38 |
+| 20 | [Writing a Dockerfile](lessons/20-dockerfile.md) | the shop as a node:http web API (routes, PORT), a Dockerfile's instructions (FROM, WORKDIR, COPY, RUN, EXPOSE, CMD), docker build -t and the build context, reading BuildKit's plain output (steps, CACHED, DONE, exporting and naming), --progress=plain, npm ci --omit=dev, running your image and curl -i, what COPY . . copies (.git, README.md, .env, node_modules) and .dockerignore, docker build -q, exec form versus shell form, signals and the shell, BuildKit build checks and warnings (JSONArgsRecommended), docker build --check, ENTRYPOINT and CMD, the node image's docker-entrypoint.sh, overriding CMD with docker run arguments, reading build errors (>>>, unknown instruction, file not found), listening on all interfaces (127.0.0.1 versus 0.0.0.0) and Connection reset by peer, docker init, VS Code's Docker DX and Container Tools extensions | 39–40 |
+| 21 | [Layers, caching and smaller images](lessons/21-layers.md) | layers and the container's writable layer, docker history and `<missing>`, shared base layers, how BuildKit's cache works, ordering a Dockerfile (dependency files, install, then code), --no-cache, choosing a base image (node:24, -slim, -alpine, distroless, Docker Hardened Images), musl versus glibc, NODE_ENV=production and npm ci --omit=dev, running as the node user (USER), file ownership and chown for writable folders, multi-stage builds (AS, COPY --from, stage labels, skipped stages, deduplicated steps), running tests in the build, secrets in ENV and ARG (SecretsUsedInArgOrEnv, docker history), build secrets (RUN --mount=type=secret), pinning tags and digests, Dependabot and Renovate for base images, scanning (Docker Scout, Trivy, Grype), attestations and SBOMs | 41–42 |
+| 22 | [Running containers: configuration, logs, signals and data](lessons/22-running.md) | configuration with environment variables (-e, --env-file), docker inspect and Go templates, secrets at run time, logs on stdout and stderr (docker logs, -f, --tail), docker exec and PID 1, docker exec -it for a shell, docker stop (SIGTERM, the 10-second timeout, SIGKILL), why Node.js as PID 1 ignores SIGTERM, graceful shutdown with server.close, docker run --init, exit codes (0, 1, 125, 126, 127, 137, 143), uncaught errors and crashes, restart policies (no, on-failure, always, unless-stopped) and RestartCount, health checks (HEALTHCHECK, wget in Alpine, starting, healthy, unhealthy), named volumes and bind mounts (-v, :ro), docker rm -f, docker volume ls and rm, memory and CPU limits (--memory, --cpus) and docker stats | 43–44 |
+| 23 | [Docker Compose: several containers together](lessons/23-compose.md) | why Compose, compose.yaml and its services (build, image, ports, environment), the project name, docker compose up -d, ps, logs, exec, stop and down (-v), the project network and service names as host names, localhost inside a container, the default bridge network has no names, depends_on and its conditions (service_started, service_healthy, service_completed_successfully), healthcheck in Compose, named volumes in Compose (project_volume names), restart, environment interpolation from the shell and .env with defaults, docker compose config, the obsolete version key and the retired docker-compose program, Compose 5, develop.watch (sync, sync+restart, rebuild) and docker compose watch, compose.override.yaml, adding a database service | 45–46 |
+| 24 | [Publishing images and building them in CI](lessons/24-publishing.md) | registries (Docker Hub, ghcr.io, cloud registries), full image names, docker tag, docker push and why it's refused without a login, personal access tokens (classic) and write:packages, docker login --password-stdin, ~/.docker/config.json and credential helpers, private packages on ghcr.io and pulling after login, docker logout, choosing tags (versions, SHAs, branches, latest), building in GitHub Actions with docker/setup-buildx-action, docker/login-action, docker/metadata-action and docker/build-push-action, permissions: packages: write and the GITHUB_TOKEN, labels linking a package to its repository, the Git context of build-push-action, releasing with a Git tag (semver tags and latest), multi-platform images (QEMU, ARM runners), provenance attestations, SBOMs and gh attestation verify | 47–48 |
+
 ### Coming next
 
 The course is being written one part at a time. Still to come:
 
-4. Docker: images and containers, writing a Dockerfile, layers and caching, volumes, networks and Compose
 5. Kafka and event streaming: topics, partitions, producers, consumers and consumer groups
 6. Kubernetes basics: pods, deployments, services, configuration and scaling
 7. Deploying to the cloud: regions, managed services, containers in the cloud, costs and security

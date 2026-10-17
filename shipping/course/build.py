@@ -40,7 +40,7 @@ DATA = ROOT / "data"
 FIGURES = ROOT / "figures"
 NODE = os.environ.get("NODE_BIN", "node")
 RUNNABLE = ("sh", "js")            # fences that become runnable examples (sh: the sandbox terminal; js: JavaScript)
-SANDBOX_FILES = ("app.js", "worker.js", "runner.js", "shell.js", "github.js", "nodejs.js", "actions.js", "gitlib.js", "yamllib.js")
+SANDBOX_FILES = ("app.js", "worker.js", "runner.js", "shell.js", "github.js", "nodejs.js", "actions.js", "docker.js", "compose.js", "gitlib.js", "yamllib.js")
 STATIC_LANG = {"js-static": "js", "json": "json", "bash": "bash", "yaml": "yaml", "dockerfile": "dockerfile", "ini": "ini",
                "python": "python", "properties": "properties", "toml": "toml", "diff": "diff", "console": "bash"}
 SETUPS = {}                        # named setup scripts from content/setups.md, used with setup=<name>

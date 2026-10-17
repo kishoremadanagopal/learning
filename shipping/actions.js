@@ -8,11 +8,11 @@
    - actionlint, for checking workflow files before you push them
    - a GitHub Pages site that curl can fetch after a deployment
    Runs finish the moment they start (the sandbox has no waiting), with realistic, fixed timings. */
-import { parseDocument, LineCounter, isMap, isSeq, isScalar } from "./yamllib.js?v=576fafd92b";
-import { NODE_RELEASES } from "./nodejs.js?v=576fafd92b";
+import { parseDocument, LineCounter, isMap, isSeq, isScalar } from "./yamllib.js?v=11948bf18f";
+import { NODE_RELEASES } from "./nodejs.js?v=11948bf18f";
 
 export function installActions(gh, api) {
-  const { git, Shell, registerCommand, parseOpts, filesAt, START } = api;
+  const { git, Shell, registerCommand, parseOpts, filesAt, START, dockerActions } = api;
   const { ghLoad, ghSave, GhError, fuzzyAgo, table, baseRepo, ghState, hooks, defaultBranchOf, copyObjects, findPull, mergeTreesOnServer, writeCommitFromFiles } = gh;
   const clockNow = (sh) => START + 60 * sh.commits;
 
@@ -30,6 +30,11 @@ export function installActions(gh, api) {
     "actions/configure-pages": { majors: [5, 6], sha: { 6: "45bfe0192ca1faeb007ade9deae92b16b8254a0d" } },
     "actions/upload-pages-artifact": { majors: [3, 4, 5], sha: { 5: "fc324d3547104276b827a68afc52ff2a11cc49c9" } },
     "actions/deploy-pages": { majors: [4, 5], sha: { 5: "368f82528645a54fb793d4d04e342629a3f51346" } },
+    "docker/setup-buildx-action": { majors: [3, 4], sha: { 4: "f87e5991a6d7451dcb8d9637bfbc97413f497069" }, post: true },
+    "docker/setup-qemu-action": { majors: [3, 4], sha: { 4: "99012661954931238ded8c8b007157a8430204e1" } },
+    "docker/login-action": { majors: [3, 4], sha: { 4: "dbcb813823bdd20940b903addbd779551569679f" }, post: true },
+    "docker/metadata-action": { majors: [5, 6], sha: { 6: "dc802804100637a589fabce1cb79ff13a1411302" } },
+    "docker/build-push-action": { majors: [6, 7], sha: { 7: "c3c9e263c25d99ce0380d002d59b67737d91b0dc" } },
   };
   const DEPRECATED = { "actions/upload-artifact": [1, 2, 3], "actions/download-artifact": [1, 2, 3], "actions/cache": [1, 2] };
   const fakeSha = (s) => { let h = 0x811c9dc5, out = ""; for (let r = 0; r < 5; r++) { for (const c of s + r) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; } out += h.toString(16).padStart(8, "0"); } return out; };
@@ -1227,6 +1232,7 @@ export function installActions(gh, api) {
       o.outputs.page_url = pages.url;
       return "success";
     }
+    if (dockerActions && dockerActions[nameRef]) return dockerActions[nameRef]({ s, st, log, o, withV, group, uses, ver });
     log(`##[error]The sandbox doesn't simulate ${uses}.`);
     return "failure";
   }
