@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="624.24pt" height="258.336pt" viewBox="0 0 624.24 258.336" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 258.336 
+L 624.24 258.336 
+L 624.24 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 31.0392 118.08 
+L 144.1368 118.08 
+Q 148.572 118.08 148.572 113.6448 
+L 148.572 50.4432 
+Q 148.572 46.008 144.1368 46.008 
+L 31.0392 46.008 
+Q 26.604 46.008 26.604 50.4432 
+L 26.604 113.6448 
+Q 26.604 118.08 31.0392 118.08 
+z
+" clip-path="url(#p2e39d0bfb9)" style="fill: #e3f2e4; stroke: #2e7d32; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 87.588 122.85385 
+Q 87.588 137.483177 87.588 150.323651 
+" clip-path="url(#p2e39d0bfb9)" style="fill: none; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 90.388 144.723651 
+L 87.588 150.323651 
+L 84.788 144.723651 
+z
+" clip-path="url(#p2e39d0bfb9)" style="fill: #52606d; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 180.7272 118.08 
+L 293.8248 118.08 
+Q 298.26 118.08 298.26 113.6448 
+L 298.26 50.4432 
+Q 298.26 46.008 293.8248 46.008 
+L 180.7272 46.008 
+Q 176.292 46.008 176.292 50.4432 
+L 176.292 113.6448 
+Q 176.292 118.08 180.7272 118.08 
+z
+" clip-path="url(#p2e39d0bfb9)" style="fill: #e3f2e4; stroke: #2e7d32; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 237.276 122.85385 
+Q 237.276 137.483177 237.276 150.323651 
+" clip-path="url(#p2e39d0bfb9)" style="fill: none; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 240.076 144.723651 
+L 237.276 150.323651 
+L 234.476 144.723651 
+z
+" clip-path="url(#p2e39d0bfb9)" style="fill: #52606d; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 330.4152 118.08 
+L 443.5128 118.08 
+Q 447.948 118.08 447.948 113.6448 
+L 447.948 50.4432 
+Q 447.948 46.008 443.5128 46.008 
+L 330.4152 46.008 
+Q 325.98 46.008 325.98 50.4432 
+L 325.98 113.6448 
+Q 325.98 118.08 330.4152 118.08 
+z
+" clip-path="url(#p2e39d0bfb9)" style="fill: #e3f2e4; stroke: #2e7d32; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 386.964 122.85385 
+Q 386.964 137.483177 386.964 150.323651 
+" clip-path="url(#p2e39d0bfb9)" style="fill: none; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 389.764 144.723651 
+L 386.964 150.323651 
+L 384.164 144.723651 
+z
+" clip-path="url(#p2e39d0bfb9)" style="fill: #52606d; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 480.1032 118.08 
+L 593.2008 118.08 
+Q 597.636 118.08 597.636 113.6448 
+L 597.636 50.4432 
+Q 597.636 46.008 593.2008 46.008 
+L 480.1032 46.008 
+Q 475.668 46.008 475.668 50.4432 
+L 475.668 113.6448 
+Q 475.668 118.08 480.1032 118.08 
+z
+" clip-path="url(#p2e39d0bfb9)" style="fill: #e3f2e4; stroke: #2e7d32; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 536.652 122.85385 
+Q 536.652 137.483177 536.652 150.323651 
+" clip-path="url(#p2e39d0bfb9)" style="fill: none; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 539.452 144.723651 
+L 536.652 150.323651 
+L 533.852 144.723651 
+z
+" clip-path="url(#p2e39d0bfb9)" style="fill: #52606d; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 31.0392 195.696 
+L 593.2008 195.696 
+Q 597.636 195.696 597.636 191.2608 
+L 597.636 161.3232 
+Q 597.636 156.888 593.2008 156.888 
+L 31.0392 156.888 
+Q 26.604 156.888 26.604 161.3232 
+L 26.604 191.2608 
+Q 26.604 195.696 31.0392 195.696 
+z
+" clip-path="url(#p2e39d0bfb9)" style="fill: #fdecd6; stroke: #e07b00; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #2e7d32" x="87.588" y="65.261406" transform="rotate(-0 87.588 65.261406)">GPU 0 · rank 0</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 8.8px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="87.588" y="90.01625" transform="rotate(-0 87.588 90.01625)">full model copy</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 8.8px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #52606d" x="87.588" y="109.42025" transform="rotate(-0 87.588 109.42025)">batch shard 0</text>
+   </g>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #2e7d32" x="237.276" y="65.261406" transform="rotate(-0 237.276 65.261406)">GPU 1 · rank 1</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 8.8px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="237.276" y="90.01625" transform="rotate(-0 237.276 90.01625)">full model copy</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 8.8px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #52606d" x="237.276" y="109.42025" transform="rotate(-0 237.276 109.42025)">batch shard 1</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #2e7d32" x="386.964" y="65.261406" transform="rotate(-0 386.964 65.261406)">GPU 2 · rank 2</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 8.8px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="386.964" y="90.01625" transform="rotate(-0 386.964 90.01625)">full model copy</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 8.8px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #52606d" x="386.964" y="109.42025" transform="rotate(-0 386.964 109.42025)">batch shard 2</text>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #2e7d32" x="536.652" y="65.261406" transform="rotate(-0 536.652 65.261406)">GPU 3 · rank 3</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 8.8px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="536.652" y="90.01625" transform="rotate(-0 536.652 90.01625)">full model copy</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 8.8px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #52606d" x="536.652" y="109.42025" transform="rotate(-0 536.652 109.42025)">batch shard 3</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="312.12" y="178.913406" transform="rotate(-0 312.12 178.913406)">all-reduce: average every gradient across the 4 processes (NCCL)</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 9px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #52606d" x="312.12" y="228.671438" transform="rotate(-0 312.12 228.671438)">each rank then takes the same optimizer step, so the copies stay identical; DistributedSampler gives each rank different data</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p2e39d0bfb9">
+   <rect x="7.2" y="7.2" width="609.84" height="243.936"/>
+  </clipPath>
+ </defs>
+</svg>

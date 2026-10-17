@@ -715,3 +715,28 @@ def scaled_dot_product_attention(query, key, value, attn_mask=None, dropout_p=0.
     if out.grad_fn is not None:
         out.grad_fn.__class__ = _node_class("ScaledDotProductFlashAttentionForCpuBackward0")
     return out
+
+
+# ---------------------------------------------------------------- autocast op lists
+
+linear = _core._autocast_op("lower")(linear)
+_convnd = _core._autocast_op("lower")(_convnd)
+scaled_dot_product_attention = _core._autocast_op("lower")(scaled_dot_product_attention)
+for _name in ("mse_loss", "l1_loss", "smooth_l1_loss", "huber_loss", "binary_cross_entropy_with_logits", "nll_loss",
+              "cross_entropy", "kl_div"):
+    globals()[_name] = _core._autocast_op("fp32")(globals()[_name])
+cosine_similarity = _core._autocast_op("fp32", ("cuda",))(cosine_similarity)
+_bce = binary_cross_entropy
+
+
+def binary_cross_entropy(input, target, weight=None, size_average=None, reduce=None, reduction="mean"):
+    if _core._AUTOCAST["cuda"][0] and isinstance(input, Tensor) and input.device.type == "cuda":
+        raise RuntimeError("torch.nn.functional.binary_cross_entropy and torch.nn.BCELoss are unsafe to autocast.\n"
+                           "Many models use a sigmoid layer right before the binary cross entropy layer.\n"
+                           "In this case, combine the two layers using torch.nn.functional.binary_cross_entropy_with_logits\n"
+                           "or torch.nn.BCEWithLogitsLoss.  binary_cross_entropy_with_logits and BCEWithLogits are\n"
+                           "safe to autocast.")
+    return _core._autocast_op("fp32", ("cpu",))(_bce)(input, target, weight, size_average, reduce, reduction)
+
+
+del _name

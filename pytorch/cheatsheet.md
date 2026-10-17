@@ -222,6 +222,34 @@ h = model.layer.register_forward_hook(lambda m, inp, out: saved.append(out.detac
 - Frozen BatchNorm still updates running statistics in `train()`: set those layers to `eval()`.
 - Use the pretrained weights' own preprocessing (`weights.transforms()` in torchvision).
 
+## Performance [24–27]
+
+```python
+torch.cuda.synchronize(); t0 = time.perf_counter(); f(); torch.cuda.synchronize()   # time GPU code
+benchmark.Timer(stmt="f(x)", globals={"f": f, "x": x}).blocked_autorange()          # torch.utils.benchmark
+with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA], record_shapes=True) as prof:
+    with record_function("step"): train_step()
+print(prof.key_averages().table(sort_by="cuda_time_total", row_limit=10))
+torch.cuda.max_memory_allocated(); torch.cuda.reset_peak_memory_stats()
+model = torch.compile(model)                       # mode="reduce-overhead" | "max-autotune"; fullgraph=True
+torch.save(model._orig_mod.state_dict(), path)     # no "_orig_mod." prefix
+torch.set_float32_matmul_precision("high")         # TF32
+scaler = torch.amp.GradScaler("cuda")
+with torch.autocast(device_type="cuda", dtype=torch.float16):
+    loss = loss_fn(model(x), y)
+scaler.scale(loss).backward(); scaler.unscale_(opt); clip_grad_norm_(model.parameters(), 1.0)
+scaler.step(opt); scaler.update()
+dist.init_process_group("nccl"); model = DDP(model.to(dev), device_ids=[local_rank])
+sampler = DistributedSampler(ds); sampler.set_epoch(epoch)   # torchrun --nproc_per_node=N train.py
+```
+
+- Warm up before timing; the first compiled call compiles.
+- Graph breaks: `.item()`, `print`, `if tensor`: use `torch.where`.
+- Autocast: matmul/linear/conv → 16-bit; softmax, sums, losses → float32; weights stay float32; backward outside.
+- bfloat16 needs no GradScaler; float16 does.
+- Effective batch = per-GPU batch × GPUs; save from rank 0 with `model.module.state_dict()`.
+- FSDP (`fully_shard`) when parameters + gradients + optimizer state don't fit on one GPU.
+
 ## Every concept at a glance
 
 Generated from the **At a glance** table at the end of each lesson. The number in brackets links to the lesson.
@@ -384,3 +412,36 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | Fine-tune | param groups: backbone lr 1e-5, head lr 1e-3 | gentle adaptation | unfreeze gradually | [23](lessons/23-transfer-learning.md) |
 | Partial load | `load_state_dict(filtered, strict=False)` | matching keys load | shapes must still match | [23](lessons/23-transfer-learning.md) |
 | Peek inside | `h = layer.register_forward_hook(fn)` … `h.remove()` | intermediate outputs | returning a value replaces the output | [23](lessons/23-transfer-learning.md) |
+| Time CPU code | `time.perf_counter()` around the call | seconds | warm up, repeat, take the median | [24](lessons/24-measuring-performance.md) |
+| Time GPU code | `torch.cuda.synchronize()` before both clock reads | the real duration | or CUDA events / `benchmark.Timer` | [24](lessons/24-measuring-performance.md) |
+| Benchmark | `benchmark.Timer(stmt, globals=...).blocked_autorange()` | `Measurement` (median, iqr) | handles warm-up and sync | [24](lessons/24-measuring-performance.md) |
+| Profile | `with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA]) as prof:` | recorded events | `record_function("name")` labels regions | [24](lessons/24-measuring-performance.md) |
+| Summarise | `prof.key_averages().table(sort_by="cpu_time_total", row_limit=10)` | per-operation table | Self excludes children; Total includes them | [24](lessons/24-measuring-performance.md) |
+| Long runs | `schedule(wait, warmup, active)` + `prof.step()` | a few profiled steps | `tensorboard_trace_handler` / `export_chrome_trace` | [24](lessons/24-measuring-performance.md) |
+| Memory | `torch.cuda.max_memory_allocated()` | peak bytes | reset with `reset_peak_memory_stats()` | [24](lessons/24-measuring-performance.md) |
+| Out of memory | smaller batch + accumulation, AMP, checkpointing, FSDP | fits | activations grow with batch size | [24](lessons/24-measuring-performance.md) |
+| Compile | `model = torch.compile(model)` | `OptimizedModule` | first call compiles; same parameters | [25](lessons/25-torch-compile.md) |
+| Pipeline | Dynamo → FX graph → Inductor → Triton / C++ | fused kernels | `backend="inductor"` by default | [25](lessons/25-torch-compile.md) |
+| Save | `compiled._orig_mod.state_dict()` | keys without `_orig_mod.` | or keep the original model | [25](lessons/25-torch-compile.md) |
+| Modes | `"default"`, `"reduce-overhead"`, `"max-autotune"` | speed vs compile time | reduce-overhead uses CUDA graphs | [25](lessons/25-torch-compile.md) |
+| No breaks allowed | `torch.compile(f, fullgraph=True)` | error at a break | debug with `TORCH_LOGS="graph_breaks"` | [25](lessons/25-torch-compile.md) |
+| Avoid breaks | `torch.where(cond, a, b)` instead of `if` | one graph | no `.item()` inside | [25](lessons/25-torch-compile.md) |
+| Shapes | `dynamic=True` / `torch._dynamo.mark_dynamic(x, 0)` | fewer recompiles | or `drop_last=True` | [25](lessons/25-torch-compile.md) |
+| TF32 | `torch.set_float32_matmul_precision("high")` | faster float32 matmuls | default "highest" | [25](lessons/25-torch-compile.md) |
+| Inference | `torch.inference_mode()` | no autograd tracking | faster than no_grad | [25](lessons/25-torch-compile.md) |
+| Autocast (GPU) | `with torch.autocast("cuda", dtype=torch.float16):` | matmul/linear/conv in fp16 | forward and loss only | [26](lessons/26-mixed-precision.md) |
+| Autocast (CPU) | `with torch.autocast("cpu", dtype=torch.bfloat16):` | matmul/linear/conv in bf16 | bf16 is the CPU default | [26](lessons/26-mixed-precision.md) |
+| Stays float32 (CUDA) | softmax, log_softmax, sum, exp, log, pow, layer_norm, losses | accuracy | float64 never cast | [26](lessons/26-mixed-precision.md) |
+| Scale | `scaler.scale(loss).backward()` | scaled gradients | `torch.amp.GradScaler("cuda")` | [26](lessons/26-mixed-precision.md) |
+| Clip | `scaler.unscale_(opt)` then `clip_grad_norm_` | true gradient sizes | once per optimizer per step | [26](lessons/26-mixed-precision.md) |
+| Step | `scaler.step(opt); scaler.update()` | skips on inf/nan | scale ×0.5 on overflow, ×2 after 2000 clean steps | [26](lessons/26-mixed-precision.md) |
+| bfloat16 | autocast with `dtype=torch.bfloat16`, plain `backward()` | no scaler needed | float32's range | [26](lessons/26-mixed-precision.md) |
+| Checkpoint | `scaler.state_dict()` / `load_state_dict` | resumes the scale | alongside model and optimizer | [26](lessons/26-mixed-precision.md) |
+| Launch | `torchrun --nproc_per_node=4 train.py` | 4 processes with RANK, LOCAL_RANK, WORLD_SIZE | one per GPU | [27](lessons/27-distributed-training.md) |
+| Join | `dist.init_process_group(backend="nccl")` | process group | Gloo for CPUs | [27](lessons/27-distributed-training.md) |
+| Wrap | `DDP(model.to(device), device_ids=[local_rank])` | gradients all-reduced in backward | `model.module` is the original | [27](lessons/27-distributed-training.md) |
+| Shard data | `DistributedSampler(ds)` + `sampler.set_epoch(epoch)` | different slice per rank | pads to equal sizes | [27](lessons/27-distributed-training.md) |
+| Save | `if dist.get_rank() == 0: torch.save(model.module.state_dict(), path)` | one checkpoint | `dist.barrier()` to wait | [27](lessons/27-distributed-training.md) |
+| Accumulate | `with model.no_sync():` on non-final micro-batches | fewer all-reduces | last backward syncs | [27](lessons/27-distributed-training.md) |
+| Too big for one GPU | `fully_shard(block)` per block, then `fully_shard(model)` | sharded params, grads, optimizer state | FSDP2 | [27](lessons/27-distributed-training.md) |
+| Clean up | `dist.destroy_process_group()` | process group closed | at the end of main | [27](lessons/27-distributed-training.md) |

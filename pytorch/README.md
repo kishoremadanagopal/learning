@@ -1,6 +1,6 @@
 # PyTorch: from tensors to the PyTorch Certified Associate exam
 
-A beginner-first PyTorch course that follows the official exam outline of the **PyTorch Certified Associate (PTCA)**, launched by the PyTorch Foundation and the Linux Foundation in June 2026: 23 lessons so far on tensors, devices, autograd, data loading, building and training models, and making them fast.
+A beginner-first PyTorch course that follows the official exam outline of the **PyTorch Certified Associate (PTCA)**, launched by the PyTorch Foundation and the Linux Foundation in June 2026: 27 lessons so far on tensors, devices, autograd, data loading, building and training models, and making them fast.
 
 PyTorch is the framework most AI research and production models are written in. Knowing it well is core for the **AI engineer** path, and a big plus for **data / AI analysts** who move into machine learning.
 
@@ -8,9 +8,9 @@ PyTorch is the framework most AI research and production models are written in. 
 
 The sandbox runs Python 3.14 in your browser (via [Pyodide](https://pyodide.org)) with the course's own copy of PyTorch: a teaching version written in Python on NumPy that follows PyTorch 2.14's names, printing, rules, random numbers and error messages for everything the course uses. It even has a pretend NVIDIA GPU, so you can practise `.to('cuda')`. Nothing to install and no sign-up. Run the same code with real PyTorch on your own computer (`pip install torch`) and it behaves the same way, just faster.
 
-- every lesson, with **144 examples** you can run and change
-- **46 exercises** with hidden tests, each with an approach, hints and a walkthrough
-- **126 exam-style quiz questions**, with explanations
+- every lesson, with **159 examples** you can run and change
+- **54 exercises** with hidden tests, each with an approach, hints and a walkthrough
+- **150 exam-style quiz questions**, with explanations
 - diagrams for the key ideas
 - practice data files (from Part 3) that reset before every run
 - your progress and code saved in your own browser
@@ -32,7 +32,7 @@ Check the latest details on the [Linux Foundation's PTCA page](https://training.
 
 | | |
 |---|---|
-| 📘 [Lessons](#lessons) | 23 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and an exam-style quiz |
+| 📘 [Lessons](#lessons) | 27 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and an exam-style quiz |
 | 📖 [Glossary](glossary.md) | every PyTorch term used in the course, defined in plain English |
 | 🧾 [Cheat sheet](cheatsheet.md) | the API you need for the exam on a few pages, and every concept at a glance |
 
@@ -88,6 +88,15 @@ Check the latest details on the [Linux Foundation's PTCA page](https://training.
 | 21 | [Training deeper networks well](lessons/21-better-models.md) | vanishing and exploding gradients, ReLU, LeakyReLU, GELU and SiLU, sigmoid and tanh saturation, Kaiming and Xavier initialisation, nn.init and model.apply, why not to initialise all weights equally, BatchNorm versus LayerNorm, residual connections and skip paths, pre-norm residual blocks, regularisation with dropout, weight decay, augmentation and smaller models, early stopping with the best weights, gradient clipping | 41–42 |
 | 22 | [Optimizers and learning-rate schedules](lessons/22-optimizers-and-schedules.md) | param_groups and optimizer state, SGD with momentum and Nesterov, RMSprop, Adam, AdamW and decoupled weight decay, per-group learning rates and weight decay, no decay on biases and norm weights, learning-rate schedulers (StepLR, MultiStepLR, ExponentialLR, CosineAnnealingLR, LinearLR, SequentialLR, OneCycleLR, ReduceLROnPlateau), the order of optimizer.step() and scheduler.step(), warm-up plus cosine decay, gradient accumulation, saving optimizer and scheduler state | 43–44 |
 | 23 | [Transfer learning and modifying models](lessons/23-transfer-learning.md) | transfer learning, feature extraction versus fine-tuning, torchvision pretrained models and their weights' transforms, inspecting models with named_children, named_modules, named_parameters and get_submodule, freezing with requires_grad_(False), replacing the head, optimizing only trainable parameters, smaller learning rates for pretrained layers, frozen BatchNorm statistics, partial loading with strict=False and filtered state dicts, forward hooks and handles | 45–46 |
+
+### Part 5: Performance and Optimization (Advanced)
+
+| # | Lesson | Topics | Sandbox |
+|---|---|---|---|
+| 24 | [Measuring performance](lessons/24-measuring-performance.md) | measuring before optimising, time.perf_counter, warm-up runs and the median, asynchronous GPU execution and torch.cuda.synchronize, CUDA events, torch.utils.benchmark.Timer and blocked_autorange, torch.profiler.profile with activities, record_function, key_averages and the profiler table (Self CPU versus CPU total, number of calls), record_shapes, profile_memory, schedule and prof.step, trace export for Perfetto and TensorBoard, GPU memory statistics (memory_allocated, max_memory_allocated, memory_reserved, reset_peak_memory_stats, empty_cache), what uses memory during training, fixes for out-of-memory errors, telling data-loading bottlenecks from compute bottlenecks | 47–48 |
+| 25 | [torch.compile and execution speed-ups](lessons/25-torch-compile.md) | eager execution and its overheads, torch.compile on models and functions, TorchDynamo and FX graphs, TorchInductor, Triton and C++ kernels, operator fusion, first-call compile time, OptimizedModule and _orig_mod, the _orig_mod. state-dict prefix, modes (default, reduce-overhead with CUDA graphs, max-autotune), fullgraph, backends, graph breaks and their causes (.item(), data-dependent control flow, unsupported code), finding breaks with TORCH_LOGS and torch._dynamo.explain, torch.compiler.disable, recompilation, dynamic shapes and mark_dynamic, inference_mode, TF32 and set_float32_matmul_precision, cudnn.benchmark, channels_last, torch.export | 49–50 |
+| 26 | [Mixed precision training](lessons/26-mixed-precision.md) | why 16-bit is faster (tensor cores, memory bandwidth), float16 versus bfloat16 range and precision, torch.autocast for CUDA and CPU, the lower-precision and float32 operation lists, operations that follow their inputs, float64 left alone, float32 master weights, backward outside autocast, nested enabled=False, the deprecated torch.cuda.amp.autocast, gradient underflow and loss scaling, torch.amp.GradScaler (scale, step, update, unscale_, get_scale, state_dict), skipped steps and the adaptive scale, clipping after unscale_, bfloat16 without a scaler, binary_cross_entropy versus BCEWithLogitsLoss under autocast | 51–52 |
+| 27 | [Distributed training](lessons/27-distributed-training.md) | why distribute training, data parallelism, all-reduce of gradients, why averaged shard gradients equal the full-batch gradient, effective batch size and learning-rate scaling, processes, world size, rank and local rank, NCCL and Gloo backends, torchrun and its environment variables, init_process_group and destroy_process_group, DistributedDataParallel and model.module, DistributedSampler (interleaving, padding, drop_last, shuffle, seed, set_epoch), rank-0 logging and saving, barrier, no_sync for gradient accumulation, Fully Sharded Data Parallel (FSDP2 fully_shard, MixedPrecisionPolicy, FSDP1), tensor and pipeline parallelism | 53–54 |
 
 ## Running it on your own computer
 

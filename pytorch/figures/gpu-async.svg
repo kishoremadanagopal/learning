@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="602.064pt" height="225.072pt" viewBox="0 0 602.064 225.072" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 225.072 
+L 602.064 225.072 
+L 602.064 -0 
+L 0 -0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 116.9712 59.868 
+L 155.2248 59.868 
+Q 159.66 59.868 159.66 55.4328 
+L 159.66 36.5832 
+Q 159.66 32.148 155.2248 32.148 
+L 116.9712 32.148 
+Q 112.536 32.148 112.536 36.5832 
+L 112.536 55.4328 
+Q 112.536 59.868 116.9712 59.868 
+z
+" clip-path="url(#p323eb8608e)" style="fill: #e3eef8; stroke: #1f6fb2; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 169.6392 59.868 
+L 207.8928 59.868 
+Q 212.328 59.868 212.328 55.4328 
+L 212.328 36.5832 
+Q 212.328 32.148 207.8928 32.148 
+L 169.6392 32.148 
+Q 165.204 32.148 165.204 36.5832 
+L 165.204 55.4328 
+Q 165.204 59.868 169.6392 59.868 
+z
+" clip-path="url(#p323eb8608e)" style="fill: #e3eef8; stroke: #1f6fb2; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 222.3072 59.868 
+L 260.5608 59.868 
+Q 264.996 59.868 264.996 55.4328 
+L 264.996 36.5832 
+Q 264.996 32.148 260.5608 32.148 
+L 222.3072 32.148 
+Q 217.872 32.148 217.872 36.5832 
+L 217.872 55.4328 
+Q 217.872 59.868 222.3072 59.868 
+z
+" clip-path="url(#p323eb8608e)" style="fill: #e3eef8; stroke: #1f6fb2; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 280.5192 59.868 
+L 327.0888 59.868 
+Q 331.524 59.868 331.524 55.4328 
+L 331.524 36.5832 
+Q 331.524 32.148 327.0888 32.148 
+L 280.5192 32.148 
+Q 276.084 32.148 276.084 36.5832 
+L 276.084 55.4328 
+Q 276.084 59.868 280.5192 59.868 
+z
+" clip-path="url(#p323eb8608e)" style="fill: #f8e1e8; stroke: #b42357; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 133.6032 137.484 
+L 209.0016 137.484 
+Q 213.4368 137.484 213.4368 133.0488 
+L 213.4368 114.1992 
+Q 213.4368 109.764 209.0016 109.764 
+L 133.6032 109.764 
+Q 129.168 109.764 129.168 114.1992 
+L 129.168 133.0488 
+Q 129.168 137.484 133.6032 137.484 
+z
+" clip-path="url(#p323eb8608e)" style="fill: #e3f2e4; stroke: #2e7d32; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 222.3072 137.484 
+L 319.8816 137.484 
+Q 324.3168 137.484 324.3168 133.0488 
+L 324.3168 114.1992 
+Q 324.3168 109.764 319.8816 109.764 
+L 222.3072 109.764 
+Q 217.872 109.764 217.872 114.1992 
+L 217.872 133.0488 
+Q 217.872 137.484 222.3072 137.484 
+z
+" clip-path="url(#p323eb8608e)" style="fill: #e3f2e4; stroke: #2e7d32; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 333.1872 137.484 
+L 397.4976 137.484 
+Q 401.9328 137.484 401.9328 133.0488 
+L 401.9328 114.1992 
+Q 401.9328 109.764 397.4976 109.764 
+L 333.1872 109.764 
+Q 328.752 109.764 328.752 114.1992 
+L 328.752 133.0488 
+Q 328.752 137.484 333.1872 137.484 
+z
+" clip-path="url(#p323eb8608e)" style="fill: #e3f2e4; stroke: #2e7d32; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 416.3472 187.38 
+L 496.1808 187.38 
+Q 500.616 187.38 500.616 182.9448 
+L 500.616 164.0952 
+Q 500.616 159.66 496.1808 159.66 
+L 416.3472 159.66 
+Q 411.912 159.66 411.912 164.0952 
+L 411.912 182.9448 
+Q 411.912 187.38 416.3472 187.38 
+z
+" clip-path="url(#p323eb8608e)" style="fill: #fdecd6; stroke: #e07b00; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 407.892059 140.44265 
+Q 417.45543 148.571516 425.655803 155.541833 
+" clip-path="url(#p323eb8608e)" style="fill: none; stroke: #e07b00; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 423.202359 149.781571 
+L 425.655803 155.541833 
+L 419.575527 154.048432 
+z
+" clip-path="url(#p323eb8608e)" style="fill: #e07b00; stroke: #e07b00; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 10.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: start; fill: #1f6fb2" x="18.288" y="48.864328" transform="rotate(-0 18.288 48.864328)">CPU (Python)</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 700; font-size: 10.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: start; fill: #2e7d32" x="18.288" y="126.521344" transform="rotate(-0 18.288 126.521344)">GPU</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="136.098" y="48.2155" transform="rotate(-0 136.098 48.2155)">launch A</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="188.766" y="48.2155" transform="rotate(-0 188.766 48.2155)">launch B</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="241.434" y="48.2155" transform="rotate(-0 241.434 48.2155)">launch C</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="303.804" y="48.2155" transform="rotate(-0 303.804 48.2155)">t1 = clock</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 8.8px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: start; fill: #b42357" x="339.84" y="48.43625" transform="rotate(-0 339.84 48.43625)">← stops too early: the GPU is still busy</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="171.3024" y="125.969469" transform="rotate(-0 171.3024 125.969469)">kernel A</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="271.0944" y="125.969469" transform="rotate(-0 271.0944 125.969469)">kernel B</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="365.3424" y="125.969469" transform="rotate(-0 365.3424 125.969469)">kernel C</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="456.264" y="175.865469" transform="rotate(-0 456.264 175.865469)">synchronize()</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 8.8px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: start; fill: #e07b00" x="506.16" y="175.94825" transform="rotate(-0 506.16 175.94825)">then read the clock</text>
+   </g>
+   <g id="text_13">
+    <text style="font-style: italic; font-size: 9px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #52606d" x="301.032" y="212.039437" transform="rotate(-0 301.032 212.039437)">PyTorch queues GPU work and returns at once; time it with torch.cuda.synchronize() or torch.utils.benchmark</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p323eb8608e">
+   <rect x="7.2" y="7.2" width="587.664" height="210.672"/>
+  </clipPath>
+ </defs>
+</svg>

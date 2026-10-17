@@ -66,6 +66,7 @@ def are_deterministic_algorithms_enabled():
     return _deterministic[0]
 
 
+@_core._autocast_op("fp32")
 def cdist(x1, x2, p=2.0):
     diff = x1.unsqueeze(-2) - x2.unsqueeze(-3)
     if p == 2.0:
@@ -93,11 +94,92 @@ def _sandbox_reset():
     _tensor_str.set_printoptions(profile="default")
     _core._GPU["available"] = True
     _deterministic[0] = False
+    distributed._state.update(initialized=False, backend=None)
+    _core._AUTOCAST["cuda"][:] = [False, _core.float16]
+    _core._AUTOCAST["cpu"][:] = [False, _core.bfloat16]
+    _matmul_precision[0] = "highest"
+    backends.cuda.matmul.allow_tf32 = False
     gc.collect()
     cuda._peak[0] = cuda._allocated[0]
 
 
+def is_autocast_enabled(device_type="cuda"):
+    return _core._AUTOCAST.get(device_type, [False])[0]
+
+
+def get_autocast_dtype(device_type):
+    return _core._AUTOCAST[device_type][1]
+
+
+def set_autocast_enabled(device_type, enabled):
+    _core._AUTOCAST[device_type][0] = enabled
+
+
+def set_autocast_dtype(device_type, dtype):
+    _core._AUTOCAST[device_type][1] = dtype
+
+
+def is_autocast_cache_enabled():
+    return True
+
+
+def set_autocast_cache_enabled(enabled):
+    pass
+
+
+def clear_autocast_cache():
+    pass
+
+
+def set_float32_matmul_precision(precision):
+    """'highest' (pure float32), 'high' (TF32 or bf16-based on capable GPUs) or 'medium'. The sandbox records it."""
+    if precision not in ("highest", "high", "medium"):
+        raise RuntimeError(f"Invalid precision: {precision}")
+    _matmul_precision[0] = precision
+    backends.cuda.matmul.allow_tf32 = precision != "highest"
+
+
+def get_float32_matmul_precision():
+    return _matmul_precision[0]
+
+
+_matmul_precision = ["highest"]
+
+from . import amp  # noqa: E402
+from .amp import autocast  # noqa: E402
 from . import nn, optim, utils  # noqa: E402
+from . import profiler  # noqa: E402
+from . import compiler, _dynamo, distributed  # noqa: E402
+from .distributed import fsdp as _fsdp  # noqa: E402,F401
+
+_COMPILE_MODES = ["default", "lite", "reduce-overhead", "max-autotune-no-cudagraphs", "max-autotune"]
+
+
+def compile(model=None, *, fullgraph=False, dynamic=None, backend="inductor", mode=None, options=None, disable=False):
+    """Optimise a model or function: in real PyTorch, TorchDynamo captures its operations as a graph and TorchInductor
+    generates fused kernels for it on the first call. The sandbox checks the arguments like PyTorch and returns the
+    same kind of object, but runs the original code (same results, no speed-up)."""
+    if model is None:
+        def fn(model):
+            return compile(model, fullgraph=fullgraph, dynamic=dynamic, backend=backend, mode=mode, options=options, disable=disable)
+        return fn
+    if mode is not None and options is not None:
+        raise RuntimeError("Either mode or options can be specified, but both can't be specified at the same time.")
+    if mode is not None and mode not in _COMPILE_MODES:
+        raise RuntimeError(f"Unrecognized mode={mode}, should be one of: {', '.join(_COMPILE_MODES)}")
+    if isinstance(backend, str) and backend not in compiler._BACKENDS + compiler._DEBUG_BACKENDS:
+        raise _dynamo.InvalidBackend(f"Invalid backend: '{backend}'. See `torch._dynamo.list_backends()` for available backends.")
+    if disable:
+        return model
+    if isinstance(model, nn.Module):
+        return _dynamo.OptimizedModule(model)
+    import functools
+
+    @functools.wraps(model)
+    def compiled(*args, **kwargs):
+        return model(*args, **kwargs)
+    return compiled
+_core._PROFILER_HOOK[0] = profiler._backward_range
 
 for _junk in ("np", "math", "numbers", "warnings", "namedtuple", "builtins", "MT19937", "Node", "AccumulateGrad"):
     globals().pop(_junk, None)

@@ -448,6 +448,75 @@ def transfer_learning_fig():
 
 
 
+# ---------------------------------------------------------------- Part 5: performance
+
+@fig("gpu-async")
+def gpu_async_fig():
+    f, ax = diag.canvas(10.6, 3.8)
+    label(ax, 0.2, 3.1, "CPU (Python)", ha="left", bold=True, color=BLUE)
+    label(ax, 0.2, 1.7, "GPU", ha="left", bold=True, color=GREEN)
+    for i, name in enumerate(("launch A", "launch B", "launch C")):
+        sbox(ax, 1.9 + i * 0.95, 2.85, 0.85, 0.5, name, color=BLUE, fontsize=8)
+    sbox(ax, 4.85, 2.85, 1.0, 0.5, "t1 = clock", color=CRIMSON, fontsize=8)
+    label(ax, 6.0, 3.1, "← stops too early: the GPU is still busy", ha="left", size=8.8, color=CRIMSON)
+    for i, (name, w) in enumerate((("kernel A", 1.6), ("kernel B", 2.0), ("kernel C", 1.4))):
+        x = 2.2 + sum((1.6, 2.0, 1.4)[:i])
+        sbox(ax, x, 1.45, w - 0.08, 0.5, name, color=GREEN, fontsize=8.5)
+    sbox(ax, 7.3, 0.55, 1.6, 0.5, "synchronize()", color=ORANGE, fontsize=8.5)
+    arrow(ax, 7.2, 1.42, 7.6, 1.08, color=ORANGE)
+    label(ax, 9.0, 0.8, "then read the clock", ha="left", size=8.8, color=ORANGE)
+    label(ax, 5.3, 0.15, "PyTorch queues GPU work and returns at once; time it with torch.cuda.synchronize() or torch.utils.benchmark", size=9, color=MUTED, italic=True)
+    return f
+
+
+@fig("compile")
+def compile_fig():
+    f, ax = diag.canvas(11.0, 3.6)
+    steps = [("Python code\nmodel(x)", BLUE), ("TorchDynamo\ncaptures an FX graph", ORANGE),
+             ("TorchInductor\nfuses operations", PURPLE), ("generated kernels\nTriton (GPU) / C++ (CPU)", GREEN)]
+    for i, (name, color) in enumerate(steps):
+        x = 0.3 + i * 2.7
+        sbox(ax, x, 1.6, 2.3, 1.1, name, color=color, fontsize=9)
+        if i < 3:
+            arrow(ax, x + 2.33, 2.15, x + 2.67, 2.15, color=MUTED)
+    label(ax, 5.5, 3.25, "first call: compile (seconds to minutes) · later calls: reuse the cached kernels", size=9.5)
+    label(ax, 5.5, 0.95, "graph break: code Dynamo can't trace (print, .item(), data-dependent if) runs in plain Python between graphs", size=9, color=CRIMSON)
+    label(ax, 5.5, 0.45, "new input shapes or dtypes → a recompile (dynamic=True or mark_dynamic avoids repeats)", size=9, color=MUTED)
+    return f
+
+
+@fig("amp")
+def amp_fig():
+    f, ax = diag.canvas(11.0, 4.0)
+    sbox(ax, 0.3, 2.4, 2.0, 0.9, "float32 weights\n(master copy)", color=BLUE, fontsize=9)
+    sbox(ax, 2.9, 2.4, 2.4, 0.9, "autocast forward\nmatmul/conv in fp16\nsoftmax/loss in fp32", color=ORANGE, fontsize=8.5)
+    sbox(ax, 5.9, 2.4, 1.9, 0.9, "loss × scale\n(GradScaler)", color=PURPLE, fontsize=9)
+    sbox(ax, 8.4, 2.4, 2.3, 0.9, "backward:\nscaled fp16 grads", color=ORANGE, fontsize=9)
+    sbox(ax, 8.4, 0.7, 2.3, 0.9, "unscale_: ÷ scale\ninf/nan? skip step", color=PURPLE, fontsize=9)
+    sbox(ax, 5.3, 0.7, 2.5, 0.9, "optimizer.step()\non float32 weights", color=BLUE, fontsize=9)
+    sbox(ax, 2.3, 0.7, 2.4, 0.9, "update(): halve the\nscale after inf, else\nslowly grow it", color=PURPLE, fontsize=8.3)
+    for a, b in (((2.35, 2.85), (2.85, 2.85)), ((5.35, 2.85), (5.85, 2.85)), ((7.85, 2.85), (8.35, 2.85)), ((9.55, 2.35), (9.55, 1.65)), ((8.35, 1.15), (7.85, 1.15)), ((5.25, 1.15), (4.75, 1.15))):
+        arrow(ax, a[0], a[1], b[0], b[1], color=MUTED)
+    label(ax, 5.5, 3.75, "float16 needs loss scaling (small gradients underflow to 0); bfloat16 has float32's range and doesn't", size=9.3)
+    return f
+
+
+@fig("ddp")
+def ddp_fig():
+    f, ax = diag.canvas(11.0, 4.4)
+    for r in range(4):
+        x = 0.35 + r * 2.7
+        sbox(ax, x, 2.4, 2.2, 1.3, "", color=GREEN)
+        label(ax, x + 1.1, 3.4, f"GPU {r} · rank {r}", bold=True, color=GREEN, size=9.5)
+        label(ax, x + 1.1, 2.95, "full model copy", size=8.8)
+        label(ax, x + 1.1, 2.6, f"batch shard {r}", size=8.8, color=MUTED)
+        arrow(ax, x + 1.1, 2.35, x + 1.1, 1.75, color=MUTED)
+    sbox(ax, 0.35, 1.0, 10.3, 0.7, "all-reduce: average every gradient across the 4 processes (NCCL)", color=ORANGE, fontsize=9.5)
+    label(ax, 5.5, 0.45, "each rank then takes the same optimizer step, so the copies stay identical; DistributedSampler gives each rank different data", size=9, color=MUTED)
+    return f
+
+
+
 def main(names):
     OUT.mkdir(exist_ok=True)
     for name in names or FIGS:

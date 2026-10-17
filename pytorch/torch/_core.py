@@ -249,6 +249,7 @@ class Size(tuple):
 # ---------------------------------------------------------------- grad mode
 
 _WARNED_ONCE = set()
+_PROFILER_HOOK = [None]          # set by torch.profiler
 
 
 class _GradMode:
@@ -544,12 +545,22 @@ def _run_backward(roots, grads, retain_graph=False, inputs=None):
                 made_by = made_by or (t.grad_fn._name if t.grad_fn is not None else None)
                 which = f", which is output 0 of {__import__('re').sub(r'Backward[0-9]+$', '', made_by)}," if made_by is not None else ""
                 raise RuntimeError(f"one of the variables needed for gradient computation has been modified by an inplace operation: [torch.{kind} {shape}]{which} is at version {t._version[0]}; expected version {ver} instead. Hint: enable anomaly detection to find the operation that failed to compute its gradient, with torch.autograd.set_detect_anomaly(True, check_nan=False).")
-        in_grads = node._backward(g)
+        rng = _PROFILER_HOOK[0](node._name) if _PROFILER_HOOK[0] is not None else None
+        if rng is not None:
+            rng[0].__enter__(); rng[1].__enter__()
+        try:
+            with np.errstate(all="ignore"):            # inf/nan gradients are reported by the caller, not by NumPy
+                in_grads = node._backward(g)
+        finally:
+            if rng is not None:
+                rng[1].__exit__(); rng[0].__exit__()
         if not retain_graph:
             node._freed = True
-        for (nxt, _), ig in zip(node.next_functions, in_grads):
+        for (nxt, _), ig, inp in zip(node.next_functions, in_grads, node._inputs):
             if nxt is None or ig is None:
                 continue
+            if isinstance(inp, Tensor) and inp.dtype in (bfloat16, float16):     # low-precision gradients are rounded
+                ig = _cast(np.asarray(ig, dtype=np.float32), inp.dtype)
             pending[id(nxt)] = pending.get(id(nxt), 0) + ig
         # tensors that asked to keep their gradient (retain_grad)
         for t in getattr(node, "_retainers", ()):
@@ -615,7 +626,7 @@ class Tensor:
         t = object.__new__(cls)
         if not isinstance(arr, np.ndarray):
             arr = np.asarray(arr)
-        if arr.dtype != dt.np:
+        if arr.dtype != dt.np or dt is bfloat16:
             arr = _cast(arr, dt)
         t._init(arr, dt, dev)
         if _GradMode.inference:
@@ -2831,3 +2842,44 @@ class iinfo:
 for _cls in (Tensor, Size, device, dtype, Generator, finfo, iinfo, no_grad, enable_grad, set_grad_enabled, inference_mode):
     _cls.__module__ = "torch"
 del _cls
+
+
+# ---------------------------------------------------------------- autocast (mixed precision)
+
+_AUTOCAST = {"cuda": [False, float16], "cpu": [False, bfloat16]}
+
+
+def _ac_cast(x, kind, devices):
+    if not isinstance(x, Tensor):
+        return x
+    st = _AUTOCAST.get(x.device.type)
+    if st is None or not st[0] or x.device.type not in devices:
+        return x
+    if not x.dtype.is_floating_point or x.dtype is float64:
+        return x
+    target = st[1] if kind == "lower" else float32
+    return x if x.dtype is target else x.to(target)
+
+
+def _autocast_op(kind, devices=("cuda", "cpu")):
+    """Wrap an operation so that, inside torch.autocast, its tensor arguments are cast first (PyTorch's op lists)."""
+    def deco(fn):
+        import functools
+
+        @functools.wraps(fn)
+        def wrapper(*args, **kwargs):
+            if not (_AUTOCAST["cuda"][0] or _AUTOCAST["cpu"][0]):
+                return fn(*args, **kwargs)
+            args = [_ac_cast(a, kind, devices) for a in args]
+            kwargs = {k: _ac_cast(v, kind, devices) for k, v in kwargs.items()}
+            return fn(*args, **kwargs)
+        wrapper._autocast = kind
+        return wrapper
+    return deco
+
+
+matmul = _autocast_op("lower")(matmul)
+for _name in ("softmax", "log_softmax", "sum", "prod", "cumsum", "exp", "log", "log2", "log10", "log1p", "expm1",
+              "pow", "__pow__", "reciprocal", "rsqrt", "tan", "sinh", "cosh", "asin", "acos", "norm"):
+    setattr(Tensor, _name, _autocast_op("fp32", ("cuda",) if _name not in ("prod",) else ("cuda", "cpu"))(getattr(Tensor, _name)))
+del _name

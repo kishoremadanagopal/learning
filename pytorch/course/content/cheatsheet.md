@@ -221,3 +221,31 @@ h = model.layer.register_forward_hook(lambda m, inp, out: saved.append(out.detac
 
 - Frozen BatchNorm still updates running statistics in `train()`: set those layers to `eval()`.
 - Use the pretrained weights' own preprocessing (`weights.transforms()` in torchvision).
+
+## Performance [24–27]
+
+```python
+torch.cuda.synchronize(); t0 = time.perf_counter(); f(); torch.cuda.synchronize()   # time GPU code
+benchmark.Timer(stmt="f(x)", globals={"f": f, "x": x}).blocked_autorange()          # torch.utils.benchmark
+with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA], record_shapes=True) as prof:
+    with record_function("step"): train_step()
+print(prof.key_averages().table(sort_by="cuda_time_total", row_limit=10))
+torch.cuda.max_memory_allocated(); torch.cuda.reset_peak_memory_stats()
+model = torch.compile(model)                       # mode="reduce-overhead" | "max-autotune"; fullgraph=True
+torch.save(model._orig_mod.state_dict(), path)     # no "_orig_mod." prefix
+torch.set_float32_matmul_precision("high")         # TF32
+scaler = torch.amp.GradScaler("cuda")
+with torch.autocast(device_type="cuda", dtype=torch.float16):
+    loss = loss_fn(model(x), y)
+scaler.scale(loss).backward(); scaler.unscale_(opt); clip_grad_norm_(model.parameters(), 1.0)
+scaler.step(opt); scaler.update()
+dist.init_process_group("nccl"); model = DDP(model.to(dev), device_ids=[local_rank])
+sampler = DistributedSampler(ds); sampler.set_epoch(epoch)   # torchrun --nproc_per_node=N train.py
+```
+
+- Warm up before timing; the first compiled call compiles.
+- Graph breaks: `.item()`, `print`, `if tensor`: use `torch.where`.
+- Autocast: matmul/linear/conv → 16-bit; softmax, sums, losses → float32; weights stay float32; backward outside.
+- bfloat16 needs no GradScaler; float16 does.
+- Effective batch = per-GPU batch × GPUs; save from rank 0 with `model.module.state_dict()`.
+- FSDP (`fully_shard`) when parameters + gradients + optimizer state don't fit on one GPU.

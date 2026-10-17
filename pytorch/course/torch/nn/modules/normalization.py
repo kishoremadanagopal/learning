@@ -142,3 +142,6 @@ class LayerNorm(Module):
 
 for _c in (BatchNorm1d, BatchNorm2d, LayerNorm):
     _c.__module__ = "torch.nn.modules.batchnorm" if _c in (BatchNorm1d, BatchNorm2d) else "torch.nn.modules.normalization"
+
+
+LayerNorm.forward = _core._autocast_op("fp32", ("cuda",))(LayerNorm.forward)

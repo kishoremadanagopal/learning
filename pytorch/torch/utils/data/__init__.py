@@ -676,3 +676,5 @@ class _DataLoaderIter:
 
 
 from . import dataloader, dataset, sampler  # noqa: E402,F401
+from . import distributed  # noqa: E402,F401
+from .distributed import DistributedSampler  # noqa: E402,F401

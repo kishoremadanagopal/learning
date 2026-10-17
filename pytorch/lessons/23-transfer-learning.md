@@ -452,4 +452,4 @@ print(get_features(model, model[1], torch.randn(3, 4)).shape)
 </details>
 
 ---
-Previous: [Lesson 22](22-optimizers-and-schedules.md) · Back to the [course home](../README.md)
+Previous: [Lesson 22](22-optimizers-and-schedules.md) · Next: [Lesson 24: Measuring performance](24-measuring-performance.md)

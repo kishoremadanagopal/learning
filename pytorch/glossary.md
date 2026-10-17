@@ -5,15 +5,18 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | Term | Meaning |
 |---|---|
 | **Accuracy** | The fraction of samples whose predicted class matches the label. [12] |
+| **Activation checkpointing** | Recomputing activations during backward instead of storing them, trading compute for memory. [24] |
 | **Activation function** | A non-linear function between layers, such as ReLU, that lets networks model curved relationships. [10] |
 | **Adam** | An optimizer with a per-parameter step size from running averages of the gradient and its square. [11] |
 | **Adaptive learning rate** | Scaling each parameter's update by the history of its own gradients (RMSprop, Adam). [22] |
 | **Advanced indexing** | Indexing with a list or tensor of positions, or a mask; it returns a copy. [4] |
 | **allclose** | Checks that two tensors are equal within a tolerance. [3] |
+| **All-reduce** | A collective operation that combines (sums or averages) a tensor across all processes and gives every process the result. [27] |
 | **arange** | Evenly spaced values from start up to but not including end, by a step. [2] |
 | **argmax** | The index of the largest value, overall or along a dim. [6] |
-| **Asynchronous execution** | GPU work is queued and runs in the background while Python continues. [7] |
+| **Asynchronous execution** | GPU work is queued and runs in the background while Python continues. [7, 24] |
 | **Attention** | A weighted average of values, with weights from the softmax of query–key similarities. [20] |
+| **Autocast** | A context in which each operation automatically chooses float16/bfloat16 or float32. [26] |
 | **Autograd** | PyTorch's automatic differentiation engine, which records operations and computes gradients with the chain rule. [8] |
 | **Backbone** | The pretrained part of a model that extracts general features. [23] |
 | **backward()** | Computes the gradients of a scalar with respect to every leaf that requires grad, adding them to `.grad`. [8] |
@@ -24,9 +27,10 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **bfloat16** | 16-bit "brain" floating point with float32's 8 exponent bits: float32's range, less precision. [3] |
 | **bmm** | Batched matrix multiplication of two 3-D tensors, one product per batch item. [6] |
 | **Boolean mask** | A bool tensor, usually from a comparison, that selects the elements where it's True. [4] |
+| **Bottleneck** | The slowest part of the pipeline, which limits overall speed. [24] |
 | **Broadcasting** | Stretching size-1 or missing dimensions so tensors of different shapes can be combined, without copying. [6] |
 | **Buffer** | A tensor registered with a module that is saved and moved with it but not trained, such as BatchNorm's running mean. [13] |
-| **Caching allocator** | PyTorch's GPU memory manager, which keeps freed memory reserved for reuse. [7] |
+| **Caching allocator** | PyTorch's GPU memory manager, which keeps freed memory reserved for reuse. [7, 24] |
 | **cat** | Joins tensors along an existing dimension. [5] |
 | **Causal mask** | A mask that stops each position attending to later positions. [20] |
 | **Checkpoint** | A saved dict with everything needed to resume training: model and optimizer state, epoch, loss. [13] |
@@ -44,9 +48,11 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Cosine annealing** | Decreasing the learning rate along half a cosine curve. [22] |
 | **CrossEntropyLoss** | Log_softmax plus negative log-likelihood; takes logits and class indices. [11] |
 | **CUDA** | NVIDIA's platform for running computations on its GPUs; PyTorch's `cuda` device type. [7] |
+| **CUDA graph** | A recorded sequence of GPU kernels replayed with one launch, used by `mode="reduce-overhead"`. [25] |
 | **Data augmentation** | Random, label-preserving changes to training samples that act like extra data. [17] |
 | **Data leakage** | Information from validation or test data reaching training, making scores look better than real performance. [18] |
 | **DataLoader** | Iterates over a dataset in batches, handling the sampling order, batching, collation and optional worker processes. [15] |
+| **Data parallelism** | Each GPU holds a full model copy and trains on a different part of each batch. [27] |
 | **Dataset** | An object that returns one sample by index (`ds[i]`) and knows how many samples it has (`len(ds)`). [14] |
 | **Decoupled weight decay** | Shrinking weights directly, separately from the gradient update, as AdamW does. [22] |
 | **Default dtype** | The floating-point type PyTorch uses when you don't choose one: float32 (`torch.get_default_dtype()`). [3] |
@@ -58,7 +64,9 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **drop_last** | Skips the final batch if it's smaller than batch_size. [15] |
 | **Dropout** | Randomly zeroing activations during training to reduce overfitting. [12] |
 | **dtype** | The data type shared by every element of a tensor, such as `torch.float32` or `torch.int64`. [1] |
+| **Eager mode** | PyTorch's default: each operation runs as soon as Python reaches it. [25] |
 | **Early stopping** | Keeping the weights from the epoch with the best validation score. [12, 21] |
+| **Effective batch size** | Batch size per GPU × number of GPUs (× accumulation steps). [27] |
 | **Element-wise operation** | An operation applied to each element (or each pair of matching elements) separately. [6] |
 | **Embedding** | A learned lookup table that turns integer token ids into vectors. [20] |
 | **Epoch** | One complete pass through the training data. [9, 15] |
@@ -76,6 +84,7 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Forward hook** | A function called after a module's forward pass with its inputs and output. [23] |
 | **Freezing** | Setting `requires_grad=False` so a parameter isn't updated. [23] |
 | **from_numpy** | Creates a tensor that shares memory with a NumPy array. [2] |
+| **FSDP** | Fully Sharded Data Parallel: shards parameters, gradients and optimizer state across GPUs. [27] |
 | **GELU** | A smooth activation, x·Φ(x), standard in Transformers. [21] |
 | **Generalisation** | How well a model performs on data it wasn't trained on. [12] |
 | **Generator** | An independent random number generator object, passed with `generator=`. [2] |
@@ -87,6 +96,9 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Gradient accumulation** | `backward()` adds to existing `.grad` values instead of replacing them. [8, 22] |
 | **Gradient clipping** | Rescaling gradients so their norm doesn't exceed a limit. [21] |
 | **Gradient descent** | Repeatedly moving each weight a small step against its gradient to reduce the loss. [9] |
+| **GradScaler** | The object that scales the loss, unscales gradients, skips steps with inf or nan and adjusts the scale. [26] |
+| **Graph break** | A point where Dynamo can't capture code, so it splits the graph and runs that code in plain Python. [25] |
+| **Growth interval** | The number of clean steps after which GradScaler doubles the scale (2000 by default). [26] |
 | **GRU** | A simpler gated recurrent layer with reset and update gates. [20] |
 | **Head** | The final task-specific layers, usually replaced for a new task. [23] |
 | **Hidden state** | The vector a recurrent layer carries between steps, summarising what it has read so far. [20] |
@@ -99,6 +111,7 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Kaiming (He) initialisation** | Random starting weights scaled by the number of inputs so activations keep a stable size. [10, 21] |
 | **keepdim** | Keeps the reduced dimension with size 1, so the result broadcasts against the input. [6] |
 | **Kernel (filter)** | The grid of weights a convolution slides; each output channel has its own kernel spanning all input channels. [19] |
+| **Kernel fusion** | Combining several operations into one kernel, so intermediate results don't travel through memory. [25] |
 | **Lazy loading** | Reading each sample from disk only when `__getitem__` asks for it, instead of all at once. [14] |
 | **Leaf tensor** | A tensor created directly (not by a recorded operation); only leaves keep `.grad` by default. [8] |
 | **Learning rate** | The step size of each gradient-descent update. [9] |
@@ -108,18 +121,22 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **load_state_dict** | Copies a state_dict's tensors into a module's parameters and buffers, checking names and shapes. [13] |
 | **Logits** | A model's raw, unnormalised output scores. [10] |
 | **Loss function** | A function of predictions and targets that measures error as one number to minimise. [11] |
+| **Loss scaling** | Multiplying the loss by a large factor so float16 gradients don't underflow, then dividing the gradients back. [26] |
 | **LSTM** | A recurrent layer with input, forget and output gates and a separate cell state, which remembers over long sequences. [20] |
 | **map_location** | A torch.load argument that remaps saved tensors to another device, such as the CPU. [13] |
 | **Map-style dataset** | A dataset that implements `__len__` and `__getitem__`, so any sample can be read by index. [14] |
+| **Master weights** | The float32 copy of the parameters that the optimizer updates. [26] |
 | **Matrix multiplication (@)** | For `[n, k] @ [k, m]`, each output element is the dot product of a row and a column, giving `[n, m]`. [6] |
 | **Mean squared error (MSE)** | The average of the squared differences between predictions and targets. [9] |
 | **Mini-batch** | A small random subset of the training data used for one step. [9] |
+| **Mixed precision** | Running some operations in 16-bit floats and others in float32 within one model. [26] |
 | **model.train() / model.eval()** | Switch layers such as dropout and batch norm between training and evaluation behaviour. [12] |
 | **Momentum** | A running average of past gradients used as the update direction, which smooths noisy steps. [11, 22] |
 | **MPS** | Metal Performance Shaders, the `mps` device type for Apple silicon GPUs. [7] |
 | **Multi-head attention** | Several attention operations in parallel on slices of the features, combined by a linear layer. [20] |
 | **Multi-label classification** | Each sample can have several labels at once, each an independent yes/no. [11] |
 | **named_modules()** | Iterates over every submodule at every depth, with dotted names. [23] |
+| **NCCL** | NVIDIA's library for fast GPU-to-GPU communication; the backend for multi-GPU training. [27] |
 | **NCHW** | PyTorch's layout for image batches: batch, channels, height, width. [1] |
 | **Negative log-likelihood** | −log of the probability the model gave the correct class. [11] |
 | **nn.Linear** | A fully connected layer computing x Wᵀ + b, with weight shape [out_features, in_features]. [10] |
@@ -140,11 +157,14 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Padding** | Filling shorter sequences with a pad value so they can share one tensor. [15, 19] |
 | **pad_sequence** | Pads a list of variable-length tensors to the longest one (`torch.nn.utils.rnn`). [15] |
 | **Parameter group** | A set of parameters in an optimizer with its own hyperparameters such as lr and weight_decay. [22] |
+| **Peak memory** | The highest memory use during a period (`max_memory_allocated`), which decides whether a batch fits. [24] |
 | **permute** | Reorders all dimensions; `transpose` swaps two. [5] |
 | **persistent_workers** | Keeps worker processes alive between epochs instead of restarting them. [16] |
 | **Pinned memory** | Page-locked CPU memory that the GPU can copy from directly, which speeds up transfers. [7, 16] |
 | **Pooling** | Summarising each window with its maximum or average, with no learned parameters. [19] |
 | **Positional embedding** | Information about each token's position, added to its embedding because attention ignores order. [20] |
+| **Process group** | The set of processes that communicate, created with `init_process_group`. [27] |
+| **Profiler** | A tool that records every operation run, how often, and how long it took (`torch.profiler.profile`). [24] |
 | **PTCA** | The PyTorch Certified Associate exam from the PyTorch Foundation and the Linux Foundation (2026). [1] |
 | **PyTorch** | An open-source Python library for building and training neural networks, built on tensors and automatic differentiation. [1] |
 | **Query, key, value** | The three projections of the input used by attention: what a position is looking for, what it offers to match, and what it passes on. [20] |
@@ -152,7 +172,9 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **RandomSampler** | Yields a random permutation of the indexes (or random indexes with replacement). [16] |
 | **random_split** | Splits a dataset into non-overlapping random Subsets of given lengths or fractions. [14] |
 | **rand / randn** | Random floats, uniform in [0, 1) or from the standard normal distribution. [2] |
+| **Rank** | A process's index in the job, from 0 to world size − 1; local rank is its index on its own machine. [27] |
 | **Rank (number of dimensions)** | How many dimensions a tensor has: 0 for a scalar, 1 for a vector, 2 for a matrix (`.ndim`). [1] |
+| **Recompilation** | Compiling again because inputs no longer match what a graph was specialised for (shapes, dtypes). [25] |
 | **Recurrent layer** | A layer that processes a sequence step by step, carrying a hidden state from one step to the next. [20] |
 | **Reduction** | An operation that combines elements into fewer, like `sum`, `mean` or `max`. [6, 11] |
 | **Regularisation** | Techniques that reduce overfitting, such as dropout, weight decay and augmentation. [21] |
@@ -162,8 +184,9 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Sampler** | An object that yields the indexes a DataLoader fetches, in order. [16] |
 | **Scalar tensor** | A 0-dimensional tensor holding one value, such as the result of `.sum()`. [1] |
 | **Seed** | The starting value of a random number generator; the same seed gives the same sequence. [2] |
+| **Self time** | Time spent in an operation itself, excluding the operations it called. [24] |
 | **Shape** | The number of elements along each dimension of a tensor, returned as a `torch.Size` (a tuple). [1] |
-| **Sharding** | Giving each worker a different part of the data so nothing is loaded twice. [16] |
+| **Sharding** | Giving each worker a different part of the data so nothing is loaded twice. [16, 27] |
 | **Shuffling** | Visiting the samples in a new random order each epoch. [15] |
 | **Softmax** | Turns a vector of scores into positive probabilities that sum to 1. [6] |
 | **stack** | Joins same-shaped tensors along a new dimension. [5] |
@@ -173,23 +196,31 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Stratified split** | A split that keeps each class's proportion the same in every subset. [18] |
 | **Stride** | How many elements to skip in memory to move one step along each dimension. [5, 19] |
 | **Subset** | A dataset view made of some of another dataset's samples, chosen by index. [14] |
+| **Synchronisation** | Waiting until the GPU has finished all queued work (`torch.cuda.synchronize()`, or implicitly via `.item()`, `.cpu()`, `print`). [24] |
 | **target_transform** | A transform applied to a sample's label instead of its input. [17] |
 | **Tensor** | A multi-dimensional array of numbers of one dtype, which can live on a CPU or a GPU and can be tracked by autograd. [1] |
+| **Tensor cores** | GPU units that multiply 16-bit (and TF32) matrices much faster than float32 units. [26] |
 | **TensorDataset** | A dataset wrapping tensors with the same first dimension; `ds[i]` is the tuple of their i-th rows. [14] |
 | **Test set** | Data used once at the end for an unbiased final score. [12] |
+| **TF32** | A tensor-core format that speeds up float32 matmuls with slightly less precision. [25] |
 | **.to(device)** | Returns a copy of a tensor on another device (and/or with another dtype). [7] |
 | **ToDtype(scale=True)** | Converts dtype and rescales values, for example uint8 0–255 to float 0–1. [17] |
 | **tolist** | Converts a tensor to (nested) Python lists. [4] |
 | **torch.accelerator** | A device-agnostic API for whatever accelerator (CUDA, MPS, XPU…) the machine has. [7] |
+| **torch.compile** | Turns a model or function into optimised code, captured on first call and reused afterwards. [25] |
+| **TorchDynamo** | The part of torch.compile that captures tensor operations from running Python code into graphs. [25] |
 | **torch.empty** | Allocates a tensor without initialising its values. [2] |
+| **TorchInductor** | The default compiler backend, which fuses operations and generates Triton (GPU) or C++ (CPU) kernels. [25] |
 | **torch.inference_mode()** | A faster no_grad for inference whose tensors can't be used in autograd later. [8] |
 | **torch.manual_seed** | Sets the seed of PyTorch's default random number generators (CPU and GPU). [2] |
 | **torch.nn.functional (F)** | The same operations as layers, as plain functions without stored weights. [10] |
 | **torch.no_grad()** | A context in which operations aren't recorded. [8] |
+| **torchrun** | PyTorch's launcher, which starts the processes and sets RANK, LOCAL_RANK, WORLD_SIZE, MASTER_ADDR and MASTER_PORT. [27] |
 | **torch.save / torch.load** | Write and read pickled objects of tensors and containers to files. [13] |
 | **torch.tensor** | Creates a tensor by copying Python data or an array, inferring the dtype unless you pass `dtype=`. [2] |
 | **torchvision.transforms.v2** | Torchvision's current transforms API for images, boxes, masks and videos. [17] |
 | **torch.where** | Chooses, element by element, from one tensor where a condition is True and another where it's False. [4] |
+| **Trace** | A timeline file of recorded events, viewable in Perfetto or TensorBoard. [24] |
 | **Training set** | The data the optimizer learns from. [12] |
 | **Training / validation / test split** | Data to learn from, data to tune decisions on, and data for one final unbiased score. [14] |
 | **Transfer learning** | Starting from a model trained on a large dataset and adapting it to a new task. [23] |
@@ -198,13 +229,15 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **tv_tensors.Image** | A tensor subclass marking a tensor as a `[C, H, W]` image for v2 transforms. [17] |
 | **Type promotion** | The rules PyTorch uses to choose the dtype of a result from inputs of different dtypes. [3] |
 | **Underfitting** | A model too simple, or trained too little, to fit even the training data. [12] |
+| **Underflow** | A value too small for the format, which becomes zero. [26] |
 | **unsqueeze / squeeze** | Add a dimension of size 1 / remove dimensions of size 1. [5] |
 | **Validation set** | Held-out data for measuring generalisation and choosing settings during development. [12] |
 | **Vanishing gradient** | Gradients shrinking as they pass back through many layers, so early layers barely learn. [21] |
 | **View** | A tensor that shares memory with another tensor but may have a different shape or strides. [4, 5] |
-| **Warm-up** | Starting with a small learning rate and increasing it over the first steps. [22] |
+| **Warm-up** | Starting with a small learning rate and increasing it over the first steps. [22, 24] |
 | **Weight decay** | Shrinking weights slightly every step to reduce overfitting; decoupled from the gradient in AdamW. [11] |
 | **WeightedRandomSampler** | Draws indexes with probability proportional to per-sample weights, usually with replacement. [16] |
 | **Weight sharing** | Using the same kernel weights at every position, which keeps convolutions small and position-independent. [19] |
 | **weights_only** | A torch.load option (True by default since PyTorch 2.6) that only unpickles tensors and plain containers, for safety. [13] |
+| **World size** | The total number of processes in a distributed job. [27] |
 | **Xavier (Glorot) initialisation** | Random weights scaled by fan_in and fan_out, suited to tanh and sigmoid. [21] |

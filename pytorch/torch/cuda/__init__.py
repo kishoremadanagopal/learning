@@ -192,3 +192,24 @@ class Event:
         if not (self.enable_timing and end.enable_timing):
             raise RuntimeError("Both events must be created with argument 'enable_timing=True'.")
         return (end._t - self._t) * 1000.0
+
+
+class _AmpModule:
+    """torch.cuda.amp: the old names, kept for compatibility (deprecated in favour of torch.amp)."""
+
+    @staticmethod
+    def autocast(enabled=True, dtype=None, cache_enabled=True):
+        import warnings
+        import torch
+        warnings.warn("`torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.", FutureWarning, stacklevel=2)
+        return torch.amp.autocast("cuda", dtype=dtype or torch.float16, enabled=enabled, cache_enabled=cache_enabled)
+
+    @staticmethod
+    def GradScaler(init_scale=2.0 ** 16, growth_factor=2.0, backoff_factor=0.5, growth_interval=2000, enabled=True):
+        import warnings
+        import torch
+        warnings.warn("`torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.", FutureWarning, stacklevel=2)
+        return torch.amp.GradScaler("cuda", init_scale, growth_factor, backoff_factor, growth_interval, enabled)
+
+
+amp = _AmpModule()
