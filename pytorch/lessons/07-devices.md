@@ -412,4 +412,4 @@ print(result, best)
 </details>
 
 ---
-Previous: [Lesson 6](06-tensor-math.md) · Back to the [course home](../README.md)
+Previous: [Lesson 6](06-tensor-math.md) · Next: [Lesson 8: Autograd: gradients for free](08-autograd.md)

@@ -36,7 +36,21 @@ def setup(data_files=None):
     except ImportError:
         pass
     _install_pure_cache()
+    _install_warning_format()
     _SETUP_DONE = True
+
+
+def _install_warning_format():
+    """Show warnings raised inside the sandbox's PyTorch as torch/…/file.py, the same in the browser and in tests."""
+    original = warnings.formatwarning
+
+    def formatwarning(message, category, filename, lineno, line=None):
+        norm = filename.replace("\\", "/")
+        i = norm.rfind("/torch/")
+        if i >= 0 and "/course/torch/" in norm or norm.startswith("/home/pyodide/torch/"):
+            filename = norm[i + 1:]
+        return original(message, category, filename, lineno, line)
+    warnings.formatwarning = formatwarning
 
 
 def _install_pure_cache():
@@ -149,11 +163,25 @@ HINTS = {
 
 
 MESSAGE_HINTS = [
+    ("cannot assign module before Module.__init__() call", "Hint: call `super().__init__()` as the first line of your model's `__init__`, before creating any layers."),
+    ("cannot assign parameters before Module.__init__() call", "Hint: call `super().__init__()` as the first line of your model's `__init__`, before creating any parameters."),
+    ('missing the required "forward" function', "Hint: define `def forward(self, x):` inside the class (check its spelling and indentation). You call the model, `model(x)`, and PyTorch runs forward."),
+    ("must have the same dtype", "Hint: the input and the layer's weights need the same dtype. Model weights are float32, so convert the data with `x.float()`."),
+    ("expected target dtype to be Long", "Hint: for CrossEntropyLoss, targets are class indices: an int64 tensor of shape [batch], like `torch.tensor([0, 2, 1])`. Convert with `.long()`."),
+    ("multi-target not supported", "Hint: CrossEntropyLoss wants targets of shape [batch], not [batch, 1]. Use `y.squeeze(1)` or `y.view(-1)`."),
+    ("is out of bounds.", "Hint: class labels must run from 0 to (number of classes − 1), and the model's last layer needs one output per class."),
+    ("Weights only load failed", "Hint: torch.load only loads tensors and plain containers by default. Save and load `model.state_dict()` instead of the whole model, or pass `weights_only=False` for a file you trust."),
+    ("Error(s) in loading state_dict", "Hint: a state_dict only loads into a model with the same layer names and shapes. Build the same architecture first; `strict=False` skips missing or extra keys (not shape mismatches)."),
+    ("Expected more than 1 value per channel when training", "Hint: BatchNorm can't compute batch statistics from one sample. Call `model.eval()` for predictions, or train with batches bigger than 1."),
+    ("optimizer got an empty parameter list", "Hint: the model has no registered parameters. Did you call `super().__init__()`, and keep layers in attributes or an `nn.ModuleList` (not a plain list)?"),
+    ("can't optimize a non-leaf Tensor", "Hint: pass the parameters themselves (`model.parameters()`, or tensors created with requires_grad=True), not results computed from them."),
+    ("Inference tensors cannot be saved for backward", "Hint: tensors made inside `torch.inference_mode()` can't be used for training. Use `torch.no_grad()` there instead, or `.clone()` the tensor."),
+    ("inference tensor outside InferenceMode", "Hint: tensors made inside `torch.inference_mode()` can never require grad. Use `torch.no_grad()` there instead, or `.clone()` the tensor first."),
     ("Expected all tensors to be on the same device", "Hint: every tensor in one operation must be on the same device. Move them first, for example `x = x.to(device)` (and `model.to(device)` for a model)."),
     ("device type tensor to numpy", "Hint: NumPy only sees CPU memory. Copy the tensor back first: `t.cpu().numpy()` (or `t.detach().cpu().numpy()` if it requires grad)."),
     ("Can't call numpy() on Tensor that requires grad", "Hint: this tensor is tracked by autograd. Take a copy outside the graph first: `t.detach().numpy()`."),
     ("must match the size of tensor b", "Hint: broadcasting lines shapes up from the right; each pair of sizes must be equal, or one of them 1. Print both `.shape`s."),
-    ("shapes cannot be multiplied", "Hint: for A @ B, A's last size must equal B's first size: (n×k) @ (k×m) gives (n×m). Print both `.shape`s; maybe one needs `.T`."),
+    ("shapes cannot be multiplied", "Hint: for A @ B, A's last size must equal B's first size: (n×k) @ (k×m) gives (n×m). For nn.Linear(in_features, out_features), the input's last size must be in_features. Print the `.shape`s."),
     ("inconsistent tensor size", "Hint: a dot product needs two 1-D tensors of the same length. Print both `.shape`s."),
     ("view size is not compatible", "Hint: .view() needs contiguous memory (after .t(), .permute() or .transpose() it isn't). Use `.reshape(...)`, or `.contiguous().view(...)`."),
     ("is invalid for input of size", "Hint: the new shape must hold exactly as many elements as the tensor has (`.numel()`). At most one size can be -1."),
@@ -227,6 +255,16 @@ def _reset_torch():
         torch._sandbox_reset()
 
 
+_MAIN_SAVED = []
+
+
+def _restore_main():
+    while _MAIN_SAVED:
+        m = _MAIN_SAVED.pop()
+        if m is not None:
+            sys.modules["__main__"] = m
+
+
 def _execute(src, stdin_text=""):
     setup()
     _restore_data()
@@ -247,12 +285,21 @@ def _execute(src, stdin_text=""):
     saved = (sys.stdout, sys.stderr, builtins.input)
     sys.stdout, sys.stderr = _Sink(parts, "out"), _Sink(parts, "err")
     builtins.input = _input
-    ns = {"__name__": "__main__", "input": _input}
+    # The learner's code runs as a real __main__ module, so pickle (torch.save of a whole model) can find
+    # classes it defines, exactly as when running a script.
+    import types
+    main = types.ModuleType("__main__")
+    ns = main.__dict__
+    ns.update({"__builtins__": builtins, "input": _input})
+    _MAIN_SAVED.append(sys.modules.get("__main__"))
+    sys.modules["__main__"] = main
     ok = True
     err = []
     try:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", DeprecationWarning)
+            import linecache
+            linecache.cache["main.py"] = (len(src), None, src.splitlines(True), "main.py")   # warnings can show the line
             exec(compile(src, "main.py", "exec"), ns)
     except SystemExit:
         pass
@@ -317,6 +364,7 @@ def run(src, stdin_text="", encode_figures=True):
     try:
         return {"ok": ok, "parts": parts, "figures": _collect_figures(encode_figures)}
     finally:
+        _restore_main()
         _dismantle(ns)
         ns.clear()
 
@@ -593,6 +641,7 @@ def check(src, check_src, stdin_text="", encode_figures=True):
     try:
         return _check(ok, ns, parts, env, src, check_src, encode_figures)
     finally:
+        _restore_main()
         _dismantle(env, ns)
         env.clear()
         ns.clear()

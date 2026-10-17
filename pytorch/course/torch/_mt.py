@@ -76,9 +76,12 @@ class MT19937:
     def uniform(self, count, low=0.0, high=1.0, double=False):
         if double:
             v = (self.next_u64(count) & np.uint64((1 << 53) - 1)).astype(np.float64) * (1.0 / (1 << 53))
-            return v * (high - low) + low
+            wide = np.longdouble
+            return (v.astype(wide) * wide(float(high) - float(low)) + wide(low)).astype(np.float64)
         v = (self.next_u32(count) & np.uint64((1 << 24) - 1)).astype(np.float32) * np.float32(1.0 / (1 << 24))
-        return (v * np.float32(high - low) + np.float32(low)).astype(np.float32)
+        lo, span = np.float32(low), np.float32(high) - np.float32(low)       # ATen casts from and to to float first
+        # x * (to - from) + from is a fused multiply-add in PyTorch's CPU kernel: one rounding, emulated in float64
+        return (v.astype(np.float64) * np.float64(span) + np.float64(lo)).astype(np.float32)
 
     def normal_double(self, mean=0.0, std=1.0):
         """at::normal_distribution<double>: Box-Muller, caching the second value."""

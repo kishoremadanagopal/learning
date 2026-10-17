@@ -10,7 +10,8 @@ from ._core import (Tensor, Size, device, dtype, Generator, default_generator, n
                     strided, contiguous_format, channels_last, preserve_format, _bool, _int, _float)
 from ._core import bool, float, int  # noqa: A004  (torch.bool, torch.float and torch.int shadow the builtins, as in PyTorch)
 from ._tensor_str import set_printoptions, get_printoptions, printoptions
-from . import cuda, backends, accelerator, autograd
+from . import cuda, backends, accelerator, autograd, serialization
+from .serialization import save, load
 
 __version__ = "2.14.1+sandbox"
 version = type("version", (), {"__version__": __version__, "cuda": "13.0", "git_version": "sandbox", "debug": False})
@@ -95,6 +96,8 @@ def _sandbox_reset():
     gc.collect()
     cuda._peak[0] = cuda._allocated[0]
 
+
+from . import nn, optim  # noqa: E402
 
 for _junk in ("np", "math", "numbers", "warnings", "namedtuple", "builtins", "MT19937", "Node", "AccumulateGrad"):
     globals().pop(_junk, None)

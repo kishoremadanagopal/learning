@@ -201,6 +201,90 @@ def devices_fig():
     return f
 
 
+# ---------------------------------------------------------------- Part 2: autograd and the model lifecycle
+
+@fig("autograd-graph")
+def autograd_graph_fig():
+    f, ax = diag.canvas(10.8, 5.0, ylim=(-0.6, 4.4))
+    sbox(ax, 0.3, 3.2, 1.6, 0.7, "w  (leaf)", color=BLUE, mono=True)
+    sbox(ax, 0.3, 1.9, 1.6, 0.7, "x  (data)", color=GREY, mono=True)
+    sbox(ax, 0.3, 0.6, 1.6, 0.7, "b  (leaf)", color=BLUE, mono=True)
+    sbox(ax, 2.9, 2.55, 2.0, 0.7, "MulBackward0", color=ORANGE, mono=True, fontsize=9.5)
+    sbox(ax, 5.6, 1.6, 2.0, 0.7, "AddBackward0", color=ORANGE, mono=True, fontsize=9.5)
+    sbox(ax, 8.3, 1.6, 2.2, 0.7, "loss", color=CRIMSON, mono=True)
+    arrow(ax, 1.95, 3.5, 2.85, 3.0, color=INK)
+    arrow(ax, 1.95, 2.25, 2.85, 2.8, color=INK)
+    arrow(ax, 4.95, 2.85, 5.55, 2.1, color=INK)
+    arrow(ax, 1.95, 0.95, 5.55, 1.8, color=INK)
+    arrow(ax, 7.65, 1.95, 8.25, 1.95, color=INK)
+    label(ax, 5.4, 4.3, "forward: PyTorch records each operation (grad_fn) as it runs", size=10, color=INK)
+    arrow(ax, 9.3, 1.45, 1.2, 0.35, color=CRIMSON, rad=-0.1, style="-|>")
+    label(ax, 5.2, -0.45, "loss.backward(): walk the graph backwards, chain rule at each node → w.grad, b.grad", size=9.5, color=CRIMSON)
+    label(ax, 1.1, 4.05, "requires_grad=True", size=8.8, color=BLUE, mono=True)
+    return f
+
+
+@fig("gradient-descent")
+def gradient_descent_fig():
+    f, axes = plt.subplots(1, 3, figsize=(10.8, 3.3), sharey=True)
+    loss = lambda w: (w - 3) ** 2
+    xs = [i / 20 for i in range(-30, 141)]
+    for ax, (lr, title, color) in zip(axes, [(0.05, "lr = 0.05: slow", BLUE), (0.3, "lr = 0.3: good", TEAL), (1.05, "lr = 1.05: diverges", CRIMSON)]):
+        ax.plot(xs, [loss(x) for x in xs], color=GREY, lw=2)
+        w, path = -1.0, [-1.0]
+        for _ in range(6):
+            w = w - lr * 2 * (w - 3)
+            path.append(w)
+        ax.plot(path, [loss(p) for p in path], "o-", color=color, ms=5, lw=1.4)
+        ax.set_title(title, color=color)
+        ax.set_xlim(-1.6, 7.1)
+        ax.set_ylim(-1, 26)
+        ax.set_xlabel("weight w")
+    axes[0].set_ylabel("loss (w − 3)²")
+    f.suptitle("six steps of w ← w − lr · dloss/dw, starting at w = −1", fontsize=11, y=1.03)
+    f.tight_layout()
+    return f
+
+
+@fig("training-loop")
+def training_loop_fig():
+    f, ax = diag.canvas(11.6, 4.4)
+    steps = [("1  forward", "pred = model(x)", BLUE), ("2  loss", "loss = loss_fn(pred, y)", ORANGE),
+             ("3  zero_grad", "optimizer.zero_grad()", PURPLE), ("4  backward", "loss.backward()", CRIMSON),
+             ("5  step", "optimizer.step()", TEAL)]
+    xs = [0.1, 2.4, 4.7, 7.0, 9.3]
+    for x, (name, code, color) in zip(xs, steps):
+        sbox(ax, x, 2.0, 2.1, 1.2, "", color=color)
+        label(ax, x + 1.05, 2.85, name, bold=True, color=color, size=10)
+        label(ax, x + 1.05, 2.35, code, mono=True, size=7.4)
+    for a, b in zip(xs, xs[1:]):
+        arrow(ax, a + 2.12, 2.6, b - 0.03, 2.6, color=INK)
+    arrow(ax, 10.3, 1.95, 1.1, 1.95, color=MUTED, rad=-0.25)
+    label(ax, 5.7, 0.55, "repeat for every batch (one pass over the data = an epoch)", size=9.6, color=MUTED)
+    label(ax, 5.7, 3.85, "model.train() first; evaluate with model.eval() and torch.no_grad()", size=9.8, color=INK)
+    return f
+
+
+@fig("train-val-curves")
+def train_val_curves_fig():
+    import math as _m
+    f, ax = plt.subplots(figsize=(7.4, 3.6))
+    ep = list(range(1, 41))
+    train = [0.9 * _m.exp(-e / 7) + 0.05 for e in ep]
+    val = [0.9 * _m.exp(-e / 7) + 0.12 + 0.0009 * max(0, e - 12) ** 2 * 0.6 for e in ep]
+    ax.plot(ep, train, color=BLUE, lw=2, label="training loss")
+    ax.plot(ep, val, color=ORANGE, lw=2, label="validation loss")
+    best = min(range(len(val)), key=lambda i: val[i])
+    ax.axvline(ep[best], color=GREY, ls="--", lw=1.2)
+    ax.annotate("best epoch:\nsave this checkpoint", (ep[best], val[best]), (ep[best] + 4, 0.65), fontsize=9.5, color=INK,
+                arrowprops=dict(arrowstyle="->", color=MUTED))
+    ax.text(31, 0.47, "overfitting:\nvalidation rises\nwhile training falls", fontsize=9.5, color=CRIMSON, ha="center")
+    ax.set_xlabel("epoch")
+    ax.set_ylabel("loss")
+    ax.legend(loc="upper right")
+    return f
+
+
 def main(names):
     OUT.mkdir(exist_ok=True)
     for name in names or FIGS:

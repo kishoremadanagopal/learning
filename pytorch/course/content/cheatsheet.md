@@ -71,3 +71,74 @@ arr = t.detach().cpu().numpy()          # any tensor -> NumPy
 - `.numpy()` needs a CPU tensor that doesn't require grad. `.item()` copies back by itself.
 - GPU work is asynchronous: `torch.cuda.synchronize()` before timing. `torch.cuda.memory_allocated()`; OOM is `torch.OutOfMemoryError`.
 - Faster transfers: `pin_memory()` and `.to(device, non_blocking=True)`.
+
+## Autograd [8–9]
+
+```python
+w = torch.randn(3, requires_grad=True)   # a leaf autograd tracks
+loss = ((x @ w - y) ** 2).mean()         # forward: builds the graph (grad_fn)
+loss.backward()                          # fills w.grad (adds to it!)
+with torch.no_grad():
+    w -= lr * w.grad                     # update in place, unrecorded
+w.grad = None                            # or w.grad.zero_()
+```
+
+- `backward()` needs a scalar (or `gradient=`), frees the graph (`retain_graph=True` to reuse), and only fills leaves' `.grad`.
+- Stop tracking: `t.detach()`, `with torch.no_grad():`, `with torch.inference_mode():` (fastest; its tensors can't be trained on later). Freeze: `p.requires_grad_(False)`.
+- `torch.autograd.grad(y, x)` returns gradients without touching `.grad`.
+- Learning rate too high → the loss diverges to `nan`; too low → it crawls.
+
+## Models, losses and optimizers [10–11]
+
+```python
+from torch import nn, optim
+import torch.nn.functional as F
+
+class Net(nn.Module):
+    def __init__(self):
+        super().__init__()                  # first!
+        self.fc1 = nn.Linear(4, 16)         # weight [16, 4], bias [16]
+        self.fc2 = nn.Linear(16, 3)
+    def forward(self, x):
+        return self.fc2(F.relu(self.fc1(x)))   # logits
+
+model = Net().to(device)                    # modules move in place
+opt = optim.AdamW(model.parameters(), lr=1e-3, weight_decay=0.01)
+loss_fn = nn.CrossEntropyLoss()
+```
+
+| Task | Output | Target | Loss |
+|---|---|---|---|
+| a number | `[N, 1]` / `[N]` | same shape, float | `MSELoss`, `L1Loss`, `HuberLoss` |
+| one of C classes | logits `[N, C]` | int64 `[N]` | `CrossEntropyLoss` (no softmax first) |
+| yes/no, multi-label | logits `[N]` / `[N, L]` | same shape, float 0/1 | `BCEWithLogitsLoss` |
+
+- `nn.Linear(in, out)` has in × out + out parameters; layers in a plain list aren't registered (use `nn.ModuleList`).
+- SGD (`momentum=0.9`), Adam (lr 1e-3), AdamW (decoupled weight decay). `zero_grad()` sets grads to `None`.
+
+## Training, evaluation and saving [12–13]
+
+```python
+for epoch in range(epochs):
+    model.train()
+    for xb, yb in batches:                  # shuffled each epoch
+        xb, yb = xb.to(device), yb.to(device)
+        loss = loss_fn(model(xb), yb)
+        opt.zero_grad()
+        loss.backward()
+        opt.step()
+    model.eval()
+    with torch.no_grad():
+        val_acc = (model(x_val).argmax(1) == y_val).float().mean().item()
+
+torch.save(model.state_dict(), "model.pt")                    # recommended
+model.load_state_dict(torch.load("model.pt", map_location=device))
+torch.save({"epoch": epoch, "model_state_dict": model.state_dict(),
+            "optimizer_state_dict": opt.state_dict()}, "ckpt.pt")
+```
+
+- `model.eval()` changes Dropout and BatchNorm only; `no_grad` / `inference_mode` stop gradient tracking. Use both to evaluate.
+- Overfitting: training loss falls while validation loss rises. Keep the best weights with `copy.deepcopy(model.state_dict())` (state_dict shares memory).
+- `torch.load` uses `weights_only=True` since PyTorch 2.6: whole pickled models need `weights_only=False` (trusted files only).
+- `load_state_dict` checks names and shapes; `strict=False` tolerates missing/extra keys, never size mismatches.
+- Predict: `model.eval()`, `with torch.inference_mode():`, add a batch dim (`x.unsqueeze(0)`), `softmax(dim=1)` for probabilities, `argmax(dim=1)` for the class.

@@ -53,7 +53,8 @@ complex64 = dtype("complex64", np.complex64, "c", 3, 8)
 complex128 = dtype("complex128", np.complex128, "c", 4, 16)
 half, float, double, short, int, long, cfloat, cdouble = float16, float32, float64, int16, int32, int64, complex64, complex128
 _DTYPES = [bool, uint8, int8, int16, int32, int64, float16, bfloat16, float32, float64, complex64, complex128]
-_dtype_by_name = lambda n: {d.name: d for d in _DTYPES}[n]
+def _dtype_by_name(n):
+    return {d.name: d for d in _DTYPES}[n]
 _default_dtype = [float32]
 
 
@@ -401,6 +402,8 @@ class Node:
         self._inputs = inputs                      # the input tensors (or None) the gradients flow to
         self._backward = backward                  # grad_output (np) -> tuple of np grads, one per input
         self._saved = [(t, t._version[0], None) for t in saved if isinstance(t, Tensor)]   # None: name the tensor's grad_fn at backward time
+        if _any(t._inference for t, _, _ in self._saved):
+            raise RuntimeError("Inference tensors cannot be saved for backward. Please do not use Tensors created in inference mode in computation tracked by autograd. To work around this, you can make a clone to get a normal tensor and use it in autograd, or use `torch.no_grad()` instead of `torch.inference_mode()`.")
         self._freed = False
         self.metadata = {}
         self._hooks = []
@@ -604,6 +607,7 @@ class Tensor:
         self._retains = False
         self._hooks = []
         self._is_param = False
+        self._inference = False
         self.name = None
 
     @classmethod
@@ -614,6 +618,8 @@ class Tensor:
         if arr.dtype != dt.np:
             arr = _cast(arr, dt)
         t._init(arr, dt, dev)
+        if _GradMode.inference:
+            t._inference = True
         if dev.type == "cuda":
             _CUDA_TRACKER(t)
         if base is not None:
@@ -669,9 +675,12 @@ class Tensor:
 
     @data.setter
     def data(self, other):
+        moved = other.device != self._device
         self._a = other._a
         self._dtype = other.dtype
         self._device = other.device
+        if moved and other.device.type == "cuda":
+            _CUDA_TRACKER(self)
 
     @property
     def is_leaf(self):
@@ -837,14 +846,12 @@ class Tensor:
         return id(self)
 
     def __reduce_ex__(self, proto):
-        return (_rebuild, (self._a.copy(), self.dtype.name, str(self.device), self.requires_grad))
+        from ._utils import _rebuild_tensor_v2, _tensor_payload
+        return (_rebuild_tensor_v2, (_tensor_payload(self), self.requires_grad))
 
     def __deepcopy__(self, memo):
         t = Tensor._wrap(self._a.copy(), self.dtype, self.device)
         t.requires_grad = self.requires_grad
-        if self._is_param:
-            from .nn.parameter import Parameter
-            t = Parameter(t, requires_grad=self.requires_grad)
         if self.grad is not None:
             t.grad = Tensor._wrap(self.grad._a.copy(), self.grad.dtype, self.grad.device)
         memo[id(self)] = t
@@ -906,7 +913,12 @@ class Tensor:
             node._backward = backward
         return _RemovableHandle()
 
+    def is_inference(self):
+        return self._inference
+
     def requires_grad_(self, requires_grad=True):
+        if requires_grad and self._inference and not _GradMode.inference:
+            raise RuntimeError("Setting requires_grad=True on inference tensor outside InferenceMode is not allowed.")
         if requires_grad and not (self.dtype.is_floating_point or self.dtype.is_complex):
             raise RuntimeError("only Tensors of floating point dtype can require gradients")
         if self.grad_fn is not None and not requires_grad:
@@ -923,6 +935,8 @@ class Tensor:
         return self
 
     def __setattr__(self, name, value):
+        if name == "requires_grad" and value and self.__dict__.get("_inference") and not _GradMode.inference:
+            raise RuntimeError("Setting requires_grad=True on inference tensor outside InferenceMode is not allowed.")
         if name == "requires_grad" and value and getattr(self, "_dtype", None) is not None and not (self._dtype.is_floating_point or self._dtype.is_complex):
             raise RuntimeError("only Tensors of floating point and complex dtype can require gradients")
         if name == "requires_grad" and getattr(self, "grad_fn", None) is not None and not value and "_dtype" in self.__dict__:
