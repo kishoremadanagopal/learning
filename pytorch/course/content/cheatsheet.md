@@ -172,3 +172,52 @@ eval_tf = v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True), v2.No
 - Workers: own dataset copy each, seed `base_seed + worker_id`; `get_worker_info()` is None in the main process. Shard an `IterableDataset` by `info.id` / `info.num_workers` or every sample repeats.
 - Leakage: fit normalisation statistics on the training split only; dedupe before splitting; touch the test set once.
 - Sanity checks: one batch's shapes, dtypes, ranges and `isfinite`; overfit one batch; first cross-entropy ≈ ln(classes).
+
+## Building blocks [19–21]
+
+```python
+nn.Conv2d(c_in, c_out, 3, stride=1, padding=1)   # [N, C, H, W]; out = ⌊(H + 2p − d(k−1) − 1)/s⌋ + 1
+nn.MaxPool2d(2); nn.AdaptiveAvgPool2d(1); nn.BatchNorm2d(c); nn.Flatten()
+nn.Embedding(vocab, dim)                          # int64 ids → vectors
+nn.LSTM(in_dim, hidden, num_layers=1, batch_first=True)   # output, (h_n, c_n); h_n: [layers·dirs, N, hidden]
+F.scaled_dot_product_attention(q, k, v, is_causal=True)   # bool attn_mask: True = may attend
+nn.MultiheadAttention(E, heads, batch_first=True)          # bool masks: True = masked out
+nn.TransformerEncoder(nn.TransformerEncoderLayer(d, h, dim_feedforward=4 * d, batch_first=True), num_layers=n)
+```
+
+- Conv params: c_out × (c_in / groups) × kH × kW + c_out. Pooling has none.
+- Activations: ReLU (CNNs), GELU (Transformers), SiLU; avoid deep stacks of sigmoid/tanh (vanishing gradients).
+- Init: Kaiming for ReLU (std √(2 / fan_in)), Xavier for tanh; `model.apply(fn)`; never all-equal weights.
+- BatchNorm (batch statistics, train ≠ eval) for CNNs; LayerNorm (per sample) for sequences. Residual: `x + F(x)`.
+- Regularise: dropout, AdamW weight decay, augmentation, early stopping (keep the best `state_dict`), `clip_grad_norm_` between backward and step.
+
+## Optimizers and schedules [22]
+
+```python
+opt = optim.AdamW([{"params": decay, "weight_decay": 0.01}, {"params": no_decay, "weight_decay": 0.0}], lr=3e-4)
+sched = optim.lr_scheduler.SequentialLR(opt, [optim.lr_scheduler.LinearLR(opt, 0.1, total_iters=w),
+                                              optim.lr_scheduler.CosineAnnealingLR(opt, T_max=total - w)], milestones=[w])
+for epoch in range(epochs):
+    for xb, yb in loader:
+        opt.zero_grad(); loss_fn(model(xb), yb).backward(); opt.step()
+    sched.step()                         # after optimizer.step(); ReduceLROnPlateau: sched.step(val_loss)
+```
+
+- Adam adds weight decay to the gradient; **AdamW decouples it** (applied to the weights directly).
+- StepLR(10, 0.1) from 0.1: 0.01 after 10 steps, 0.001 after 20. OneCycleLR steps every batch.
+- Gradient accumulation: `zero_grad()` once, `(loss / k).backward()` per micro-batch, then `step()`.
+- Checkpoints: model, optimizer and scheduler `state_dict()`s plus the epoch.
+
+## Transfer learning [23]
+
+```python
+model.backbone.requires_grad_(False)                         # freeze
+model.fc = nn.Linear(model.fc.in_features, n_classes)        # new head (trainable)
+opt = optim.Adam(p for p in model.parameters() if p.requires_grad)   # create AFTER replacing the head
+opt = optim.AdamW([{"params": model.backbone.parameters(), "lr": 1e-5}, {"params": model.fc.parameters(), "lr": 1e-3}])
+model.load_state_dict({k: v for k, v in sd.items() if not k.startswith("fc.")}, strict=False)
+h = model.layer.register_forward_hook(lambda m, inp, out: saved.append(out.detach())); ...; h.remove()
+```
+
+- Frozen BatchNorm still updates running statistics in `train()`: set those layers to `eval()`.
+- Use the pretrained weights' own preprocessing (`weights.transforms()` in torchvision).

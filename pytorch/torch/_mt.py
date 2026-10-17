@@ -113,8 +113,14 @@ class MT19937:
             block[:8] = radius * np.cos(theta) * std + mean
             block[8:16] = radius * np.sin(theta) * std + mean
 
-        for i in range(0, count - 15, 16):
-            fill16(data[i:i + 16])
+        nb = count // 16                                  # every full block of 16 at once (each block is independent)
+        blocks = data[:nb * 16].reshape(nb, 16)
+        u1 = (1 - blocks[:, :8]).astype(dt)
+        u2 = blocks[:, 8:].copy()
+        radius = np.sqrt(-2 * np.log(u1))
+        theta = (2.0 * math.pi) * u2
+        blocks[:, :8] = radius * np.cos(theta) * std + mean
+        blocks[:, 8:] = radius * np.sin(theta) * std + mean
         if count % 16 != 0:
             tail = data[count - 16:]
             tail[:] = self.uniform(16, double=not float32).astype(dt)

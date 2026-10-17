@@ -348,6 +348,106 @@ def leakage_fig():
 
 
 
+# ---------------------------------------------------------------- Part 4: model development
+
+@fig("convolution")
+def convolution_fig():
+    f, ax = diag.canvas(11.0, 4.6)
+    # padded 5x5 input (with a ring of zeros) and a 3x3 kernel window
+    n, cs, x0, y0 = 7, 0.42, 0.4, 0.9
+    for r in range(n):
+        for c in range(n):
+            pad = r in (0, n - 1) or c in (0, n - 1)
+            sbox(ax, x0 + c * cs, y0 + (n - 1 - r) * cs, cs - 0.04, cs - 0.04, "0" if pad else "", color=GREY if pad else BLUE, fontsize=7.5, mono=True)
+    ax.add_patch(Rectangle((x0 - 0.03, y0 + 4 * cs - 0.03), 3 * cs + 0.02, 3 * cs + 0.02, fill=False, lw=2.4, edgecolor=ORANGE))
+    label(ax, x0 + 3.5 * cs, y0 + n * cs + 0.3, "input 5 × 5, padding=1", size=9.5)
+    # kernel
+    kx = 4.0
+    for r in range(3):
+        for c in range(3):
+            sbox(ax, kx + c * 0.45, 2.0 + (2 - r) * 0.45, 0.41, 0.41, "w", color=ORANGE, fontsize=8.5, mono=True)
+    label(ax, kx + 0.67, 3.65, "kernel 3 × 3", size=9.5)
+    label(ax, kx + 0.67, 1.65, "one weight per input\nchannel × position", size=8.5, color=MUTED)
+    arrow(ax, 3.55, 2.65, 3.9, 2.65, color=MUTED)
+    arrow(ax, 5.5, 2.65, 6.0, 2.65, color=MUTED)
+    # output 5x5 (stride 1) with first cell highlighted
+    ox = 6.2
+    for r in range(5):
+        for c in range(5):
+            sbox(ax, ox + c * 0.42, 1.2 + (4 - r) * 0.42, 0.38, 0.38, "", color=ORANGE if (r, c) == (0, 0) else TEAL)
+    label(ax, ox + 1.05, 3.6, "output 5 × 5 (stride 1)", size=9.5)
+    label(ax, 5.5, 0.45, "out = ⌊(in + 2·padding − dilation·(kernel − 1) − 1) / stride⌋ + 1", size=10.5, mono=True)
+    label(ax, 9.75, 2.3, "each output channel\nhas its own kernel\nacross all input channels", size=8.8, color=MUTED, ha="left")
+    return f
+
+
+@fig("lr-schedules")
+def lr_schedules_fig():
+    import torch
+    from torch import nn, optim
+    f, ax = plt.subplots(figsize=(8.6, 3.8))
+    steps = 60
+
+    def run(make):
+        opt = optim.SGD(nn.Linear(1, 1).parameters(), lr=0.1)
+        s = make(opt)
+        out = []
+        for _ in range(steps):
+            out.append(opt.param_groups[0]["lr"])
+            opt.step()
+            s.step()
+        return out
+    curves = [
+        ("StepLR(step_size=20, gamma=0.5)", lambda o: optim.lr_scheduler.StepLR(o, 20, 0.5), BLUE),
+        ("CosineAnnealingLR(T_max=60)", lambda o: optim.lr_scheduler.CosineAnnealingLR(o, 60), ORANGE),
+        ("LinearLR warm-up → cosine", lambda o: optim.lr_scheduler.SequentialLR(o, [optim.lr_scheduler.LinearLR(o, 0.05, total_iters=10), optim.lr_scheduler.CosineAnnealingLR(o, 50)], [10]), TEAL),
+        ("OneCycleLR(max_lr=0.1)", lambda o: optim.lr_scheduler.OneCycleLR(o, max_lr=0.1, total_steps=steps), PURPLE),
+    ]
+    for name, make, color in curves:
+        ax.plot(range(steps), run(make), label=name, color=color, lw=2)
+    ax.set_xlabel("scheduler step (epoch, or batch for OneCycleLR)")
+    ax.set_ylabel("learning rate")
+    ax.legend(fontsize=8.5, loc="upper right")
+    ax.set_title("Learning-rate schedules starting from lr = 0.1")
+    return f
+
+
+@fig("residual")
+def residual_fig():
+    f, ax = diag.canvas(10.0, 4.2)
+    sbox(ax, 0.3, 1.8, 1.2, 0.8, "x", color=BLUE, mono=True)
+    xs = [2.1, 4.1, 6.1]
+    for x, name in zip(xs, ("Linear / Conv", "ReLU", "Linear / Conv")):
+        sbox(ax, x, 1.8, 1.5, 0.8, name, color=ORANGE, fontsize=9)
+    for a, b in ((1.5, 2.1), (3.6, 4.1), (5.6, 6.1), (7.6, 8.05)):
+        arrow(ax, a + 0.03, 2.2, b - 0.03, 2.2, color=MUTED)
+    ax.add_patch(Circle((8.35, 2.2), 0.3, fill=True, facecolor=SOFT[TEAL], edgecolor=TEAL, lw=1.6))
+    label(ax, 8.35, 2.2, "+", size=16, color=TEAL)
+    arrow(ax, 0.9, 2.65, 8.35, 2.52, color=TEAL, rad=-0.3)
+    label(ax, 4.6, 3.95, "skip connection: the input is added back unchanged", size=9.5, color=TEAL)
+    arrow(ax, 8.68, 2.2, 9.5, 2.2, color=MUTED)
+    label(ax, 4.6, 0.9, "out = x + F(x)", mono=True, size=11)
+    label(ax, 4.6, 0.4, "gradients flow straight through the +, so very deep networks still train", size=9.2, color=MUTED)
+    return f
+
+
+@fig("transfer-learning")
+def transfer_learning_fig():
+    f, ax = diag.canvas(10.0, 3.9)
+    for i in range(4):
+        sbox(ax, 0.4 + i * 1.55, 1.7, 1.35, 1.0, f"block {i + 1}", color=GREY, fontsize=9.5)
+        if i < 3:
+            arrow(ax, 1.77 + i * 1.55, 2.2, 1.93 + i * 1.55, 2.2, color=MUTED)
+    label(ax, 3.3, 3.25, "pretrained backbone: frozen (requires_grad=False)", size=9.5, color=MUTED)
+    label(ax, 3.3, 1.25, "general features learned on a big dataset", size=8.8, color=MUTED, italic=True)
+    arrow(ax, 6.6, 2.2, 7.1, 2.2, color=MUTED)
+    sbox(ax, 7.2, 1.7, 2.2, 1.0, "new head\nnn.Linear(f, classes)", color=GREEN, fontsize=9)
+    label(ax, 8.3, 3.25, "trained", size=9.5, color=GREEN, bold=True)
+    label(ax, 5.0, 0.45, "then optionally unfreeze the last blocks with a smaller learning rate (fine-tuning)", size=9.3)
+    return f
+
+
+
 def main(names):
     OUT.mkdir(exist_ok=True)
     for name in names or FIGS:

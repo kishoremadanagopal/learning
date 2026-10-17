@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="568.8pt" height="230.616pt" viewBox="0 0 568.8 230.616" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 230.616 
+L 568.8 230.616 
+L 568.8 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 33.8112 129.168 
+L 99.7848 129.168 
+Q 104.22 129.168 104.22 124.7328 
+L 104.22 78.1632 
+Q 104.22 73.728 99.7848 73.728 
+L 33.8112 73.728 
+Q 29.376 73.728 29.376 78.1632 
+L 29.376 124.7328 
+Q 29.376 129.168 33.8112 129.168 
+z
+" clip-path="url(#pdfd2d9a97e)" style="fill: #eef1f4; stroke: #9aa5b1; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 107.325506 101.448 
+Q 109.763855 101.448 110.41335 101.448 
+" clip-path="url(#pdfd2d9a97e)" style="fill: none; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 104.81335 98.648 
+L 110.41335 101.448 
+L 104.81335 104.248 
+z
+" clip-path="url(#pdfd2d9a97e)" style="fill: #52606d; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 119.7432 129.168 
+L 185.7168 129.168 
+Q 190.152 129.168 190.152 124.7328 
+L 190.152 78.1632 
+Q 190.152 73.728 185.7168 73.728 
+L 119.7432 73.728 
+Q 115.308 73.728 115.308 78.1632 
+L 115.308 124.7328 
+Q 115.308 129.168 119.7432 129.168 
+z
+" clip-path="url(#pdfd2d9a97e)" style="fill: #eef1f4; stroke: #9aa5b1; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 193.257506 101.448 
+Q 195.695855 101.448 196.34535 101.448 
+" clip-path="url(#pdfd2d9a97e)" style="fill: none; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 190.74535 98.648 
+L 196.34535 101.448 
+L 190.74535 104.248 
+z
+" clip-path="url(#pdfd2d9a97e)" style="fill: #52606d; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 205.6752 129.168 
+L 271.6488 129.168 
+Q 276.084 129.168 276.084 124.7328 
+L 276.084 78.1632 
+Q 276.084 73.728 271.6488 73.728 
+L 205.6752 73.728 
+Q 201.24 73.728 201.24 78.1632 
+L 201.24 124.7328 
+Q 201.24 129.168 205.6752 129.168 
+z
+" clip-path="url(#pdfd2d9a97e)" style="fill: #eef1f4; stroke: #9aa5b1; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 279.189506 101.448 
+Q 281.627855 101.448 282.27735 101.448 
+" clip-path="url(#pdfd2d9a97e)" style="fill: none; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 276.67735 98.648 
+L 282.27735 101.448 
+L 276.67735 104.248 
+z
+" clip-path="url(#pdfd2d9a97e)" style="fill: #52606d; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 291.6072 129.168 
+L 357.5808 129.168 
+Q 362.016 129.168 362.016 124.7328 
+L 362.016 78.1632 
+Q 362.016 73.728 357.5808 73.728 
+L 291.6072 73.728 
+Q 287.172 73.728 287.172 78.1632 
+L 287.172 124.7328 
+Q 287.172 129.168 291.6072 129.168 
+z
+" clip-path="url(#pdfd2d9a97e)" style="fill: #eef1f4; stroke: #9aa5b1; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 375.103819 101.448 
+Q 386.963925 101.448 397.035176 101.448 
+" clip-path="url(#pdfd2d9a97e)" style="fill: none; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 391.435176 98.648 
+L 397.035176 101.448 
+L 391.435176 104.248 
+z
+" clip-path="url(#pdfd2d9a97e)" style="fill: #52606d; stroke: #52606d; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 410.8032 129.168 
+L 523.9008 129.168 
+Q 528.336 129.168 528.336 124.7328 
+L 528.336 78.1632 
+Q 528.336 73.728 523.9008 73.728 
+L 410.8032 73.728 
+Q 406.368 73.728 406.368 78.1632 
+L 406.368 124.7328 
+Q 406.368 129.168 410.8032 129.168 
+z
+" clip-path="url(#pdfd2d9a97e)" style="fill: #e3f2e4; stroke: #2e7d32; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="66.798" y="104.069406" transform="rotate(-0 66.798 104.069406)">block 1</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="152.73" y="104.069406" transform="rotate(-0 152.73 104.069406)">block 2</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="238.662" y="104.069406" transform="rotate(-0 238.662 104.069406)">block 3</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="324.594" y="104.069406" transform="rotate(-0 324.594 104.069406)">block 4</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #52606d" x="190.152" y="45.725297" transform="rotate(-0 190.152 45.725297)">pretrained backbone: frozen (requires_grad=False)</text>
+   </g>
+   <g id="text_6">
+    <text style="font-style: italic; font-size: 8.8px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #52606d" x="190.152" y="156.54425" transform="rotate(-0 190.152 156.54425)">general features learned on a big dataset</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 9px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; fill: #1f2933" transform="translate(445.385672 98.892422)">new head</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; fill: #1f2933" transform="translate(421.992703 108.970453)">nn.Linear(f, classes)</text>
+   </g>
+   <g id="text_8">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #2e7d32" x="467.352" y="45.857406" transform="rotate(-0 467.352 45.857406)">trained</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 9.3px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f2933" x="284.4" y="201.034219" transform="rotate(-0 284.4 201.034219)">then optionally unfreeze the last blocks with a smaller learning rate (fine-tuning)</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pdfd2d9a97e">
+   <rect x="7.2" y="7.2" width="554.4" height="216.216"/>
+  </clipPath>
+ </defs>
+</svg>

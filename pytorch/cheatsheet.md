@@ -173,6 +173,55 @@ eval_tf = v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True), v2.No
 - Leakage: fit normalisation statistics on the training split only; dedupe before splitting; touch the test set once.
 - Sanity checks: one batch's shapes, dtypes, ranges and `isfinite`; overfit one batch; first cross-entropy ≈ ln(classes).
 
+## Building blocks [19–21]
+
+```python
+nn.Conv2d(c_in, c_out, 3, stride=1, padding=1)   # [N, C, H, W]; out = ⌊(H + 2p − d(k−1) − 1)/s⌋ + 1
+nn.MaxPool2d(2); nn.AdaptiveAvgPool2d(1); nn.BatchNorm2d(c); nn.Flatten()
+nn.Embedding(vocab, dim)                          # int64 ids → vectors
+nn.LSTM(in_dim, hidden, num_layers=1, batch_first=True)   # output, (h_n, c_n); h_n: [layers·dirs, N, hidden]
+F.scaled_dot_product_attention(q, k, v, is_causal=True)   # bool attn_mask: True = may attend
+nn.MultiheadAttention(E, heads, batch_first=True)          # bool masks: True = masked out
+nn.TransformerEncoder(nn.TransformerEncoderLayer(d, h, dim_feedforward=4 * d, batch_first=True), num_layers=n)
+```
+
+- Conv params: c_out × (c_in / groups) × kH × kW + c_out. Pooling has none.
+- Activations: ReLU (CNNs), GELU (Transformers), SiLU; avoid deep stacks of sigmoid/tanh (vanishing gradients).
+- Init: Kaiming for ReLU (std √(2 / fan_in)), Xavier for tanh; `model.apply(fn)`; never all-equal weights.
+- BatchNorm (batch statistics, train ≠ eval) for CNNs; LayerNorm (per sample) for sequences. Residual: `x + F(x)`.
+- Regularise: dropout, AdamW weight decay, augmentation, early stopping (keep the best `state_dict`), `clip_grad_norm_` between backward and step.
+
+## Optimizers and schedules [22]
+
+```python
+opt = optim.AdamW([{"params": decay, "weight_decay": 0.01}, {"params": no_decay, "weight_decay": 0.0}], lr=3e-4)
+sched = optim.lr_scheduler.SequentialLR(opt, [optim.lr_scheduler.LinearLR(opt, 0.1, total_iters=w),
+                                              optim.lr_scheduler.CosineAnnealingLR(opt, T_max=total - w)], milestones=[w])
+for epoch in range(epochs):
+    for xb, yb in loader:
+        opt.zero_grad(); loss_fn(model(xb), yb).backward(); opt.step()
+    sched.step()                         # after optimizer.step(); ReduceLROnPlateau: sched.step(val_loss)
+```
+
+- Adam adds weight decay to the gradient; **AdamW decouples it** (applied to the weights directly).
+- StepLR(10, 0.1) from 0.1: 0.01 after 10 steps, 0.001 after 20. OneCycleLR steps every batch.
+- Gradient accumulation: `zero_grad()` once, `(loss / k).backward()` per micro-batch, then `step()`.
+- Checkpoints: model, optimizer and scheduler `state_dict()`s plus the epoch.
+
+## Transfer learning [23]
+
+```python
+model.backbone.requires_grad_(False)                         # freeze
+model.fc = nn.Linear(model.fc.in_features, n_classes)        # new head (trainable)
+opt = optim.Adam(p for p in model.parameters() if p.requires_grad)   # create AFTER replacing the head
+opt = optim.AdamW([{"params": model.backbone.parameters(), "lr": 1e-5}, {"params": model.fc.parameters(), "lr": 1e-3}])
+model.load_state_dict({k: v for k, v in sd.items() if not k.startswith("fc.")}, strict=False)
+h = model.layer.register_forward_hook(lambda m, inp, out: saved.append(out.detach())); ...; h.remove()
+```
+
+- Frozen BatchNorm still updates running statistics in `train()`: set those layers to `eval()`.
+- Use the pretrained weights' own preprocessing (`weights.transforms()` in torchvision).
+
 ## Every concept at a glance
 
 Generated from the **At a glance** table at the end of each lesson. The number in brackets links to the lesson.
@@ -300,3 +349,38 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | Stratify | split each class's indexes separately | every class in every split | matters for small, imbalanced data | [18](lessons/18-data-quality.md) |
 | Weight the loss | `nn.CrossEntropyLoss(weight=n / (k * counts))` | rare classes matter more | one weight per class | [18](lessons/18-data-quality.md) |
 | Sanity check | inspect `next(iter(loader))`, overfit one batch | shapes, dtypes, ranges; loss → 0 | first loss ≈ ln(classes) | [18](lessons/18-data-quality.md) |
+| Convolution | `nn.Conv2d(c_in, c_out, k, stride, padding)` | `[N, c_out, H', W']` | H' = ⌊(H + 2p − d(k − 1) − 1) / s⌋ + 1 | [19](lessons/19-cnn-layers.md) |
+| Keep the size | `kernel_size=3, padding=1` (or `padding="same"`) | same H and W | "same" needs stride 1 | [19](lessons/19-cnn-layers.md) |
+| Parameters | c_out × (c_in / groups) × kH × kW + c_out | independent of image size | far fewer than a dense layer | [19](lessons/19-cnn-layers.md) |
+| Downsample | `nn.MaxPool2d(2)` / `stride=2` | half the height and width | pooling has no parameters | [19](lessons/19-cnn-layers.md) |
+| Any input size | `nn.AdaptiveAvgPool2d(1)` + `nn.Flatten()` | `[N, C]` | global average pooling | [19](lessons/19-cnn-layers.md) |
+| Normalise feature maps | `Conv2d(bias=False) → BatchNorm2d → ReLU` | stable, faster training | per channel; train vs eval behaviour | [19](lessons/19-cnn-layers.md) |
+| Sequences | `nn.Conv1d(c_in, c_out, k)` on `[N, C, L]` | `[N, c_out, L']` | channels before length | [19](lessons/19-cnn-layers.md) |
+| Tokens to vectors | `nn.Embedding(vocab, dim)` | `[N, L] → [N, L, dim]` | int64 ids | [20](lessons/20-sequence-layers.md) |
+| Recurrent layer | `nn.LSTM(in, hidden, batch_first=True)` | `output, (h_n, c_n)` | GRU/RNN return `output, h_n` | [20](lessons/20-sequence-layers.md) |
+| Classify a sequence | `head(h_n[-1])` | `[N, classes]` | top layer's last state | [20](lessons/20-sequence-layers.md) |
+| Attention | `F.scaled_dot_product_attention(q, k, v)` | softmax(QKᵀ / √d) V | fused, fast kernels | [20](lessons/20-sequence-layers.md) |
+| Causal | `is_causal=True` or `nn.Transformer.generate_square_subsequent_mask(L)` | no peeking ahead | float mask: -inf blocks | [20](lessons/20-sequence-layers.md) |
+| Multi-head | `nn.MultiheadAttention(E, heads, batch_first=True)` | `(output, weights)` | bool True = masked out | [20](lessons/20-sequence-layers.md) |
+| Transformer | `nn.TransformerEncoder(nn.TransformerEncoderLayer(d, h, batch_first=True), n)` | stacked layers | add positional embeddings first | [20](lessons/20-sequence-layers.md) |
+| Default activation | `nn.ReLU()` (CNNs), `nn.GELU()` (Transformers) | non-linearity without saturation | sigmoid's slope ≤ 0.25 | [21](lessons/21-better-models.md) |
+| Initialise | `model.apply(fn)` with `nn.init.kaiming_normal_(w, nonlinearity="relu")` | stable activation scale | zeros_ for biases | [21](lessons/21-better-models.md) |
+| Normalise | BatchNorm for CNNs, LayerNorm for sequences | stable, faster training | LayerNorm is batch-independent | [21](lessons/21-better-models.md) |
+| Go deep | `x + block(x)` | trainable 100+ layer networks | shapes must match | [21](lessons/21-better-models.md) |
+| Regularise | Dropout, `AdamW(weight_decay=…)`, augmentation | less overfitting | only training behaviour changes | [21](lessons/21-better-models.md) |
+| Stop early | keep `copy.deepcopy(model.state_dict())` of the best epoch | best validation weights | patience = epochs to wait | [21](lessons/21-better-models.md) |
+| Clip | `clip_grad_norm_(params, 1.0)` between backward and step | bounded updates | returns the norm before clipping | [21](lessons/21-better-models.md) |
+| Default optimizer | `optim.AdamW(params, lr=3e-4, weight_decay=0.01)` | adaptive, decoupled decay | SGD + momentum still strong for CNNs | [22](lessons/22-optimizers-and-schedules.md) |
+| Per-group settings | `optim.AdamW([{"params": a, "lr": 1e-5}, {"params": b}], lr=1e-3)` | different lr / decay per group | groups can't share parameters | [22](lessons/22-optimizers-and-schedules.md) |
+| Epoch schedule | `StepLR`, `MultiStepLR`, `CosineAnnealingLR` | lr changes per `step()` | `opt.step()` first | [22](lessons/22-optimizers-and-schedules.md) |
+| Warm-up + cosine | `SequentialLR(opt, [LinearLR(...), CosineAnnealingLR(...)], milestones=[w])` | the Transformer recipe | step per batch or epoch consistently | [22](lessons/22-optimizers-and-schedules.md) |
+| One cycle | `OneCycleLR(opt, max_lr, total_steps)` | up then down | step every batch | [22](lessons/22-optimizers-and-schedules.md) |
+| On plateau | `ReduceLROnPlateau(opt, factor=0.1, patience=10)` | lower lr when stuck | `sched.step(val_loss)` | [22](lessons/22-optimizers-and-schedules.md) |
+| Big effective batch | `(loss / k).backward()` k times, then `opt.step()` | same gradient as one big batch | zero_grad once | [22](lessons/22-optimizers-and-schedules.md) |
+| Inspect | `named_children()`, `named_modules()`, `named_parameters()`, `get_submodule("a.0")` | a model's structure | named_modules recurses | [23](lessons/23-transfer-learning.md) |
+| Freeze | `backbone.requires_grad_(False)` | no gradients, no updates | BN statistics still update in train() | [23](lessons/23-transfer-learning.md) |
+| New head | `model.fc = nn.Linear(model.fc.in_features, n)` | trainable, right size | create the optimizer after this | [23](lessons/23-transfer-learning.md) |
+| Train only some | `optim.Adam(p for p in model.parameters() if p.requires_grad)` | updates the head only | feature extraction | [23](lessons/23-transfer-learning.md) |
+| Fine-tune | param groups: backbone lr 1e-5, head lr 1e-3 | gentle adaptation | unfreeze gradually | [23](lessons/23-transfer-learning.md) |
+| Partial load | `load_state_dict(filtered, strict=False)` | matching keys load | shapes must still match | [23](lessons/23-transfer-learning.md) |
+| Peek inside | `h = layer.register_forward_hook(fn)` … `h.remove()` | intermediate outputs | returning a value replaces the output | [23](lessons/23-transfer-learning.md) |

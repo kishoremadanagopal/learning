@@ -1163,10 +1163,11 @@ class Tensor:
             return Tensor._wrap(self._a.view(shape[0].np), shape[0], self.device, base=self)
         shape = _shape_arg(shape)
         shape = self._infer_shape(shape)
-        if not self.is_contiguous() and self.numel() > 1:
+        v = self._viewed(shape)
+        if v is None:
             raise RuntimeError("view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces). Use .reshape(...) instead.")
         orig = self._a.shape
-        t = _make_result(self._a.reshape(shape), self.dtype, [self], "ViewBackward0", lambda g: (np.asarray(g).reshape(orig),))
+        t = _make_result(v, self.dtype, [self], "ViewBackward0", lambda g: (np.asarray(g).reshape(orig),))
         t._base, t._version = self, self._version
         return t
 
@@ -1187,9 +1188,18 @@ class Tensor:
             raise RuntimeError(f"shape '[{', '.join(map(str, shape))}]' is invalid for input of size {n}")
         return tuple(_int(s) for s in shape)
 
+    def _viewed(self, shape):
+        """The array in the new shape without copying, or None when the strides don't allow it (PyTorch's rule)."""
+        v = self._a.view()
+        try:
+            v.shape = shape
+        except AttributeError:
+            return None
+        return v
+
     def reshape(self, *shape):
         shape = self._infer_shape(_shape_arg(shape))
-        if self.is_contiguous():
+        if self._viewed(shape) is not None:
             return self.view(*shape)
         orig = self._a.shape
         return _make_result(np.ascontiguousarray(self._a).reshape(shape), self.dtype, [self], "UnsafeViewBackward0", lambda g: (np.asarray(g).reshape(orig),))

@@ -6,7 +6,7 @@ from ..._core import Tensor, _make_result
 from ..parameter import Parameter
 from .module import Module
 
-__all__ = ["BatchNorm1d", "LayerNorm"]
+__all__ = ["BatchNorm1d", "BatchNorm2d", "LayerNorm"]
 
 
 class BatchNorm1d(Module):
@@ -32,18 +32,21 @@ class BatchNorm1d(Module):
             self.register_buffer("running_var", None)
             self.register_buffer("num_batches_tracked", None)
 
+    def _check_input_dim(self, input):
+        if input.dim() not in (2, 3):
+            raise ValueError(f"expected 2D or 3D input (got {input.dim()}D input)")
+
     def extra_repr(self):
         return f"{self.num_features}, eps={self.eps}, momentum={self.momentum}, affine={self.affine}, bias={self.affine}, track_running_stats={self.track_running_stats}"
 
     def forward(self, input):
-        if input.dim() not in (2, 3):
-            raise ValueError(f"expected 2D or 3D input (got {input.dim()}D input)")
+        self._check_input_dim(input)
         if input.shape[1] != self.num_features:
             raise RuntimeError(f"running_mean should contain {input.shape[1]} elements not {self.num_features}")
-        axes = (0,) if input.dim() == 2 else (0, 2)
+        axes = (0,) + tuple(range(2, input.dim()))
         x = input._a.astype(np.float64)
         use_batch = self.training or not self.track_running_stats
-        shape = [1, -1] + ([1] if input.dim() == 3 else [])
+        shape = [1, -1] + [1] * (input.dim() - 2)
         if use_batch:
             n = x.size // x.shape[1]
             if self.training and n <= 1:
@@ -78,6 +81,15 @@ class BatchNorm1d(Module):
             dt = input._a.dtype
             return (gx.astype(dt), None if gw is None else gw.astype(dt), None if gb is None else gb.astype(dt))
         return _make_result(y, input.dtype, [input, self.weight, self.bias], "NativeBatchNormBackward0", bw, saved=[input])
+
+
+class BatchNorm2d(BatchNorm1d):
+    """Batch normalization for [N, C, H, W] feature maps: one mean and variance per channel, over the batch and
+    every pixel."""
+
+    def _check_input_dim(self, input):
+        if input.dim() != 4:
+            raise ValueError(f"expected 4D input (got {input.dim()}D input)")
 
 
 class LayerNorm(Module):
@@ -128,5 +140,5 @@ class LayerNorm(Module):
         return _make_result(y, input.dtype, [input, self.weight, self.bias], "NativeLayerNormBackward0", bw, saved=[input])
 
 
-for _c in (BatchNorm1d, LayerNorm):
-    _c.__module__ = "torch.nn.modules.batchnorm" if _c is BatchNorm1d else "torch.nn.modules.normalization"
+for _c in (BatchNorm1d, BatchNorm2d, LayerNorm):
+    _c.__module__ = "torch.nn.modules.batchnorm" if _c in (BatchNorm1d, BatchNorm2d) else "torch.nn.modules.normalization"

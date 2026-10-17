@@ -1,6 +1,6 @@
 # PyTorch: from tensors to the PyTorch Certified Associate exam
 
-A beginner-first PyTorch course that follows the official exam outline of the **PyTorch Certified Associate (PTCA)**, launched by the PyTorch Foundation and the Linux Foundation in June 2026: 18 lessons so far on tensors, devices, autograd, data loading, building and training models, and making them fast.
+A beginner-first PyTorch course that follows the official exam outline of the **PyTorch Certified Associate (PTCA)**, launched by the PyTorch Foundation and the Linux Foundation in June 2026: 23 lessons so far on tensors, devices, autograd, data loading, building and training models, and making them fast.
 
 PyTorch is the framework most AI research and production models are written in. Knowing it well is core for the **AI engineer** path, and a big plus for **data / AI analysts** who move into machine learning.
 
@@ -8,9 +8,9 @@ PyTorch is the framework most AI research and production models are written in. 
 
 The sandbox runs Python 3.14 in your browser (via [Pyodide](https://pyodide.org)) with the course's own copy of PyTorch: a teaching version written in Python on NumPy that follows PyTorch 2.14's names, printing, rules, random numbers and error messages for everything the course uses. It even has a pretend NVIDIA GPU, so you can practise `.to('cuda')`. Nothing to install and no sign-up. Run the same code with real PyTorch on your own computer (`pip install torch`) and it behaves the same way, just faster.
 
-- every lesson, with **115 examples** you can run and change
-- **36 exercises** with hidden tests, each with an approach, hints and a walkthrough
-- **98 exam-style quiz questions**, with explanations
+- every lesson, with **144 examples** you can run and change
+- **46 exercises** with hidden tests, each with an approach, hints and a walkthrough
+- **126 exam-style quiz questions**, with explanations
 - diagrams for the key ideas
 - practice data files (from Part 3) that reset before every run
 - your progress and code saved in your own browser
@@ -32,7 +32,7 @@ Check the latest details on the [Linux Foundation's PTCA page](https://training.
 
 | | |
 |---|---|
-| 📘 [Lessons](#lessons) | 18 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and an exam-style quiz |
+| 📘 [Lessons](#lessons) | 23 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and an exam-style quiz |
 | 📖 [Glossary](glossary.md) | every PyTorch term used in the course, defined in plain English |
 | 🧾 [Cheat sheet](cheatsheet.md) | the API you need for the exam on a few pages, and every concept at a glance |
 
@@ -78,6 +78,16 @@ Check the latest details on the [Linux Foundation's PTCA page](https://training.
 | 16 | [Samplers, workers and fast loading](lessons/16-samplers-and-workers.md) | samplers and the order of indexes, SequentialSampler, RandomSampler with and without replacement, SubsetRandomSampler, BatchSampler, sampler and shuffle being mutually exclusive, WeightedRandomSampler for imbalanced classes, num_workers and parallel loading, worker processes with their own dataset copies and seeds, get_worker_info and worker_init_fn, IterableDataset and sharding a stream across workers, pin_memory with non_blocking copies, persistent_workers and prefetch_factor | 31–32 |
 | 17 | [Transforms and augmentation](lessons/17-transforms.md) | what a transform is, torchvision.transforms.v2, tv_tensors.Image, ToImage, ToDtype with scale=True, Normalize with per-channel mean and std, Compose, the deprecated ToTensor, ImageNet normalisation statistics, computing statistics over the training set, data augmentation with RandomHorizontalFlip and RandomCrop, separate training and evaluation pipelines, transform and target_transform in a Dataset, transforms passing labels through | 33–34 |
 | 18 | [Data quality and leakage](lessons/18-data-quality.md) | silent data bugs, inspecting raw CSV data, missing values, impossible values, inconsistent labels, wrong units, duplicates, NaN and inf in tensors with isnan, isfinite and nan_to_num, data leakage from statistics, duplicates, augmentation and test-set reuse, stratified splits, class imbalance and class-weighted cross-entropy, accuracy on imbalanced data, sanity checks on a batch, overfitting one batch, the expected starting loss | 35–36 |
+
+### Part 4: Model Development (Intermediate)
+
+| # | Lesson | Topics | Sandbox |
+|---|---|---|---|
+| 19 | [Convolutional networks](lessons/19-cnn-layers.md) | why images need convolutions, kernels and weight sharing, nn.Conv2d and its arguments (stride, padding, "same", dilation, groups, bias), the output-size formula, counting convolution parameters, channel-mismatch errors, MaxPool2d, AvgPool2d and AdaptiveAvgPool2d (global average pooling), BatchNorm2d and the Conv–BN–ReLU block, Conv1d, tracing shapes through a CNN, flattening into a linear layer, training a small CNN | 37–38 |
+| 20 | [Recurrent layers and attention](lessons/20-sequence-layers.md) | sequence tensors and batch_first, nn.Embedding as a lookup table, recurrent layers (RNN, LSTM, GRU), hidden and cell states, output versus h_n and c_n, num_layers and bidirectional, classifying from the last hidden state, scaled dot-product attention, queries, keys and values, scaling by √d, causal and padding masks, nn.MultiheadAttention and its opposite boolean-mask convention, TransformerEncoderLayer and TransformerEncoder, positional embeddings, pre-norm | 39–40 |
+| 21 | [Training deeper networks well](lessons/21-better-models.md) | vanishing and exploding gradients, ReLU, LeakyReLU, GELU and SiLU, sigmoid and tanh saturation, Kaiming and Xavier initialisation, nn.init and model.apply, why not to initialise all weights equally, BatchNorm versus LayerNorm, residual connections and skip paths, pre-norm residual blocks, regularisation with dropout, weight decay, augmentation and smaller models, early stopping with the best weights, gradient clipping | 41–42 |
+| 22 | [Optimizers and learning-rate schedules](lessons/22-optimizers-and-schedules.md) | param_groups and optimizer state, SGD with momentum and Nesterov, RMSprop, Adam, AdamW and decoupled weight decay, per-group learning rates and weight decay, no decay on biases and norm weights, learning-rate schedulers (StepLR, MultiStepLR, ExponentialLR, CosineAnnealingLR, LinearLR, SequentialLR, OneCycleLR, ReduceLROnPlateau), the order of optimizer.step() and scheduler.step(), warm-up plus cosine decay, gradient accumulation, saving optimizer and scheduler state | 43–44 |
+| 23 | [Transfer learning and modifying models](lessons/23-transfer-learning.md) | transfer learning, feature extraction versus fine-tuning, torchvision pretrained models and their weights' transforms, inspecting models with named_children, named_modules, named_parameters and get_submodule, freezing with requires_grad_(False), replacing the head, optimizing only trainable parameters, smaller learning rates for pretrained layers, frozen BatchNorm statistics, partial loading with strict=False and filtered state dicts, forward hooks and handles | 45–46 |
 
 ## Running it on your own computer
 

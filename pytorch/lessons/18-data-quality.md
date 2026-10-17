@@ -415,4 +415,4 @@ print(class_weights(fruit_labels, 3))
 </details>
 
 ---
-Previous: [Lesson 17](17-transforms.md) · Back to the [course home](../README.md)
+Previous: [Lesson 17](17-transforms.md) · Next: [Lesson 19: Convolutional networks](19-cnn-layers.md)
