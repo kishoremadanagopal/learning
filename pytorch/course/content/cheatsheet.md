@@ -142,3 +142,33 @@ torch.save({"epoch": epoch, "model_state_dict": model.state_dict(),
 - `torch.load` uses `weights_only=True` since PyTorch 2.6: whole pickled models need `weights_only=False` (trusted files only).
 - `load_state_dict` checks names and shapes; `strict=False` tolerates missing/extra keys, never size mismatches.
 - Predict: `model.eval()`, `with torch.inference_mode():`, add a batch dim (`x.unsqueeze(0)`), `softmax(dim=1)` for probabilities, `argmax(dim=1)` for the class.
+
+## Data [14–18]
+
+```python
+from torch.utils.data import Dataset, TensorDataset, DataLoader, random_split, WeightedRandomSampler
+from torchvision.transforms import v2
+
+class MyData(Dataset):                          # map-style: __len__ + __getitem__
+    def __init__(self, paths, labels, transform=None): ...
+    def __len__(self): return len(self.labels)
+    def __getitem__(self, i): return self.transform(load(self.paths[i])), self.labels[i]
+
+train, val = random_split(ds, [0.8, 0.2], generator=torch.Generator().manual_seed(0))
+train_loader = DataLoader(train, batch_size=64, shuffle=True, num_workers=4, pin_memory=True, persistent_workers=True)
+val_loader = DataLoader(val, batch_size=128)    # no shuffle, no augmentation
+for xb, yb in train_loader:
+    xb, yb = xb.to(device, non_blocking=True), yb.to(device, non_blocking=True)
+
+train_tf = v2.Compose([v2.ToImage(), v2.RandomHorizontalFlip(), v2.RandomCrop(32, padding=4),
+                       v2.ToDtype(torch.float32, scale=True), v2.Normalize(mean, std)])
+eval_tf = v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True), v2.Normalize(mean, std)])
+```
+
+- `len(loader)` = ceil(n / batch_size), or n // batch_size with `drop_last=True`. `shuffle=True` draws a new order every epoch.
+- `default_collate` stacks tensors on a new dim 0; ints → int64, **floats → float64**, strings → lists, tuples → lists.
+- Variable lengths: a `collate_fn` with `pad_sequence(seqs, batch_first=True)`.
+- `sampler=` and `shuffle=True` are mutually exclusive. Imbalance: `WeightedRandomSampler(1 / counts[labels], len(labels))` (one weight per **sample**) or `nn.CrossEntropyLoss(weight=n / (k * counts))` (one per **class**).
+- Workers: own dataset copy each, seed `base_seed + worker_id`; `get_worker_info()` is None in the main process. Shard an `IterableDataset` by `info.id` / `info.num_workers` or every sample repeats.
+- Leakage: fit normalisation statistics on the training split only; dedupe before splitting; touch the test set once.
+- Sanity checks: one batch's shapes, dtypes, ranges and `isfinite`; overfit one batch; first cross-entropy ≈ ln(classes).

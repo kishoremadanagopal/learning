@@ -1037,12 +1037,6 @@ class Tensor:
             return self
         return _make_result(np.ascontiguousarray(self._a), self.dtype, [self], "CloneBackward0", lambda g: (g,))
 
-    def pin_memory(self):
-        return self
-
-    def is_pinned(self):
-        return False
-
     def share_memory_(self):
         return self
 
@@ -1432,6 +1426,16 @@ class Tensor:
             self._a[...] = g.randint(self.numel(), lo, hi).reshape(self._a.shape)
         self._bump()
         return self
+
+    def pin_memory(self, device=None):
+        if self.device.type != "cpu":
+            raise RuntimeError(f"cannot pin '{self.type()}' only dense CPU tensors can be pinned")
+        t = Tensor._wrap(self._a.copy(), self.dtype, self.device)
+        t._pinned = True
+        return t
+
+    def is_pinned(self, device=None):
+        return _bool(self.__dict__.get("_pinned", False))
 
     def bernoulli_(self, p=0.5, generator=None):
         self._check_inplace()
@@ -2527,26 +2531,47 @@ def bernoulli(input, p=None, generator=None):
 
 
 def multinomial(input, num_samples, replacement=False, *, generator=None):
-    p = input._a.astype(np.float64)
-    g = _gen(generator)
+    """Draw category indexes with probabilities proportional to input's rows.
+    With replacement this follows ATen's CPU kernel (a cumulative sum and a binary search per uniform draw), so
+    seeded results match PyTorch. Without replacement PyTorch draws exponential noise with an MKL kernel that the
+    sandbox can't copy: the results are valid samples, but not the same numbers as real PyTorch."""
+    if input.dim() not in (1, 2):
+        raise RuntimeError("prob_dist must be 1 or 2 dim")
+    if not input.dtype.is_floating_point:
+        raise RuntimeError("multinomial only supports floating-point dtypes for input")
+    if num_samples <= 0:
+        raise RuntimeError("cannot sample n_sample <= 0 samples")
+    p = input._a
     rows = p.reshape(-1, p.shape[-1])
-    out = []
-    for row in rows:
-        row = row / row.sum()
-        chosen = []
-        avail = row.copy()
-        for _ in range(num_samples):
-            u = float(g.uniform(1, double=True)[0])
-            c = np.cumsum(avail / avail.sum())
-            k = _int(np.searchsorted(c, u, side="right"))
-            k = _min(k, len(c) - 1)
-            chosen.append(k)
-            if not replacement:
-                avail[k] = 0
-        out.append(chosen)
-    arr = np.array(out, dtype=np.int64)
-    return Tensor._wrap(arr.reshape(p.shape[:-1] + (num_samples,)) if p.ndim > 1 else arr[0], int64, input.device)
-
+    n_cat = rows.shape[1]
+    if not replacement and num_samples > n_cat:
+        raise RuntimeError("cannot sample n_sample > prob_dist.size(-1) samples without replacement")
+    if (rows < 0).any() or not np.isfinite(rows).all():
+        raise RuntimeError("probability tensor contains either `inf`, `nan` or element < 0")
+    g = _gen(generator)
+    out = np.zeros((rows.shape[0], num_samples), dtype=np.int64)
+    for r, row in enumerate(rows):
+        if row.sum() <= 0:
+            raise RuntimeError("invalid multinomial distribution (sum of probabilities <= 0)")
+        if replacement:
+            cum = np.cumsum(row.astype(row.dtype))
+            total = cum[-1]
+            cum = cum / total
+            for k in range(num_samples):
+                u = _float(g.uniform(1, double=True)[0])
+                lo, hi = 0, n_cat
+                while hi - lo > 0:
+                    mid = lo + (hi - lo) // 2
+                    if cum[mid] < u:
+                        lo = mid + 1
+                    else:
+                        hi = mid
+                out[r, k] = lo
+        else:
+            q = -np.log1p(-g.uniform(n_cat, double=True))
+            keys = np.where(row > 0, row / q, -1.0)
+            out[r] = np.argsort(-keys, kind="stable")[:num_samples]
+    return Tensor._wrap(out.reshape(p.shape[:-1] + (num_samples,)) if p.ndim > 1 else out[0], int64, input.device)
 
 def arange(start, end=None, step=1, *, dtype=None, device=None, requires_grad=False):
     if end is None:

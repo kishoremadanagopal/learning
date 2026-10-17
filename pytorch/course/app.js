@@ -188,11 +188,10 @@
         `<code>${d.columns.map(esc).join(", ")}</code><br><button class="mini-btn" type="button" data-load="${i}">Load into editor</button></div>`).join("") + `</div>`;
     view.querySelectorAll("[data-load]").forEach((btn) => btn.addEventListener("click", () => {
       const d = ds[+btn.dataset.load];
-      const reader = d.name.endsWith(".json") ? "read_json" : "read_csv";
       ctx = { mode: "scratch", page: ctx.page };
       clearActiveExercise();
       setIdeHeader("Scratchpad", d.name);
-      setCode(`import pandas as pd\n\ndf = pd.${reader}("${d.name}")\nprint(df.shape)\nprint(df.head())\n`);
+      setCode(`import csv\n\nwith open("${d.name}", newline="") as f:\n    rows = list(csv.DictReader(f))\nprint(len(rows), "rows")\nfor row in rows[:3]:\n    print(row)\n`);
       doRun();
     }));
     view.scrollTop = 0;

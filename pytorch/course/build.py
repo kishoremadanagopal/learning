@@ -393,13 +393,25 @@ def glossary_markdown(lessons):
 
 
 def dataset_info():
-    """This course needs no data files: every exercise works on small Python values."""
-    return []
+    """The practice files for the sandbox's Data tab (Part 3 onwards)."""
+    import csv
+    notes = {
+        "fruit.csv": "90 (made-up) fruit: weight in grams, diameter in cm, sweetness 0–10, colour, and the fruit (apple, orange or lemon).",
+        "fruit_raw.csv": "The first 40 fruit as a messy export: a missing value or two, an impossible weight, a mistyped label, a value in the wrong unit and duplicate rows.",
+    }
+    out = []
+    for name, about in notes.items():
+        path = DATA / name
+        with open(path, newline="") as f:
+            rows = list(csv.reader(f))
+        out.append({"name": name, "rows": len(rows) - 1, "columns": rows[0], "about": about, "bytes": path.stat().st_size})
+    return out
 
 
 def torch_files():
     """The sandbox's PyTorch package, as paths relative to the site (the browser worker writes them into Pyodide)."""
-    return sorted(str(p.relative_to(ROOT)) for p in TORCH.rglob("*.py") if "__pycache__" not in p.parts)
+    return sorted(str(p.relative_to(ROOT)) for d in (TORCH, ROOT / "torchvision") for p in d.rglob("*.py")
+                  if "__pycache__" not in p.parts)
 
 
 def readme_markdown(data, datasets):
@@ -422,6 +434,7 @@ def readme_markdown(data, datasets):
         f"- **{n_ex} exercises** with hidden tests, each with an approach, hints and a walkthrough",
         f"- **{n_q} exam-style quiz questions**, with explanations",
         "- diagrams for the key ideas",
+        "- practice data files (from Part 3) that reset before every run",
         "- your progress and code saved in your own browser",
         "",
         "**Before you start:** you should be comfortable with Python basics (lists, loops, functions, classes). If not, do [Learn Python from scratch](../python/) first. Some NumPy helps: [Python for Data](../python-data/) covers it, but each lesson explains what it uses.",
@@ -557,8 +570,9 @@ def assemble(data):
         shutil.copytree(DATA, SITE / "data")
 
     if TORCH.resolve() != (SITE / "torch").resolve():
-        if (SITE / "torch").exists():
-            shutil.rmtree(SITE / "torch")
+        for d in ("torch", "torchvision"):
+            if (SITE / d).exists():
+                shutil.rmtree(SITE / d)
         for f in tfiles:
             (SITE / f).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(ROOT / f, SITE / f)

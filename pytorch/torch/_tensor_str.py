@@ -188,7 +188,7 @@ def _add_suffixes(tensor_str, suffixes, indent, force_newline):
 
 def _str(t, *, tensor_contents=None):
     import torch
-    prefix = "tensor("
+    prefix = "tensor(" if type(t).__name__ in ("Tensor", "Parameter", "Buffer") else f"{type(t).__name__}("
     indent = len(prefix)
     suffixes = []
     if t.device.type != "cpu" and not (t.device.type == "meta"):

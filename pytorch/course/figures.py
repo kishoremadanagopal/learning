@@ -285,6 +285,69 @@ def train_val_curves_fig():
     return f
 
 
+# ---------------------------------------------------------------- Part 3: data handling
+
+@fig("data-pipeline")
+def data_pipeline_fig():
+    f, ax = diag.canvas(11.6, 4.4)
+    steps = [("Sampler", "which indexes?\nSequential / Random", ORANGE),
+             ("BatchSampler", "groups of batch_size\n[7, 2, 9, 4]", PURPLE),
+             ("Dataset", "dataset[i] for each i\n(x, y) samples", BLUE),
+             ("collate_fn", "stack into tensors\nx [4, ...], y [4]", TEAL)]
+    for i, (name, note, color) in enumerate(steps):
+        x = 0.3 + i * 2.75
+        sbox(ax, x, 1.5, 2.3, 1.6, "", color=color)
+        label(ax, x + 1.15, 2.7, name, bold=True, color=color, mono=True)
+        label(ax, x + 1.15, 2.05, note, size=9, color=INK)
+        if i < 3:
+            arrow(ax, x + 2.35, 2.3, x + 2.7, 2.3, color=MUTED)
+    label(ax, 5.8, 3.9, "for x, y in DataLoader(dataset, batch_size=4, shuffle=True):", mono=True, size=10)
+    label(ax, 5.8, 0.85, "shuffle=True swaps in a RandomSampler; a new order is drawn every epoch", size=9.5, color=MUTED)
+    label(ax, 5.8, 0.4, "num_workers > 0 runs the Dataset and collate steps in worker processes", size=9.5, color=MUTED)
+    return f
+
+
+@fig("workers")
+def workers_fig():
+    f, ax = diag.canvas(10.6, 4.4)
+    sbox(ax, 0.3, 1.2, 2.4, 2.0, "", color=BLUE)
+    label(ax, 1.5, 2.85, "main process", bold=True, color=BLUE)
+    label(ax, 1.5, 2.25, "sampler: picks\nthe batch indexes", size=9)
+    label(ax, 1.5, 1.55, "training loop", size=9, color=MUTED)
+    for k, (y, color) in enumerate(((3.0, ORANGE), (1.0, TEAL))):
+        sbox(ax, 4.2, y - 0.45, 2.6, 1.15, "", color=color)
+        label(ax, 5.5, y + 0.4, f"worker {k}", bold=True, color=color)
+        label(ax, 5.5, y - 0.05, f"seed = base_seed + {k}\nown copy of the dataset", size=8.8)
+        arrow(ax, 2.8, 2.2, 4.1, y + 0.1, color=MUTED)
+    for j, (k, color) in enumerate(((0, ORANGE), (1, TEAL), (0, ORANGE), (1, TEAL))):
+        sbox(ax, 7.6 + j * 0.72, 1.9, 0.62, 0.6, f"b{j}", color=color, mono=True, fontsize=9.5)
+    arrow(ax, 6.9, 3.1, 7.7, 2.6, color=MUTED)
+    arrow(ax, 6.9, 1.1, 7.7, 1.85, color=MUTED)
+    label(ax, 9.05, 2.9, "batches return in order", size=9.2)
+    label(ax, 5.3, 0.15, "workers take turns: batch 0 → worker 0, batch 1 → worker 1, batch 2 → worker 0…", size=9.4, color=MUTED, italic=True)
+    return f
+
+
+@fig("leakage")
+def leakage_fig():
+    f, ax = diag.canvas(10.6, 4.0)
+    label(ax, 2.6, 3.65, "right: statistics from training data only", bold=True, color=GREEN)
+    sbox(ax, 0.3, 2.2, 3.2, 0.8, "training set", color=GREEN)
+    sbox(ax, 3.7, 2.2, 1.3, 0.8, "val", color=BLUE)
+    arrow(ax, 1.9, 2.15, 1.9, 1.45, color=GREEN)
+    sbox(ax, 0.9, 0.7, 2.0, 0.7, "mean, std", color=GREEN, mono=True)
+    arrow(ax, 2.95, 1.05, 4.3, 2.1, color=GREEN, text="apply", text_offset=(-0.45, 0.05))
+    label(ax, 8.1, 3.65, "leak: statistics from all the data", bold=True, color=CRIMSON)
+    sbox(ax, 5.8, 2.2, 3.2, 0.8, "training set", color=GREY)
+    sbox(ax, 9.2, 2.2, 1.3, 0.8, "val", color=CRIMSON)
+    arrow(ax, 7.4, 2.15, 7.6, 1.45, color=CRIMSON)
+    arrow(ax, 9.85, 2.15, 8.2, 1.45, color=CRIMSON)
+    sbox(ax, 6.9, 0.7, 2.0, 0.7, "mean, std", color=CRIMSON, mono=True)
+    label(ax, 8.0, 0.3, "the validation score looks better than real use will be", size=9.2, color=CRIMSON)
+    return f
+
+
+
 def main(names):
     OUT.mkdir(exist_ok=True)
     for name in names or FIGS:

@@ -143,6 +143,36 @@ torch.save({"epoch": epoch, "model_state_dict": model.state_dict(),
 - `load_state_dict` checks names and shapes; `strict=False` tolerates missing/extra keys, never size mismatches.
 - Predict: `model.eval()`, `with torch.inference_mode():`, add a batch dim (`x.unsqueeze(0)`), `softmax(dim=1)` for probabilities, `argmax(dim=1)` for the class.
 
+## Data [14–18]
+
+```python
+from torch.utils.data import Dataset, TensorDataset, DataLoader, random_split, WeightedRandomSampler
+from torchvision.transforms import v2
+
+class MyData(Dataset):                          # map-style: __len__ + __getitem__
+    def __init__(self, paths, labels, transform=None): ...
+    def __len__(self): return len(self.labels)
+    def __getitem__(self, i): return self.transform(load(self.paths[i])), self.labels[i]
+
+train, val = random_split(ds, [0.8, 0.2], generator=torch.Generator().manual_seed(0))
+train_loader = DataLoader(train, batch_size=64, shuffle=True, num_workers=4, pin_memory=True, persistent_workers=True)
+val_loader = DataLoader(val, batch_size=128)    # no shuffle, no augmentation
+for xb, yb in train_loader:
+    xb, yb = xb.to(device, non_blocking=True), yb.to(device, non_blocking=True)
+
+train_tf = v2.Compose([v2.ToImage(), v2.RandomHorizontalFlip(), v2.RandomCrop(32, padding=4),
+                       v2.ToDtype(torch.float32, scale=True), v2.Normalize(mean, std)])
+eval_tf = v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True), v2.Normalize(mean, std)])
+```
+
+- `len(loader)` = ceil(n / batch_size), or n // batch_size with `drop_last=True`. `shuffle=True` draws a new order every epoch.
+- `default_collate` stacks tensors on a new dim 0; ints → int64, **floats → float64**, strings → lists, tuples → lists.
+- Variable lengths: a `collate_fn` with `pad_sequence(seqs, batch_first=True)`.
+- `sampler=` and `shuffle=True` are mutually exclusive. Imbalance: `WeightedRandomSampler(1 / counts[labels], len(labels))` (one weight per **sample**) or `nn.CrossEntropyLoss(weight=n / (k * counts))` (one per **class**).
+- Workers: own dataset copy each, seed `base_seed + worker_id`; `get_worker_info()` is None in the main process. Shard an `IterableDataset` by `info.id` / `info.num_workers` or every sample repeats.
+- Leakage: fit normalisation statistics on the training split only; dedupe before splitting; touch the test set once.
+- Sanity checks: one batch's shapes, dtypes, ranges and `isfinite`; overfit one batch; first cross-entropy ≈ ln(classes).
+
 ## Every concept at a glance
 
 Generated from the **At a glance** table at the end of each lesson. The number in brackets links to the lesson.
@@ -237,3 +267,36 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | Resume | save `{"model_state_dict", "optimizer_state_dict", "epoch", …}` | exact continuation | then `model.train()` | [13](lessons/13-saving-and-loading.md) |
 | Other device | `torch.load(path, map_location="cpu")` | GPU checkpoint on a CPU | or `map_location=device` | [13](lessons/13-saving-and-loading.md) |
 | Predict | `model.eval()`; `with torch.inference_mode(): model(x.unsqueeze(0)).argmax(1)` | a class index | softmax only for probabilities | [13](lessons/13-saving-and-loading.md) |
+| Data already in tensors | `TensorDataset(x, y)` | `ds[i] == (x[i], y[i])` | every tensor needs the same size of dim 0 | [14](lessons/14-datasets.md) |
+| Your own data | `class MyData(Dataset)` with `__len__`, `__getitem__` | samples on demand | float32 features, int64 labels | [14](lessons/14-datasets.md) |
+| Big data on disk | store paths in `__init__`, read in `__getitem__` | low memory, parallel loading | lazy loading | [14](lessons/14-datasets.md) |
+| Some samples | `Subset(ds, indices)` | a view by index | indexes into the original dataset | [14](lessons/14-datasets.md) |
+| Join datasets | `ConcatDataset([a, b])` or `a + b` | one longer dataset | map-style only | [14](lessons/14-datasets.md) |
+| Split | `random_split(ds, [0.8, 0.1, 0.1], generator=g)` | Subsets | fractions round down; leftovers go to the first pieces | [14](lessons/14-datasets.md) |
+| Batches | `DataLoader(ds, batch_size=32)` | tensors with a batch dim | last batch may be smaller | [15](lessons/15-dataloaders.md) |
+| Equal-sized batches | `drop_last=True` | len = n // batch_size | the leftover samples are skipped that epoch | [15](lessons/15-dataloaders.md) |
+| Training order | `shuffle=True` | a new permutation each epoch | don't shuffle validation or test | [15](lessons/15-dataloaders.md) |
+| Reproducible order | `generator=torch.Generator().manual_seed(0)` | the same shuffles every run | iterating also draws a base seed | [15](lessons/15-dataloaders.md) |
+| Default batching | `default_collate` | stacked tensors; ints → int64, floats → float64 | tuples come back as lists | [15](lessons/15-dataloaders.md) |
+| Variable lengths | `collate_fn=pad_batch` with `pad_sequence(..., batch_first=True)` | `[batch, longest]` | pad per batch, keep the lengths | [15](lessons/15-dataloaders.md) |
+| Training loop | `for xb, yb in train_loader:` then the five steps | one epoch | `xb.to(device)` inside the loop | [15](lessons/15-dataloaders.md) |
+| Choose the order | `sampler=RandomSampler(ds)` / `SequentialSampler(ds)` | the index order | can't combine with shuffle= | [16](lessons/16-samplers-and-workers.md) |
+| Some indexes, shuffled | `SubsetRandomSampler(idx)` | a random order of chosen indexes | for manual splits | [16](lessons/16-samplers-and-workers.md) |
+| Balance classes | `WeightedRandomSampler(1 / counts[labels], len(labels))` | rare classes drawn more | one weight per sample; repeats rare samples | [16](lessons/16-samplers-and-workers.md) |
+| Parallel loading | `num_workers=4` | batches loaded in the background | each worker: own dataset copy, seed base_seed + id | [16](lessons/16-samplers-and-workers.md) |
+| Who am I? | `get_worker_info()` | id, num_workers, seed, dataset | None in the main process | [16](lessons/16-samplers-and-workers.md) |
+| Streams | `IterableDataset` with `__iter__` | data read in order | shard by `info.id` and `info.num_workers` | [16](lessons/16-samplers-and-workers.md) |
+| Faster GPU copies | `pin_memory=True` + `.to(device, non_blocking=True)` | overlapped transfers | warns without an accelerator | [16](lessons/16-samplers-and-workers.md) |
+| Reuse workers | `persistent_workers=True` | no restart each epoch | needs num_workers > 0 | [16](lessons/16-samplers-and-workers.md) |
+| To a model input | `v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True), v2.Normalize(mean, std)])` | float32 `[C, H, W]`, about mean 0 | Normalize needs floats | [17](lessons/17-transforms.md) |
+| Channels first | `v2.ToImage()` | `[H, W, C]` array → `[C, H, W]` Image | dtype unchanged | [17](lessons/17-transforms.md) |
+| Scale | `v2.ToDtype(torch.float32, scale=True)` | uint8 0–255 → 0–1 | replaces ToTensor | [17](lessons/17-transforms.md) |
+| Statistics | `x.mean(dim=(0, 2, 3))`, `x.std(dim=(0, 2, 3))` | one value per channel | training images only | [17](lessons/17-transforms.md) |
+| Augment | `v2.RandomHorizontalFlip()`, `v2.RandomCrop(28, padding=4)` | a new variation each epoch | training pipeline only | [17](lessons/17-transforms.md) |
+| In a Dataset | `transform`, `target_transform` in `__getitem__` | per-sample processing | labels pass through v2 transforms | [17](lessons/17-transforms.md) |
+| Find gaps | `any(v.strip() == "" for v in row.values())` / `torch.isnan(x)` | rows to drop or impute | check before `float(...)` | [18](lessons/18-data-quality.md) |
+| Non-finite values | `torch.isfinite(x).all()`, `torch.nan_to_num(x)` | catch NaN and inf | one NaN poisons the whole model | [18](lessons/18-data-quality.md) |
+| Avoid leakage | fit mean / std on `train` only, apply to val and test | honest validation scores | dedupe before splitting | [18](lessons/18-data-quality.md) |
+| Stratify | split each class's indexes separately | every class in every split | matters for small, imbalanced data | [18](lessons/18-data-quality.md) |
+| Weight the loss | `nn.CrossEntropyLoss(weight=n / (k * counts))` | rare classes matter more | one weight per class | [18](lessons/18-data-quality.md) |
+| Sanity check | inspect `next(iter(loader))`, overfit one batch | shapes, dtypes, ranges; loss → 0 | first loss ≈ ln(classes) | [18](lessons/18-data-quality.md) |

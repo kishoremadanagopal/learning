@@ -1,6 +1,6 @@
 # PyTorch: from tensors to the PyTorch Certified Associate exam
 
-A beginner-first PyTorch course that follows the official exam outline of the **PyTorch Certified Associate (PTCA)**, launched by the PyTorch Foundation and the Linux Foundation in June 2026: 13 lessons so far on tensors, devices, autograd, data loading, building and training models, and making them fast.
+A beginner-first PyTorch course that follows the official exam outline of the **PyTorch Certified Associate (PTCA)**, launched by the PyTorch Foundation and the Linux Foundation in June 2026: 18 lessons so far on tensors, devices, autograd, data loading, building and training models, and making them fast.
 
 PyTorch is the framework most AI research and production models are written in. Knowing it well is core for the **AI engineer** path, and a big plus for **data / AI analysts** who move into machine learning.
 
@@ -8,10 +8,11 @@ PyTorch is the framework most AI research and production models are written in. 
 
 The sandbox runs Python 3.14 in your browser (via [Pyodide](https://pyodide.org)) with the course's own copy of PyTorch: a teaching version written in Python on NumPy that follows PyTorch 2.14's names, printing, rules, random numbers and error messages for everything the course uses. It even has a pretend NVIDIA GPU, so you can practise `.to('cuda')`. Nothing to install and no sign-up. Run the same code with real PyTorch on your own computer (`pip install torch`) and it behaves the same way, just faster.
 
-- every lesson, with **84 examples** you can run and change
-- **26 exercises** with hidden tests, each with an approach, hints and a walkthrough
-- **71 exam-style quiz questions**, with explanations
+- every lesson, with **115 examples** you can run and change
+- **36 exercises** with hidden tests, each with an approach, hints and a walkthrough
+- **98 exam-style quiz questions**, with explanations
 - diagrams for the key ideas
+- practice data files (from Part 3) that reset before every run
 - your progress and code saved in your own browser
 
 **Before you start:** you should be comfortable with Python basics (lists, loops, functions, classes). If not, do [Learn Python from scratch](../python/) first. Some NumPy helps: [Python for Data](../python-data/) covers it, but each lesson explains what it uses.
@@ -31,7 +32,7 @@ Check the latest details on the [Linux Foundation's PTCA page](https://training.
 
 | | |
 |---|---|
-| 📘 [Lessons](#lessons) | 13 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and an exam-style quiz |
+| 📘 [Lessons](#lessons) | 18 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and an exam-style quiz |
 | 📖 [Glossary](glossary.md) | every PyTorch term used in the course, defined in plain English |
 | 🧾 [Cheat sheet](cheatsheet.md) | the API you need for the exam on a few pages, and every concept at a glance |
 
@@ -67,6 +68,16 @@ Check the latest details on the [Linux Foundation's PTCA page](https://training.
 | 11 | [Losses and optimizers](lessons/11-losses-and-optimizers.md) | MSELoss, L1Loss and HuberLoss for regression, reduction, shape mismatches that broadcast, CrossEntropyLoss with logits and int64 class indices, NLLLoss and log_softmax, class weights, ignore_index and label smoothing, BCEWithLogitsLoss for binary and multi-label targets, BCELoss, torch.optim, SGD with momentum, Adam, AdamW and decoupled weight decay, zero_grad, the five-line training step | 21–22 |
 | 12 | [The training and evaluation loop](lessons/12-training-loop.md) | training, validation and test sets, generalisation and overfitting, epochs and shuffled mini-batches, a complete classification training loop, model.train() and model.eval(), dropout and batch norm in each mode, evaluating under torch.no_grad, accuracy from argmax, reading training and validation curves, underfitting, early stopping and keeping the best weights with deepcopy, training on a GPU | 23–24 |
 | 13 | [Saving, loading and using a model](lessons/13-saving-and-loading.md) | model and optimizer state_dicts, buffers in state_dicts, torch.save and torch.load, saving the state_dict versus the whole model, weights_only=True by default since PyTorch 2.6 and why, load_state_dict and strict, missing, unexpected and size-mismatched keys, checkpoints for resuming training, map_location, making predictions with eval, inference_mode, a batch dimension, softmax and argmax | 25–26 |
+
+### Part 3: Data Handling (Intermediate)
+
+| # | Lesson | Topics | Sandbox |
+|---|---|---|---|
+| 14 | [Datasets](lessons/14-datasets.md) | the Dataset and DataLoader split of responsibilities, the map-style Dataset protocol (__len__ and __getitem__), TensorDataset, a custom Dataset reading a CSV file, float32 features and int64 labels, eager versus lazy loading, torchvision's ready-made datasets, Subset, ConcatDataset, random_split with lengths or fractions and a seeded Generator | 27–28 |
+| 15 | [DataLoader: batching and shuffling](lessons/15-dataloaders.md) | iterating a DataLoader, batch_size and the last smaller batch, drop_last, len(loader), shuffle=True and a new order every epoch, generator for reproducible shuffling, how iterating draws a base seed, default_collate's rules, Python floats becoming float64, custom collate_fn with pad_sequence, batch_size=None, a full training loop with training and validation loaders, moving batches to the device | 29–30 |
+| 16 | [Samplers, workers and fast loading](lessons/16-samplers-and-workers.md) | samplers and the order of indexes, SequentialSampler, RandomSampler with and without replacement, SubsetRandomSampler, BatchSampler, sampler and shuffle being mutually exclusive, WeightedRandomSampler for imbalanced classes, num_workers and parallel loading, worker processes with their own dataset copies and seeds, get_worker_info and worker_init_fn, IterableDataset and sharding a stream across workers, pin_memory with non_blocking copies, persistent_workers and prefetch_factor | 31–32 |
+| 17 | [Transforms and augmentation](lessons/17-transforms.md) | what a transform is, torchvision.transforms.v2, tv_tensors.Image, ToImage, ToDtype with scale=True, Normalize with per-channel mean and std, Compose, the deprecated ToTensor, ImageNet normalisation statistics, computing statistics over the training set, data augmentation with RandomHorizontalFlip and RandomCrop, separate training and evaluation pipelines, transform and target_transform in a Dataset, transforms passing labels through | 33–34 |
+| 18 | [Data quality and leakage](lessons/18-data-quality.md) | silent data bugs, inspecting raw CSV data, missing values, impossible values, inconsistent labels, wrong units, duplicates, NaN and inf in tensors with isnan, isfinite and nan_to_num, data leakage from statistics, duplicates, augmentation and test-set reuse, stratified splits, class imbalance and class-weighted cross-entropy, accuracy on imbalanced data, sanity checks on a batch, overfitting one batch, the expected starting loss | 35–36 |
 
 ## Running it on your own computer
 

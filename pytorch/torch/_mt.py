@@ -141,8 +141,8 @@ class MT19937:
         return np.array(r, dtype=np.int64)
 
     def random_int64(self):
-        """Tensor.random_() on an int64 tensor: random64() % (2**63 + 1)."""
-        return int(self.next_u64(1)[0]) % ((1 << 63) + 1)
+        """Tensor.random_() on an int64 tensor: random64() masked to 63 bits (checked against PyTorch 2.14)."""
+        return int(self.next_u64(1)[0]) % (1 << 63)
 
     def get_state(self):
         return (self.state.copy(), self.index, self.next_double_normal, self.initial_seed)

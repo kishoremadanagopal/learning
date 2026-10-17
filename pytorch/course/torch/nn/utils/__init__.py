@@ -39,3 +39,4 @@ def clip_grad_value_(parameters, clip_value, foreach=None):
 
 def parameters_to_vector(parameters):
     return _core.cat([p.reshape(-1) for p in parameters])
+from . import rnn  # noqa: E402,F401

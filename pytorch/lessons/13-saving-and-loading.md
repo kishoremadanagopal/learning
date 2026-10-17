@@ -438,4 +438,4 @@ print(predict(model, torch.tensor([[0.5, -0.2], [2.0, 1.0]]), ["low", "mid", "hi
 </details>
 
 ---
-Previous: [Lesson 12](12-training-loop.md) · Back to the [course home](../README.md)
+Previous: [Lesson 12](12-training-loop.md) · Next: [Lesson 14: Datasets](14-datasets.md)

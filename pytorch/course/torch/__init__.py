@@ -97,7 +97,7 @@ def _sandbox_reset():
     cuda._peak[0] = cuda._allocated[0]
 
 
-from . import nn, optim  # noqa: E402
+from . import nn, optim, utils  # noqa: E402
 
 for _junk in ("np", "math", "numbers", "warnings", "namedtuple", "builtins", "MT19937", "Node", "AccumulateGrad"):
     globals().pop(_junk, None)
