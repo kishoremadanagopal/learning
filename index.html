@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Learning</title>
-<meta name="description" content="Free, hands-on courses: Learn SQL, Python, data analysis with pandas, statistics, machine learning, data structures and algorithms, AI engineering with LLMs, JavaScript and TypeScript, and Java from scratch, with in-browser practice sandboxes.">
+<meta name="description" content="Free, hands-on courses: Learn SQL, Python, data analysis with pandas, statistics, machine learning, PyTorch, data structures and algorithms, AI engineering with LLMs, JavaScript and TypeScript, and Java from scratch, with in-browser practice sandboxes.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
 <style>
@@ -26,6 +26,8 @@
   --stats-soft: #dcf1ee;
   --ml: #b42357;
   --ml-soft: #fbe4ec;
+  --pt: #c4321a;
+  --pt-soft: #fde7e2;
   --dsa: #2e7d32;
   --dsa-soft: #e3f2e4;
   --ai: #7e22ce;
@@ -43,13 +45,13 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0f1418; --surface: #161d23; --ink: #e2e8ee; --muted: #93a0ae; --line: #27313b;
-    --sql: #38bfa8; --sql-soft: #16332d; --py: #79aee0; --py-soft: #1b2a3b; --py-yellow: #f2c94c; --data: #a99cf0; --data-soft: #262041; --stats: #5fd3c4; --stats-soft: #15302d; --ml: #f08bb0; --ml-soft: #3a1a26; --dsa: #7cc982; --dsa-soft: #1a2e1c; --ai: #c99cf5; --ai-soft: #2a1a3d; --js: #f2c14e; --js-soft: #33290f; --java: #f5a25d; --java-soft: #33241a; --java-blue: #79aee0; --on-accent: #0b1418;
+    --sql: #38bfa8; --sql-soft: #16332d; --py: #79aee0; --py-soft: #1b2a3b; --py-yellow: #f2c94c; --data: #a99cf0; --data-soft: #262041; --stats: #5fd3c4; --stats-soft: #15302d; --ml: #f08bb0; --ml-soft: #3a1a26; --pt: #ff8f73; --pt-soft: #3a1c16; --dsa: #7cc982; --dsa-soft: #1a2e1c; --ai: #c99cf5; --ai-soft: #2a1a3d; --js: #f2c14e; --js-soft: #33290f; --java: #f5a25d; --java-soft: #33241a; --java-blue: #79aee0; --on-accent: #0b1418;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0f1418; --surface: #161d23; --ink: #e2e8ee; --muted: #93a0ae; --line: #27313b;
-  --sql: #38bfa8; --sql-soft: #16332d; --py: #79aee0; --py-soft: #1b2a3b; --py-yellow: #f2c94c; --data: #a99cf0; --data-soft: #262041; --stats: #5fd3c4; --stats-soft: #15302d; --ml: #f08bb0; --ml-soft: #3a1a26; --dsa: #7cc982; --dsa-soft: #1a2e1c; --ai: #c99cf5; --ai-soft: #2a1a3d; --js: #f2c14e; --js-soft: #33290f; --java: #f5a25d; --java-soft: #33241a; --java-blue: #79aee0; --on-accent: #0b1418;
+  --sql: #38bfa8; --sql-soft: #16332d; --py: #79aee0; --py-soft: #1b2a3b; --py-yellow: #f2c94c; --data: #a99cf0; --data-soft: #262041; --stats: #5fd3c4; --stats-soft: #15302d; --ml: #f08bb0; --ml-soft: #3a1a26; --pt: #ff8f73; --pt-soft: #3a1c16; --dsa: #7cc982; --dsa-soft: #1a2e1c; --ai: #c99cf5; --ai-soft: #2a1a3d; --js: #f2c14e; --js-soft: #33290f; --java: #f5a25d; --java-soft: #33241a; --java-blue: #79aee0; --on-accent: #0b1418;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -69,6 +71,7 @@ header p { margin: 0; font-size: 18px; color: var(--muted); }
 .course.data { --accent: var(--data); --soft: var(--data-soft); }
 .course.stats { --accent: var(--stats); --soft: var(--stats-soft); }
 .course.ml { --accent: var(--ml); --soft: var(--ml-soft); }
+.course.pt { --accent: var(--pt); --soft: var(--pt-soft); }
 .course.dsa { --accent: var(--dsa); --soft: var(--dsa-soft); }
 .course.ai { --accent: var(--ai); --soft: var(--ai-soft); }
 .course.js { --accent: var(--js); --soft: var(--js-soft); }
@@ -177,6 +180,20 @@ model.<b>score</b>(X_test, y_test)
       </div>
     </article>
 
+    <article class="course pt">
+      <pre class="sample" aria-hidden="true">model = torch.<b>compile</b>(model)
+x = torch.randn(<b>32</b>, 3, 224, 224)
+print(model(x).shape)
+<span>→ torch.Size([32, 10])</span></pre>
+      <h2>PyTorch for the PTCA exam</h2>
+      <p>Deep learning with PyTorch, following the PyTorch Certified Associate exam: tensors, autograd, training, data loading, CNNs and attention, torch.compile, mixed precision and distributed training, with three timed mock exams.</p>
+      <div class="facts"><span><b>31</b> lessons</span><span><b>54</b> exercises</span><span><b>155</b> quiz questions</span><span><b>3</b> mock exams</span></div>
+      <div class="actions">
+        <a class="primary" href="pytorch/">Open the PyTorch course</a>
+        <a class="secondary" href="https://github.com/kishoremadanagopal/learning/tree/main/pytorch#lessons">Read the lessons</a>
+      </div>
+    </article>
+
     <article class="course dsa">
       <pre class="sample" aria-hidden="true">seen = <b>{}</b>
 <b>for</b> i, x <b>in</b> enumerate(nums):
@@ -237,6 +254,7 @@ System.out.println(p);</pre>
   <section class="order" aria-label="Where to start">
     <div><b>New to programming?</b><span>Start with Python. It teaches how programs think: variables, decisions, loops and functions.</span></div>
     <div><b>Working with data or AI?</b><span>Learn SQL and Python, then Python for Data, Statistics, Machine Learning and Data Structures and Algorithms: the shared core of analyst and AI engineer roles.</span></div>
+    <div><b>Training neural networks?</b><span>After Machine Learning, take PyTorch: from tensors to multi-GPU training, with three timed mock exams for the PyTorch Certified Associate (PTCA) certification.</span></div>
     <div><b>Building with LLMs?</b><span>After Python, take AI Engineering: prompts, RAG, agents and evals, all practised in the browser without an API key.</span></div>
     <div><b>Building for the web?</b><span>Take JavaScript, TypeScript and JSON: web pages, APIs, Node.js and typed code, ending with an LLM-powered assistant.</span></div>
     <div><b>Aiming for software jobs?</b><span>Add Java. It powers backends, Android and enterprise systems, and teaches object-oriented design properly.</span></div>

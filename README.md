@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/banner-dark.svg">
-    <img alt="Learning: learn SQL, Python, data analysis, statistics, machine learning, data structures and algorithms, AI engineering with LLMs, JavaScript and TypeScript, and Java from scratch" src="assets/banner-light.svg" width="100%">
+    <img alt="Learning: learn SQL, Python, data analysis, statistics, machine learning, PyTorch, data structures and algorithms, AI engineering with LLMs, JavaScript and TypeScript, and Java from scratch" src="assets/banner-light.svg" width="100%">
   </picture>
 </p>
 
@@ -10,9 +10,9 @@
 </p>
 
 <p align="center">
-  <img alt="Courses: 9" src="https://img.shields.io/badge/courses-9-0e7466">
-  <img alt="Lessons: 301" src="https://img.shields.io/badge/lessons-301-2c679c">
-  <img alt="Exercises: 648" src="https://img.shields.io/badge/auto--checked%20exercises-648-e8b417">
+  <img alt="Courses: 10" src="https://img.shields.io/badge/courses-10-0e7466">
+  <img alt="Lessons: 332" src="https://img.shields.io/badge/lessons-332-2c679c">
+  <img alt="Exercises: 702" src="https://img.shields.io/badge/auto--checked%20exercises-702-e8b417">
   <img alt="Price: free" src="https://img.shields.io/badge/price-free-2f7a45">
   <img alt="Setup: none" src="https://img.shields.io/badge/setup-none%2C%20runs%20in%20your%20browser-5b697b">
 </p>
@@ -126,7 +126,7 @@
     </td>
   </tr>
   <tr>
-    <td colspan="2" valign="top">
+    <td width="50%" valign="top">
       <h3>🟨 JavaScript, TypeScript and JSON</h3>
       <p>The language of the web, from zero: data and JSON, async code and APIs, interactive pages with a live preview, TypeScript checked by the real compiler, Node.js, npm, testing and a small API server, interview topics, and a final project that builds a typed AI shopping assistant with tools.</p>
       <p><b>45</b> lessons · <b>90</b> exercises · <b>180</b> quiz questions · runs JavaScript, TypeScript and web pages in the browser</p>
@@ -135,6 +135,17 @@
         📘 <a href="javascript/README.md#lessons">Lessons</a> ·
         📖 <a href="javascript/glossary.md">Glossary</a> ·
         🧾 <a href="javascript/cheatsheet.md">Cheat sheet</a>
+      </p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>🔥 PyTorch for the PTCA exam</h3>
+      <p>Deep learning with PyTorch, following the PyTorch Certified Associate (PTCA) exam outline: tensors, devices, autograd, training, data loading, CNNs, RNNs and attention, transfer learning, profiling, <code>torch.compile</code>, mixed precision and distributed training, ending with three timed mock exams.</p>
+      <p><b>31</b> lessons · <b>54</b> exercises · <b>155</b> quiz questions · ⏱️ <b>3</b> mock exams · a pretend GPU in the browser</p>
+      <p>
+        <a href="https://kishoremadanagopal.github.io/learning/pytorch/"><b>▶ Open the PyTorch course</b></a><br>
+        📘 <a href="pytorch/README.md#lessons">Lessons</a> ·
+        📖 <a href="pytorch/glossary.md">Glossary</a> ·
+        🧾 <a href="pytorch/cheatsheet.md">Cheat sheet</a>
       </p>
     </td>
   </tr>
@@ -147,6 +158,7 @@
 | New to programming | 🐍 **Python** | It teaches how programs think: variables, decisions, loops and functions. |
 | Working with data or reports | 🗄️ **SQL** | You'll answer real questions about data from the first lesson. |
 | Heading into data or AI work | 🐍 **Python** → 📊 **Python for Data** → 📈 **Statistics** + 🗄️ **SQL** → 🤖 **Machine Learning** + 🧩 **DSA** | The shared core of both the AI engineer and the data/AI analyst paths. |
+| Training neural networks, or preparing for the PTCA certification | 🐍 **Python** → 📊 **Python for Data** → 🤖 **Machine Learning** → 🔥 **PyTorch** | From tensors to `torch.compile`, mixed precision and multi-GPU training, with timed mock exams. |
 | Building apps on top of LLMs | 🐍 **Python** → ✨ **AI Engineering** | Prompts, RAG, agents and evals, with every exercise runnable without an API key. |
 | Building websites, web apps or full-stack AI products | 🟨 **JavaScript, TypeScript and JSON** | The web's own language, typed with TypeScript, from pages to APIs to an LLM-powered assistant. |
 | Preparing for coding interviews | 🐍 **Python** → 🧩 **DSA** | Every pattern interviewers ask about, with a help ladder from hints to full walkthroughs. |
@@ -208,6 +220,15 @@ learning/
 │   ├── glossary.md         every term, A to Z
 │   ├── cheatsheet.md       every step, model and metric on one page
 │   └── course/             sources the course is built from
+├── pytorch/                🔥 PyTorch for the PTCA exam
+│   ├── README.md           course home: lesson list, exam facts and how to use it
+│   ├── index.html          practice sandbox (a teaching PyTorch on NumPy, with a pretend GPU, plus timed mock exams)
+│   ├── lessons/            31 lessons with diagrams, approaches, hints, walkthroughs, quizzes and 3 mock exams
+│   ├── figures/            the lesson diagrams
+│   ├── data/               practice datasets
+│   ├── glossary.md         every term, A to Z
+│   ├── cheatsheet.md       the exam's API on a few pages, and every concept at a glance
+│   └── course/             sources the course is built from
 ├── dsa/                    🧩 Data Structures and Algorithms in Python
 │   ├── README.md           course home: lesson list and how to use it
 │   ├── index.html          practice sandbox (Python with hidden tests and speed checks)
@@ -245,7 +266,7 @@ learning/
 ## 💡 Good to know
 
 - **Your progress stays with you.** Completed exercises and your code are saved in your own browser.
-- **Everything runs locally.** The SQL sandbox uses SQLite, the Python sandbox uses Brython, the Python for Data, Statistics, Machine Learning, DSA and AI Engineering sandboxes run real Python (with pandas, SciPy and scikit-learn where needed) on [Pyodide](https://pyodide.org), the JavaScript sandbox runs your code in the page itself (type-checking TypeScript with the real compiler and showing your web pages in a sandboxed preview), and the Java sandbox runs the real `javac` compiler on [CheerpJ](https://cheerpj.com), all inside the page. Nothing you type is sent anywhere.
+- **Everything runs locally.** The SQL sandbox uses SQLite, the Python sandbox uses Brython, the Python for Data, Statistics, Machine Learning, DSA and AI Engineering sandboxes run real Python (with pandas, SciPy and scikit-learn where needed) on [Pyodide](https://pyodide.org), the PyTorch sandbox runs a teaching version of PyTorch written in Python on NumPy (same API, printing and errors) on Pyodide, the JavaScript sandbox runs your code in the page itself (type-checking TypeScript with the real compiler and showing your web pages in a sandboxed preview), and the Java sandbox runs the real `javac` compiler on [CheerpJ](https://cheerpj.com), all inside the page. Nothing you type is sent anywhere.
 - **Read anywhere.** Every lesson is plain Markdown, so it reads well right here on GitHub, on your phone or offline.
 
 ---
