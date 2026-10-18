@@ -220,19 +220,19 @@ print(list(running_total([3, 1, 4])))
 
 1. What does calling a generator function return?
    - A) The first yielded value
-   - B) A generator object, without running the body yet
-   - C) A list of all values
+   - B) A list of all values
+   - C) A generator object, without running the body yet
 
 2. What's the main benefit of `(x * 2 for x in data)` over `[x * 2 for x in data]`?
-   - A) It doesn't build the whole result in memory
-   - B) It's always faster
-   - C) It can be reused many times
+   - A) It can be reused many times
+   - B) It doesn't build the whole result in memory
+   - C) It's always faster
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) A generator object, without running the body yet**: The body only starts running when you ask for the first value with `next()` or a loop.
-2. **A) It doesn't build the whole result in memory**: Generator expressions are lazy. They're single-use, though.
+1. **C) A generator object, without running the body yet**: The body only starts running when you ask for the first value with `next()` or a loop.
+2. **B) It doesn't build the whole result in memory**: Generator expressions are lazy. They're single-use, though.
 
 </details>
 

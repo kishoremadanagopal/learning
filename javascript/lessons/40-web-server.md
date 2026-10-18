@@ -433,32 +433,32 @@ console.log(res.status, await res.json());
 ## Quick quiz
 
 1. What does a web-standard handler take and return?
-   - A) A Request, and a Response (or a promise of one)
-   - B) req and res objects from node:http
-   - C) A URL string and a JSON object
+   - A) A URL string and a JSON object
+   - B) A Request, and a Response (or a promise of one)
+   - C) req and res objects from node:http
 
 2. A client POSTs a product without a name. Which status fits?
-   - A) 400 Bad Request
-   - B) 404 Not Found
-   - C) 500 Internal Server Error
+   - A) 404 Not Found
+   - B) 500 Internal Server Error
+   - C) 400 Bad Request
 
 3. Why should a 500 response hide the real error message?
-   - A) Error details can reveal secrets or internals to anyone calling the API
-   - B) Browsers can't display long messages
+   - A) Browsers can't display long messages
+   - B) Error details can reveal secrets or internals to anyone calling the API
    - C) It's required by HTTP
 
 4. What is middleware in a handler-based server?
-   - A) A function that wraps a handler and returns a new handler, adding behaviour such as logging or error handling
-   - B) A database between the server and the client
-   - C) A browser extension
+   - A) A database between the server and the client
+   - B) A browser extension
+   - C) A function that wraps a handler and returns a new handler, adding behaviour such as logging or error handling
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) A Request, and a Response (or a promise of one)**: The same classes fetch uses, which is why one handler runs on many platforms.
-2. **A) 400 Bad Request**: 400 means the client's input is invalid.
-3. **A) Error details can reveal secrets or internals to anyone calling the API**: Log the details for yourself; return a generic message.
-4. **A) A function that wraps a handler and returns a new handler, adding behaviour such as logging or error handling**: Middleware composes: withErrors(withLogging(router)).
+1. **B) A Request, and a Response (or a promise of one)**: The same classes fetch uses, which is why one handler runs on many platforms.
+2. **C) 400 Bad Request**: 400 means the client's input is invalid.
+3. **B) Error details can reveal secrets or internals to anyone calling the API**: Log the details for yourself; return a generic message.
+4. **C) A function that wraps a handler and returns a new handler, adding behaviour such as logging or error handling**: Middleware composes: withErrors(withLogging(router)).
 
 </details>
 

@@ -627,35 +627,35 @@ gh run list
 ## Quick quiz
 
 1. What makes a good cache key?
-   - A) A fingerprint of the files the cached folder depends on, like hashFiles('package-lock.json')
-   - B) The current date
-   - C) The run ID
-   - D) A fixed string like "cache"
+   - A) The current date
+   - B) A fixed string like "cache"
+   - C) A fingerprint of the files the cached folder depends on, like hashFiles('package-lock.json')
+   - D) The run ID
 
 2. When should you use a reusable workflow rather than a composite action?
-   - A) To share whole jobs, with their runners, across workflows or repositories
-   - B) To share two or three steps inside a job
-   - C) Never; they are the same thing
+   - A) Never; they are the same thing
+   - B) To share whole jobs, with their runners, across workflows or repositories
+   - C) To share two or three steps inside a job
    - D) Only for scheduled workflows
 
 3. A schedule says cron: "0 9 * * *" with no timezone. When does it run?
-   - A) Every day at 09:00 UTC, possibly a little later when GitHub is busy
-   - B) Every day at 09:00 in the repository owner's timezone
-   - C) Every 9 minutes
-   - D) At 09:00 on the 9th of every month
+   - A) Every day at 09:00 in the repository owner's timezone
+   - B) Every 9 minutes
+   - C) At 09:00 on the 9th of every month
+   - D) Every day at 09:00 UTC, possibly a little later when GitHub is busy
 
 4. Why not use self-hosted runners for a public repository?
    - A) Anyone's pull request could run code on your machine
-   - B) Self-hosted runners can't run Linux
+   - B) Public repositories can't use runners
    - C) They're more expensive than hosted runners
-   - D) Public repositories can't use runners
+   - D) Self-hosted runners can't run Linux
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) A fingerprint of the files the cached folder depends on, like hashFiles('package-lock.json')**: When the lockfile changes the key changes, so a stale cache is never restored; a fixed key would restore stale files forever.
-2. **A) To share whole jobs, with their runners, across workflows or repositories**: Reusable workflows are called as jobs; composite actions are used as steps.
-3. **A) Every day at 09:00 UTC, possibly a little later when GitHub is busy**: Cron schedules run in UTC unless a timezone is given, and scheduled runs can be delayed at busy times.
+1. **C) A fingerprint of the files the cached folder depends on, like hashFiles('package-lock.json')**: When the lockfile changes the key changes, so a stale cache is never restored; a fixed key would restore stale files forever.
+2. **B) To share whole jobs, with their runners, across workflows or repositories**: Reusable workflows are called as jobs; composite actions are used as steps.
+3. **D) Every day at 09:00 UTC, possibly a little later when GitHub is busy**: Cron schedules run in UTC unless a timezone is given, and scheduled runs can be delayed at busy times.
 4. **A) Anyone's pull request could run code on your machine**: Fork pull requests run untrusted code; on a self-hosted runner it would run inside your network.
 
 </details>

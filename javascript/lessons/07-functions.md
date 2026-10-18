@@ -297,32 +297,32 @@ console.log(repeatCall(() => "hi", 2));
 ## Quick quiz
 
 1. What does const f = (n) => { n * 2; }; return?
-   - A) undefined, because braces need an explicit return
-   - B) n * 2
-   - C) An error
+   - A) n * 2
+   - B) An error
+   - C) undefined, because braces need an explicit return
 
 2. A function is called with fewer arguments than it has parameters. What happens?
    - A) The missing parameters are undefined (or their default value)
-   - B) A TypeError is thrown
-   - C) JavaScript refuses to run the code
+   - B) JavaScript refuses to run the code
+   - C) A TypeError is thrown
 
 3. Which can be called before the line where it's defined?
-   - A) A function declaration: function f() {}
+   - A) let f = function () {}
    - B) const f = () => {}
-   - C) let f = function () {}
+   - C) A function declaration: function f() {}
 
 4. What does ...prices in a parameter list do?
-   - A) Collects the remaining arguments into an array
-   - B) Copies an object
-   - C) Makes the parameter optional
+   - A) Makes the parameter optional
+   - B) Collects the remaining arguments into an array
+   - C) Copies an object
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) undefined, because braces need an explicit return**: Without braces, (n) => n * 2 returns the value.
+1. **C) undefined, because braces need an explicit return**: Without braces, (n) => n * 2 returns the value.
 2. **A) The missing parameters are undefined (or their default value)**: JavaScript doesn't check argument counts.
-3. **A) A function declaration: function f() {}**: Declarations are hoisted.
-4. **A) Collects the remaining arguments into an array**: Rest parameters gather arguments; spread does the opposite.
+3. **C) A function declaration: function f() {}**: Declarations are hoisted.
+4. **B) Collects the remaining arguments into an array**: Rest parameters gather arguments; spread does the opposite.
 
 </details>
 

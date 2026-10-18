@@ -196,20 +196,20 @@ print("tests passed")
 ## Quick quiz
 
 1. What's the first thing to do when you see an error?
-   - A) Read the last line of the traceback
-   - B) Rewrite the function from scratch
-   - C) Add try/except around everything
+   - A) Rewrite the function from scratch
+   - B) Add try/except around everything
+   - C) Read the last line of the traceback
 
 2. Why shouldn't you use `assert` to validate user input?
    - A) It's too slow
-   - B) Asserts can be disabled when Python runs with optimisation
-   - C) It only works with numbers
+   - B) It only works with numbers
+   - C) Asserts can be disabled when Python runs with optimisation
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Read the last line of the traceback**: The message usually tells you exactly what went wrong and where.
-2. **B) Asserts can be disabled when Python runs with optimisation**: With `python -O`, asserts are skipped. Raise ValueError for real validation.
+1. **C) Read the last line of the traceback**: The message usually tells you exactly what went wrong and where.
+2. **C) Asserts can be disabled when Python runs with optimisation**: With `python -O`, asserts are skipped. Raise ValueError for real validation.
 
 </details>
 

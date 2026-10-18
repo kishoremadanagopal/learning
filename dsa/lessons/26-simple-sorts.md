@@ -342,31 +342,31 @@ print(sort_colours([2, 0, 2, 1, 1, 0]))
 
 1. Which sort is fastest on a nearly sorted list?
    - A) Insertion sort: each item only moves a few places, so it's close to O(n)
-   - B) Selection sort
-   - C) They're all O(n²) on any input
+   - B) They're all O(n²) on any input
+   - C) Selection sort
 
 2. What does "stable" mean for a sorting algorithm?
-   - A) Items that compare equal keep their original relative order
-   - B) It never crashes
-   - C) It uses O(1) extra memory
+   - A) It uses O(1) extra memory
+   - B) Items that compare equal keep their original relative order
+   - C) It never crashes
 
 3. Why isn't selection sort stable?
-   - A) Its long-distance swap can move an item past another item equal to it
+   - A) It uses recursion
    - B) It sorts in reverse
-   - C) It uses recursion
+   - C) Its long-distance swap can move an item past another item equal to it
 
 4. In the Dutch flag partition, why doesn't mid move after swapping with high?
-   - A) The item swapped in from the end hasn't been checked yet
-   - B) Because mid always stays at 0
+   - A) Because mid always stays at 0
+   - B) The item swapped in from the end hasn't been checked yet
    - C) It would skip a 1
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Insertion sort: each item only moves a few places, so it's close to O(n)**: Insertion sort stops shifting as soon as the item is in place.
-2. **A) Items that compare equal keep their original relative order**: Stability matters when sorting records by one key after another.
-3. **A) Its long-distance swap can move an item past another item equal to it**: For example [2a, 2b, 1]: swapping 1 with 2a puts 2a after 2b.
-4. **A) The item swapped in from the end hasn't been checked yet**: It could be a 0 or a 2 and still needs to be placed.
+2. **B) Items that compare equal keep their original relative order**: Stability matters when sorting records by one key after another.
+3. **C) Its long-distance swap can move an item past another item equal to it**: For example [2a, 2b, 1]: swapping 1 with 2a puts 2a after 2b.
+4. **B) The item swapped in from the end hasn't been checked yet**: It could be a 0 or a 2 and still needs to be placed.
 
 </details>
 

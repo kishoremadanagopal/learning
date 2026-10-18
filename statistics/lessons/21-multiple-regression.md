@@ -221,24 +221,24 @@ print(round(predicted, 1))
 ## Quick quiz
 
 1. In a multiple regression, the coefficient for age is -0.9. What does it mean?
-   - A) Each extra year of age lowers the predicted price by about 0.9, holding the other variables fixed
-   - B) Age explains 90% of the price
-   - C) Older homes are always cheaper
+   - A) Age explains 90% of the price
+   - B) Older homes are always cheaper
+   - C) Each extra year of age lowers the predicted price by about 0.9, holding the other variables fixed
 
 2. Why prefer adjusted R² when comparing models with different numbers of predictors?
-   - A) It's always higher
+   - A) It's easier to calculate
    - B) Plain R² rises with any added variable, even noise; adjusted R² penalises extras
-   - C) It's easier to calculate
+   - C) It's always higher
 
 3. What's multicollinearity?
-   - A) Too many rows
+   - A) Residuals that form a curve
    - B) Predictors that are strongly correlated with each other, making their separate effects hard to estimate
-   - C) Residuals that form a curve
+   - C) Too many rows
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Each extra year of age lowers the predicted price by about 0.9, holding the other variables fixed**: Coefficients are effects with the other predictors held constant.
+1. **C) Each extra year of age lowers the predicted price by about 0.9, holding the other variables fixed**: Coefficients are effects with the other predictors held constant.
 2. **B) Plain R² rises with any added variable, even noise; adjusted R² penalises extras**: Adjusted R² only increases when a variable improves the model more than chance would.
 3. **B) Predictors that are strongly correlated with each other, making their separate effects hard to estimate**: Correlated predictors give unstable coefficients with wide intervals.
 

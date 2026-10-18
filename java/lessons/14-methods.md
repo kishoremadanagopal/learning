@@ -243,21 +243,21 @@ public class Main {
    - C) null
 
 2. Why does "missing return statement" appear?
-   - A) Some path through a non-void method doesn't return a value
-   - B) The method has too many returns
-   - C) `return` must be the first line
+   - A) `return` must be the first line
+   - B) Some path through a non-void method doesn't return a value
+   - C) The method has too many returns
 
 3. In `int area(int w, int h)`, what are `w` and `h`?
-   - A) Parameters
+   - A) Return types
    - B) Arguments
-   - C) Return types
+   - C) Parameters
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Nothing**: `void` means the method doesn't hand back a value.
-2. **A) Some path through a non-void method doesn't return a value**: Every possible path must end in a `return` (or throw an exception).
-3. **A) Parameters**: Parameters are in the definition; arguments are the values in a call.
+2. **B) Some path through a non-void method doesn't return a value**: Every possible path must end in a `return` (or throw an exception).
+3. **C) Parameters**: Parameters are in the definition; arguments are the values in a call.
 
 </details>
 

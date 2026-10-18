@@ -410,35 +410,35 @@ git log --oneline --graph
 ## Quick quiz
 
 1. What is origin/main?
-   - A) Your repository's record of where main was on the remote origin when you last fetched or pushed
-   - B) The main branch on GitHub itself, updated live
+   - A) The main branch on GitHub itself, updated live
+   - B) The first commit of the repository
    - C) A backup copy of your own main
-   - D) The first commit of the repository
+   - D) Your repository's record of where main was on the remote origin when you last fetched or pushed
 
 2. What's the difference between git fetch and git pull?
-   - A) fetch only downloads and updates origin/main; pull also integrates it into your branch
-   - B) They're the same command
-   - C) fetch uploads your commits; pull downloads others'
-   - D) pull only works on new branches
+   - A) pull only works on new branches
+   - B) fetch uploads your commits; pull downloads others'
+   - C) fetch only downloads and updates origin/main; pull also integrates it into your branch
+   - D) They're the same command
 
 3. What does -u do in git push -u origin add-helmets?
-   - A) Sets origin/add-helmets as the branch's upstream, so later plain git push and git pull work
-   - B) Uploads untracked files
-   - C) Forces the push
-   - D) Updates every branch
+   - A) Forces the push
+   - B) Updates every branch
+   - C) Uploads untracked files
+   - D) Sets origin/add-helmets as the branch's upstream, so later plain git push and git pull work
 
 4. Your push is rejected with "fetch first". Why?
    - A) The remote branch has commits you don't have yet
-   - B) Your password is wrong
+   - B) You need to commit first
    - C) The repository is private
-   - D) You need to commit first
+   - D) Your password is wrong
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Your repository's record of where main was on the remote origin when you last fetched or pushed**: It only moves when you talk to the remote (fetch, pull or push).
-2. **A) fetch only downloads and updates origin/main; pull also integrates it into your branch**: Fetching is always safe; pulling changes your branch and files.
-3. **A) Sets origin/add-helmets as the branch's upstream, so later plain git push and git pull work**: It's short for --set-upstream.
+1. **D) Your repository's record of where main was on the remote origin when you last fetched or pushed**: It only moves when you talk to the remote (fetch, pull or push).
+2. **C) fetch only downloads and updates origin/main; pull also integrates it into your branch**: Fetching is always safe; pulling changes your branch and files.
+3. **D) Sets origin/add-helmets as the branch's upstream, so later plain git push and git pull work**: It's short for --set-upstream.
 4. **A) The remote branch has commits you don't have yet**: Git won't overwrite other people's commits; integrate them first, then push.
 
 </details>

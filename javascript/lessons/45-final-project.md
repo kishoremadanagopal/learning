@@ -580,9 +580,9 @@ for (const question of ["How much is the bell?", "Please order a dozen inner tub
 ## Quick quiz
 
 1. Why validate the model's tool input against the schema yourself?
-   - A) Model output is outside data and can break the schema, so check it before acting
-   - B) The API never checks anything
-   - C) Validation makes the model faster
+   - A) The API never checks anything
+   - B) Validation makes the model faster
+   - C) Model output is outside data and can break the schema, so check it before acting
 
 2. How does the assistant understand the answer "Ada" to its question?
    - A) The history sent with the request contains the earlier turns
@@ -595,17 +595,17 @@ for (const question of ["How much is the bell?", "Please order a dozen inner tub
    - C) It makes the error shorter
 
 4. What should change before this assistant goes live with a real model?
-   - A) The key moves to a server, orders need the user's confirmation, and calls are logged
-   - B) Nothing; it's ready
-   - C) Remove the step limit
+   - A) Remove the step limit
+   - B) The key moves to a server, orders need the user's confirmation, and calls are logged
+   - C) Nothing; it's ready
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Model output is outside data and can break the schema, so check it before acting**: Send problems back as is_error results; the model can fix them.
+1. **C) Model output is outside data and can break the schema, so check it before acting**: Send problems back as is_error results; the model can fix them.
 2. **A) The history sent with the request contains the earlier turns**: The API is stateless; your code keeps and sends the history.
 3. **A) So the model can fix everything in one more call**: Each round trip costs time and tokens.
-4. **A) The key moves to a server, orders need the user's confirmation, and calls are logged**: Real models and real orders need these safeguards.
+4. **B) The key moves to a server, orders need the user's confirmation, and calls are logged**: Real models and real orders need these safeguards.
 
 </details>
 

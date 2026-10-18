@@ -358,27 +358,27 @@ console.log(firstSuccess([loadFromCache, loadFromServer]));
    - C) Only when no error was thrown
 
 2. Why rethrow errors you don't recognise in a catch block?
-   - A) Swallowing unexpected errors hides bugs
-   - B) JavaScript requires every catch to rethrow
+   - A) JavaScript requires every catch to rethrow
+   - B) Swallowing unexpected errors hides bugs
    - C) It makes the code faster
 
 3. What does new Error("Couldn't save", { cause: err }) do?
-   - A) Creates a new error that keeps the original error as its cause
-   - B) Throws err immediately
-   - C) Merges the two messages
+   - A) Merges the two messages
+   - B) Creates a new error that keeps the original error as its cause
+   - C) Throws err immediately
 
 4. Why throw Error objects rather than strings?
-   - A) Error objects carry a name, message and stack trace
+   - A) Strings are slower
    - B) Strings can't be thrown
-   - C) Strings are slower
+   - C) Error objects carry a name, message and stack trace
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Always: after try finishes, after catch, even after a return**: Use it for clean-up.
-2. **A) Swallowing unexpected errors hides bugs**: Handle what you expect; let the rest propagate.
-3. **A) Creates a new error that keeps the original error as its cause**: Causes preserve the low-level detail.
-4. **A) Error objects carry a name, message and stack trace**: throw "oops" works but loses the stack.
+2. **B) Swallowing unexpected errors hides bugs**: Handle what you expect; let the rest propagate.
+3. **B) Creates a new error that keeps the original error as its cause**: Causes preserve the low-level detail.
+4. **C) Error objects carry a name, message and stack trace**: throw "oops" works but loses the stack.
 
 </details>
 

@@ -280,26 +280,26 @@ public class Main {
 ## Quick quiz
 
 1. What's the difference between `thread.start()` and `thread.run()`?
-   - A) `start()` runs the code on a new thread; `run()` runs it on the current thread
-   - B) They are the same
-   - C) `run()` starts two threads
+   - A) `run()` starts two threads
+   - B) `start()` runs the code on a new thread; `run()` runs it on the current thread
+   - C) They are the same
 
 2. Why can `count++` from several threads lose updates?
-   - A) It's a read, an add and a write that can interleave
-   - B) Integers can't be shared
-   - C) Threads can't change static fields
+   - A) Threads can't change static fields
+   - B) It's a read, an add and a write that can interleave
+   - C) Integers can't be shared
 
 3. What should you call when you're done with an ExecutorService?
-   - A) shutdown()
-   - B) stop()
-   - C) Nothing
+   - A) Nothing
+   - B) shutdown()
+   - C) stop()
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) `start()` runs the code on a new thread; `run()` runs it on the current thread**: Only `start()` creates concurrency.
-2. **A) It's a read, an add and a write that can interleave**: Two threads may read the same old value and both write old + 1.
-3. **A) shutdown()**: Otherwise its threads can keep the program running.
+1. **B) `start()` runs the code on a new thread; `run()` runs it on the current thread**: Only `start()` creates concurrency.
+2. **B) It's a read, an add and a write that can interleave**: Two threads may read the same old value and both write old + 1.
+3. **B) shutdown()**: Otherwise its threads can keep the program running.
 
 </details>
 

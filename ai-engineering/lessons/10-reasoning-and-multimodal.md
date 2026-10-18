@@ -305,32 +305,32 @@ for block in blocks:
 ## Quick quiz
 
 1. Why can a reply hit max_tokens before any visible answer appears?
-   - A) max_tokens includes the thinking tokens, which come first
-   - B) Thinking is free but slow
+   - A) Thinking is free but slow
+   - B) max_tokens includes the thinking tokens, which come first
    - C) Images use up max_tokens
 
 2. What does lowering effort change?
    - A) All output: less thinking, shorter answers and fewer tool calls
-   - B) Only the price per token
-   - C) Only the thinking display
+   - B) Only the thinking display
+   - C) Only the price per token
 
 3. Thinking display is set to omitted. What do you pay for?
-   - A) All the thinking tokens the model actually generated
-   - B) Nothing for thinking
-   - C) Only the summary
+   - A) Only the summary
+   - B) All the thinking tokens the model actually generated
+   - C) Nothing for thinking
 
 4. What is a sensible way to ask several questions about one long PDF?
-   - A) Cache the document (prompt caching) or send only the relevant pages
+   - A) Convert it to an image first
    - B) Send it base64-encoded twice for accuracy
-   - C) Convert it to an image first
+   - C) Cache the document (prompt caching) or send only the relevant pages
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) max_tokens includes the thinking tokens, which come first**: Leave room for thinking plus the answer.
+1. **B) max_tokens includes the thinking tokens, which come first**: Leave room for thinking plus the answer.
 2. **A) All output: less thinking, shorter answers and fewer tool calls**: It trades quality for speed and cost across the whole response.
-3. **A) All the thinking tokens the model actually generated**: Display changes what you see, not what you're billed.
-4. **A) Cache the document (prompt caching) or send only the relevant pages**: Each page costs text tokens plus an image, so avoid paying for it repeatedly.
+3. **B) All the thinking tokens the model actually generated**: Display changes what you see, not what you're billed.
+4. **C) Cache the document (prompt caching) or send only the relevant pages**: Each page costs text tokens plus an image, so avoid paying for it repeatedly.
 
 </details>
 

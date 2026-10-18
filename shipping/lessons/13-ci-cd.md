@@ -575,36 +575,36 @@ gh run list
 ## Quick quiz
 
 1. Which describes continuous delivery?
-   - A) Every change that passes the pipeline is ready to release; releasing is a button press
+   - A) Tests run only before a release
    - B) Every change goes to production automatically, with no human step
-   - C) Developers merge into main once a month
-   - D) Tests run only before a release
+   - C) Every change that passes the pipeline is ready to release; releasing is a button press
+   - D) Developers merge into main once a month
 
 2. How does a CI system know a command failed?
-   - A) The command's exit status isn't 0
-   - B) The command printed the word "error"
-   - C) The command took longer than a minute
-   - D) The log has more than 100 lines
+   - A) The command printed the word "error"
+   - B) The log has more than 100 lines
+   - C) The command's exit status isn't 0
+   - D) The command took longer than a minute
 
 3. Where must a workflow file be for GitHub to run it?
    - A) In .github/workflows/ in the repository, on the branch or commit that's pushed
-   - B) Anywhere in the repository, named workflow.yml
-   - C) In the repository's settings on GitHub
-   - D) In ~/.github on your computer
+   - B) In the repository's settings on GitHub
+   - C) In ~/.github on your computer
+   - D) Anywhere in the repository, named workflow.yml
 
 4. What does actions/checkout do?
-   - A) Copies the repository's code onto the runner, so later steps can use it
-   - B) Switches your local branch
+   - A) Switches your local branch
+   - B) Installs Node.js
    - C) Checks the workflow file for errors
-   - D) Installs Node.js
+   - D) Copies the repository's code onto the runner, so later steps can use it
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Every change that passes the pipeline is ready to release; releasing is a button press**: Continuous deployment goes one step further and releases automatically; delivery keeps a human decision.
-2. **A) The command's exit status isn't 0**: Every CI system runs commands and checks their exit status; tools like npm test exit non-zero when a test fails.
+1. **C) Every change that passes the pipeline is ready to release; releasing is a button press**: Continuous deployment goes one step further and releases automatically; delivery keeps a human decision.
+2. **C) The command's exit status isn't 0**: Every CI system runs commands and checks their exit status; tools like npm test exit non-zero when a test fails.
 3. **A) In .github/workflows/ in the repository, on the branch or commit that's pushed**: GitHub reads workflow files from .github/workflows/ in the commit the event refers to.
-4. **A) Copies the repository's code onto the runner, so later steps can use it**: Each job starts on an empty runner; checkout fetches the commit being tested.
+4. **D) Copies the repository's code onto the runner, so later steps can use it**: Each job starts on an empty runner; checkout fetches the commit being tested.
 
 </details>
 

@@ -291,32 +291,32 @@ console.log(formatDuration(125), formatDuration(45), formatDuration(1620), forma
 ## Quick quiz
 
 1. What does new Date(2026, 9, 8) represent?
-   - A) 8 October 2026, because months start at 0
-   - B) 9 August 2026
-   - C) 8 September 2026
+   - A) 9 August 2026
+   - B) 8 September 2026
+   - C) 8 October 2026, because months start at 0
 
 2. What format should dates use in JSON and APIs?
-   - A) ISO 8601, such as 2026-10-08T14:30:00Z
-   - B) 10/08/2026
+   - A) 10/08/2026
+   - B) ISO 8601, such as 2026-10-08T14:30:00Z
    - C) Thursday 8 October
 
 3. Why not add 86,400,000 ms for "tomorrow" in local time?
    - A) Days around daylight-saving changes are 23 or 25 hours long
-   - B) JavaScript doesn't allow adding numbers to timestamps
-   - C) A day is 86,400 ms
+   - B) A day is 86,400 ms
+   - C) JavaScript doesn't allow adding numbers to timestamps
 
 4. Which Temporal type fits a birthday?
-   - A) Temporal.PlainDate
+   - A) Temporal.ZonedDateTime
    - B) Temporal.Instant
-   - C) Temporal.ZonedDateTime
+   - C) Temporal.PlainDate
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) 8 October 2026, because months start at 0**: Months in Date are 0–11; Temporal uses 1–12.
-2. **A) ISO 8601, such as 2026-10-08T14:30:00Z**: It's unambiguous and sorts correctly as text.
+1. **C) 8 October 2026, because months start at 0**: Months in Date are 0–11; Temporal uses 1–12.
+2. **B) ISO 8601, such as 2026-10-08T14:30:00Z**: It's unambiguous and sorts correctly as text.
 3. **A) Days around daylight-saving changes are 23 or 25 hours long**: Use calendar arithmetic (Temporal) or UTC.
-4. **A) Temporal.PlainDate**: A calendar date has no time or time zone.
+4. **C) Temporal.PlainDate**: A calendar date has no time or time zone.
 
 </details>
 

@@ -354,31 +354,31 @@ print(edit_distance("intention", "execution"))
 
 1. In the grid "unique paths" DP, where does each cell's value come from?
    - A) The cell above plus the cell to the left
-   - B) The cell below plus the cell to the right
-   - C) Only the diagonal neighbour
+   - B) Only the diagonal neighbour
+   - C) The cell below plus the cell to the right
 
 2. In the LCS table, what happens when a[i−1] == b[j−1]?
-   - A) dp[i][j] = dp[i−1][j−1] + 1
+   - A) dp[i][j] = 0
    - B) dp[i][j] = max(dp[i−1][j], dp[i][j−1])
-   - C) dp[i][j] = 0
+   - C) dp[i][j] = dp[i−1][j−1] + 1
 
 3. Which three neighbours does edit distance compare when the last characters differ?
-   - A) Replace (diagonal), delete (above) and insert (left)
+   - A) The cells two steps away
    - B) Only the diagonal
-   - C) The cells two steps away
+   - C) Replace (diagonal), delete (above) and insert (left)
 
 4. Two-string DP tables need O(m × n) memory. How can you usually reduce that?
-   - A) Keep only the previous row (and the current one)
-   - B) Sort the strings first
-   - C) Use recursion instead
+   - A) Sort the strings first
+   - B) Use recursion instead
+   - C) Keep only the previous row (and the current one)
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) The cell above plus the cell to the left**: Moves are right or down, so each cell is entered from above or from the left.
-2. **A) dp[i][j] = dp[i−1][j−1] + 1**: A shared last character extends the LCS of the shorter prefixes.
-3. **A) Replace (diagonal), delete (above) and insert (left)**: Each corresponds to the last edit made.
-4. **A) Keep only the previous row (and the current one)**: Each row depends only on the row above it.
+2. **C) dp[i][j] = dp[i−1][j−1] + 1**: A shared last character extends the LCS of the shorter prefixes.
+3. **C) Replace (diagonal), delete (above) and insert (left)**: Each corresponds to the last edit made.
+4. **C) Keep only the previous row (and the current one)**: Each row depends only on the row above it.
 
 </details>
 

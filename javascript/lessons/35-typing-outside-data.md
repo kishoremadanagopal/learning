@@ -373,19 +373,19 @@ console.log(missing.ok ? missing.value : missing.error);
 ## Quick quiz
 
 1. What type does res.json() return?
-   - A) Promise<any>
-   - B) Promise<unknown>
-   - C) The type you annotate the variable with, checked at runtime
+   - A) Promise<unknown>
+   - B) The type you annotate the variable with, checked at runtime
+   - C) Promise<any>
 
 2. In strict mode, what is the type of err in catch (err)?
-   - A) unknown, because anything can be thrown
-   - B) Error
-   - C) any
+   - A) Error
+   - B) any
+   - C) unknown, because anything can be thrown
 
 3. What does function isProduct(v: unknown): v is Product promise?
-   - A) When it returns true, v is a Product, so callers can use it as one
+   - A) It throws if v isn't a Product
    - B) TypeScript will check v against Product at runtime
-   - C) It throws if v isn't a Product
+   - C) When it returns true, v is a Product, so callers can use it as one
 
 4. Why give an LLM a JSON Schema for a tool's arguments?
    - A) It describes the JSON the model should produce, which you can then validate
@@ -395,9 +395,9 @@ console.log(missing.ok ? missing.value : missing.error);
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Promise<any>**: It's any, so annotating the result checks nothing.
-2. **A) unknown, because anything can be thrown**: Narrow it, for example with err instanceof Error.
-3. **A) When it returns true, v is a Product, so callers can use it as one**: TypeScript trusts the guard; your code must really check.
+1. **C) Promise<any>**: It's any, so annotating the result checks nothing.
+2. **C) unknown, because anything can be thrown**: Narrow it, for example with err instanceof Error.
+3. **C) When it returns true, v is a Product, so callers can use it as one**: TypeScript trusts the guard; your code must really check.
 4. **A) It describes the JSON the model should produce, which you can then validate**: The schema describes the data; your code still checks the reply before using it.
 
 </details>

@@ -313,9 +313,9 @@ try {
 ## Quick quiz
 
 1. fetch(url) gets a 404 response. What happens?
-   - A) The promise fulfils with a Response whose ok is false
-   - B) The promise rejects
-   - C) fetch retries automatically
+   - A) fetch retries automatically
+   - B) The promise fulfils with a Response whose ok is false
+   - C) The promise rejects
 
 2. How should you add customer=Ada & Co to a URL's query string?
    - A) url.searchParams.set("customer", "Ada & Co")
@@ -323,22 +323,22 @@ try {
    - C) encodeURI on the whole URL
 
 3. Why must the body of a JSON POST go through JSON.stringify?
-   - A) The body must be text (or another body type), not a plain object
-   - B) fetch can't send objects over HTTPS
+   - A) fetch can't send objects over HTTPS
+   - B) The body must be text (or another body type), not a plain object
    - C) It encrypts the data
 
 4. Where should a secret API key live?
-   - A) On your server, never in front-end code
-   - B) In a const in the browser code
-   - C) In a hidden HTML field
+   - A) In a hidden HTML field
+   - B) On your server, never in front-end code
+   - C) In a const in the browser code
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The promise fulfils with a Response whose ok is false**: fetch only rejects on network failures; check res.ok.
+1. **B) The promise fulfils with a Response whose ok is false**: fetch only rejects on network failures; check res.ok.
 2. **A) url.searchParams.set("customer", "Ada & Co")**: URLSearchParams encodes special characters correctly.
-3. **A) The body must be text (or another body type), not a plain object**: Also set Content-Type: application/json.
-4. **A) On your server, never in front-end code**: Anything sent to the browser can be read by anyone.
+3. **B) The body must be text (or another body type), not a plain object**: Also set Content-Type: application/json.
+4. **B) On your server, never in front-end code**: Anything sent to the browser can be read by anyone.
 
 </details>
 

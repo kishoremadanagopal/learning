@@ -189,9 +189,9 @@ print(X.columns.tolist())
 ## Quick quiz
 
 1. 90% of emails are not spam. A model is 90% accurate. What do you know?
-   - A) It's an excellent model
-   - B) It may have learned nothing: always saying "not spam" also scores 90%
-   - C) It's overfitting
+   - A) It's overfitting
+   - B) It's an excellent model
+   - C) It may have learned nothing: always saying "not spam" also scores 90%
 
 2. What does DummyRegressor() predict by default?
    - A) Zero for every row
@@ -204,14 +204,14 @@ print(X.columns.tolist())
    - C) It makes training slower
 
 4. Which step should come before you study patterns in the data closely?
-   - A) Deploying the model
+   - A) Tuning hyperparameters
    - B) Splitting off the test set
-   - C) Tuning hyperparameters
+   - C) Deploying the model
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) It may have learned nothing: always saying "not spam" also scores 90%**: Compare with a baseline. A DummyClassifier would score 90% here.
+1. **C) It may have learned nothing: always saying "not spam" also scores 90%**: Compare with a baseline. A DummyClassifier would score 90% here.
 2. **B) The average of the training labels, for every row**: It's the simplest sensible guess, so a real model must beat it.
 3. **A) An ID is just a name; any pattern in it is accidental and won't hold for new customers**: IDs carry no real information about behaviour, so they only invite fake patterns.
 4. **B) Splitting off the test set**: Split first, so nothing you learn from the data (even by eye) leaks from the test set into your choices.

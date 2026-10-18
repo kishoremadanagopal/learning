@@ -127,20 +127,20 @@ print(distance((0, 0), (3, 4)))
 ## Quick quiz
 
 1. Which creates a tuple with one item?
-   - A) `(5)`
-   - B) `(5,)`
-   - C) `tuple 5`
+   - A) `tuple 5`
+   - B) `(5)`
+   - C) `(5,)`
 
 2. What is `b` after `a, *b = [1, 2, 3]`?
-   - A) 2
-   - B) [2, 3]
-   - C) (2, 3)
+   - A) [2, 3]
+   - B) (2, 3)
+   - C) 2
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) `(5,)`**: `(5)` is just the number 5 in parentheses. The comma makes it a tuple.
-2. **B) [2, 3]**: A starred target always collects the remaining items into a list.
+1. **C) `(5,)`**: `(5)` is just the number 5 in parentheses. The comma makes it a tuple.
+2. **A) [2, 3]**: A starred target always collects the remaining items into a list.
 
 </details>
 

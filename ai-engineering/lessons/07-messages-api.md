@@ -334,31 +334,31 @@ print(trim_history(msgs, 16))
 
 1. What does it mean that the Messages API is stateless?
    - A) It remembers nothing between calls, so you must send the conversation history each time
-   - B) It can't return text
-   - C) It only works once per day
+   - B) It only works once per day
+   - C) It can't return text
 
 2. A reply has stop_reason "max_tokens". What happened?
-   - A) The reply was cut off at your max_tokens limit
+   - A) The model wants to call a tool
    - B) The model finished naturally
-   - C) The model wants to call a tool
+   - C) The reply was cut off at your max_tokens limit
 
 3. Why shouldn't you read only response.content[0].text?
-   - A) The first block may be thinking or a tool call, and later blocks may hold more text
-   - B) content is always empty
-   - C) The text is in usage instead
+   - A) The text is in usage instead
+   - B) The first block may be thinking or a tool call, and later blocks may hold more text
+   - C) content is always empty
 
 4. Why do long chats get more expensive per message?
-   - A) Every request resends the whole history, so input tokens grow with each turn
-   - B) The model charges more after ten messages
-   - C) Responses get longer automatically
+   - A) Responses get longer automatically
+   - B) Every request resends the whole history, so input tokens grow with each turn
+   - C) The model charges more after ten messages
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) It remembers nothing between calls, so you must send the conversation history each time**: Your application stores and resends the history.
-2. **A) The reply was cut off at your max_tokens limit**: Raise the limit, or ask the model to continue.
-3. **A) The first block may be thinking or a tool call, and later blocks may hold more text**: Loop over the blocks and filter by type.
-4. **A) Every request resends the whole history, so input tokens grow with each turn**: Trimming, summarising and caching keep it under control.
+2. **C) The reply was cut off at your max_tokens limit**: Raise the limit, or ask the model to continue.
+3. **B) The first block may be thinking or a tool call, and later blocks may hold more text**: Loop over the blocks and filter by type.
+4. **B) Every request resends the whole history, so input tokens grow with each turn**: Trimming, summarising and caching keep it under control.
 
 </details>
 

@@ -154,9 +154,9 @@ print(passed)
 ## Quick quiz
 
 1. What is `[x * 2 for x in range(3)]`?
-   - A) [0, 2, 4]
+   - A) [0, 1, 2, 0, 1, 2]
    - B) [2, 4, 6]
-   - C) [0, 1, 2, 0, 1, 2]
+   - C) [0, 2, 4]
 
 2. Where does a filtering `if` go in a list comprehension?
    - A) At the start
@@ -166,7 +166,7 @@ print(passed)
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) [0, 2, 4]**: range(3) gives 0, 1 and 2, each doubled.
+1. **C) [0, 2, 4]**: range(3) gives 0, 1 and 2, each doubled.
 2. **B) At the end**: `[x for x in items if condition]`. A conditional *expression* (`a if c else b`) goes at the start instead.
 
 </details>

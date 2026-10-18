@@ -359,8 +359,8 @@ print(ship_capacity([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5))
 ## Quick quiz
 
 1. Binary search on the answer requires the yes/no test to be:
-   - A) Monotonic: once it's yes for some value, it's yes for every bigger value (or the reverse)
-   - B) Fast, but it can flip back and forth
+   - A) Fast, but it can flip back and forth
+   - B) Monotonic: once it's yes for some value, it's yes for every bigger value (or the reverse)
    - C) Based on a sorted list
 
 2. In the ship problem, why is the lower bound max(weights)?
@@ -374,17 +374,17 @@ print(ship_capacity([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5))
    - C) It doesn't matter
 
 4. Which question suggests binary search on the answer?
-   - A) "What is the minimum speed that finishes all the work within 8 hours?"
-   - B) "Print every permutation of a string"
+   - A) "Print every permutation of a string"
+   - B) "What is the minimum speed that finishes all the work within 8 hours?"
    - C) "Count the words in a sentence"
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Monotonic: once it's yes for some value, it's yes for every bigger value (or the reverse)**: A single boundary between no and yes is what binary search finds.
+1. **B) Monotonic: once it's yes for some value, it's yes for every bigger value (or the reverse)**: A single boundary between no and yes is what binary search finds.
 2. **A) Any smaller capacity can't carry the heaviest package at all**: The search range must contain the answer and only sensible candidates.
 3. **A) (lo + hi + 1) // 2, rounding up**: Rounding down with lo = mid can leave the range unchanged forever when lo and hi are neighbours.
-4. **A) "What is the minimum speed that finishes all the work within 8 hours?"**: A minimum or maximum value with an easy feasibility check is the classic signal.
+4. **B) "What is the minimum speed that finishes all the work within 8 hours?"**: A minimum or maximum value with an easy feasibility check is the classic signal.
 
 </details>
 

@@ -247,26 +247,26 @@ public class Main {
 ## Quick quiz
 
 1. What does `super(name)` do in a constructor?
-   - A) Runs the parent class's constructor
+   - A) Calls the overridden method
    - B) Creates a second object
-   - C) Calls the overridden method
+   - C) Runs the parent class's constructor
 
 2. How many classes can a Java class extend directly?
    - A) One
-   - B) Two
-   - C) Any number
+   - B) Any number
+   - C) Two
 
 3. Why write `@Override`?
-   - A) The compiler checks that a parent method is really being overridden
+   - A) It's required for every method
    - B) It makes the method faster
-   - C) It's required for every method
+   - C) The compiler checks that a parent method is really being overridden
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Runs the parent class's constructor**: It lets the parent initialise its part of the object; it must come first.
+1. **C) Runs the parent class's constructor**: It lets the parent initialise its part of the object; it must come first.
 2. **A) One**: Java has single inheritance for classes. Interfaces fill the gap.
-3. **A) The compiler checks that a parent method is really being overridden**: A misspelled method name becomes a compile error instead of a silent bug.
+3. **C) The compiler checks that a parent method is really being overridden**: A misspelled method name becomes a compile error instead of a silent bug.
 
 </details>
 

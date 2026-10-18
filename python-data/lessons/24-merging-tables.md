@@ -223,12 +223,12 @@ print(profit_by_product)
 
 1. An order's customer_id isn't in the customers table. What happens in an inner join?
    - A) The order is dropped
-   - B) It's kept with missing customer details
-   - C) An error is raised
+   - B) An error is raised
+   - C) It's kept with missing customer details
 
 2. What does `indicator=True` add?
-   - A) A row count
-   - B) A `_merge` column showing whether each row matched
+   - A) A `_merge` column showing whether each row matched
+   - B) A row count
    - C) An index
 
 3. After a merge you have far more rows than before. What's the likely cause?
@@ -240,7 +240,7 @@ print(profit_by_product)
 <summary>Quiz answers</summary>
 
 1. **A) The order is dropped**: An inner join only keeps rows that match in both tables. Use `how="left"` to keep every order.
-2. **B) A `_merge` column showing whether each row matched**: `_merge` is `both`, `left_only` or `right_only`, which makes unmatched rows easy to find.
+2. **A) A `_merge` column showing whether each row matched**: `_merge` is `both`, `left_only` or `right_only`, which makes unmatched rows easy to find.
 3. **B) The key repeats in both tables, so matches multiply**: Each left row pairs with every matching right row. Check keys are unique where they should be, or use `validate=`.
 
 </details>

@@ -344,9 +344,9 @@ print(wait_seconds(1), wait_seconds(4), wait_seconds(2, retry_after=10))
 ## Quick quiz
 
 1. What is the main benefit of streaming a response?
-   - A) Users see the answer appear immediately, and long generations avoid network timeouts
+   - A) It halves the cost
    - B) It makes the model smarter
-   - C) It halves the cost
+   - C) Users see the answer appear immediately, and long generations avoid network timeouts
 
 2. Which error should NOT be retried?
    - A) 400 invalid_request_error
@@ -354,21 +354,21 @@ print(wait_seconds(1), wait_seconds(4), wait_seconds(2, retry_after=10))
    - C) 529 overloaded_error
 
 3. Why add jitter to exponential backoff?
-   - A) So many clients don't all retry at exactly the same moment
-   - B) To make retries faster
+   - A) To make retries faster
+   - B) So many clients don't all retry at exactly the same moment
    - C) To make the delays shorter than the server asked
 
 4. What should you log for every API call to help debugging later?
    - A) The request-id from the response
-   - B) The API key
-   - C) Nothing; the provider keeps everything
+   - B) Nothing; the provider keeps everything
+   - C) The API key
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Users see the answer appear immediately, and long generations avoid network timeouts**: The total work is the same; the experience and robustness improve.
+1. **C) Users see the answer appear immediately, and long generations avoid network timeouts**: The total work is the same; the experience and robustness improve.
 2. **A) 400 invalid_request_error**: A malformed request fails the same way every time.
-3. **A) So many clients don't all retry at exactly the same moment**: Randomising the wait spreads retries out.
+3. **B) So many clients don't all retry at exactly the same moment**: Randomising the wait spreads retries out.
 4. **A) The request-id from the response**: Support uses the request ID to find a specific call; never log API keys.
 
 </details>

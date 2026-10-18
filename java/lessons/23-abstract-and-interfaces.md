@@ -199,25 +199,25 @@ public class Main {
 ## Quick quiz
 
 1. Can you create an object with `new` from an abstract class?
-   - A) Yes
-   - B) No
+   - A) No
+   - B) Yes
 
 2. How many interfaces can a class implement?
-   - A) One
-   - B) Any number
-   - C) Two
+   - A) Two
+   - B) One
+   - C) Any number
 
 3. Why must a method implementing an interface method be `public`?
-   - A) Interface methods are implicitly public, and you can't reduce visibility
-   - B) It's a style rule only
-   - C) It doesn't have to be
+   - A) It's a style rule only
+   - B) It doesn't have to be
+   - C) Interface methods are implicitly public, and you can't reduce visibility
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) No**: Abstract classes are partial; only concrete subclasses can be instantiated.
-2. **B) Any number**: `class A implements X, Y, Z` is fine.
-3. **A) Interface methods are implicitly public, and you can't reduce visibility**: An override can't be less visible than the method it implements.
+1. **A) No**: Abstract classes are partial; only concrete subclasses can be instantiated.
+2. **C) Any number**: `class A implements X, Y, Z` is fine.
+3. **C) Interface methods are implicitly public, and you can't reduce visibility**: An override can't be less visible than the method it implements.
 
 </details>
 

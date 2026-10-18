@@ -372,31 +372,31 @@ Two rooms.
 ## Quick quiz
 
 1. When do the closed intervals [a1, b1] and [a2, b2] overlap?
-   - A) When a1 ≤ b2 and a2 ≤ b1
-   - B) When a1 == a2
-   - C) When b1 < a2
+   - A) When a1 == a2
+   - B) When b1 < a2
+   - C) When a1 ≤ b2 and a2 ≤ b1
 
 2. After sorting intervals by start, which merged interval can the next one overlap?
-   - A) Only the last merged interval
+   - A) Only the first
    - B) Any of them
-   - C) Only the first
+   - C) Only the last merged interval
 
 3. In a sweep line for meeting rooms, why must an end event come before a start event at the same time?
-   - A) So a room freed at time t can be reused by a meeting starting at t
-   - B) To keep the list sorted
-   - C) Because ends are more important
+   - A) To keep the list sorted
+   - B) Because ends are more important
+   - C) So a room freed at time t can be reused by a meeting starting at t
 
 4. What does a difference array make cheap?
    - A) Applying many range additions before reading the values once
-   - B) Answering many range-sum queries on fixed data
-   - C) Sorting intervals
+   - B) Sorting intervals
+   - C) Answering many range-sum queries on fixed data
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) When a1 ≤ b2 and a2 ≤ b1**: Each must start before (or when) the other ends.
-2. **A) Only the last merged interval**: Everything earlier ended before the last merged interval began.
-3. **A) So a room freed at time t can be reused by a meeting starting at t**: Sorting (time, change) with −1 for ends puts them first automatically.
+1. **C) When a1 ≤ b2 and a2 ≤ b1**: Each must start before (or when) the other ends.
+2. **C) Only the last merged interval**: Everything earlier ended before the last merged interval began.
+3. **C) So a room freed at time t can be reused by a meeting starting at t**: Sorting (time, change) with −1 for ends puts them first automatically.
 4. **A) Applying many range additions before reading the values once**: Each update touches two cells; one prefix-sum pass rebuilds the values.
 
 </details>

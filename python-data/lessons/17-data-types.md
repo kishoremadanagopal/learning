@@ -199,14 +199,14 @@ print(bad)
 ## Quick quiz
 
 1. Why did `salary` load as text?
-   - A) CSV files can't hold numbers
-   - B) Some values contain `$` and commas, so pandas can't read them as numbers
+   - A) Some values contain `$` and commas, so pandas can't read them as numbers
+   - B) CSV files can't hold numbers
    - C) pandas always reads money as text
 
 2. What does `pd.to_numeric(s, errors="coerce")` do with `"eight"`?
-   - A) Converts it to 8
-   - B) Turns it into a missing value
-   - C) Raises an error
+   - A) Turns it into a missing value
+   - B) Raises an error
+   - C) Converts it to 8
 
 3. Why read postcodes with `dtype={"postcode": str}`?
    - A) To keep leading zeros, since postcodes aren't for maths
@@ -216,8 +216,8 @@ print(bad)
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) Some values contain `$` and commas, so pandas can't read them as numbers**: One unreadable value is enough to make pandas keep the whole column as text.
-2. **B) Turns it into a missing value**: "coerce" replaces anything it can't convert with NaN, so check how many values went missing.
+1. **A) Some values contain `$` and commas, so pandas can't read them as numbers**: One unreadable value is enough to make pandas keep the whole column as text.
+2. **A) Turns it into a missing value**: "coerce" replaces anything it can't convert with NaN, so check how many values went missing.
 3. **A) To keep leading zeros, since postcodes aren't for maths**: As numbers, `02134` becomes `2134`. Codes and IDs should stay text.
 
 </details>

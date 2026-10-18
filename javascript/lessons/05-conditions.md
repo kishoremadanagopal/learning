@@ -323,32 +323,32 @@ console.log(deliveryLabel({}));
 ## Quick quiz
 
 1. Why prefer === over ==?
-   - A) === doesn't convert types, so there are no surprising matches like 0 == ""
-   - B) === is faster to type
-   - C) == doesn't work on strings
+   - A) === is faster to type
+   - B) == doesn't work on strings
+   - C) === doesn't convert types, so there are no surprising matches like 0 == ""
 
 2. Which of these is truthy?
-   - A) "0"
-   - B) 0
+   - A) 0
+   - B) null
    - C) ""
-   - D) null
+   - D) "0"
 
 3. What does 0 ?? 5 evaluate to?
-   - A) 0
+   - A) null
    - B) 5
-   - C) null
+   - C) 0
 
 4. What happens if a switch case has no break or return?
    - A) Execution falls through into the next case
-   - B) JavaScript adds a break automatically
-   - C) It's a syntax error
+   - B) It's a syntax error
+   - C) JavaScript adds a break automatically
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) === doesn't convert types, so there are no surprising matches like 0 == ""**: Use === and !== everywhere.
-2. **A) "0"**: Any non-empty string is truthy, even "0" and "false".
-3. **A) 0**: ?? only falls back for null and undefined.
+1. **C) === doesn't convert types, so there are no surprising matches like 0 == ""**: Use === and !== everywhere.
+2. **D) "0"**: Any non-empty string is truthy, even "0" and "false".
+3. **C) 0**: ?? only falls back for null and undefined.
 4. **A) Execution falls through into the next case**: Return from each case, or add break.
 
 </details>

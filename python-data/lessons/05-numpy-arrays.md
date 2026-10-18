@@ -199,26 +199,26 @@ print(grid_shape)
 ## Quick quiz
 
 1. What does `np.array([1, 2, 3]) * 2` give?
-   - A) `[1, 2, 3, 1, 2, 3]`
-   - B) `[2 4 6]`
-   - C) An error
+   - A) `[2 4 6]`
+   - B) An error
+   - C) `[1, 2, 3, 1, 2, 3]`
 
 2. An array has shape `(4, 6)`. How many numbers does it hold?
-   - A) 10
+   - A) 6
    - B) 24
-   - C) 6
+   - C) 10
 
 3. Why is `np.array([1, 2, 3.5]).dtype` a float type?
-   - A) Every item in an array shares one type, so the whole numbers become floats
-   - B) NumPy always uses floats
+   - A) NumPy always uses floats
+   - B) Every item in an array shares one type, so the whole numbers become floats
    - C) Because the array has three items
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) `[2 4 6]`**: Arrays apply maths to every item. It's lists that repeat themselves when multiplied.
+1. **A) `[2 4 6]`**: Arrays apply maths to every item. It's lists that repeat themselves when multiplied.
 2. **B) 24**: Shape `(4, 6)` means 4 rows and 6 columns, so 4 × 6 = 24 items.
-3. **A) Every item in an array shares one type, so the whole numbers become floats**: An array has a single dtype. One float forces the rest to be stored as floats too.
+3. **B) Every item in an array shares one type, so the whole numbers become floats**: An array has a single dtype. One float forces the rest to be stored as floats too.
 
 </details>
 

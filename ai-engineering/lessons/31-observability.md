@@ -309,14 +309,14 @@ print(trace_summary(spans))
    - C) A user's session
 
 2. Why record the prompt version with every request?
-   - A) To trace a bad answer back to the exact prompt that produced it, and compare versions
+   - A) It reduces cost
    - B) The API requires it
-   - C) It reduces cost
+   - C) To trace a bad answer back to the exact prompt that produced it, and compare versions
 
 3. What should you do with interesting production failures?
-   - A) Turn them into eval cases so they're tested from now on
+   - A) Ignore them unless a user complains twice
    - B) Delete them
-   - C) Ignore them unless a user complains twice
+   - C) Turn them into eval cases so they're tested from now on
 
 4. Why decide what text to store in traces?
    - A) Prompts and responses may contain personal data, which needs redaction, retention limits and access control
@@ -327,8 +327,8 @@ print(trace_summary(spans))
 <summary>Quiz answers</summary>
 
 1. **A) One timed step of a request, such as a model call or a tool call, with a parent and attributes**: A trace is a tree of spans.
-2. **A) To trace a bad answer back to the exact prompt that produced it, and compare versions**: Prompts are code; log which version ran.
-3. **A) Turn them into eval cases so they're tested from now on**: Production traces are the best test data.
+2. **C) To trace a bad answer back to the exact prompt that produced it, and compare versions**: Prompts are code; log which version ran.
+3. **C) Turn them into eval cases so they're tested from now on**: Production traces are the best test data.
 4. **A) Prompts and responses may contain personal data, which needs redaction, retention limits and access control**: Observability and privacy must be designed together.
 
 </details>

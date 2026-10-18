@@ -408,14 +408,14 @@ print(hanoi_moves(2))
 ## Quick quiz
 
 1. What must every recursive function have to avoid running forever?
-   - A) A base case that returns without recursing, reached by making the input smaller each call
-   - B) A global variable
+   - A) A global variable
+   - B) A base case that returns without recursing, reached by making the input smaller each call
    - C) A loop
 
 2. Naive recursive Fibonacci is slow because:
-   - A) It solves the same smaller problems again and again, so the call tree grows exponentially
+   - A) Recursion is always slower than loops by a factor of 1000
    - B) Python can't add large numbers
-   - C) Recursion is always slower than loops by a factor of 1000
+   - C) It solves the same smaller problems again and again, so the call tree grows exponentially
 
 3. What decides the stack space of a recursive function?
    - A) The maximum depth of calls waiting at once
@@ -424,14 +424,14 @@ print(hanoi_moves(2))
 
 4. Why prefer a loop over recursion for walking a 100,000-node linked list in Python?
    - A) The recursion would need 100,000 frames, far past Python's limit of about 1,000
-   - B) Loops give different answers
-   - C) Recursion can't use linked lists
+   - B) Recursion can't use linked lists
+   - C) Loops give different answers
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) A base case that returns without recursing, reached by making the input smaller each call**: Without a base case that every path eventually reaches, the calls never stop (RecursionError in Python).
-2. **A) It solves the same smaller problems again and again, so the call tree grows exponentially**: The recursion tree repeats fib(3), fib(2)... Memoisation removes the repeats.
+1. **B) A base case that returns without recursing, reached by making the input smaller each call**: Without a base case that every path eventually reaches, the calls never stop (RecursionError in Python).
+2. **C) It solves the same smaller problems again and again, so the call tree grows exponentially**: The recursion tree repeats fib(3), fib(2)... Memoisation removes the repeats.
 3. **A) The maximum depth of calls waiting at once**: Only one path of the tree is on the stack at a time.
 4. **A) The recursion would need 100,000 frames, far past Python's limit of about 1,000**: Python has no tail-call optimisation, so deep recursion overflows the call stack.
 

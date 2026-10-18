@@ -183,14 +183,14 @@ print(round(p_b, 4), round(se_b, 4))
 ## Quick quiz
 
 1. The central limit theorem says that, for large samples:
-   - A) The data becomes normal
-   - B) The sample averages are approximately normal
-   - C) Every sample has the same average
+   - A) The sample averages are approximately normal
+   - B) Every sample has the same average
+   - C) The data becomes normal
 
 2. Averages of samples of 100 are more spread out than averages of samples of 25. True or false?
-   - A) True
+   - A) It depends on the data's shape
    - B) False: bigger samples give averages that vary less
-   - C) It depends on the data's shape
+   - C) True
 
 3. Why does the CLT matter so much?
    - A) It lets us use the normal curve to measure uncertainty in averages and proportions
@@ -200,7 +200,7 @@ print(round(p_b, 4), round(se_b, 4))
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) The sample averages are approximately normal**: It's about the distribution of averages, not of the raw data.
+1. **A) The sample averages are approximately normal**: It's about the distribution of averages, not of the raw data.
 2. **B) False: bigger samples give averages that vary less**: The spread of averages is σ / √n, which shrinks as n grows.
 3. **A) It lets us use the normal curve to measure uncertainty in averages and proportions**: Confidence intervals and many tests rest on it.
 

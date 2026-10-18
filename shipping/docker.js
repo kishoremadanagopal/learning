@@ -10,7 +10,7 @@
      actions GitHub Actions uses to build and push images (compose.js)
    Everything finishes instantly with realistic, fixed timings. It's a teaching simulation: real Docker runs Linux
    containers with namespaces and cgroups; this runs JavaScript in your browser. */
-import { installCompose } from "./compose.js?v=11948bf18f";
+import { installCompose } from "./compose.js?v=160af99cac";
 
 export function installDocker(api) {
   const { Shell, MemFS, registerCommand, registeredCommand, NET, addHelpers, tokenize } = api;

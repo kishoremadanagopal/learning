@@ -1239,22 +1239,22 @@ gh run list
 ## Quick quiz
 
 1. What does docker tag shop:1.0 ghcr.io/ada/shop:1.0 do?
-   - A) Gives the existing image a second name; nothing is copied or uploaded
-   - B) Uploads the image to ghcr.io
-   - C) Builds a new image
-   - D) Renames the image and deletes shop:1.0
+   - A) Renames the image and deletes shop:1.0
+   - B) Builds a new image
+   - C) Uploads the image to ghcr.io
+   - D) Gives the existing image a second name; nothing is copied or uploaded
 
 2. Why log in with --password-stdin instead of -p TOKEN?
-   - A) So the token doesn't end up in the shell history or the process list
-   - B) -p doesn't work with ghcr.io
-   - C) --password-stdin encrypts the token on disk
-   - D) It's faster
+   - A) It's faster
+   - B) --password-stdin encrypts the token on disk
+   - C) -p doesn't work with ghcr.io
+   - D) So the token doesn't end up in the shell history or the process list
 
 3. In GitHub Actions, what lets the job push to ghcr.io without a personal token?
-   - A) The GITHUB_TOKEN with permissions: packages: write
-   - B) secrets.CR_PAT
-   - C) actions/checkout
-   - D) Making the repository public
+   - A) Making the repository public
+   - B) actions/checkout
+   - C) secrets.CR_PAT
+   - D) The GITHUB_TOKEN with permissions: packages: write
 
 4. Which tag should a production server run?
    - A) A specific version or digest, so you know exactly what runs and can roll back
@@ -1265,9 +1265,9 @@ gh run list
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Gives the existing image a second name; nothing is copied or uploaded**: Tags are names; docker push uploads.
-2. **A) So the token doesn't end up in the shell history or the process list**: Pipe the token in; Docker still stores it, so use a credential helper.
-3. **A) The GITHUB_TOKEN with permissions: packages: write**: login-action logs in with github.actor and the GITHUB_TOKEN.
+1. **D) Gives the existing image a second name; nothing is copied or uploaded**: Tags are names; docker push uploads.
+2. **D) So the token doesn't end up in the shell history or the process list**: Pipe the token in; Docker still stores it, so use a credential helper.
+3. **D) The GITHUB_TOKEN with permissions: packages: write**: login-action logs in with github.actor and the GITHUB_TOKEN.
 4. **A) A specific version or digest, so you know exactly what runs and can roll back**: latest and branch tags move; versions and digests don't.
 
 </details>

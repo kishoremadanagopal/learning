@@ -155,26 +155,26 @@ print(left, right)
 ## Quick quiz
 
 1. What is the type of `"3.14"`?
-   - A) float
-   - B) str
-   - C) int
+   - A) int
+   - B) float
+   - C) str
 
 2. After `a = 5`, `b = a`, `a = 10`, what is `b`?
-   - A) 5
-   - B) 10
-   - C) An error
+   - A) An error
+   - B) 5
+   - C) 10
 
 3. Which is a valid variable name?
-   - A) `2nd_place`
+   - A) `_total`
    - B) `my-score`
-   - C) `_total`
+   - C) `2nd_place`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) str**: It's in quotes, so it's text. `float("3.14")` would convert it to a number.
-2. **A) 5**: `b = a` makes `b` refer to the value 5. Later pointing `a` at 10 doesn't change what `b` refers to.
-3. **C) `_total`**: Names can start with an underscore. They can't start with a digit, and `-` means subtraction.
+1. **C) str**: It's in quotes, so it's text. `float("3.14")` would convert it to a number.
+2. **B) 5**: `b = a` makes `b` refer to the value 5. Later pointing `a` at 10 doesn't change what `b` refers to.
+3. **A) `_total`**: Names can start with an underscore. They can't start with a digit, and `-` means subtraction.
 
 </details>
 

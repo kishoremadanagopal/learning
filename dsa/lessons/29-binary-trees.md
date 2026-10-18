@@ -489,31 +489,31 @@ print(level_order(build([3, 9, 20, None, None, 15, 7])))
 
 1. Which traversal of a tree visits the node between its left and right subtrees?
    - A) Inorder
-   - B) Preorder
-   - C) Postorder
+   - B) Postorder
+   - C) Preorder
 
 2. What data structure does breadth-first (level-order) traversal use?
-   - A) A queue
-   - B) A stack
-   - C) A hash set
+   - A) A stack
+   - B) A hash set
+   - C) A queue
 
 3. What is the recursion space of a DFS traversal?
    - A) O(h), the height of the tree
-   - B) O(1)
-   - C) O(n²)
+   - B) O(n²)
+   - C) O(1)
 
 4. A binary tree where every level is full except the last, which fills from the left, is called:
-   - A) Complete
-   - B) Full
+   - A) Full
+   - B) Complete
    - C) Degenerate
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Inorder**: In, as in "in between": left, node, right.
-2. **A) A queue**: First in, first out keeps the nodes in level order. DFS uses a stack (or recursion).
+2. **C) A queue**: First in, first out keeps the nodes in level order. DFS uses a stack (or recursion).
 3. **A) O(h), the height of the tree**: One frame per level on the current path: O(log n) when balanced, O(n) for a chain.
-4. **A) Complete**: Heaps are complete binary trees, which is why they fit neatly in an array.
+4. **B) Complete**: Heaps are complete binary trees, which is why they fit neatly in an array.
 
 </details>
 

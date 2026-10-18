@@ -156,25 +156,25 @@ print(is_palindrome("A man, a plan, a canal: Panama!"))
 ## Quick quiz
 
 1. What does `"a,b,c".split(",")` return?
-   - A) ['a', 'b', 'c']
-   - B) 'abc'
+   - A) 'abc'
+   - B) ['a', 'b', 'c']
    - C) ('a', 'b', 'c')
 
 2. What does `"-".join(["x", "y", "z"])` return?
-   - A) ['x-y-z']
-   - B) 'x-y-z'
-   - C) 'x-y-z-'
+   - A) 'x-y-z-'
+   - B) ['x-y-z']
+   - C) 'x-y-z'
 
 3. After `s = "hi"`, `s.upper()`, what is `s`?
-   - A) 'hi'
-   - B) 'HI'
+   - A) 'HI'
+   - B) 'hi'
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) ['a', 'b', 'c']**: `split` always returns a list of strings.
-2. **B) 'x-y-z'**: The separator goes between items only.
-3. **A) 'hi'**: String methods return new strings. To keep the result, write `s = s.upper()`.
+1. **B) ['a', 'b', 'c']**: `split` always returns a list of strings.
+2. **C) 'x-y-z'**: The separator goes between items only.
+3. **B) 'hi'**: String methods return new strings. To keep the result, write `s = s.upper()`.
 
 </details>
 

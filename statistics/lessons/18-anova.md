@@ -189,26 +189,26 @@ print(p_rain)
 ## Quick quiz
 
 1. Why use ANOVA instead of three t-tests for three groups?
-   - A) Several t-tests inflate the chance of a false alarm
-   - B) t-tests can't compare means
-   - C) ANOVA needs less data
+   - A) t-tests can't compare means
+   - B) ANOVA needs less data
+   - C) Several t-tests inflate the chance of a false alarm
 
 2. ANOVA gives p = 0.001. What do you know?
-   - A) All three groups differ from each other
-   - B) At least one group mean differs; a follow-up test like Tukey's says which
+   - A) At least one group mean differs; a follow-up test like Tukey's says which
+   - B) All three groups differ from each other
    - C) The first group is the largest
 
 3. When would you choose Kruskal-Wallis over ANOVA?
    - A) When there are only two groups
-   - B) When the data is strongly skewed or has outliers
-   - C) When the groups have equal means
+   - B) When the groups have equal means
+   - C) When the data is strongly skewed or has outliers
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Several t-tests inflate the chance of a false alarm**: One test at α = 0.05 keeps the overall false-alarm rate at 5%.
-2. **B) At least one group mean differs; a follow-up test like Tukey's says which**: ANOVA is an overall test; post-hoc tests identify the pairs.
-3. **B) When the data is strongly skewed or has outliers**: Kruskal-Wallis uses ranks, so it doesn't assume normal data.
+1. **C) Several t-tests inflate the chance of a false alarm**: One test at α = 0.05 keeps the overall false-alarm rate at 5%.
+2. **A) At least one group mean differs; a follow-up test like Tukey's says which**: ANOVA is an overall test; post-hoc tests identify the pairs.
+3. **C) When the data is strongly skewed or has outliers**: Kruskal-Wallis uses ranks, so it doesn't assume normal data.
 
 </details>
 

@@ -166,19 +166,19 @@ print(power(2, 10))
 ## Quick quiz
 
 1. What happens if a recursive function has no base case?
-   - A) It returns None
-   - B) It raises RecursionError
-   - C) It runs forever silently
+   - A) It runs forever silently
+   - B) It returns None
+   - C) It raises RecursionError
 
 2. Which problem is the most natural fit for recursion?
-   - A) Adding numbers from 1 to 10
+   - A) Printing a list
    - B) Walking through folders that contain folders
-   - C) Printing a list
+   - C) Adding numbers from 1 to 10
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) It raises RecursionError**: Python limits how deep calls can go and raises RecursionError when the limit is reached.
+1. **C) It raises RecursionError**: Python limits how deep calls can go and raises RecursionError when the limit is reached.
 2. **B) Walking through folders that contain folders**: Nested, tree-shaped data maps naturally onto a function that calls itself for each sub-part.
 
 </details>

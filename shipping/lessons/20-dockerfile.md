@@ -1249,36 +1249,36 @@ docker build -t shop:1.0 .
 ## Quick quiz
 
 1. What does COPY . . copy?
-   - A) The build context (the folder given to docker build, minus .dockerignore) into the image's working directory
-   - B) Every file on your computer
-   - C) The image into the current folder
-   - D) Only the Dockerfile
+   - A) Every file on your computer
+   - B) The build context (the folder given to docker build, minus .dockerignore) into the image's working directory
+   - C) Only the Dockerfile
+   - D) The image into the current folder
 
 2. Which instruction runs while the image is built, not when a container starts?
-   - A) RUN
-   - B) CMD
-   - C) ENTRYPOINT
-   - D) EXPOSE
+   - A) CMD
+   - B) RUN
+   - C) EXPOSE
+   - D) ENTRYPOINT
 
 3. Why is CMD ["node", "server.js"] better than CMD node server.js?
    - A) It runs node directly as the main process, so it receives the stop signal
-   - B) It's faster to type
-   - C) Shell form doesn't work on Alpine
+   - B) Shell form doesn't work on Alpine
+   - C) It's faster to type
    - D) Exec form makes the image smaller
 
 4. A server in a container listens on 127.0.0.1:3000 and is published with -p 8080:3000. What happens when you curl localhost:8080?
-   - A) The connection fails: 127.0.0.1 inside the container only accepts connections from inside it
+   - A) It works only on macOS
    - B) It works: localhost is the same everywhere
-   - C) It works only on macOS
+   - C) The connection fails: 127.0.0.1 inside the container only accepts connections from inside it
    - D) Docker rewrites the address automatically
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The build context (the folder given to docker build, minus .dockerignore) into the image's working directory**: The first dot is the context, the second is the destination (WORKDIR).
-2. **A) RUN**: RUN changes the image during the build; CMD and ENTRYPOINT say what a container runs later.
+1. **B) The build context (the folder given to docker build, minus .dockerignore) into the image's working directory**: The first dot is the context, the second is the destination (WORKDIR).
+2. **B) RUN**: RUN changes the image during the build; CMD and ENTRYPOINT say what a container runs later.
 3. **A) It runs node directly as the main process, so it receives the stop signal**: Shell form runs /bin/sh -c, and the shell doesn't forward signals to node.
-4. **A) The connection fails: 127.0.0.1 inside the container only accepts connections from inside it**: Servers in containers must listen on all interfaces (0.0.0.0 or ::), which node:http does by default.
+4. **C) The connection fails: 127.0.0.1 inside the container only accepts connections from inside it**: Servers in containers must listen on all interfaces (0.0.0.0 or ::), which node:http does by default.
 
 </details>
 

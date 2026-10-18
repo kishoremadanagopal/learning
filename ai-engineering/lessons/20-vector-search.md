@@ -325,32 +325,32 @@ print(ivf_search(query, centroids, assignments, vectors, 3, n_probe=2))
 ## Quick quiz
 
 1. You switch to a newer embedding model. What must you do?
-   - A) Re-embed every document, because vectors from different models aren't comparable
-   - B) Nothing: vectors are universal
-   - C) Only embed new documents with the new model
+   - A) Nothing: vectors are universal
+   - B) Only embed new documents with the new model
+   - C) Re-embed every document, because vectors from different models aren't comparable
 
 2. What does an approximate nearest-neighbour index trade away?
-   - A) A little recall, for much faster search
-   - B) All accuracy
-   - C) The ability to filter
+   - A) The ability to filter
+   - B) A little recall, for much faster search
+   - C) All accuracy
 
 3. Why can post-filtering return fewer than k results?
-   - A) It drops non-matching results after the search has already picked its top candidates
-   - B) Filters are always buggy
-   - C) k is ignored by vector databases
+   - A) Filters are always buggy
+   - B) k is ignored by vector databases
+   - C) It drops non-matching results after the search has already picked its top candidates
 
 4. Roughly how much memory do 1,000,000 vectors of 1,024 float32 numbers need?
-   - A) About 4 GB
-   - B) About 4 MB
-   - C) About 4 TB
+   - A) About 4 MB
+   - B) About 4 TB
+   - C) About 4 GB
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Re-embed every document, because vectors from different models aren't comparable**: Queries and documents must come from the same model.
-2. **A) A little recall, for much faster search**: Measure recall against exact search.
-3. **A) It drops non-matching results after the search has already picked its top candidates**: Pre-filter or filter during the search.
-4. **A) About 4 GB**: 1,000,000 × 1,024 × 4 bytes ≈ 4.1 GB.
+1. **C) Re-embed every document, because vectors from different models aren't comparable**: Queries and documents must come from the same model.
+2. **B) A little recall, for much faster search**: Measure recall against exact search.
+3. **C) It drops non-matching results after the search has already picked its top candidates**: Pre-filter or filter during the search.
+4. **C) About 4 GB**: 1,000,000 × 1,024 × 4 bytes ≈ 4.1 GB.
 
 </details>
 

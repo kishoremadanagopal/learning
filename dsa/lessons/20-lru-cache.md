@@ -358,8 +358,8 @@ class LRUCache:
 
 1. Why does an LRU cache need both a dict and a doubly linked list?
    - A) The dict finds a key in O(1); the list keeps recency order and moves or removes nodes in O(1)
-   - B) The dict stores values and the list stores keys, for no reason
-   - C) A dict alone can evict the oldest key in O(1)
+   - B) A dict alone can evict the oldest key in O(1)
+   - C) The dict stores values and the list stores keys, for no reason
 
 2. Why does each node store its key?
    - A) When the oldest node is evicted, you need its key to delete it from the dict
@@ -368,13 +368,13 @@ class LRUCache:
 
 3. What does @lru_cache do to a function?
    - A) Remembers the results for recent arguments and returns them without recomputing
-   - B) Makes the function run in parallel
-   - C) Limits how often it can be called
+   - B) Limits how often it can be called
+   - C) Makes the function run in parallel
 
 4. An LFU cache evicts:
    - A) The key used the fewest times (oldest first on ties)
-   - B) The most recently used key
-   - C) A random key
+   - B) A random key
+   - C) The most recently used key
 
 <details>
 <summary>Quiz answers</summary>

@@ -231,25 +231,25 @@ plt.show()
 ## Quick quiz
 
 1. Which chart shows how exam scores are spread out?
-   - A) Line chart
-   - B) Histogram
-   - C) Pie chart
+   - A) Histogram
+   - B) Pie chart
+   - C) Line chart
 
 2. Why must a bar chart's axis start at zero?
-   - A) The bar's length represents the value, so a cut axis exaggerates differences
-   - B) matplotlib requires it
-   - C) To fit the labels
+   - A) matplotlib requires it
+   - B) To fit the labels
+   - C) The bar's length represents the value, so a cut axis exaggerates differences
 
 3. A scatter plot shows that ice-cream sales and sunburn rise together. What can you conclude?
-   - A) Ice cream causes sunburn
+   - A) Nothing at all
    - B) They're related; something else (sunny weather) may drive both
-   - C) Nothing at all
+   - C) Ice cream causes sunburn
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) Histogram**: A histogram counts how many values fall in each range, showing the shape of the distribution.
-2. **A) The bar's length represents the value, so a cut axis exaggerates differences**: If the axis starts at 90, a bar of 95 looks twice as long as one of 92.
+1. **A) Histogram**: A histogram counts how many values fall in each range, showing the shape of the distribution.
+2. **C) The bar's length represents the value, so a cut axis exaggerates differences**: If the axis starts at 90, a bar of 95 looks twice as long as one of 92.
 3. **B) They're related; something else (sunny weather) may drive both**: Correlation isn't causation. A third factor often explains both.
 
 </details>

@@ -468,32 +468,32 @@ print(search_rotated([4, 5, 6, 7, 0, 1, 2], 0))
 ## Quick quiz
 
 1. Binary search needs at most how many comparisons for a million sorted items?
-   - A) About 1,000
-   - B) About 20
+   - A) About 20
+   - B) About 1,000
    - C) About 500,000
 
 2. Why must the template use `lo = mid + 1` rather than `lo = mid`?
-   - A) mid has already been checked; excluding it guarantees the range shrinks, otherwise the loop can run forever
-   - B) It makes the answer one bigger
+   - A) It makes the answer one bigger
+   - B) mid has already been checked; excluding it guarantees the range shrinks, otherwise the loop can run forever
    - C) Python indexes start at 1
 
 3. bisect_left([10, 20, 20, 30], 20) returns:
-   - A) 1, the index of the first 20
-   - B) 2
+   - A) 2
+   - B) 1, the index of the first 20
    - C) 3
 
 4. What does binary search really need to work?
-   - A) A test that tells you which half can be thrown away
-   - B) Data that is fully sorted, always
-   - C) Numbers only
+   - A) Numbers only
+   - B) A test that tells you which half can be thrown away
+   - C) Data that is fully sorted, always
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) About 20**: Each comparison halves the range: 2^20 is about a million.
-2. **A) mid has already been checked; excluding it guarantees the range shrinks, otherwise the loop can run forever**: With lo = mid, when lo and hi are neighbours, mid equals lo and nothing changes.
-3. **A) 1, the index of the first 20**: bisect_left gives the leftmost insertion point, which is the first item >= 20.
-4. **A) A test that tells you which half can be thrown away**: Rotated arrays and peaks work without full sorting, because each step can still discard half.
+1. **A) About 20**: Each comparison halves the range: 2^20 is about a million.
+2. **B) mid has already been checked; excluding it guarantees the range shrinks, otherwise the loop can run forever**: With lo = mid, when lo and hi are neighbours, mid equals lo and nothing changes.
+3. **B) 1, the index of the first 20**: bisect_left gives the leftmost insertion point, which is the first item >= 20.
+4. **B) A test that tells you which half can be thrown away**: Rotated arrays and peaks work without full sorting, because each step can still discard half.
 
 </details>
 

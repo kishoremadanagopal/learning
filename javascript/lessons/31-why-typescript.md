@@ -398,32 +398,32 @@ console.log(priceOf(1), priceOf(99), products[1].stock);
 ## Quick quiz
 
 1. What happens to TypeScript's types when the code runs?
-   - A) They're removed; the JavaScript that's left runs
-   - B) They're checked again at runtime
-   - C) They make the code slower
+   - A) They're checked again at runtime
+   - B) They make the code slower
+   - C) They're removed; the JavaScript that's left runs
 
 2. Which should you use for a value whose type you don't know yet, such as parsed JSON?
    - A) unknown
-   - B) any
-   - C) never
+   - B) never
+   - C) any
 
 3. With strict mode, what is the type of products.find(...) for a Product[]?
    - A) Product | undefined
-   - B) Product
-   - C) any
+   - B) any
+   - C) Product
 
 4. What does node file.ts do in Node.js 26?
-   - A) Removes the types and runs the code, without type-checking
+   - A) Fails: Node.js only runs .js files
    - B) Type-checks the file, then runs it
-   - C) Fails: Node.js only runs .js files
+   - C) Removes the types and runs the code, without type-checking
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) They're removed; the JavaScript that's left runs**: Types are erased, so they can't check data at runtime.
+1. **C) They're removed; the JavaScript that's left runs**: Types are erased, so they can't check data at runtime.
 2. **A) unknown**: unknown forces a check before use; any turns checking off.
 3. **A) Product | undefined**: find returns undefined when nothing matches, and TypeScript makes you handle it.
-4. **A) Removes the types and runs the code, without type-checking**: Type stripping is fast; run tsc --noEmit to check types.
+4. **C) Removes the types and runs the code, without type-checking**: Type stripping is fast; run tsc --noEmit to check types.
 
 </details>
 

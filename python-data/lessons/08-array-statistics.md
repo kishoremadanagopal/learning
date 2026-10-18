@@ -217,21 +217,21 @@ print(typical, slow)
    - C) The mean can't be calculated for salaries
 
 2. `scores` has shape `(30, 4)`: 30 students, 4 subjects. What shape is `scores.mean(axis=0)`?
-   - A) `(4,)`, one average per subject
-   - B) `(30,)`, one average per student
+   - A) `(30,)`, one average per student
+   - B) `(4,)`, one average per subject
    - C) A single number
 
 3. What does `argmax()` return?
-   - A) The largest value
-   - B) The position of the largest value
+   - A) The position of the largest value
+   - B) The largest value
    - C) The number of values
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **B) A few very high salaries pull the mean up but barely move the median**: The median is the middle value, so extreme values don't drag it around.
-2. **A) `(4,)`, one average per subject**: `axis=0` collapses the rows, leaving one answer per column.
-3. **B) The position of the largest value**: `max()` gives the value; `argmax()` gives where it is.
+2. **B) `(4,)`, one average per subject**: `axis=0` collapses the rows, leaving one answer per column.
+3. **A) The position of the largest value**: `max()` gives the value; `argmax()` gives where it is.
 
 </details>
 

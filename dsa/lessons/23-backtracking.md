@@ -624,31 +624,31 @@ print(combination_sum([2, 3, 6, 7], 7))
 
 1. What are the three steps inside a backtracking loop?
    - A) Choose, explore (recurse), unchoose (undo)
-   - B) Sort, search, return
-   - C) Divide, conquer, combine
+   - B) Divide, conquer, combine
+   - C) Sort, search, return
 
 2. Why record path[:] instead of path?
-   - A) path is one shared list that later pops will change; the copy freezes the current solution
+   - A) Python requires slices in recursion
    - B) path[:] is faster to append
-   - C) Python requires slices in recursion
+   - C) path is one shared list that later pops will change; the copy freezes the current solution
 
 3. How many subsets does a list of 10 distinct items have?
-   - A) 10
+   - A) 1,024
    - B) 100
-   - C) 1,024
+   - C) 10
 
 4. What makes N-Queens fast enough with backtracking?
-   - A) Pruning: attacked squares are skipped before exploring them
-   - B) Trying every board and checking at the end
+   - A) Trying every board and checking at the end
+   - B) Pruning: attacked squares are skipped before exploring them
    - C) Sorting the board
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Choose, explore (recurse), unchoose (undo)**: Undoing the choice restores the state for the next option.
-2. **A) path is one shared list that later pops will change; the copy freezes the current solution**: Without a copy, every saved entry points to the same list.
-3. **C) 1,024**: Each item is in or out: 2^10 = 1,024.
-4. **A) Pruning: attacked squares are skipped before exploring them**: Cutting off dead branches early avoids almost all of the n^n boards.
+2. **C) path is one shared list that later pops will change; the copy freezes the current solution**: Without a copy, every saved entry points to the same list.
+3. **A) 1,024**: Each item is in or out: 2^10 = 1,024.
+4. **B) Pruning: attacked squares are skipped before exploring them**: Cutting off dead branches early avoids almost all of the n^n boards.
 
 </details>
 

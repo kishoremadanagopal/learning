@@ -12,11 +12,11 @@
    Everything is deterministic: the clock starts at 2026-10-01 09:00 UTC and moves one minute per commit, so
    commit hashes in lessons are the same every time. */
 
-import { git, Buffer } from "./gitlib.js?v=11948bf18f";
-import { installGitHub } from "./github.js?v=11948bf18f";
-import { installNode } from "./nodejs.js?v=11948bf18f";
-import { installActions } from "./actions.js?v=11948bf18f";
-import { installDocker } from "./docker.js?v=11948bf18f";
+import { git, Buffer } from "./gitlib.js?v=160af99cac";
+import { installGitHub } from "./github.js?v=160af99cac";
+import { installNode } from "./nodejs.js?v=160af99cac";
+import { installActions } from "./actions.js?v=160af99cac";
+import { installDocker } from "./docker.js?v=160af99cac";
 
 const HOME = "/home/learner";
 const START = Date.UTC(2026, 9, 1, 9, 0, 0) / 1000;      // 1 October 2026, 09:00 UTC

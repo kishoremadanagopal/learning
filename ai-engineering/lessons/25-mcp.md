@@ -341,13 +341,13 @@ print(namespace_tools(servers))
 ## Quick quiz
 
 1. What problem does MCP mainly solve?
-   - A) Every app needing its own connector for every service; with a standard, a server works in any MCP host
-   - B) Models being too slow
-   - C) The cost of tokens
+   - A) Models being too slow
+   - B) The cost of tokens
+   - C) Every app needing its own connector for every service; with a standard, a server works in any MCP host
 
 2. Which MCP primitive is controlled by the model?
-   - A) Tools
-   - B) Resources
+   - A) Resources
+   - B) Tools
    - C) Prompts
 
 3. When would you use the stdio transport?
@@ -356,17 +356,17 @@ print(namespace_tools(servers))
    - C) Only for prompts
 
 4. Why should you only install MCP servers you trust?
-   - A) A server's tool descriptions and results go straight into the model's context and can carry injected instructions
-   - B) Untrusted servers are slower
-   - C) MCP forbids third-party servers
+   - A) Untrusted servers are slower
+   - B) MCP forbids third-party servers
+   - C) A server's tool descriptions and results go straight into the model's context and can carry injected instructions
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Every app needing its own connector for every service; with a standard, a server works in any MCP host**: M × N integrations become M + N.
-2. **A) Tools**: Resources are app-controlled; prompts are user-controlled.
+1. **C) Every app needing its own connector for every service; with a standard, a server works in any MCP host**: M × N integrations become M + N.
+2. **B) Tools**: Resources are app-controlled; prompts are user-controlled.
 3. **A) For a local server the host starts as a subprocess, such as filesystem access**: Remote and shared servers use Streamable HTTP.
-4. **A) A server's tool descriptions and results go straight into the model's context and can carry injected instructions**: Tool poisoning and prompt injection are real risks.
+4. **C) A server's tool descriptions and results go straight into the model's context and can carry injected instructions**: Tool poisoning and prompt injection are real risks.
 
 </details>
 

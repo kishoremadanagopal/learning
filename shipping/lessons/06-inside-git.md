@@ -319,27 +319,27 @@ cat ~/main.txt ~/head.txt
    - C) A folder in .git/objects
 
 2. Two files in different folders have exactly the same content. How many blobs does Git store?
-   - A) One, because blobs are named by their content's hash
-   - B) Two, one per file
-   - C) None, until they differ
+   - A) Two, one per file
+   - B) None, until they differ
+   - C) One, because blobs are named by their content's hash
 
 3. Why does git commit --amend give the commit a new id?
-   - A) The id is a hash of the commit's content, so any change makes a new commit
+   - A) Amending also changes the parent
    - B) Git numbers commits in order
-   - C) Amending also changes the parent
+   - C) The id is a hash of the commit's content, so any change makes a new commit
 
 4. What does a commit object point to?
-   - A) A tree (the project snapshot) and its parent commit(s)
-   - B) A list of changed lines
+   - A) A list of changed lines
+   - B) A tree (the project snapshot) and its parent commit(s)
    - C) The files in the working tree
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) A small file containing the id of a commit**: That's why creating a branch is instant.
-2. **A) One, because blobs are named by their content's hash**: Identical content means an identical hash.
-3. **A) The id is a hash of the commit's content, so any change makes a new commit**: Commits can't be edited, only replaced.
-4. **A) A tree (the project snapshot) and its parent commit(s)**: Diffs are computed from snapshots when you ask for them.
+2. **C) One, because blobs are named by their content's hash**: Identical content means an identical hash.
+3. **C) The id is a hash of the commit's content, so any change makes a new commit**: Commits can't be edited, only replaced.
+4. **B) A tree (the project snapshot) and its parent commit(s)**: Diffs are computed from snapshots when you ask for them.
 
 </details>
 

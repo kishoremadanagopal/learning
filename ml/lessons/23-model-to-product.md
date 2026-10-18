@@ -326,31 +326,31 @@ print(leavers_by_contract)
 ## Quick quiz
 
 1. Why save the whole pipeline instead of just the model?
-   - A) So the exact same preparation (imputing, scaling, encoding) is applied to new data
-   - B) Pipelines are smaller files
+   - A) Pipelines are smaller files
+   - B) So the exact same preparation (imputing, scaling, encoding) is applied to new data
    - C) Models can't be saved on their own
 
 2. A model's accuracy slowly drops months after launch, though nothing in the code changed. The likely cause is:
-   - A) Drift: the data or the relationship it learned has changed
-   - B) A bug in scikit-learn
-   - C) Overfitting during training
+   - A) A bug in scikit-learn
+   - B) Overfitting during training
+   - C) Drift: the data or the relationship it learned has changed
 
 3. You remove the "gender" column from a hiring model. Is it now fair?
-   - A) Not necessarily: other columns can act as proxies, so you must still measure outcomes per group
-   - B) Yes, completely
-   - C) Only if accuracy stays the same
+   - A) Yes, completely
+   - B) Only if accuracy stays the same
+   - C) Not necessarily: other columns can act as proxies, so you must still measure outcomes per group
 
 4. Why must you never load a .joblib file from an unknown source?
    - A) Loading it can run arbitrary code on your computer
-   - B) It might be the wrong size
-   - C) It will overwrite your data
+   - B) It will overwrite your data
+   - C) It might be the wrong size
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) So the exact same preparation (imputing, scaling, encoding) is applied to new data**: The model only understands data prepared the way it was during training.
-2. **A) Drift: the data or the relationship it learned has changed**: The world moves on; monitor and retrain.
-3. **A) Not necessarily: other columns can act as proxies, so you must still measure outcomes per group**: Bias can come in through correlated features. Measure, don't assume.
+1. **B) So the exact same preparation (imputing, scaling, encoding) is applied to new data**: The model only understands data prepared the way it was during training.
+2. **C) Drift: the data or the relationship it learned has changed**: The world moves on; monitor and retrain.
+3. **C) Not necessarily: other columns can act as proxies, so you must still measure outcomes per group**: Bias can come in through correlated features. Measure, don't assume.
 4. **A) Loading it can run arbitrary code on your computer**: joblib and pickle files execute code when loaded.
 
 </details>

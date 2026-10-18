@@ -165,31 +165,31 @@ print(kinds)
 ## Quick quiz
 
 1. In machine learning, who writes the rules?
-   - A) The programmer, by hand
-   - B) The computer, by learning them from examples with answers
-   - C) Nobody: models don't use rules
+   - A) The computer, by learning them from examples with answers
+   - B) Nobody: models don't use rules
+   - C) The programmer, by hand
 
 2. In a table of houses, which column would be the label for predicting price?
-   - A) area_sqm
+   - A) price_k
    - B) neighborhood
-   - C) price_k
+   - C) area_sqm
 
 3. A model predicts whether a customer will cancel (yes/no). This is:
-   - A) Regression
-   - B) Classification
-   - C) Clustering
+   - A) Classification
+   - B) Clustering
+   - C) Regression
 
 4. What makes learning "unsupervised"?
-   - A) It runs without a computer
+   - A) It uses more data
    - B) The training data has no answers (labels)
-   - C) It uses more data
+   - C) It runs without a computer
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) The computer, by learning them from examples with answers**: You supply examples and answers; training finds the rule. The learned rule is the model.
-2. **C) price_k**: The label (target) is what you want to predict. Everything you use as clues is a feature.
-3. **B) Classification**: The answer is a category (yes or no), so it's classification, even if it's stored as 0 and 1.
+1. **A) The computer, by learning them from examples with answers**: You supply examples and answers; training finds the rule. The learned rule is the model.
+2. **A) price_k**: The label (target) is what you want to predict. Everything you use as clues is a feature.
+3. **A) Classification**: The answer is a category (yes or no), so it's classification, even if it's stored as 0 and 1.
 4. **B) The training data has no answers (labels)**: Without labels, the model can only look for structure, such as groups.
 
 </details>

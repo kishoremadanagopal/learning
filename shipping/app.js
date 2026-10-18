@@ -10,10 +10,23 @@
 
   /* ---------- Storage (per-browser progress) ---------- */
   const KEY = "shipping-course:v1";
-  let state = { passed: {}, quiz: {}, code: {}, last: null };
+  let state = { passed: {}, quiz: {}, code: {}, last: null, quizOrder: 2 };
   try {
     const raw = window.localStorage.getItem(KEY);
-    if (raw) state = Object.assign(state, JSON.parse(raw));
+    if (raw) {
+      const saved = JSON.parse(raw);
+      if (saved.quizOrder !== 2 && saved.quiz) {
+        // Quiz options used to appear in the order they were written; map saved answers to the shuffled order.
+        const remapped = {};
+        for (const [key, chosen] of Object.entries(saved.quiz)) {
+          const [id, qi] = key.split("#");
+          const l = LESSONS.find((x) => x.id === id), q = l && l.quiz[+qi];
+          if (q && q.order && q.order.indexOf(chosen) >= 0) remapped[key] = q.order.indexOf(chosen);
+        }
+        saved.quiz = remapped;
+      }
+      state = Object.assign(state, saved, { quizOrder: 2 });
+    }
   } catch (e) { /* storage unavailable: progress lasts for this visit only */ }
   let saveTimer = null;
   function save() {

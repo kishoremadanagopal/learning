@@ -259,14 +259,14 @@ def count_evens(nums):
 ## Quick quiz
 
 1. What is an algorithm?
-   - A) A Python library
-   - B) A precise, step-by-step recipe for solving a problem
-   - C) A kind of list
+   - A) A precise, step-by-step recipe for solving a problem
+   - B) A kind of list
+   - C) A Python library
 
 2. Why was the set version of "do two lists share an item?" so much faster?
-   - A) Checking `x in some_set` jumps straight to the answer instead of scanning every item
+   - A) Sets are sorted
    - B) Sets use less memory
-   - C) Sets are sorted
+   - C) Checking `x in some_set` jumps straight to the answer instead of scanning every item
 
 3. Your function prints the right answer but the checker says it returned None. Why?
    - A) It prints instead of returning; a function without return gives back None
@@ -274,17 +274,17 @@ def count_evens(nums):
    - C) print is slower than return
 
 4. Which structure fits "undo the last action" best?
-   - A) Queue
-   - B) Stack
-   - C) Graph
+   - A) Graph
+   - B) Queue
+   - C) Stack
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) A precise, step-by-step recipe for solving a problem**: Data structures organise data; algorithms are the recipes that use them.
-2. **A) Checking `x in some_set` jumps straight to the answer instead of scanning every item**: A list check looks at items one by one; a set uses hashing (Lesson 13).
+1. **A) A precise, step-by-step recipe for solving a problem**: Data structures organise data; algorithms are the recipes that use them.
+2. **C) Checking `x in some_set` jumps straight to the answer instead of scanning every item**: A list check looks at items one by one; a set uses hashing (Lesson 13).
 3. **A) It prints instead of returning; a function without return gives back None**: Tests look at what the function returns. Use `return answer`.
-4. **B) Stack**: The last thing done is the first thing undone: last in, first out.
+4. **C) Stack**: The last thing done is the first thing undone: last in, first out.
 
 </details>
 

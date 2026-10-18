@@ -209,26 +209,26 @@ print(weather["temp_c"].isna().sum())
 ## Quick quiz
 
 1. What does `df.isna().sum()` show?
-   - A) The number of missing values in each column
+   - A) The sum of each column
    - B) The number of rows
-   - C) The sum of each column
+   - C) The number of missing values in each column
 
 2. When is `fillna(0)` a good choice?
    - A) Always
-   - B) When a missing value really means zero, like "no sales recorded"
-   - C) For temperatures
+   - B) For temperatures
+   - C) When a missing value really means zero, like "no sales recorded"
 
 3. What does `dropna(subset=["salary"])` drop?
    - A) Every row with any missing value
-   - B) Only rows where salary is missing
-   - C) The salary column
+   - B) The salary column
+   - C) Only rows where salary is missing
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The number of missing values in each column**: `isna()` marks gaps as True, and summing counts them per column.
-2. **B) When a missing value really means zero, like "no sales recorded"**: Filling with 0 claims the value was zero. That's only right when missing really means none.
-3. **B) Only rows where salary is missing**: `subset` limits the check to the listed columns.
+1. **C) The number of missing values in each column**: `isna()` marks gaps as True, and summing counts them per column.
+2. **C) When a missing value really means zero, like "no sales recorded"**: Filling with 0 claims the value was zero. That's only right when missing really means none.
+3. **C) Only rows where salary is missing**: `subset` limits the check to the listed columns.
 
 </details>
 

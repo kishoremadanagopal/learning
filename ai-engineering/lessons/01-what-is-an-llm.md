@@ -281,30 +281,30 @@ print(predict_next(counts, "sat"))
 
 1. At its core, what does a large language model do?
    - A) Predicts the next token given the text so far, repeatedly
-   - B) Looks up answers in a database of facts
-   - C) Runs a search engine query for every question
+   - B) Runs a search engine query for every question
+   - C) Looks up answers in a database of facts
 
 2. Which training stage teaches a model to follow instructions and answer helpfully?
-   - A) Instruction tuning (supervised fine-tuning), refined with reinforcement learning from feedback
-   - B) Pretraining on web text alone
+   - A) Pretraining on web text alone
+   - B) Instruction tuning (supervised fine-tuning), refined with reinforcement learning from feedback
    - C) Tokenization
 
 3. Why might a model answer a question about last month's news wrongly?
-   - A) Its knowledge stops at its training cutoff unless you give it the information
-   - B) Models can only answer questions about code
+   - A) Models can only answer questions about code
+   - B) Its knowledge stops at its training cutoff unless you give it the information
    - C) Because of the temperature setting
 
 4. What is a hallucination?
    - A) A fluent, confident answer that isn't true or isn't supported by the sources
-   - B) A refusal to answer
-   - C) A very long answer
+   - B) A very long answer
+   - C) A refusal to answer
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Predicts the next token given the text so far, repeatedly**: Every capability is built on next-token prediction, one token at a time.
-2. **A) Instruction tuning (supervised fine-tuning), refined with reinforcement learning from feedback**: Pretraining gives knowledge and language; tuning shapes behaviour.
-3. **A) Its knowledge stops at its training cutoff unless you give it the information**: Retrieval (RAG) or a search tool supplies current information.
+2. **B) Instruction tuning (supervised fine-tuning), refined with reinforcement learning from feedback**: Pretraining gives knowledge and language; tuning shapes behaviour.
+3. **B) Its knowledge stops at its training cutoff unless you give it the information**: Retrieval (RAG) or a search tool supplies current information.
 4. **A) A fluent, confident answer that isn't true or isn't supported by the sources**: Next-token prediction optimises for plausible text, not verified truth.
 
 </details>

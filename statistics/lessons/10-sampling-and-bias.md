@@ -183,26 +183,26 @@ print(se_price, se_4x)      # four times the data halves the standard error
 ## Quick quiz
 
 1. A company surveys customers by email. Who is missed?
-   - A) Customers who don't read or answer email, so the sample may be biased
-   - B) Nobody, email reaches everyone
-   - C) Only very young customers
+   - A) Only very young customers
+   - B) Customers who don't read or answer email, so the sample may be biased
+   - C) Nobody, email reaches everyone
 
 2. Does collecting a much bigger biased sample fix bias?
-   - A) Yes
-   - B) No, it just gives a more precise wrong answer
+   - A) No, it just gives a more precise wrong answer
+   - B) Yes
    - C) Only if the sample is over 1,000
 
 3. To halve the standard error of a mean, you need:
-   - A) Twice the data
-   - B) Four times the data
-   - C) Half the data
+   - A) Half the data
+   - B) Twice the data
+   - C) Four times the data
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Customers who don't read or answer email, so the sample may be biased**: That's selection and non-response bias: the people who answer may differ from those who don't.
-2. **B) No, it just gives a more precise wrong answer**: Bias is a systematic error. More data shrinks the random wobble, not the bias.
-3. **B) Four times the data**: SE = s / √n, and √4 = 2.
+1. **B) Customers who don't read or answer email, so the sample may be biased**: That's selection and non-response bias: the people who answer may differ from those who don't.
+2. **A) No, it just gives a more precise wrong answer**: Bias is a systematic error. More data shrinks the random wobble, not the bias.
+3. **C) Four times the data**: SE = s / √n, and √4 = 2.
 
 </details>
 

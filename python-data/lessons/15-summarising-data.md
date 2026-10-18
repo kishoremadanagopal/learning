@@ -194,25 +194,25 @@ print(shares.round(1))
 
 1. What does `df["col"].count()` count?
    - A) The distinct values
-   - B) The values that aren't missing
-   - C) Every row, including missing ones
+   - B) Every row, including missing ones
+   - C) The values that aren't missing
 
 2. What does `(df["score"] >= 50).mean()` give?
-   - A) The share of rows with a score of 50 or more
-   - B) The average score
-   - C) The number of passing rows
+   - A) The average score
+   - B) The number of passing rows
+   - C) The share of rows with a score of 50 or more
 
 3. What does `idxmax()` return?
-   - A) The largest value
-   - B) The index label of the row with the largest value
+   - A) The index label of the row with the largest value
+   - B) The largest value
    - C) The row number, always counting from 0
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) The values that aren't missing**: `count()` skips missing values. Use `len(df)` for the number of rows.
-2. **A) The share of rows with a score of 50 or more**: True counts as 1 and False as 0, so the mean is the fraction of True.
-3. **B) The index label of the row with the largest value**: It returns the label, which you can pass to `loc` to fetch the whole row.
+1. **C) The values that aren't missing**: `count()` skips missing values. Use `len(df)` for the number of rows.
+2. **C) The share of rows with a score of 50 or more**: True counts as 1 and False as 0, so the mean is the fraction of True.
+3. **A) The index label of the row with the largest value**: It returns the label, which you can pass to `loc` to fetch the whole row.
 
 </details>
 

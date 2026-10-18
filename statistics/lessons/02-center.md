@@ -163,26 +163,26 @@ print(top_product)
 ## Quick quiz
 
 1. House prices in a city have a few mansions. Which "typical price" is most honest?
-   - A) Mean
+   - A) Mode
    - B) Median
-   - C) Mode
+   - C) Mean
 
 2. In a right-skewed dataset, where is the mean compared with the median?
-   - A) Higher (pulled towards the long right tail)
+   - A) Always equal
    - B) Lower
-   - C) Always equal
+   - C) Higher (pulled towards the long right tail)
 
 3. What does `s.mode()` return?
-   - A) A single number
-   - B) A Series, because several values can tie for most common
-   - C) The middle value
+   - A) The middle value
+   - B) A single number
+   - C) A Series, because several values can tie for most common
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **B) Median**: The few very expensive homes pull the mean up; the median shows what a typical home costs.
-2. **A) Higher (pulled towards the long right tail)**: The long tail of big values drags the mean in their direction.
-3. **B) A Series, because several values can tie for most common**: Take `s.mode()[0]` when you want one value.
+2. **C) Higher (pulled towards the long right tail)**: The long tail of big values drags the mean in their direction.
+3. **C) A Series, because several values can tie for most common**: Take `s.mode()[0]` when you want one value.
 
 </details>
 

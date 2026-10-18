@@ -194,14 +194,14 @@ print(big_city)
 ## Quick quiz
 
 1. Why does `df[df["a"] > 1 & df["b"] < 5]` go wrong?
-   - A) `&` doesn't work in pandas
-   - B) Without brackets, `&` is applied before the comparisons
-   - C) You can't filter on two columns
+   - A) Without brackets, `&` is applied before the comparisons
+   - B) You can't filter on two columns
+   - C) `&` doesn't work in pandas
 
 2. What does `sales["product"].isin(["Pen Pack", "Notebook"])` produce?
    - A) True for rows whose product is either of those, False otherwise
-   - B) A list of the two products
-   - C) The number of matching rows
+   - B) The number of matching rows
+   - C) A list of the two products
 
 3. In `query`, what does the `@` in `"price > @limit"` mean?
    - A) A column called limit
@@ -211,7 +211,7 @@ print(big_city)
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) Without brackets, `&` is applied before the comparisons**: `&` binds tighter than `>` and `<`, so wrap each condition: `(df["a"] > 1) & (df["b"] < 5)`.
+1. **A) Without brackets, `&` is applied before the comparisons**: `&` binds tighter than `>` and `<`, so wrap each condition: `(df["a"] > 1) & (df["b"] < 5)`.
 2. **A) True for rows whose product is either of those, False otherwise**: `isin` gives a mask you can use to filter.
 3. **B) Use the Python variable `limit`**: `@` refers to a variable from your code rather than a column.
 

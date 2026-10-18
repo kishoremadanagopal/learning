@@ -251,14 +251,14 @@ print(median_pay)
 ## Quick quiz
 
 1. Why wrap the cleaning steps in a function?
-   - A) Functions run faster
-   - B) So the same cleaning can be re-run on new data, with no steps forgotten
-   - C) pandas requires it
+   - A) pandas requires it
+   - B) Functions run faster
+   - C) So the same cleaning can be re-run on new data, with no steps forgotten
 
 2. Why were missing salaries left missing instead of filled?
-   - A) A guessed salary would distort the pay analysis
-   - B) pandas can't fill numbers
-   - C) Because there were too many of them
+   - A) Because there were too many of them
+   - B) A guessed salary would distort the pay analysis
+   - C) pandas can't fill numbers
 
 3. What does `df.to_csv("out.csv", index=False)` leave out?
    - A) The header row
@@ -268,8 +268,8 @@ print(median_pay)
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) So the same cleaning can be re-run on new data, with no steps forgotten**: A cleaning function is repeatable and testable: next month's file gets exactly the same treatment.
-2. **A) A guessed salary would distort the pay analysis**: Filling with a typical value makes the data look more certain than it is. Leave it, count it and mention it.
+1. **C) So the same cleaning can be re-run on new data, with no steps forgotten**: A cleaning function is repeatable and testable: next month's file gets exactly the same treatment.
+2. **B) A guessed salary would distort the pay analysis**: Filling with a typical value makes the data look more certain than it is. Leave it, count it and mention it.
 3. **B) The row index (0, 1, 2…)**: Without `index=False`, the index is written as an extra unnamed first column.
 
 </details>

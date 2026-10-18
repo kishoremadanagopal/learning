@@ -301,32 +301,32 @@ def spiral(grid):
 ## Quick quiz
 
 1. What's wrong with `grid = [[0] * 3] * 2`?
-   - A) Both rows are the same list, so changing one changes the other
-   - B) It creates a 3 × 2 grid
-   - C) Nothing
+   - A) It creates a 3 × 2 grid
+   - B) Nothing
+   - C) Both rows are the same list, so changing one changes the other
 
 2. How do you get the columns of a grid as tuples?
-   - A) zip(*grid)
-   - B) grid.T
+   - A) grid.T
+   - B) zip(*grid)
    - C) reversed(grid)
 
 3. Rotating a grid 90° clockwise equals:
-   - A) Transposing, then reversing each row
-   - B) Reversing the rows only
-   - C) Transposing twice
+   - A) Reversing the rows only
+   - B) Transposing twice
+   - C) Transposing, then reversing each row
 
 4. Searching a matrix whose rows and columns are sorted, starting from the top-right corner, costs:
-   - A) O(rows × cols)
-   - B) O(rows + cols)
+   - A) O(rows + cols)
+   - B) O(rows × cols)
    - C) O(1)
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Both rows are the same list, so changing one changes the other**: Multiplying a list of lists copies references. Use a comprehension.
-2. **A) zip(*grid)**: `*` unpacks the rows as separate arguments to zip.
-3. **A) Transposing, then reversing each row**: Try it on a 2 × 2 example.
-4. **B) O(rows + cols)**: Each step removes a whole row or a whole column.
+1. **C) Both rows are the same list, so changing one changes the other**: Multiplying a list of lists copies references. Use a comprehension.
+2. **B) zip(*grid)**: `*` unpacks the rows as separate arguments to zip.
+3. **C) Transposing, then reversing each row**: Try it on a 2 × 2 example.
+4. **A) O(rows + cols)**: Each step removes a whole row or a whole column.
 
 </details>
 

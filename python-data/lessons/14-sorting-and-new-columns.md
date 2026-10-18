@@ -190,26 +190,26 @@ print(top5)
 ## Quick quiz
 
 1. After `df.sort_values("price")`, is `df` sorted?
-   - A) Yes
-   - B) No, the sorted table is returned and must be saved
-   - C) Only if the column is numeric
+   - A) Only if the column is numeric
+   - B) Yes
+   - C) No, the sorted table is returned and must be saved
 
 2. How do you sort by category A–Z, then price high to low?
-   - A) `df.sort_values(["category", "price"], ascending=[True, False])`
-   - B) `df.sort_values("category").sort_values("price")`
+   - A) `df.sort_values("category").sort_values("price")`
+   - B) `df.sort_values(["category", "price"], ascending=[True, False])`
    - C) `df.sort_values("category", "price", False)`
 
 3. What does `df["total"] = df["a"] * df["b"]` do?
-   - A) Multiplies only the first row
-   - B) Creates a total column, row by row
-   - C) Raises an error because total doesn't exist
+   - A) Creates a total column, row by row
+   - B) Raises an error because total doesn't exist
+   - C) Multiplies only the first row
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) No, the sorted table is returned and must be saved**: Most pandas methods return a new object. Write `df = df.sort_values("price")` to keep it.
-2. **A) `df.sort_values(["category", "price"], ascending=[True, False])`**: Pass lists of columns and directions, in priority order.
-3. **B) Creates a total column, row by row**: Assigning to a new name creates the column, calculated for every row at once.
+1. **C) No, the sorted table is returned and must be saved**: Most pandas methods return a new object. Write `df = df.sort_values("price")` to keep it.
+2. **B) `df.sort_values(["category", "price"], ascending=[True, False])`**: Pass lists of columns and directions, in priority order.
+3. **A) Creates a total column, row by row**: Assigning to a new name creates the column, calculated for every row at once.
 
 </details>
 

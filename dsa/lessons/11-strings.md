@@ -273,9 +273,9 @@ def reverse_words(s):
 ## Quick quiz
 
 1. Why does `s[0] = "H"` fail for a string?
-   - A) Strings are immutable
-   - B) Strings can't be indexed
-   - C) You must use s.set(0, "H")
+   - A) You must use s.set(0, "H")
+   - B) Strings are immutable
+   - C) Strings can't be indexed
 
 2. What's the reliable way to build a long string from many parts?
    - A) Append the parts to a list and "".join(parts) once
@@ -284,8 +284,8 @@ def reverse_words(s):
 
 3. `ord(ch) - ord("a")` is useful because:
    - A) It maps "a"–"z" to 0–25, so a list of 26 counters can count letters
-   - B) It sorts letters
-   - C) It removes spaces
+   - B) It removes spaces
+   - C) It sorts letters
 
 4. What does `"  a  b ".split()` return?
    - A) ['a', 'b']
@@ -295,7 +295,7 @@ def reverse_words(s):
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Strings are immutable**: Build a new string instead, e.g. "H" + s[1:].
+1. **B) Strings are immutable**: Build a new string instead, e.g. "H" + s[1:].
 2. **A) Append the parts to a list and "".join(parts) once**: join builds the result in one O(total length) pass.
 3. **A) It maps "a"–"z" to 0–25, so a list of 26 counters can count letters**: Letters have consecutive codes.
 4. **A) ['a', 'b']**: split() with no argument splits on runs of whitespace and ignores the ends.

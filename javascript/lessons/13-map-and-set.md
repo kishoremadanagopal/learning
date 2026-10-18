@@ -274,32 +274,32 @@ console.log(compareTags(["mtb", "disc", "alloy", "mtb"], ["road", "alloy", "disc
 ## Quick quiz
 
 1. When is a Map better than a plain object?
-   - A) When keys come from data, aren't strings, or the collection changes a lot
-   - B) When you need to send it as JSON directly
-   - C) When the object has fixed, known fields
+   - A) When the object has fixed, known fields
+   - B) When keys come from data, aren't strings, or the collection changes a lot
+   - C) When you need to send it as JSON directly
 
 2. What does [...new Set([2, 1, 2, 3, 1])] return?
-   - A) [2, 1, 3]
-   - B) [1, 2, 3]
-   - C) [2, 1, 2, 3, 1]
+   - A) [2, 1, 2, 3, 1]
+   - B) [2, 1, 3]
+   - C) [1, 2, 3]
 
 3. Why use a Set for "have I seen this?" checks in a loop?
-   - A) set.has is fast regardless of size, while array.includes checks every item
-   - B) Sets sort their values
-   - C) Arrays can't hold strings
+   - A) Sets sort their values
+   - B) Arrays can't hold strings
+   - C) set.has is fast regardless of size, while array.includes checks every item
 
 4. What does map.getOrInsert(key, []) return?
-   - A) The existing value for key, or the new [] after storing it
-   - B) Always a new empty array
-   - C) true or false
+   - A) Always a new empty array
+   - B) true or false
+   - C) The existing value for key, or the new [] after storing it
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) When keys come from data, aren't strings, or the collection changes a lot**: Use objects for records, Maps for dictionaries.
-2. **A) [2, 1, 3]**: Duplicates are removed; first-seen order is kept.
-3. **A) set.has is fast regardless of size, while array.includes checks every item**: O(1) on average versus O(n).
-4. **A) The existing value for key, or the new [] after storing it**: It's new in ECMAScript 2026.
+1. **B) When keys come from data, aren't strings, or the collection changes a lot**: Use objects for records, Maps for dictionaries.
+2. **B) [2, 1, 3]**: Duplicates are removed; first-seen order is kept.
+3. **C) set.has is fast regardless of size, while array.includes checks every item**: O(1) on average versus O(n).
+4. **C) The existing value for key, or the new [] after storing it**: It's new in ECMAScript 2026.
 
 </details>
 

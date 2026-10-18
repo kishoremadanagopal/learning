@@ -1384,36 +1384,36 @@ docker run --rm shop:2.0 ls
 ## Quick quiz
 
 1. You change one line in server.js. With COPY . . before RUN npm ci, what happens on the next build?
-   - A) npm ci runs again, because the layer it's built on changed
-   - B) Nothing is rebuilt
-   - C) Only the CMD changes
-   - D) The build fails
+   - A) Nothing is rebuilt
+   - B) npm ci runs again, because the layer it's built on changed
+   - C) The build fails
+   - D) Only the CMD changes
 
 2. What does USER node do?
-   - A) Runs the following instructions and the container's process as the user node instead of root
-   - B) Creates a new user called node
-   - C) Lets the node image run without Docker
-   - D) Gives node access to the host's files
+   - A) Creates a new user called node
+   - B) Gives node access to the host's files
+   - C) Runs the following instructions and the container's process as the user node instead of root
+   - D) Lets the node image run without Docker
 
 3. In a multi-stage build, which stage becomes the image?
-   - A) The last stage (or the one named with --target)
+   - A) The largest stage
    - B) The first stage
-   - C) All stages, merged together
-   - D) The largest stage
+   - C) The last stage (or the one named with --target)
+   - D) All stages, merged together
 
 4. Why is ENV API_TOKEN=… in a Dockerfile dangerous?
-   - A) Anyone with the image can read it, for example with docker history or docker inspect
-   - B) ENV only works for numbers
-   - C) It makes the image larger
-   - D) Docker refuses to build it
+   - A) Docker refuses to build it
+   - B) It makes the image larger
+   - C) ENV only works for numbers
+   - D) Anyone with the image can read it, for example with docker history or docker inspect
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) npm ci runs again, because the layer it's built on changed**: Every step after the first changed one runs again; copy the package files and install first.
-2. **A) Runs the following instructions and the container's process as the user node instead of root**: The node images already have a node user; USER switches to it.
-3. **A) The last stage (or the one named with --target)**: Earlier stages only exist to produce files the final stage copies in.
-4. **A) Anyone with the image can read it, for example with docker history or docker inspect**: BuildKit warns (SecretsUsedInArgOrEnv); give secrets to containers at run time, or use build secrets.
+1. **B) npm ci runs again, because the layer it's built on changed**: Every step after the first changed one runs again; copy the package files and install first.
+2. **C) Runs the following instructions and the container's process as the user node instead of root**: The node images already have a node user; USER switches to it.
+3. **C) The last stage (or the one named with --target)**: Earlier stages only exist to produce files the final stage copies in.
+4. **D) Anyone with the image can read it, for example with docker history or docker inspect**: BuildKit warns (SecretsUsedInArgOrEnv); give secrets to containers at run time, or use build secrets.
 
 </details>
 

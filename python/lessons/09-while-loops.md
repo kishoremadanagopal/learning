@@ -129,20 +129,20 @@ print(collatz_steps(6))
 ## Quick quiz
 
 1. How many times does this print? `i = 0` / `while i < 3:` / `print(i)` / `i += 1`
-   - A) 2
-   - B) 3
-   - C) 4
+   - A) 3
+   - B) 4
+   - C) 2
 
 2. What's the most common cause of an infinite loop?
-   - A) The condition's variable is never updated inside the loop
+   - A) Indenting with 4 spaces
    - B) Using print inside a loop
-   - C) Indenting with 4 spaces
+   - C) The condition's variable is never updated inside the loop
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) 3**: It prints for i = 0, 1 and 2. When i reaches 3 the condition is false.
-2. **A) The condition's variable is never updated inside the loop**: If nothing inside the loop moves the condition towards False, it stays True forever.
+1. **A) 3**: It prints for i = 0, 1 and 2. When i reaches 3 the condition is false.
+2. **C) The condition's variable is never updated inside the loop**: If nothing inside the loop moves the condition towards False, it stays True forever.
 
 </details>
 

@@ -342,32 +342,32 @@ console.log(applyUpdate(bell, { price: 750 }), bell.price);
 ## Quick quiz
 
 1. function first<T>(items: T[]): T | undefined is called as first(["a", "b"]). What is T?
-   - A) string, inferred from the argument
-   - B) any
+   - A) any
+   - B) string, inferred from the argument
    - C) unknown, until you write first<string>
 
 2. For const p = { name: "Bell", price: 800 }, what is keyof typeof p?
-   - A) "name" | "price"
+   - A) ["name", "price"]
    - B) string
-   - C) ["name", "price"]
+   - C) "name" | "price"
 
 3. Which type describes a Product without its id, with every other property optional?
-   - A) Partial<Omit<Product, "id">>
-   - B) Omit<Partial<Product>>
-   - C) Pick<Product, "id">
+   - A) Omit<Partial<Product>>
+   - B) Pick<Product, "id">
+   - C) Partial<Omit<Product, "id">>
 
 4. What does as const do to ["parts", "tools"]?
-   - A) Makes it a read-only tuple of the literal types "parts" and "tools"
-   - B) Makes it impossible to read
-   - C) Converts it to an object
+   - A) Converts it to an object
+   - B) Makes it a read-only tuple of the literal types "parts" and "tools"
+   - C) Makes it impossible to read
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) string, inferred from the argument**: TypeScript infers type arguments from the values you pass.
-2. **A) "name" | "price"**: keyof gives the union of property names.
-3. **A) Partial<Omit<Product, "id">>**: Omit removes id; Partial makes the rest optional.
-4. **A) Makes it a read-only tuple of the literal types "parts" and "tools"**: Then (typeof X)[number] is the union "parts" | "tools".
+1. **B) string, inferred from the argument**: TypeScript infers type arguments from the values you pass.
+2. **C) "name" | "price"**: keyof gives the union of property names.
+3. **C) Partial<Omit<Product, "id">>**: Omit removes id; Partial makes the rest optional.
+4. **B) Makes it a read-only tuple of the literal types "parts" and "tools"**: Then (typeof X)[number] is the union "parts" | "tools".
 
 </details>
 

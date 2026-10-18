@@ -330,9 +330,9 @@ print(round(test_recall, 3), round(test_precision, 3), n_calls)
 ## Quick quiz
 
 1. In the project, why choose the threshold with cross_val_predict on the training set?
-   - A) So the test set stays unseen until the final, honest check
-   - B) Because the test set is too small
-   - C) cross_val_predict is faster
+   - A) Because the test set is too small
+   - B) cross_val_predict is faster
+   - C) So the test set stays unseen until the final, honest check
 
 2. Two models tie in cross-validation. Which should usually go forward?
    - A) The simpler, faster, easier-to-explain one
@@ -340,8 +340,8 @@ print(round(test_recall, 3), round(test_precision, 3), n_calls)
    - C) Both, averaged
 
 3. What belongs in the final report?
-   - A) The honest test numbers in plain words, what drives the predictions, and the model's limits
-   - B) Only the AUC
+   - A) Only the AUC
+   - B) The honest test numbers in plain words, what drives the predictions, and the model's limits
    - C) The training accuracy
 
 4. The retention team later asks for 90% recall. What changes?
@@ -352,9 +352,9 @@ print(round(test_recall, 3), round(test_precision, 3), n_calls)
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) So the test set stays unseen until the final, honest check**: Any choice made with the test set makes the final test score optimistic.
+1. **C) So the test set stays unseen until the final, honest check**: Any choice made with the test set makes the final test score optimistic.
 2. **A) The simpler, faster, easier-to-explain one**: Equal performance plus simplicity wins.
-3. **A) The honest test numbers in plain words, what drives the predictions, and the model's limits**: People need numbers they can plan with, the reasons, and the boundaries.
+3. **B) The honest test numbers in plain words, what drives the predictions, and the model's limits**: People need numbers they can plan with, the reasons, and the boundaries.
 4. **A) Lower the threshold (chosen again on validation data); expect more calls and lower precision**: Recall and precision trade off through the threshold.
 
 </details>

@@ -293,18 +293,18 @@ console.log(toQuantity(" 3 "), toQuantity("2.5"), toQuantity(""), toQuantity("12
 
 1. Which declaration should you use by default?
    - A) const
-   - B) let
-   - C) var
+   - B) var
+   - C) let
 
 2. What does typeof null return?
-   - A) "object"
-   - B) "null"
-   - C) "undefined"
+   - A) "null"
+   - B) "undefined"
+   - C) "object"
 
 3. What is Number("")?
    - A) 0
-   - B) NaN
-   - C) null
+   - B) null
+   - C) NaN
 
 4. How do you reliably check whether x is NaN?
    - A) Number.isNaN(x)
@@ -315,7 +315,7 @@ console.log(toQuantity(" 3 "), toQuantity("2.5"), toQuantity(""), toQuantity("12
 <summary>Quiz answers</summary>
 
 1. **A) const**: Use let only when the name must be reassigned; avoid var.
-2. **A) "object"**: A historical bug; test with value === null.
+2. **C) "object"**: A historical bug; test with value === null.
 3. **A) 0**: An empty (or all-space) string converts to 0, a common surprise.
 4. **A) Number.isNaN(x)**: NaN is the only value not equal to itself.
 

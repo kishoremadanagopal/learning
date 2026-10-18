@@ -164,20 +164,20 @@ public class Main {
 ## Quick quiz
 
 1. What's the best use of `Optional`?
-   - A) As the return type of a method that might not find a result
-   - B) As the type of every field
-   - C) Instead of empty lists
+   - A) As the type of every field
+   - B) Instead of empty lists
+   - C) As the return type of a method that might not find a result
 
 2. What does `Optional.ofNullable(null).orElse("x")` return?
-   - A) "x"
-   - B) null
+   - A) null
+   - B) "x"
    - C) It throws
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) As the return type of a method that might not find a result**: It tells callers, in the type, that the result may be missing.
-2. **A) "x"**: An empty Optional falls back to the given value.
+1. **C) As the return type of a method that might not find a result**: It tells callers, in the type, that the result may be missing.
+2. **B) "x"**: An empty Optional falls back to the given value.
 
 </details>
 

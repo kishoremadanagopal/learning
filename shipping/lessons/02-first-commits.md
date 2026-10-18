@@ -312,27 +312,27 @@ git status
    - C) The .git/objects folder
 
 2. You run git add a.txt, then edit a.txt again, then git commit. What's committed?
-   - A) The version of a.txt from when you ran git add
+   - A) Nothing, because the file changed
    - B) The latest version on disk
-   - C) Nothing, because the file changed
+   - C) The version of a.txt from when you ran git add
 
 3. Which is the best commit summary line?
-   - A) Fix total when the cart is empty
-   - B) fixed it
-   - C) Changes
+   - A) Changes
+   - B) Fix total when the cart is empty
+   - C) fixed it
 
 4. What does git commit -am "message" skip?
-   - A) New (untracked) files
+   - A) Deleted tracked files
    - B) Changed files
-   - C) Deleted tracked files
+   - C) New (untracked) files
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) The staging area (index)**: git add puts changes there; git commit records them.
-2. **A) The version of a.txt from when you ran git add**: git add stages a snapshot of the file; stage again to include later edits.
-3. **A) Fix total when the cart is empty**: Imperative, specific and short: it says what the commit does.
-4. **A) New (untracked) files**: -a stages changes to files Git already tracks; new files need git add.
+2. **C) The version of a.txt from when you ran git add**: git add stages a snapshot of the file; stage again to include later edits.
+3. **B) Fix total when the cart is empty**: Imperative, specific and short: it says what the commit does.
+4. **C) New (untracked) files**: -a stages changes to files Git already tracks; new files need git add.
 
 </details>
 

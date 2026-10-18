@@ -311,31 +311,31 @@ for path, body in split_markdown(doc):
 ## Quick quiz
 
 1. What is the main risk of very small chunks?
-   - A) They lose context, such as what "it" or "the fee" refers to
-   - B) They can't be embedded
-   - C) They make the index too small
+   - A) They make the index too small
+   - B) They lose context, such as what "it" or "the fee" refers to
+   - C) They can't be embedded
 
 2. Why add overlap between chunks?
-   - A) So text cut at a boundary still appears whole in one chunk
-   - B) To make the index larger
-   - C) Because embedding models require it
+   - A) Because embedding models require it
+   - B) So text cut at a boundary still appears whole in one chunk
+   - C) To make the index larger
 
 3. What does contextual retrieval add to each chunk before indexing?
-   - A) A short, model-written description situating the chunk within its document
-   - B) The full document
+   - A) The full document
+   - B) A short, model-written description situating the chunk within its document
    - C) A random ID
 
 4. A chunk matches, but the answer needs the surrounding section. Which pattern helps?
    - A) Small-to-big: retrieve the small chunk, give the model its parent section
-   - B) Bigger embeddings
-   - C) More overlap only
+   - B) More overlap only
+   - C) Bigger embeddings
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) They lose context, such as what "it" or "the fee" refers to**: Precise but context-poor; add headers or small-to-big retrieval.
-2. **A) So text cut at a boundary still appears whole in one chunk**: A little repetition protects ideas that straddle a cut.
-3. **A) A short, model-written description situating the chunk within its document**: In Anthropic's tests it cut retrieval failures substantially.
+1. **B) They lose context, such as what "it" or "the fee" refers to**: Precise but context-poor; add headers or small-to-big retrieval.
+2. **B) So text cut at a boundary still appears whole in one chunk**: A little repetition protects ideas that straddle a cut.
+3. **B) A short, model-written description situating the chunk within its document**: In Anthropic's tests it cut retrieval failures substantially.
 4. **A) Small-to-big: retrieve the small chunk, give the model its parent section**: Match precisely, answer with context.
 
 </details>

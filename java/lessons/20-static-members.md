@@ -173,20 +173,20 @@ public class Main {
 ## Quick quiz
 
 1. How many copies of a static field exist?
-   - A) One, shared by the class
-   - B) One per object
-   - C) One per method
+   - A) One per object
+   - B) One per method
+   - C) One, shared by the class
 
 2. Why can't a static method use `this`?
-   - A) It isn't called on any particular object
-   - B) `this` is a reserved word
+   - A) `this` is a reserved word
+   - B) It isn't called on any particular object
    - C) It can, always
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) One, shared by the class**: Static members belong to the class, not to individual objects.
-2. **A) It isn't called on any particular object**: There's no current object inside a static method.
+1. **C) One, shared by the class**: Static members belong to the class, not to individual objects.
+2. **B) It isn't called on any particular object**: There's no current object inside a static method.
 
 </details>
 

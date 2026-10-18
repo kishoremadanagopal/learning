@@ -245,32 +245,32 @@ print({k: round(v, 3) for k, v in cv_means.items()}, best_k)
 ## Quick quiz
 
 1. Why use cross-validation instead of one train/test split to compare models?
-   - A) One split's score depends on luck; CV averages over several splits
-   - B) CV needs less data
+   - A) CV needs less data
+   - B) One split's score depends on luck; CV averages over several splits
    - C) CV makes models train faster
 
 2. In 5-fold CV, how many times is each row used for validation?
    - A) Exactly once
-   - B) Five times
-   - C) Never
+   - B) Never
+   - C) Five times
 
 3. Why does scikit-learn report "neg_mean_absolute_error"?
-   - A) It always treats higher scores as better, so errors are negated
+   - A) It's a different metric from MAE
    - B) Because errors can be negative
-   - C) It's a different metric from MAE
+   - C) It always treats higher scores as better, so errors are negated
 
 4. Two models score 0.814 ± 0.03 and 0.813 ± 0.06 in CV. What's the sensible conclusion?
-   - A) They're about equally good; prefer the simpler one
-   - B) The first is clearly better
-   - C) Cross-validation failed
+   - A) The first is clearly better
+   - B) Cross-validation failed
+   - C) They're about equally good; prefer the simpler one
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) One split's score depends on luck; CV averages over several splits**: Averaging over folds gives a steadier score and shows how much it wobbles.
+1. **B) One split's score depends on luck; CV averages over several splits**: Averaging over folds gives a steadier score and shows how much it wobbles.
 2. **A) Exactly once**: Each fold is the validation fold in one round.
-3. **A) It always treats higher scores as better, so errors are negated**: Flip the sign to read the usual MAE.
-4. **A) They're about equally good; prefer the simpler one**: A difference far smaller than the wobble isn't a real difference.
+3. **C) It always treats higher scores as better, so errors are negated**: Flip the sign to read the usual MAE.
+4. **C) They're about equally good; prefer the simpler one**: A difference far smaller than the wobble isn't a real difference.
 
 </details>
 

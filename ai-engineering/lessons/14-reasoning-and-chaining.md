@@ -307,14 +307,14 @@ print(majority_answer(replies))
    - C) "Answer immediately without thinking"
 
 2. Why must chain-of-thought reasoning come before the answer?
-   - A) The model generates in order, so reasoning written after the answer can't change it
+   - A) The API rejects answers before reasoning
    - B) Tags must be alphabetical
-   - C) The API rejects answers before reasoning
+   - C) The model generates in order, so reasoning written after the answer can't change it
 
 3. What is the main advantage of a prompt chain over one big prompt?
-   - A) Each step is simpler and its output can be logged, checked and tested
-   - B) It's always cheaper
-   - C) It removes the need for evaluation
+   - A) It's always cheaper
+   - B) It removes the need for evaluation
+   - C) Each step is simpler and its output can be logged, checked and tested
 
 4. When is voting across several answers worth its cost?
    - A) For important decisions where independent attempts may make different mistakes
@@ -325,8 +325,8 @@ print(majority_answer(replies))
 <summary>Quiz answers</summary>
 
 1. **A) A general goal, such as "think carefully about edge cases", plus a request to verify the answer**: Describe the goal and how to check it; let the model plan.
-2. **A) The model generates in order, so reasoning written after the answer can't change it**: Otherwise the "reasoning" just justifies the first guess.
-3. **A) Each step is simpler and its output can be logged, checked and tested**: Chains add control points; they also add calls.
+2. **C) The model generates in order, so reasoning written after the answer can't change it**: Otherwise the "reasoning" just justifies the first guess.
+3. **C) Each step is simpler and its output can be logged, checked and tested**: Chains add control points; they also add calls.
 4. **A) For important decisions where independent attempts may make different mistakes**: It multiplies cost by the number of attempts.
 
 </details>

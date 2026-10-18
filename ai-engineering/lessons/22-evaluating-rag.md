@@ -314,32 +314,32 @@ print(groundedness(answer, sources))
 ## Quick quiz
 
 1. Retrieval found the right chunk, but the answer is wrong. Where should you look?
-   - A) The generation step: the prompt, the model, or conflicting chunks
-   - B) The embedding model
-   - C) The chunk size
+   - A) The embedding model
+   - B) The chunk size
+   - C) The generation step: the prompt, the model, or conflicting chunks
 
 2. Why does recall@k usually matter more than precision@k for RAG?
    - A) The model can ignore an irrelevant chunk but can't use a relevant one that was never retrieved
-   - B) Precision can't be measured
-   - C) Recall is cheaper to compute
+   - B) Recall is cheaper to compute
+   - C) Precision can't be measured
 
 3. Why include unanswerable questions in a RAG evaluation set?
-   - A) To check the system says "I don't know" instead of inventing an answer
-   - B) To make the scores look better
-   - C) Because every question must be unanswerable
+   - A) To make the scores look better
+   - B) Because every question must be unanswerable
+   - C) To check the system says "I don't know" instead of inventing an answer
 
 4. What's a weakness of word-overlap groundedness checks?
-   - A) They miss paraphrases and can't detect contradictions that reuse the source's words
-   - B) They're too slow
+   - A) They're too slow
+   - B) They miss paraphrases and can't detect contradictions that reuse the source's words
    - C) They need a GPU
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The generation step: the prompt, the model, or conflicting chunks**: Diagnose which half failed before changing anything.
+1. **C) The generation step: the prompt, the model, or conflicting chunks**: Diagnose which half failed before changing anything.
 2. **A) The model can ignore an irrelevant chunk but can't use a relevant one that was never retrieved**: Missing evidence can't be recovered later in the pipeline.
-3. **A) To check the system says "I don't know" instead of inventing an answer**: Refusal accuracy is part of quality.
-4. **A) They miss paraphrases and can't detect contradictions that reuse the source's words**: Use them as a cheap filter, not a verdict.
+3. **C) To check the system says "I don't know" instead of inventing an answer**: Refusal accuracy is part of quality.
+4. **B) They miss paraphrases and can't detect contradictions that reuse the source's words**: Use them as a cheap filter, not a verdict.
 
 </details>
 

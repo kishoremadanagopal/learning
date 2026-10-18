@@ -182,26 +182,26 @@ print(invert({"Ana": "555-1234", "Ben": "555-9876"}))
 ## Quick quiz
 
 1. What does `{"a": 1}.get("b", 0)` return?
-   - A) None
-   - B) 0
-   - C) KeyError
+   - A) KeyError
+   - B) None
+   - C) 0
 
 2. Which can NOT be a dictionary key?
    - A) `"name"`
-   - B) `(1, 2)`
-   - C) `[1, 2]`
+   - B) `[1, 2]`
+   - C) `(1, 2)`
 
 3. What does `for k, v in d.items():` give you?
-   - A) Each key and its value
+   - A) Only the keys
    - B) Each value twice
-   - C) Only the keys
+   - C) Each key and its value
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) 0**: `.get()` returns the default when the key is missing.
-2. **C) `[1, 2]`**: Keys must be immutable (hashable). Lists can change, so they can't be keys.
-3. **A) Each key and its value**: `.items()` produces (key, value) pairs, which the loop unpacks.
+1. **C) 0**: `.get()` returns the default when the key is missing.
+2. **B) `[1, 2]`**: Keys must be immutable (hashable). Lists can change, so they can't be keys.
+3. **C) Each key and its value**: `.items()` produces (key, value) pairs, which the loop unpacks.
 
 </details>
 

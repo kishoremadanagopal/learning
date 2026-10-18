@@ -287,9 +287,9 @@ print(nucleus({"Paris": 0.8, "Lyon": 0.1, "Rome": 0.06, "cat": 0.04}, 0.85))
    - C) Stops the model from generating
 
 2. What does top-p = 0.9 keep?
-   - A) The smallest set of most likely tokens whose probabilities add up to at least 0.9
+   - A) The 90 most likely tokens
    - B) Every token with probability at least 0.9
-   - C) The 90 most likely tokens
+   - C) The smallest set of most likely tokens whose probabilities add up to at least 0.9
 
 3. On a model that exposes sampling settings, which suit extracting fields from invoices into JSON?
    - A) A low temperature, for consistent and focused output
@@ -298,14 +298,14 @@ print(nucleus({"Paris": 0.8, "Lyon": 0.1, "Rome": 0.06, "cat": 0.04}, 0.85))
 
 4. Does temperature 0 guarantee identical outputs on every call?
    - A) No: small variations can still occur, so systems should tolerate them
-   - B) Yes, always
-   - C) Only on weekends
+   - B) Only on weekends
+   - C) Yes, always
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Sharpens the distribution, making the most likely tokens even more likely**: Dividing logits by T < 1 widens the gaps before softmax.
-2. **A) The smallest set of most likely tokens whose probabilities add up to at least 0.9**: The nucleus adapts to how confident the model is.
+2. **C) The smallest set of most likely tokens whose probabilities add up to at least 0.9**: The nucleus adapts to how confident the model is.
 3. **A) A low temperature, for consistent and focused output**: Extraction should give the same answer every time. (On current Claude models, use structured outputs instead.)
 4. **A) No: small variations can still occur, so systems should tolerate them**: Hardware and serving details can introduce tiny differences.
 

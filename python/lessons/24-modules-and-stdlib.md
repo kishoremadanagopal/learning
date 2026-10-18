@@ -193,19 +193,19 @@ print(days_until(2026, 12, 25, date(2026, 10, 2)))
 ## Quick quiz
 
 1. What does `if __name__ == "__main__":` check?
-   - A) Whether the file is being run directly rather than imported
-   - B) Whether a function called main exists
-   - C) Whether Python is installed
+   - A) Whether Python is installed
+   - B) Whether the file is being run directly rather than imported
+   - C) Whether a function called main exists
 
 2. Which import style is generally discouraged?
-   - A) `import math`
-   - B) `from math import sqrt`
+   - A) `from math import sqrt`
+   - B) `import math`
    - C) `from math import *`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Whether the file is being run directly rather than imported**: `__name__` is "__main__" only for the file you run directly.
+1. **B) Whether the file is being run directly rather than imported**: `__name__` is "__main__" only for the file you run directly.
 2. **C) `from math import *`**: Star imports pull in unknown names and make code harder to read.
 
 </details>

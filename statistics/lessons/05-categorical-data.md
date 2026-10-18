@@ -166,26 +166,26 @@ print(better_device)
 ## Quick quiz
 
 1. What is the mean of a column of 1s and 0s?
-   - A) Always 0.5
+   - A) The number of 1s
    - B) The proportion of 1s
-   - C) The number of 1s
+   - C) Always 0.5
 
 2. Why prefer a sorted bar chart to a pie chart with seven slices?
-   - A) People compare lengths more accurately than angles
-   - B) Pie charts can't show percentages
-   - C) Bar charts use less ink
+   - A) Bar charts use less ink
+   - B) People compare lengths more accurately than angles
+   - C) Pie charts can't show percentages
 
 3. What does `normalize="index"` do in `pd.crosstab`?
    - A) Sorts the rows
-   - B) Turns each row into percentages of that row's total
-   - C) Removes missing values
+   - B) Removes missing values
+   - C) Turns each row into percentages of that row's total
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **B) The proportion of 1s**: Adding 1s counts them; dividing by the total turns the count into a share.
-2. **A) People compare lengths more accurately than angles**: With many similar slices, a pie becomes guesswork; bars make the ranking obvious.
-3. **B) Turns each row into percentages of that row's total**: Each row then adds up to 1 (or 100%), so groups of different sizes can be compared.
+2. **B) People compare lengths more accurately than angles**: With many similar slices, a pie becomes guesswork; bars make the ranking obvious.
+3. **C) Turns each row into percentages of that row's total**: Each row then adds up to 1 (or 100%), so groups of different sizes can be compared.
 
 </details>
 

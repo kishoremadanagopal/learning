@@ -124,24 +124,24 @@ print(f"Fahrenheit: {fahrenheit:.1f}")
 ## Quick quiz
 
 1. What type does `input()` return?
-   - A) It depends on what the user types
-   - B) Always str
+   - A) Always str
+   - B) It depends on what the user types
    - C) int
 
 2. What does `int("12") + int("3")` give?
    - A) 15
-   - B) "123"
-   - C) An error
+   - B) An error
+   - C) "123"
 
 3. What happens with `int("3.5")`?
-   - A) 3
-   - B) 4
+   - A) 4
+   - B) 3
    - C) ValueError
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) Always str**: `input()` always returns a string, even if the user types digits.
+1. **A) Always str**: `input()` always returns a string, even if the user types digits.
 2. **A) 15**: Both strings are converted to numbers first, so they add normally.
 3. **C) ValueError**: `int()` can't read decimal text directly. Use `int(float("3.5"))`.
 

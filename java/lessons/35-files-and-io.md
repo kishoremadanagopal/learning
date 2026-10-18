@@ -228,20 +228,20 @@ public class Main {
 ## Quick quiz
 
 1. Why does `Files.readString` need `throws IOException` or a try/catch?
-   - A) IOException is a checked exception
-   - B) It always fails
+   - A) It always fails
+   - B) IOException is a checked exception
    - C) Files is a deprecated class
 
 2. Why use try-with-resources with `Files.lines(...)`?
-   - A) So the file is closed when you're done
-   - B) It makes reading faster
+   - A) It makes reading faster
+   - B) So the file is closed when you're done
    - C) It's required to filter lines
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) IOException is a checked exception**: The compiler requires checked exceptions to be handled or declared.
-2. **A) So the file is closed when you're done**: The stream holds the file open until it's closed.
+1. **B) IOException is a checked exception**: The compiler requires checked exceptions to be handled or declared.
+2. **B) So the file is closed when you're done**: The stream holds the file open until it's closed.
 
 </details>
 

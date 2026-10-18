@@ -392,9 +392,9 @@ console.log(contactLine(2));
 ## Quick quiz
 
 1. What is the type of x inside if (typeof x === "string") when x is string | number?
-   - A) string
-   - B) string | number
-   - C) unknown
+   - A) unknown
+   - B) string
+   - C) string | number
 
 2. What makes a union a discriminated union?
    - A) Every member has a common property with a different literal type, like kind
@@ -402,21 +402,21 @@ console.log(contactLine(2));
    - C) It has exactly two members
 
 3. Why put const unhandled: never = s in a switch's default branch?
-   - A) So that forgetting to handle a new member becomes a compile error
-   - B) To make the switch faster
-   - C) Because switch statements require it
+   - A) Because switch statements require it
+   - B) So that forgetting to handle a new member becomes a compile error
+   - C) To make the switch faster
 
 4. What does value as Product check at runtime?
    - A) Nothing: it only tells the compiler to trust you
-   - B) That value has every Product property
-   - C) That value isn't null
+   - B) That value isn't null
+   - C) That value has every Product property
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) string**: TypeScript narrows the union using the check.
+1. **B) string**: TypeScript narrows the union using the check.
 2. **A) Every member has a common property with a different literal type, like kind**: Checking the discriminant narrows to one member.
-3. **A) So that forgetting to handle a new member becomes a compile error**: If a case is missing, s isn't never there, and the assignment fails to compile.
+3. **B) So that forgetting to handle a new member becomes a compile error**: If a case is missing, s isn't never there, and the assignment fails to compile.
 4. **A) Nothing: it only tells the compiler to trust you**: Assertions are erased like all types; validate data with real code instead.
 
 </details>

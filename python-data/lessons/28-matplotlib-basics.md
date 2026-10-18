@@ -221,26 +221,26 @@ plt.show()
 ## Quick quiz
 
 1. In `fig, ax = plt.subplots()`, what is `ax`?
-   - A) The whole image
-   - B) The chart area you draw on
+   - A) The chart area you draw on
+   - B) The whole image
    - C) The x axis only
 
 2. What does `ax.legend()` need in order to show anything?
    - A) Lines drawn with a `label=`
-   - B) A title
-   - C) At least three lines
+   - B) At least three lines
+   - C) A title
 
 3. What makes a good chart title?
-   - A) The column names
-   - B) The finding, like "Revenue grew 38% in the first half"
-   - C) The file name
+   - A) The finding, like "Revenue grew 38% in the first half"
+   - B) The file name
+   - C) The column names
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) The chart area you draw on**: The figure is the page; the axes object is the chart area with its own x and y axes.
+1. **A) The chart area you draw on**: The figure is the page; the axes object is the chart area with its own x and y axes.
 2. **A) Lines drawn with a `label=`**: The legend lists each labelled line. Without labels it has nothing to show.
-3. **B) The finding, like "Revenue grew 38% in the first half"**: A title that states the takeaway tells the reader what to look for.
+3. **A) The finding, like "Revenue grew 38% in the first half"**: A title that states the takeaway tells the reader what to look for.
 
 </details>
 

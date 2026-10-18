@@ -228,20 +228,20 @@ print(cart.total(), cart.count())
 ## Quick quiz
 
 1. What is `self` in a method?
-   - A) The object the method was called on
-   - B) The class
+   - A) The class
+   - B) The object the method was called on
    - C) A reserved keyword you can't rename
 
 2. When does `__init__` run?
    - A) When the class is defined
-   - B) Each time a new object is created
-   - C) When the program ends
+   - B) When the program ends
+   - C) Each time a new object is created
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The object the method was called on**: Python passes the instance automatically. `self` is a convention, not a keyword.
-2. **B) Each time a new object is created**: `Dog("Rex", 3)` creates an object and immediately calls `__init__` on it.
+1. **B) The object the method was called on**: Python passes the instance automatically. `self` is a convention, not a keyword.
+2. **C) Each time a new object is created**: `Dog("Rex", 3)` creates an object and immediately calls `__init__` on it.
 
 </details>
 

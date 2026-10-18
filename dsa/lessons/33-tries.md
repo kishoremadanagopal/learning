@@ -487,32 +487,32 @@ print(suggestions(["mobile", "mouse", "moneypot", "monitor", "mousepad"], ["m", 
 ## Quick quiz
 
 1. Searching a trie for a word of length L takes:
-   - A) O(L), however many words are stored
-   - B) O(n), where n is the number of words
-   - C) O(log n)
+   - A) O(n), where n is the number of words
+   - B) O(log n)
+   - C) O(L), however many words are stored
 
 2. A trie contains "apple". Why does search("app") return False?
-   - A) No word is marked as ending at the second "p"
-   - B) "app" is too short
-   - C) Tries can't store prefixes
+   - A) Tries can't store prefixes
+   - B) No word is marked as ending at the second "p"
+   - C) "app" is too short
 
 3. Which problem is a trie especially good at?
-   - A) Finding all words with a given prefix
-   - B) Finding the largest number
-   - C) Sorting numbers
+   - A) Sorting numbers
+   - B) Finding all words with a given prefix
+   - C) Finding the largest number
 
 4. What is the main downside of a trie compared with a set of strings?
-   - A) Memory: a node (with its own dict) for every character
-   - B) Exact lookups are impossible
-   - C) It can't store more than 26 words
+   - A) Exact lookups are impossible
+   - B) It can't store more than 26 words
+   - C) Memory: a node (with its own dict) for every character
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) O(L), however many words are stored**: Each step follows one character.
-2. **A) No word is marked as ending at the second "p"**: The path exists, but the end-of-word flag isn't set there.
-3. **A) Finding all words with a given prefix**: Every word with the prefix lies in the subtree below the prefix's node.
-4. **A) Memory: a node (with its own dict) for every character**: Radix trees compress chains of single-child nodes to save space.
+1. **C) O(L), however many words are stored**: Each step follows one character.
+2. **B) No word is marked as ending at the second "p"**: The path exists, but the end-of-word flag isn't set there.
+3. **B) Finding all words with a given prefix**: Every word with the prefix lies in the subtree below the prefix's node.
+4. **C) Memory: a node (with its own dict) for every character**: Radix trees compress chains of single-child nodes to save space.
 
 </details>
 

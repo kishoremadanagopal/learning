@@ -327,19 +327,19 @@ That's a real limitation of splitting on punctuation: a citation placed **after*
 ## Quick quiz
 
 1. What problem does RAG solve?
-   - A) The model lacks your private or recent information, so you retrieve it and put it in the prompt
-   - B) The model is too slow
-   - C) The model's context window is too small for any documents
+   - A) The model's context window is too small for any documents
+   - B) The model lacks your private or recent information, so you retrieve it and put it in the prompt
+   - C) The model is too slow
 
 2. Why tell the model to say "I don't know" when the documents don't contain the answer?
-   - A) Otherwise it's pushed to answer anyway, often by making something up
-   - B) It's required by the API
+   - A) It's required by the API
+   - B) Otherwise it's pushed to answer anyway, often by making something up
    - C) It makes retrieval faster
 
 3. Your whole knowledge base is 80 pages. What's a sensible first approach?
-   - A) Put it all in the prompt with prompt caching
-   - B) Build a vector database with three rerankers
-   - C) Fine-tune a model on it
+   - A) Fine-tune a model on it
+   - B) Put it all in the prompt with prompt caching
+   - C) Build a vector database with three rerankers
 
 4. Why keep metadata such as source and permissions with each chunk?
    - A) To cite sources and to retrieve only what the user is allowed to see
@@ -349,9 +349,9 @@ That's a real limitation of splitting on punctuation: a citation placed **after*
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The model lacks your private or recent information, so you retrieve it and put it in the prompt**: It turns a closed-book exam into an open-book one.
-2. **A) Otherwise it's pushed to answer anyway, often by making something up**: An honest way out reduces hallucinations when retrieval misses.
-3. **A) Put it all in the prompt with prompt caching**: Retrieval adds moving parts; start simple when the content fits.
+1. **B) The model lacks your private or recent information, so you retrieve it and put it in the prompt**: It turns a closed-book exam into an open-book one.
+2. **B) Otherwise it's pushed to answer anyway, often by making something up**: An honest way out reduces hallucinations when retrieval misses.
+3. **B) Put it all in the prompt with prompt caching**: Retrieval adds moving parts; start simple when the content fits.
 4. **A) To cite sources and to retrieve only what the user is allowed to see**: Citations and access control both depend on it.
 
 </details>

@@ -273,14 +273,14 @@ console.log(describeUser({ name: "Bo" }));
 ## Quick quiz
 
 1. What does const [first, ...rest] = [1, 2, 3] give?
-   - A) first = 1, rest = [2, 3]
-   - B) first = [1], rest = 3
-   - C) first = 1, rest = 2
+   - A) first = 1, rest = 2
+   - B) first = 1, rest = [2, 3]
+   - C) first = [1], rest = 3
 
 2. What does const { customer: buyer } = order do?
-   - A) Creates a variable called buyer holding order.customer
-   - B) Creates a variable called customer
-   - C) Sets order.customer to buyer
+   - A) Sets order.customer to buyer
+   - B) Creates a variable called buyer holding order.customer
+   - C) Creates a variable called customer
 
 3. In { ...defaults, ...userPrefs }, which wins when both have fontSize?
    - A) userPrefs, because later spreads overwrite earlier ones
@@ -288,17 +288,17 @@ console.log(describeUser({ name: "Bo" }));
    - C) Neither; it throws
 
 4. Why write function f({ a = 1 } = {})?
-   - A) So callers can omit the options object entirely
-   - B) To make a required
-   - C) It's required syntax for destructuring
+   - A) It's required syntax for destructuring
+   - B) So callers can omit the options object entirely
+   - C) To make a required
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) first = 1, rest = [2, 3]**: ...rest collects the remaining items into an array.
-2. **A) Creates a variable called buyer holding order.customer**: The name after the colon is the new variable.
+1. **B) first = 1, rest = [2, 3]**: ...rest collects the remaining items into an array.
+2. **B) Creates a variable called buyer holding order.customer**: The name after the colon is the new variable.
 3. **A) userPrefs, because later spreads overwrite earlier ones**: Order matters: put the overrides last.
-4. **A) So callers can omit the options object entirely**: Without = {}, calling f() would try to destructure undefined.
+4. **B) So callers can omit the options object entirely**: Without = {}, calling f() would try to destructure undefined.
 
 </details>
 

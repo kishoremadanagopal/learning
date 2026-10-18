@@ -206,9 +206,9 @@ print(round(pearson_r, 3), pearson_p, round(spearman_rho, 3))
 ## Quick quiz
 
 1. r = -0.8 between price and sales means:
-   - A) A strong tendency for sales to fall as price rises
+   - A) 80% of sales are caused by price
    - B) Price has no effect on sales
-   - C) 80% of sales are caused by price
+   - C) A strong tendency for sales to fall as price rises
 
 2. Two variables have r ≈ 0. Can they still be strongly related?
    - A) Yes, by a curve, which r doesn't measure
@@ -216,16 +216,16 @@ print(round(pearson_r, 3), pearson_p, round(spearman_rho, 3))
    - C) Only if the sample is small
 
 3. Towns with more firefighters have more fire damage. The best explanation is:
-   - A) Firefighters cause damage
-   - B) A confounder: bigger fires bring both more firefighters and more damage
-   - C) Coincidence
+   - A) A confounder: bigger fires bring both more firefighters and more damage
+   - B) Coincidence
+   - C) Firefighters cause damage
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) A strong tendency for sales to fall as price rises**: The sign gives the direction and the size gives the strength of the straight-line relationship.
+1. **C) A strong tendency for sales to fall as price rises**: The sign gives the direction and the size gives the strength of the straight-line relationship.
 2. **A) Yes, by a curve, which r doesn't measure**: r only measures straight-line relationships. Look at the scatter plot.
-3. **B) A confounder: bigger fires bring both more firefighters and more damage**: A third variable (fire size) drives both. Correlation alone can't show cause.
+3. **A) A confounder: bigger fires bring both more firefighters and more damage**: A third variable (fire size) drives both. Correlation alone can't show cause.
 
 </details>
 

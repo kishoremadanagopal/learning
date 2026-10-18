@@ -360,32 +360,32 @@ Total: 3.
 ## Quick quiz
 
 1. What are the three steps of divide and conquer?
-   - A) Divide into smaller subproblems, solve them recursively, combine their answers
-   - B) Sort, search, return
-   - C) Guess, check, repeat
+   - A) Guess, check, repeat
+   - B) Divide into smaller subproblems, solve them recursively, combine their answers
+   - C) Sort, search, return
 
 2. Why does fast exponentiation compute the half-power only once?
-   - A) Calling it twice would double the work at every level, bringing it back to O(n)
+   - A) To avoid integer overflow
    - B) Python caches it automatically
-   - C) To avoid integer overflow
+   - C) Calling it twice would double the work at every level, bringing it back to O(n)
 
 3. Merge sort's recurrence is T(n) = 2T(n/2) + O(n). Its cost is:
-   - A) O(n log n)
+   - A) O(n²)
    - B) O(n)
-   - C) O(n²)
+   - C) O(n log n)
 
 4. Which problem is NOT a good fit for plain divide and conquer?
-   - A) Fibonacci, because its subproblems overlap and get recomputed
-   - B) Sorting a list
+   - A) Sorting a list
+   - B) Fibonacci, because its subproblems overlap and get recomputed
    - C) Searching a sorted list
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Divide into smaller subproblems, solve them recursively, combine their answers**: Binary search, merge sort and fast power all follow this shape.
-2. **A) Calling it twice would double the work at every level, bringing it back to O(n)**: One call per level gives log n levels of O(1) work.
-3. **A) O(n log n)**: log n levels, each doing O(n) merging work.
-4. **A) Fibonacci, because its subproblems overlap and get recomputed**: Overlapping subproblems call for memoisation or dynamic programming instead.
+1. **B) Divide into smaller subproblems, solve them recursively, combine their answers**: Binary search, merge sort and fast power all follow this shape.
+2. **C) Calling it twice would double the work at every level, bringing it back to O(n)**: One call per level gives log n levels of O(1) work.
+3. **C) O(n log n)**: log n levels, each doing O(n) merging work.
+4. **B) Fibonacci, because its subproblems overlap and get recomputed**: Overlapping subproblems call for memoisation or dynamic programming instead.
 
 </details>
 

@@ -417,18 +417,18 @@ Open these only after a real attempt. Each one explains the solution step by ste
 ## Quick quiz
 
 1. A listener on a ul handles a click on a button inside an li. What are event.target and event.currentTarget?
-   - A) target is the button, currentTarget is the ul
+   - A) target is the ul, currentTarget is the button
    - B) Both are the ul
-   - C) target is the ul, currentTarget is the button
+   - C) target is the button, currentTarget is the ul
 
 2. Why does event delegation work for elements added after the listener?
-   - A) Their events bubble up to the container, which already has the listener
-   - B) addEventListener watches for new elements automatically
+   - A) addEventListener watches for new elements automatically
+   - B) Their events bubble up to the container, which already has the listener
    - C) The browser copies listeners to new elements
 
 3. Which is the best way to remove several listeners when a dialog closes?
-   - A) Pass the same AbortController's signal to each, then call abort()
-   - B) Call stopPropagation in each listener
+   - A) Call stopPropagation in each listener
+   - B) Pass the same AbortController's signal to each, then call abort()
    - C) Set the elements' onclick to null
 
 4. Why use a <button> instead of a <div> with a click listener?
@@ -439,9 +439,9 @@ Open these only after a real attempt. Each one explains the solution step by ste
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) target is the button, currentTarget is the ul**: target is where the event happened; currentTarget is whose listener is running.
-2. **A) Their events bubble up to the container, which already has the listener**: The listener is on the container, which never changes.
-3. **A) Pass the same AbortController's signal to each, then call abort()**: One abort() removes every listener registered with that signal.
+1. **C) target is the button, currentTarget is the ul**: target is where the event happened; currentTarget is whose listener is running.
+2. **B) Their events bubble up to the container, which already has the listener**: The listener is on the container, which never changes.
+3. **B) Pass the same AbortController's signal to each, then call abort()**: One abort() removes every listener registered with that signal.
 4. **A) Buttons work with the keyboard and are announced to screen readers**: Divs get none of the keyboard and accessibility behaviour for free.
 
 </details>

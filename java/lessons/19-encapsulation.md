@@ -195,20 +195,20 @@ public class Main {
 ## Quick quiz
 
 1. Which modifier hides a field from every other class?
-   - A) private
+   - A) public
    - B) protected
-   - C) public
+   - C) private
 
 2. Why make `balance` private and offer `deposit`/`withdraw`?
-   - A) So the account can enforce its rules, like never going negative
+   - A) It's required for doubles
    - B) Private fields are faster
-   - C) It's required for doubles
+   - C) So the account can enforce its rules, like never going negative
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) private**: `private` members are visible only inside their own class.
-2. **A) So the account can enforce its rules, like never going negative**: Methods can validate every change; direct field access can't.
+1. **C) private**: `private` members are visible only inside their own class.
+2. **C) So the account can enforce its rules, like never going negative**: Methods can validate every change; direct field access can't.
 
 </details>
 

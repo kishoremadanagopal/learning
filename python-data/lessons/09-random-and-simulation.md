@@ -204,8 +204,8 @@ print(len(train), len(test))
 
 2. What does `(rolls == 6).mean()` give for an array of dice rolls?
    - A) The average roll
-   - B) The share of rolls that were 6
-   - C) The number of 6s
+   - B) The number of 6s
+   - C) The share of rolls that were 6
 
 3. Which describes the normal distribution?
    - A) Every value equally likely
@@ -216,7 +216,7 @@ print(len(train), len(test))
 <summary>Quiz answers</summary>
 
 1. **B) So the same "random" numbers come out every run, and results can be reproduced**: With a seed, anyone running your code gets the same results, which matters for experiments and models.
-2. **B) The share of rolls that were 6**: The comparison makes True/False values; their mean is the fraction that are True.
+2. **C) The share of rolls that were 6**: The comparison makes True/False values; their mean is the fraction that are True.
 3. **B) Most values near the average, fewer further away**: The normal "bell curve" clusters around the mean, with fewer values in the tails.
 
 </details>

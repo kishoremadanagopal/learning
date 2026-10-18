@@ -427,32 +427,32 @@ console.log(result);
 ## Quick quiz
 
 1. The API is stateless. What must you send to continue a conversation?
-   - A) The whole history: earlier user and assistant turns, plus the new message
+   - A) The id of the previous message
    - B) Only the new message; the server remembers the rest
-   - C) The id of the previous message
+   - C) The whole history: earlier user and assistant turns, plus the new message
 
 2. A reply has stop_reason "max_tokens". What does that mean?
-   - A) It was cut off because it reached max_tokens
+   - A) The model wants to use a tool
    - B) It finished normally
-   - C) The model wants to use a tool
+   - C) It was cut off because it reached max_tokens
 
 3. Which errors are worth retrying with backoff?
    - A) 429 and 5xx (including 529 overloaded)
-   - B) 400 and 401
-   - C) All errors
+   - B) All errors
+   - C) 400 and 401
 
 4. Why can't you parse each streamed chunk as one event?
-   - A) Chunks can split an event (or a character) at any point, so you must buffer
-   - B) Each chunk contains several unrelated replies
-   - C) Streamed data isn't JSON
+   - A) Streamed data isn't JSON
+   - B) Chunks can split an event (or a character) at any point, so you must buffer
+   - C) Each chunk contains several unrelated replies
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The whole history: earlier user and assistant turns, plus the new message**: Every request carries the full conversation.
-2. **A) It was cut off because it reached max_tokens**: Check it every time; a cut-off reply looks normal.
+1. **C) The whole history: earlier user and assistant turns, plus the new message**: Every request carries the full conversation.
+2. **C) It was cut off because it reached max_tokens**: Check it every time; a cut-off reply looks normal.
 3. **A) 429 and 5xx (including 529 overloaded)**: 4xx errors other than 429 mean the request itself must change.
-4. **A) Chunks can split an event (or a character) at any point, so you must buffer**: Buffer, extract complete events, and keep the rest.
+4. **B) Chunks can split an event (or a character) at any point, so you must buffer**: Buffer, extract complete events, and keep the rest.
 
 </details>
 

@@ -211,26 +211,26 @@ print(underpriced_id)
 ## Quick quiz
 
 1. A regression gives sales ≈ 200 + 15 × ads. What does 15 mean?
-   - A) Each extra ad goes with about 15 more sales, on average
-   - B) 15% of sales come from ads
+   - A) 15% of sales come from ads
+   - B) Each extra ad goes with about 15 more sales, on average
    - C) Sales are 15 when there are no ads
 
 2. R² = 0.36 means:
-   - A) The correlation is 0.36
+   - A) 36% of predictions are correct
    - B) The line explains about 36% of the variation in y
-   - C) 36% of predictions are correct
+   - C) The correlation is 0.36
 
 3. Why is predicting far outside the data's range risky?
-   - A) The formula stops working
-   - B) The straight-line pattern may not continue there (extrapolation)
-   - C) R² becomes negative
+   - A) R² becomes negative
+   - B) The formula stops working
+   - C) The straight-line pattern may not continue there (extrapolation)
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Each extra ad goes with about 15 more sales, on average**: The slope is the average change in y per one-unit increase in x.
+1. **B) Each extra ad goes with about 15 more sales, on average**: The slope is the average change in y per one-unit increase in x.
 2. **B) The line explains about 36% of the variation in y**: R² is the share of variation explained; here r would be ±0.6.
-3. **B) The straight-line pattern may not continue there (extrapolation)**: You have no evidence about how the relationship behaves beyond the data.
+3. **C) The straight-line pattern may not continue there (extrapolation)**: You have no evidence about how the relationship behaves beyond the data.
 
 </details>
 

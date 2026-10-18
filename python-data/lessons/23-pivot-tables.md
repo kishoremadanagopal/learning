@@ -183,9 +183,9 @@ print(counts)
 ## Quick quiz
 
 1. In `pivot_table(index="region", columns="category", ...)`, what are the rows?
-   - A) One row per region
-   - B) One row per category
-   - C) One row per order
+   - A) One row per order
+   - B) One row per region
+   - C) One row per category
 
 2. What does `margins=True` add?
    - A) Spaces between columns
@@ -194,15 +194,15 @@ print(counts)
 
 3. What does `pd.crosstab(a, b)` count?
    - A) The values of a
-   - B) How often each combination of a and b occurs
-   - C) The missing values
+   - B) The missing values
+   - C) How often each combination of a and b occurs
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) One row per region**: `index` goes down the side; `columns` goes across the top.
+1. **B) One row per region**: `index` goes down the side; `columns` goes across the top.
 2. **B) Total rows and columns labelled "All"**: Margins are the totals along each side, like a spreadsheet's grand total.
-3. **B) How often each combination of a and b occurs**: A crosstab is a table of combination counts. `normalize=` turns them into shares.
+3. **C) How often each combination of a and b occurs**: A crosstab is a table of combination counts. `normalize=` turns them into shares.
 
 </details>
 

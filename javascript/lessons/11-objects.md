@@ -290,31 +290,31 @@ console.log(getPath(order, "customer.address.city", "?"), getPath(order, "custom
 
 1. When must you use brackets instead of a dot to read a property?
    - A) When the key is in a variable or isn't a valid name, like "frame size"
-   - B) When the value is a number
-   - C) Always, for nested objects
+   - B) Always, for nested objects
+   - C) When the value is a number
 
 2. const b = { ...a }; Then b.address.city = "Leeds". What happens to a.address.city?
-   - A) It changes too, because spread makes a shallow copy
+   - A) An error is thrown
    - B) Nothing; b is a full copy
-   - C) An error is thrown
+   - C) It changes too, because spread makes a shallow copy
 
 3. How do you test whether an object has a key "bells", even if its value is 0?
-   - A) Object.hasOwn(obj, "bells") or "bells" in obj
-   - B) if (obj.bells)
-   - C) obj.bells !== 0
+   - A) if (obj.bells)
+   - B) obj.bells !== 0
+   - C) Object.hasOwn(obj, "bells") or "bells" in obj
 
 4. What does Object.fromEntries([["a", 1], ["b", 2]]) return?
-   - A) { a: 1, b: 2 }
-   - B) [["a", 1], ["b", 2]]
-   - C) a Map
+   - A) [["a", 1], ["b", 2]]
+   - B) a Map
+   - C) { a: 1, b: 2 }
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) When the key is in a variable or isn't a valid name, like "frame size"**: obj[key] evaluates key; obj.key looks for a property literally called "key".
-2. **A) It changes too, because spread makes a shallow copy**: Use structuredClone for a deep copy.
-3. **A) Object.hasOwn(obj, "bells") or "bells" in obj**: Truthiness tests treat 0 as missing.
-4. **A) { a: 1, b: 2 }**: It's the reverse of Object.entries.
+2. **C) It changes too, because spread makes a shallow copy**: Use structuredClone for a deep copy.
+3. **C) Object.hasOwn(obj, "bells") or "bells" in obj**: Truthiness tests treat 0 as missing.
+4. **C) { a: 1, b: 2 }**: It's the reverse of Object.entries.
 
 </details>
 

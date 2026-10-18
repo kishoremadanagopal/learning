@@ -299,9 +299,9 @@ Returns **3**.
 ## Quick quiz
 
 1. When does the opposite-ends pair search work?
-   - A) When the array is sorted
-   - B) On any array
-   - C) Only when all numbers are positive
+   - A) On any array
+   - B) Only when all numbers are positive
+   - C) When the array is sorted
 
 2. In the pair search, the sum is smaller than the target. What do you do?
    - A) Move the left pointer right, to a bigger value
@@ -309,22 +309,22 @@ Returns **3**.
    - C) Move both pointers
 
 3. In the read/write pattern, what does the write pointer mark?
-   - A) Where the next item to keep should go
+   - A) The end of the list
    - B) The item being read
-   - C) The end of the list
+   - C) Where the next item to keep should go
 
 4. What is the time complexity of merging two sorted lists of sizes n and m?
-   - A) O(n × m)
-   - B) O(n + m)
-   - C) O(log n)
+   - A) O(log n)
+   - B) O(n × m)
+   - C) O(n + m)
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) When the array is sorted**: Sorted order is what tells you which pointer to move.
+1. **C) When the array is sorted**: Sorted order is what tells you which pointer to move.
 2. **A) Move the left pointer right, to a bigger value**: Only a bigger left value can increase the sum.
-3. **A) Where the next item to keep should go**: Read scans everything; write builds the result at the front.
-4. **B) O(n + m)**: Each step moves one pointer forward.
+3. **C) Where the next item to keep should go**: Read scans everything; write builds the result at the front.
+4. **C) O(n + m)**: Each step moves one pointer forward.
 
 </details>
 

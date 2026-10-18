@@ -258,27 +258,27 @@ print(best_alpha, round(-search.best_score_, 1), round(test_rmse, 1))
    - C) "knn.n_neighbors"
 
 2. What does GridSearchCV do after finding the best settings (by default)?
-   - A) Refits a model with those settings on the whole training set
-   - B) Deletes the other models and stops
-   - C) Scores the test set automatically
+   - A) Deletes the other models and stops
+   - B) Scores the test set automatically
+   - C) Refits a model with those settings on the whole training set
 
 3. Why is best_score_ usually a little optimistic?
    - A) It's the maximum of many CV scores, so some luck is baked in
-   - B) It's computed on training data
-   - C) It includes the test set
+   - B) It includes the test set
+   - C) It's computed on training data
 
 4. For LogisticRegression, a smaller C means:
-   - A) A stronger penalty and a simpler model
-   - B) A weaker penalty
-   - C) More iterations
+   - A) A weaker penalty
+   - B) More iterations
+   - C) A stronger penalty and a simpler model
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) "knn__n_neighbors"**: Step name, two underscores, parameter name.
-2. **A) Refits a model with those settings on the whole training set**: refit=True means the search object becomes the final model.
+2. **C) Refits a model with those settings on the whole training set**: refit=True means the search object becomes the final model.
 3. **A) It's the maximum of many CV scores, so some luck is baked in**: Picking the best of many tries favours the luckiest one a bit. The test set gives the honest final number.
-4. **A) A stronger penalty and a simpler model**: C is the inverse of the penalty strength, the opposite direction from Ridge's alpha.
+4. **C) A stronger penalty and a simpler model**: C is the inverse of the penalty strength, the opposite direction from Ridge's alpha.
 
 </details>
 

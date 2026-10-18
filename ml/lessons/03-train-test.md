@@ -197,13 +197,13 @@ print(round(train_acc, 3), round(test_acc, 3))
 
 1. Why keep a test set the model never trains on?
    - A) To make training faster
-   - B) To measure how well the model does on new, unseen data
-   - C) Because scikit-learn requires it
+   - B) Because scikit-learn requires it
+   - C) To measure how well the model does on new, unseen data
 
 2. A model scores 1.00 on training data and 0.70 on test data. The most likely problem is:
-   - A) Underfitting
-   - B) Overfitting: it memorised the training data
-   - C) A bug in train_test_split
+   - A) Overfitting: it memorised the training data
+   - B) A bug in train_test_split
+   - C) Underfitting
 
 3. What does random_state=42 do in train_test_split?
    - A) Uses 42% of rows for testing
@@ -218,8 +218,8 @@ print(round(train_acc, 3), round(test_acc, 3))
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) To measure how well the model does on new, unseen data**: Scoring on training data rewards memorising. Only unseen data shows real performance.
-2. **B) Overfitting: it memorised the training data**: A big train/test gap means the model learned noise that doesn't carry over to new rows.
+1. **C) To measure how well the model does on new, unseen data**: Scoring on training data rewards memorising. Only unseen data shows real performance.
+2. **A) Overfitting: it memorised the training data**: A big train/test gap means the model learned noise that doesn't carry over to new rows.
 3. **B) Fixes the shuffle so the split is the same every run**: It seeds the random shuffle. Any number works; the point is repeatability.
 4. **A) For classification, so train and test keep the same mix of classes**: Stratifying keeps rare classes represented in both parts.
 

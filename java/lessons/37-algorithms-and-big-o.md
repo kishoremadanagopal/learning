@@ -280,26 +280,26 @@ public class Main {
 ## Quick quiz
 
 1. What's the Big-O of `HashSet.contains`?
-   - A) O(1) on average
-   - B) O(n)
+   - A) O(n)
+   - B) O(1) on average
    - C) O(log n)
 
 2. What does binary search require?
    - A) Sorted data
-   - B) A HashMap
-   - C) Unique values
+   - B) Unique values
+   - C) A HashMap
 
 3. Two nested loops over the same n items are usually…
-   - A) O(n)
-   - B) O(n²)
-   - C) O(2n)
+   - A) O(2n)
+   - B) O(n)
+   - C) O(n²)
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) O(1) on average**: Hashing jumps straight to the right bucket.
+1. **B) O(1) on average**: Hashing jumps straight to the right bucket.
 2. **A) Sorted data**: Discarding half only works if you know which side the target is on.
-3. **B) O(n²)**: For each of n items you do up to n more steps.
+3. **C) O(n²)**: For each of n items you do up to n more steps.
 
 </details>
 

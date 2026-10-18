@@ -345,27 +345,27 @@ cat prices.txt
    - C) git revert app.js
 
 2. A commit is already on the shared main branch. How do you undo it?
-   - A) git revert <commit>
-   - B) git reset --hard <commit>~1
+   - A) git reset --hard <commit>~1
+   - B) git revert <commit>
    - C) git commit --amend
 
 3. What does git reset --soft HEAD~1 do?
    - A) Moves the branch back one commit and keeps that commit's changes staged
-   - B) Deletes the last commit and its changes
-   - C) Only unstages files
+   - B) Only unstages files
+   - C) Deletes the last commit and its changes
 
 4. You ran git reset --hard and lost a commit. What can help?
-   - A) git reflog, which still lists where HEAD was
-   - B) Nothing; it's gone
-   - C) git restore
+   - A) git restore
+   - B) git reflog, which still lists where HEAD was
+   - C) Nothing; it's gone
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) git restore app.js**: Changes that were never committed can't be recovered.
-2. **A) git revert <commit>**: Revert adds a new commit instead of rewriting shared history.
+2. **B) git revert <commit>**: Revert adds a new commit instead of rewriting shared history.
 3. **A) Moves the branch back one commit and keeps that commit's changes staged**: --soft leaves the staging area and working tree as they were.
-4. **A) git reflog, which still lists where HEAD was**: Commits stay reachable through the reflog for about 90 days.
+4. **B) git reflog, which still lists where HEAD was**: Commits stay reachable through the reflog for about 90 days.
 
 </details>
 

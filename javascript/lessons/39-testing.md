@@ -400,14 +400,14 @@ describe("parseDuration", () => {
 ## Quick quiz
 
 1. What does assert.equal([1, 2], [1, 2]) do?
-   - A) Fails: they're two different arrays; use assert.deepEqual
-   - B) Passes
-   - C) Throws a TypeError
+   - A) Throws a TypeError
+   - B) Fails: they're two different arrays; use assert.deepEqual
+   - C) Passes
 
 2. An async test calls assert.rejects(promise) without await. What can happen?
-   - A) The test can pass even if the promise never rejects
-   - B) It always fails
-   - C) Node.js adds the await automatically
+   - A) Node.js adds the await automatically
+   - B) The test can pass even if the promise never rejects
+   - C) It always fails
 
 3. How do you test code that uses the current time?
    - A) Pass the time (or a clock) in as a parameter, and pass a fixed date in tests
@@ -415,17 +415,17 @@ describe("parseDuration", () => {
    - C) You can't test it
 
 4. What does 100% test coverage tell you?
-   - A) Every line ran during the tests, not that the results were checked correctly
+   - A) Every possible input was tested
    - B) The code has no bugs
-   - C) Every possible input was tested
+   - C) Every line ran during the tests, not that the results were checked correctly
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Fails: they're two different arrays; use assert.deepEqual**: equal checks identity; deepEqual compares contents.
-2. **A) The test can pass even if the promise never rejects**: Always await assertions on promises.
+1. **B) Fails: they're two different arrays; use assert.deepEqual**: equal checks identity; deepEqual compares contents.
+2. **B) The test can pass even if the promise never rejects**: Always await assertions on promises.
 3. **A) Pass the time (or a clock) in as a parameter, and pass a fixed date in tests**: Dependency injection makes outside dependencies replaceable.
-4. **A) Every line ran during the tests, not that the results were checked correctly**: Coverage finds untested code; it doesn't measure test quality.
+4. **C) Every line ran during the tests, not that the results were checked correctly**: Coverage finds untested code; it doesn't measure test quality.
 
 </details>
 

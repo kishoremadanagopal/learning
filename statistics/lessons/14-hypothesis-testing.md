@@ -189,26 +189,26 @@ meaning = "b"
 ## Quick quiz
 
 1. What is the null hypothesis in an A/B test?
-   - A) There's no real difference between A and B
-   - B) B is better than A
+   - A) B is better than A
+   - B) There's no real difference between A and B
    - C) The test was run correctly
 
 2. p = 0.002 means:
-   - A) There's a 0.2% chance H₀ is true
-   - B) If H₀ were true, a result this extreme would happen only 0.2% of the time
+   - A) If H₀ were true, a result this extreme would happen only 0.2% of the time
+   - B) There's a 0.2% chance H₀ is true
    - C) The effect is large
 
 3. A huge test finds p = 0.001 for a 0.01% lift in sales. What should you conclude?
-   - A) It's an important improvement
-   - B) It's statistically significant but probably too small to matter
-   - C) The test is wrong
+   - A) It's statistically significant but probably too small to matter
+   - B) The test is wrong
+   - C) It's an important improvement
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) There's no real difference between A and B**: H₀ is the "nothing is going on" explanation that the test tries to find evidence against.
-2. **B) If H₀ were true, a result this extreme would happen only 0.2% of the time**: A p-value is a probability about the data assuming H₀, not about H₀ itself.
-3. **B) It's statistically significant but probably too small to matter**: Large samples make tiny effects significant. Judge the effect size too.
+1. **B) There's no real difference between A and B**: H₀ is the "nothing is going on" explanation that the test tries to find evidence against.
+2. **A) If H₀ were true, a result this extreme would happen only 0.2% of the time**: A p-value is a probability about the data assuming H₀, not about H₀ itself.
+3. **A) It's statistically significant but probably too small to matter**: Large samples make tiny effects significant. Judge the effect size too.
 
 </details>
 

@@ -140,8 +140,8 @@ print(can_ride)
 
 2. Which value is falsy?
    - A) `"0"`
-   - B) `[0]`
-   - C) `""`
+   - B) `""`
+   - C) `[0]`
 
 3. What is `not (3 > 2 and 2 > 5)`?
    - A) True
@@ -151,7 +151,7 @@ print(can_ride)
 <summary>Quiz answers</summary>
 
 1. **A) True**: Python compares the numeric values, and 5 equals 5.0.
-2. **C) `""`**: An empty string is falsy. `"0"` is a non-empty string and `[0]` is a non-empty list, so both are truthy.
+2. **B) `""`**: An empty string is falsy. `"0"` is a non-empty string and `[0]` is a non-empty list, so both are truthy.
 3. **A) True**: `3 > 2` is True, `2 > 5` is False, so the `and` is False and `not` flips it to True.
 
 </details>

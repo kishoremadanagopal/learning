@@ -296,8 +296,8 @@ print(compare_runs(before, after))
 ## Quick quiz
 
 1. Why do LLM features need evals rather than only ordinary unit tests?
-   - A) Outputs vary between runs and have many acceptable forms, so you measure pass rates over many cases
-   - B) LLMs can't be called from tests
+   - A) LLMs can't be called from tests
+   - B) Outputs vary between runs and have many acceptable forms, so you measure pass rates over many cases
    - C) Unit tests are too fast
 
 2. What's the difference between a capability eval and a regression eval?
@@ -306,22 +306,22 @@ print(compare_runs(before, after))
    - C) Regression evals only run once
 
 3. A customer-facing agent must work every time a user asks. Which metric fits?
-   - A) pass^k: all k trials succeed
-   - B) pass@k: at least one of k trials succeeds
-   - C) The average output length
+   - A) The average output length
+   - B) pass^k: all k trials succeed
+   - C) pass@k: at least one of k trials succeeds
 
 4. Your pass rate went from 80% to 82% on 50 cases. What can you conclude?
-   - A) Probably nothing yet: that difference is within the noise of a 50-case set
-   - B) The new version is definitely better
+   - A) The new version is definitely better
+   - B) Probably nothing yet: that difference is within the noise of a 50-case set
    - C) The eval is broken
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Outputs vary between runs and have many acceptable forms, so you measure pass rates over many cases**: Evals turn "seems better" into a measurement.
+1. **B) Outputs vary between runs and have many acceptable forms, so you measure pass rates over many cases**: Evals turn "seems better" into a measurement.
 2. **A) Capability evals target what the system can't yet do (low pass rate); regression evals check it still does what it did (near 100%)**: Passing capability cases graduate into the regression suite.
-3. **A) pass^k: all k trials succeed**: Reliability needs consistency across trials.
-4. **A) Probably nothing yet: that difference is within the noise of a 50-case set**: Look at which cases flipped, and grow the set.
+3. **B) pass^k: all k trials succeed**: Reliability needs consistency across trials.
+4. **B) Probably nothing yet: that difference is within the noise of a 50-case set**: Look at which cases flipped, and grow the set.
 
 </details>
 

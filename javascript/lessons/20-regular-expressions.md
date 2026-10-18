@@ -313,31 +313,31 @@ console.log(highlight("Version 1.5 (beta), not 125", "1.5"));
 ## Quick quiz
 
 1. What does the g flag do?
-   - A) Finds every match instead of only the first
-   - B) Ignores case
+   - A) Ignores case
+   - B) Finds every match instead of only the first
    - C) Makes . match line breaks
 
 2. On "<b>x</b>", what does /<.+>/ match?
-   - A) The whole string, because + is greedy
-   - B) Just <b>
-   - C) Nothing
+   - A) Just <b>
+   - B) Nothing
+   - C) The whole string, because + is greedy
 
 3. Why escape user text before putting it in a RegExp?
-   - A) Characters like . * ( would be treated as pattern syntax
+   - A) To make the match case-insensitive
    - B) RegExp only accepts lower-case text
-   - C) To make the match case-insensitive
+   - C) Characters like . * ( would be treated as pattern syntax
 
 4. Which pattern matches a letter in any language?
    - A) /\p{L}/u
-   - B) /\w/
-   - C) /[a-zA-Z]/
+   - B) /[a-zA-Z]/
+   - C) /\w/
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Finds every match instead of only the first**: Needed for matchAll and for replacing all matches.
-2. **A) The whole string, because + is greedy**: Use <.+?> for the shortest match.
-3. **A) Characters like . * ( would be treated as pattern syntax**: RegExp.escape or a small escape function does it.
+1. **B) Finds every match instead of only the first**: Needed for matchAll and for replacing all matches.
+2. **C) The whole string, because + is greedy**: Use <.+?> for the shortest match.
+3. **C) Characters like . * ( would be treated as pattern syntax**: RegExp.escape or a small escape function does it.
 4. **A) /\p{L}/u**: \w covers only A–Z, digits and _.
 
 </details>

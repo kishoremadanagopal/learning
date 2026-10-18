@@ -354,14 +354,14 @@ print(largest_number([3, 30, 34, 5, 9]))
    - C) Because Python limits sorting
 
 2. When is counting sort a good choice?
-   - A) When the values are integers in a small range compared with n
-   - B) When the values are long strings
-   - C) When memory is extremely limited and values span billions
+   - A) When memory is extremely limited and values span billions
+   - B) When the values are integers in a small range compared with n
+   - C) When the values are long strings
 
 3. Python's sorted() on a list that's already sorted takes:
-   - A) About O(n), because Timsort detects existing runs
-   - B) O(n log n) always
-   - C) O(n²)
+   - A) O(n²)
+   - B) About O(n), because Timsort detects existing runs
+   - C) O(n log n) always
 
 4. How do you sort by department ascending, then salary descending?
    - A) sorted(people, key=lambda p: (p.dept, -p.salary))
@@ -372,8 +372,8 @@ print(largest_number([3, 30, 34, 5, 9]))
 <summary>Quiz answers</summary>
 
 1. **A) It must distinguish n! orderings, and k yes/no comparisons distinguish at most 2^k of them**: 2^k >= n! requires k >= log2(n!), which is about n log n.
-2. **A) When the values are integers in a small range compared with n**: Its cost is O(n + k); a huge range k makes it wasteful.
-3. **A) About O(n), because Timsort detects existing runs**: Timsort is adaptive: sorted or nearly sorted input is fast.
+2. **B) When the values are integers in a small range compared with n**: Its cost is O(n + k); a huge range k makes it wasteful.
+3. **B) About O(n), because Timsort detects existing runs**: Timsort is adaptive: sorted or nearly sorted input is fast.
 4. **A) sorted(people, key=lambda p: (p.dept, -p.salary))**: Tuples compare item by item; negating the number reverses just that key.
 
 </details>

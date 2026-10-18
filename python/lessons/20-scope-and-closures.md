@@ -163,8 +163,8 @@ print(avg(10), avg(20), avg(30))
 
 1. In which order does Python look up names?
    - A) Local, Enclosing, Global, Built-in
-   - B) Global, Local, Built-in, Enclosing
-   - C) Built-in, Global, Enclosing, Local
+   - B) Built-in, Global, Enclosing, Local
+   - C) Global, Local, Built-in, Enclosing
 
 2. What keyword lets an inner function reassign a variable of its outer function?
    - A) global

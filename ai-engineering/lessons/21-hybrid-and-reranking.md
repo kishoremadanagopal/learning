@@ -281,17 +281,17 @@ print(weighted_fusion(keyword, vector, alpha=0.9))
 
 2. What makes a reranker more accurate than embedding similarity?
    - A) It reads the query and the document together instead of encoding them separately
-   - B) It uses bigger vectors
-   - C) It ignores the query
+   - B) It ignores the query
+   - C) It uses bigger vectors
 
 3. Why rerank only a shortlist?
-   - A) Rerankers are too slow and costly to run over the whole corpus
-   - B) Rerankers only accept 10 documents
-   - C) The shortlist is always correct
+   - A) The shortlist is always correct
+   - B) Rerankers are too slow and costly to run over the whole corpus
+   - C) Rerankers only accept 10 documents
 
 4. A user asks "What about helmets?" after a question about returns. What should happen before retrieval?
-   - A) Rewrite it into a standalone query using the conversation
-   - B) Search for "What about helmets?" as is
+   - A) Search for "What about helmets?" as is
+   - B) Rewrite it into a standalone query using the conversation
    - C) Skip retrieval
 
 <details>
@@ -299,8 +299,8 @@ print(weighted_fusion(keyword, vector, alpha=0.9))
 
 1. **A) They're on different, query-dependent scales, so one would dominate**: Fuse ranks (RRF) or normalise first.
 2. **A) It reads the query and the document together instead of encoding them separately**: Cross-encoders compare directly; that's also why they're slow.
-3. **A) Rerankers are too slow and costly to run over the whole corpus**: Each funnel stage is more accurate but costlier per item.
-4. **A) Rewrite it into a standalone query using the conversation**: Follow-ups lack the context retrieval needs.
+3. **B) Rerankers are too slow and costly to run over the whole corpus**: Each funnel stage is more accurate but costlier per item.
+4. **B) Rewrite it into a standalone query using the conversation**: Follow-ups lack the context retrieval needs.
 
 </details>
 

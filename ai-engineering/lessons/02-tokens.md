@@ -282,32 +282,32 @@ print(request_cost(2_000, 500, 3, 15))
 ## Quick quiz
 
 1. Why do LLMs use subword tokens instead of whole words?
-   - A) Frequent words stay whole while rare words split into known pieces, so no text is ever "unknown"
-   - B) Subwords are always shorter than characters
-   - C) Whole words can't be stored in a computer
+   - A) Subwords are always shorter than characters
+   - B) Whole words can't be stored in a computer
+   - C) Frequent words stay whole while rare words split into known pieces, so no text is ever "unknown"
 
 2. What does byte-pair encoding repeatedly do?
-   - A) Merges the most frequent pair of neighbouring symbols into a new symbol
-   - B) Splits every word in half
+   - A) Splits every word in half
+   - B) Merges the most frequent pair of neighbouring symbols into a new symbol
    - C) Removes rare words from the text
 
 3. Roughly how many tokens is 750 English words?
-   - A) About 1,000
-   - B) About 100
+   - A) About 100
+   - B) About 1,000
    - C) About 7,500
 
 4. Why are models often bad at counting the letters in a word?
-   - A) They see tokens, which can hide individual letters
-   - B) They don't know the alphabet
+   - A) They don't know the alphabet
+   - B) They see tokens, which can hide individual letters
    - C) Letters cost more tokens than words
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Frequent words stay whole while rare words split into known pieces, so no text is ever "unknown"**: Subwords balance vocabulary size against sequence length.
-2. **A) Merges the most frequent pair of neighbouring symbols into a new symbol**: Frequent pieces like "est" and "low" become single tokens.
-3. **A) About 1,000**: Rule of thumb: about ¾ of a word (4 characters) per token.
-4. **A) They see tokens, which can hide individual letters**: "strawberry" might be one or two tokens, not ten letters.
+1. **C) Frequent words stay whole while rare words split into known pieces, so no text is ever "unknown"**: Subwords balance vocabulary size against sequence length.
+2. **B) Merges the most frequent pair of neighbouring symbols into a new symbol**: Frequent pieces like "est" and "low" become single tokens.
+3. **B) About 1,000**: Rule of thumb: about ¾ of a word (4 characters) per token.
+4. **B) They see tokens, which can hide individual letters**: "strawberry" might be one or two tokens, not ten letters.
 
 </details>
 

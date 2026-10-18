@@ -286,18 +286,18 @@ ls -a
 
 1. You add *.log to .gitignore, but app.log, committed last week, still shows changes. Why?
    - A) .gitignore only affects untracked files; untrack it with git rm --cached app.log
-   - B) .gitignore needs a restart of Git
-   - C) The pattern should be **.log
+   - B) The pattern should be **.log
+   - C) .gitignore needs a restart of Git
 
 2. A teammate committed an API key, then removed it in the next commit. What must happen?
-   - A) Revoke or rotate the key: it's still readable in the history
-   - B) Nothing, it's been deleted
-   - C) Delete the repository's latest commit
+   - A) Nothing, it's been deleted
+   - B) Delete the repository's latest commit
+   - C) Revoke or rotate the key: it's still readable in the history
 
 3. What does the pattern !keep.log do after *.log?
-   - A) Keeps keep.log visible to Git even though *.log matches it
+   - A) Deletes keep.log
    - B) Ignores only keep.log
-   - C) Deletes keep.log
+   - C) Keeps keep.log visible to Git even though *.log matches it
 
 4. Where should .DS_Store (a macOS file) be ignored?
    - A) In your global ignore file (core.excludesFile)
@@ -308,8 +308,8 @@ ls -a
 <summary>Quiz answers</summary>
 
 1. **A) .gitignore only affects untracked files; untrack it with git rm --cached app.log**: Tracked files stay tracked until you remove them from the index.
-2. **A) Revoke or rotate the key: it's still readable in the history**: Treat any committed secret as leaked.
-3. **A) Keeps keep.log visible to Git even though *.log matches it**: ! re-includes files an earlier pattern ignored.
+2. **C) Revoke or rotate the key: it's still readable in the history**: Treat any committed secret as leaked.
+3. **C) Keeps keep.log visible to Git even though *.log matches it**: ! re-includes files an earlier pattern ignored.
 4. **A) In your global ignore file (core.excludesFile)**: Files your computer creates belong in your own global ignore file.
 
 </details>

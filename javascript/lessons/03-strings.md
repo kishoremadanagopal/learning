@@ -297,8 +297,8 @@ console.log(slugify("  Tubeless Tyres: A Beginner's Guide!  "));
 ## Quick quiz
 
 1. What does `${a + b}` do inside backticks?
-   - A) Inserts the value of a + b into the string
-   - B) Prints a dollar sign
+   - A) Prints a dollar sign
+   - B) Inserts the value of a + b into the string
    - C) Creates a variable
 
 2. What does "bicycle".at(-1) return?
@@ -307,22 +307,22 @@ console.log(slugify("  Tubeless Tyres: A Beginner's Guide!  "));
    - C) An error
 
 3. Why does name.toUpperCase() alone not change name?
-   - A) Strings are immutable; the method returns a new string
-   - B) toUpperCase only works on const strings
-   - C) It needs to be awaited
+   - A) It needs to be awaited
+   - B) Strings are immutable; the method returns a new string
+   - C) toUpperCase only works on const strings
 
 4. "🚲".length is 2. Why?
-   - A) The emoji takes two UTF-16 code units
-   - B) Emoji are stored as two characters by mistake
-   - C) length counts bytes
+   - A) Emoji are stored as two characters by mistake
+   - B) length counts bytes
+   - C) The emoji takes two UTF-16 code units
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Inserts the value of a + b into the string**: Template literals evaluate any expression inside ${…}.
+1. **B) Inserts the value of a + b into the string**: Template literals evaluate any expression inside ${…}.
 2. **A) "e"**: at() counts negative positions from the end; plain [-1] is undefined.
-3. **A) Strings are immutable; the method returns a new string**: Assign the result: name = name.toUpperCase().
-4. **A) The emoji takes two UTF-16 code units**: [..."🚲"].length counts real characters.
+3. **B) Strings are immutable; the method returns a new string**: Assign the result: name = name.toUpperCase().
+4. **C) The emoji takes two UTF-16 code units**: [..."🚲"].length counts real characters.
 
 </details>
 

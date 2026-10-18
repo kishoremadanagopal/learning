@@ -410,9 +410,9 @@ print(join_cost([4, 3, 2, 6]))
 ## Quick quiz
 
 1. What is the usual way to prove a greedy algorithm correct?
-   - A) An exchange argument: swapping the greedy choice into an optimal solution doesn't make it worse
-   - B) Running it on one example
-   - C) Showing it's faster than DP
+   - A) Showing it's faster than DP
+   - B) An exchange argument: swapping the greedy choice into an optimal solution doesn't make it worse
+   - C) Running it on one example
 
 2. For selecting the most non-overlapping meetings, which meeting should be chosen first?
    - A) The one that ends earliest
@@ -421,21 +421,21 @@ print(join_cost([4, 3, 2, 6]))
 
 3. Why does greedy by value per weight work for the fractional knapsack but not the 0/1 knapsack?
    - A) With fractions, the last item can be cut to fill the bag exactly, so no capacity is wasted
-   - B) Fractional values are smaller
-   - C) Sorting doesn't work for 0/1
+   - B) Sorting doesn't work for 0/1
+   - C) Fractional values are smaller
 
 4. Huffman's algorithm repeatedly:
-   - A) Merges the two least frequent symbols or subtrees
+   - A) Sorts the symbols alphabetically
    - B) Gives the most frequent symbol the longest code
-   - C) Sorts the symbols alphabetically
+   - C) Merges the two least frequent symbols or subtrees
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) An exchange argument: swapping the greedy choice into an optimal solution doesn't make it worse**: If no exchange argument works, look for a counterexample, or use DP.
+1. **B) An exchange argument: swapping the greedy choice into an optimal solution doesn't make it worse**: If no exchange argument works, look for a counterexample, or use DP.
 2. **A) The one that ends earliest**: Ending early leaves the most room for the rest.
 3. **A) With fractions, the last item can be cut to fill the bag exactly, so no capacity is wasted**: In 0/1, a high-ratio item can leave unusable leftover space.
-4. **A) Merges the two least frequent symbols or subtrees**: Rare symbols end up deep in the tree with long codes; frequent ones get short codes.
+4. **C) Merges the two least frequent symbols or subtrees**: Rare symbols end up deep in the tree with long codes; frequent ones get short codes.
 
 </details>
 

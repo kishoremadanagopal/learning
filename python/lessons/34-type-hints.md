@@ -153,20 +153,20 @@ print(summarize({"ana": [90, 80], "ben": []}))
 ## Quick quiz
 
 1. What happens if you pass a str to a function hinted as taking an int?
-   - A) Python raises TypeError
-   - B) It runs anyway; hints aren't enforced at runtime
-   - C) Python converts it automatically
+   - A) It runs anyway; hints aren't enforced at runtime
+   - B) Python converts it automatically
+   - C) Python raises TypeError
 
 2. What does `Optional[str]` mean?
-   - A) A str or None
-   - B) An optional argument
-   - C) Any type
+   - A) An optional argument
+   - B) Any type
+   - C) A str or None
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) It runs anyway; hints aren't enforced at runtime**: Hints are for readers and tools like mypy, not for the interpreter.
-2. **A) A str or None**: It's the same as `str | None`. Whether the argument has a default is a separate matter.
+1. **A) It runs anyway; hints aren't enforced at runtime**: Hints are for readers and tools like mypy, not for the interpreter.
+2. **C) A str or None**: It's the same as `str | None`. Whether the argument has a default is a separate matter.
 
 </details>
 

@@ -165,26 +165,26 @@ print(round(p_fraud_given_flag, 3))
 ## Quick quiz
 
 1. How do you compute P(converted | mobile) from data?
-   - A) Keep only mobile visitors, then take the share who converted
+   - A) Multiply P(converted) by P(mobile)
    - B) Take the share of converters who are on mobile
-   - C) Multiply P(converted) by P(mobile)
+   - C) Keep only mobile visitors, then take the share who converted
 
 2. A rare disease, an accurate test, a positive result. Why might the chance of being sick still be low?
-   - A) The test is broken
-   - B) Healthy people vastly outnumber sick ones, so their false positives outnumber the true positives
-   - C) Probabilities don't apply to medicine
+   - A) Probabilities don't apply to medicine
+   - B) The test is broken
+   - C) Healthy people vastly outnumber sick ones, so their false positives outnumber the true positives
 
 3. Events A and B are independent when:
-   - A) P(A and B) = 0
-   - B) P(A | B) = P(A)
+   - A) P(A | B) = P(A)
+   - B) P(A and B) = 0
    - C) P(A) = P(B)
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Keep only mobile visitors, then take the share who converted**: "Given mobile" means you restrict to mobile visitors first.
-2. **B) Healthy people vastly outnumber sick ones, so their false positives outnumber the true positives**: The base rate matters: a small error rate on a huge group swamps a rare condition.
-3. **B) P(A | B) = P(A)**: Knowing B happened doesn't change the probability of A.
+1. **C) Keep only mobile visitors, then take the share who converted**: "Given mobile" means you restrict to mobile visitors first.
+2. **C) Healthy people vastly outnumber sick ones, so their false positives outnumber the true positives**: The base rate matters: a small error rate on a huge group swamps a rare condition.
+3. **A) P(A | B) = P(A)**: Knowing B happened doesn't change the probability of A.
 
 </details>
 

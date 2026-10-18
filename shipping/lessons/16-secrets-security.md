@@ -623,35 +623,35 @@ gh run list --workflow Announce
 
 1. Where should a database password used by a workflow live?
    - A) In a secret, read with ${{ secrets.NAME }}
-   - B) In env: at the top of the workflow file
-   - C) In a configuration variable (vars)
-   - D) In a comment in the workflow
+   - B) In a comment in the workflow
+   - C) In env: at the top of the workflow file
+   - D) In a configuration variable (vars)
 
 2. Why is run: echo "${{ github.event.pull_request.title }}" dangerous?
-   - A) The title is pasted into the script before it runs, so a crafted title can run commands
+   - A) Expressions don't work in run:
    - B) Pull request titles can't contain spaces
-   - C) Expressions don't work in run:
-   - D) It prints a secret
+   - C) It prints a secret
+   - D) The title is pasted into the script before it runs, so a crafted title can run commands
 
 3. Why pin a third-party action to a full commit SHA?
-   - A) A SHA can't be moved to different code, unlike a tag
-   - B) SHAs run faster than tags
-   - C) GitHub requires it
-   - D) Tags don't work with uses:
+   - A) GitHub requires it
+   - B) Tags don't work with uses:
+   - C) A SHA can't be moved to different code, unlike a tag
+   - D) SHAs run faster than tags
 
 4. A workflow lists permissions: contents: read. What can its GITHUB_TOKEN do with issues?
-   - A) Nothing; unlisted permissions become none
-   - B) Read and write them
+   - A) Whatever the repository default allows
+   - B) Nothing; unlisted permissions become none
    - C) Only read them
-   - D) Whatever the repository default allows
+   - D) Read and write them
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) In a secret, read with ${{ secrets.NAME }}**: Secrets are encrypted and masked; the workflow file and variables are readable by anyone who can read the repository.
-2. **A) The title is pasted into the script before it runs, so a crafted title can run commands**: Anyone opening a pull request controls its title. Pass it through env: and use "$TITLE".
-3. **A) A SHA can't be moved to different code, unlike a tag**: In March 2025, tags of a compromised action were moved to malicious code; pinned SHAs were unaffected.
-4. **A) Nothing; unlisted permissions become none**: Listing any permission sets every unlisted permission to none (metadata stays readable).
+2. **D) The title is pasted into the script before it runs, so a crafted title can run commands**: Anyone opening a pull request controls its title. Pass it through env: and use "$TITLE".
+3. **C) A SHA can't be moved to different code, unlike a tag**: In March 2025, tags of a compromised action were moved to malicious code; pinned SHAs were unaffected.
+4. **B) Nothing; unlisted permissions become none**: Listing any permission sets every unlisted permission to none (metadata stays readable).
 
 </details>
 

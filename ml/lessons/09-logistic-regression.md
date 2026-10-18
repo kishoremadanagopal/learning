@@ -182,14 +182,14 @@ print(n_flagged, round(acc, 3))
 ## Quick quiz
 
 1. Logistic regression is used for:
-   - A) Predicting numbers like prices
+   - A) Clustering
    - B) Classification, especially yes/no questions
-   - C) Clustering
+   - C) Predicting numbers like prices
 
 2. What does the sigmoid function do?
-   - A) Turns any score into a probability between 0 and 1
+   - A) Picks the features
    - B) Removes outliers
-   - C) Picks the features
+   - C) Turns any score into a probability between 0 and 1
 
 3. model.predict_proba(X)[:, 1] gives:
    - A) The predicted class
@@ -197,17 +197,17 @@ print(n_flagged, round(acc, 3))
    - C) The model's accuracy
 
 4. A coefficient for support_calls is positive. This means:
-   - A) More support calls make the model predict a higher chance of churning
-   - B) Support calls reduce churn
+   - A) Support calls reduce churn
+   - B) More support calls make the model predict a higher chance of churning
    - C) Each call adds exactly 0.47 to the probability
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **B) Classification, especially yes/no questions**: The name is historical. It predicts the probability of a class.
-2. **A) Turns any score into a probability between 0 and 1**: The S-curve maps very negative scores near 0 and very positive scores near 1.
+2. **C) Turns any score into a probability between 0 and 1**: The S-curve maps very negative scores near 0 and very positive scores near 1.
 3. **B) The probability of the second class in model.classes_ (here: leaving)**: One column per class, in the order of classes_. Column 1 is class 1.
-4. **A) More support calls make the model predict a higher chance of churning**: The sign gives the direction. The effect on probability isn't a fixed amount, because of the S-curve.
+4. **B) More support calls make the model predict a higher chance of churning**: The sign gives the direction. The effect on probability isn't a fixed amount, because of the S-curve.
 
 </details>
 

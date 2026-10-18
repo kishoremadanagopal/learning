@@ -321,33 +321,33 @@ console.log(validateOrder({ id: "7", customer: " ", items: [{ qty: 0 }, { qty: 1
 ## Quick quiz
 
 1. Which of these is valid JSON?
-   - A) {"name": "Ada", "tags": []}
-   - B) {name: "Ada"}
-   - C) {'name': 'Ada'}
-   - D) {"name": "Ada",}
+   - A) {name: "Ada"}
+   - B) {'name': 'Ada'}
+   - C) {"name": "Ada",}
+   - D) {"name": "Ada", "tags": []}
 
 2. What happens to a Date in JSON.stringify and then JSON.parse?
    - A) It becomes an ISO string and comes back as a string
-   - B) It comes back as a Date
-   - C) It's removed
+   - B) It's removed
+   - C) It comes back as a Date
 
 3. What does JSON.stringify({ a: undefined, b: 1 }) produce?
-   - A) {"b":1}
-   - B) {"a":undefined,"b":1}
-   - C) {"a":null,"b":1}
+   - A) {"a":undefined,"b":1}
+   - B) {"a":null,"b":1}
+   - C) {"b":1}
 
 4. JSON.parse succeeded. Is the data safe to use?
-   - A) Not necessarily: it's valid JSON, but its shape still needs checking
-   - B) Yes, parse validates the structure
+   - A) Yes, parse validates the structure
+   - B) Not necessarily: it's valid JSON, but its shape still needs checking
    - C) Only if it contains no strings
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) {"name": "Ada", "tags": []}**: JSON needs double-quoted keys and strings, and no trailing commas.
+1. **D) {"name": "Ada", "tags": []}**: JSON needs double-quoted keys and strings, and no trailing commas.
 2. **A) It becomes an ISO string and comes back as a string**: Use a reviver to turn it back into a Date.
-3. **A) {"b":1}**: undefined values are dropped from objects.
-4. **A) Not necessarily: it's valid JSON, but its shape still needs checking**: Validate data at the boundary where it enters your program.
+3. **C) {"b":1}**: undefined values are dropped from objects.
+4. **B) Not necessarily: it's valid JSON, but its shape still needs checking**: Validate data at the boundary where it enters your program.
 
 </details>
 

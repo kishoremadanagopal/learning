@@ -195,8 +195,8 @@ public class Main {
 
 1. What's the difference between `while` and `do-while`?
    - A) `do-while` always runs its body at least once
-   - B) `while` always runs at least once
-   - C) There is no difference
+   - B) There is no difference
+   - C) `while` always runs at least once
 
 2. How many times does `int i = 0; while (i < 3) { i++; }` run its body?
    - A) 2

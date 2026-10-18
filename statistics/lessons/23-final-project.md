@@ -222,26 +222,26 @@ print(round(riverside_coef, 1), round(ci_low, 1), round(ci_high, 1))
 ## Quick quiz
 
 1. Why fit a regression instead of just comparing average prices by neighbourhood?
-   - A) To compare like with like: holding size, age and distance fixed
-   - B) Regression always gives bigger differences
+   - A) Regression always gives bigger differences
+   - B) To compare like with like: holding size, age and distance fixed
    - C) Averages can't be calculated by neighbourhood
 
 2. A model explains 89% of price variation. Does it prove that a bigger area causes a higher price?
-   - A) Yes, R² proves cause
-   - B) No: it shows a strong association; causal claims need more (experiments or strong reasoning)
+   - A) No: it shows a strong association; causal claims need more (experiments or strong reasoning)
+   - B) Yes, R² proves cause
    - C) Only if p < 0.05
 
 3. What belongs in the caveats of a good write-up?
-   - A) The sample's limits, what the model can't show, and where predictions are reliable
-   - B) The code
+   - A) The code
+   - B) The sample's limits, what the model can't show, and where predictions are reliable
    - C) Every p-value calculated
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) To compare like with like: holding size, age and distance fixed**: Raw averages mix location with other factors; regression separates them.
-2. **B) No: it shows a strong association; causal claims need more (experiments or strong reasoning)**: Observational data shows associations. Here causation is plausible, but the model alone doesn't prove it.
-3. **A) The sample's limits, what the model can't show, and where predictions are reliable**: Caveats tell the reader how far to trust and generalise the results.
+1. **B) To compare like with like: holding size, age and distance fixed**: Raw averages mix location with other factors; regression separates them.
+2. **A) No: it shows a strong association; causal claims need more (experiments or strong reasoning)**: Observational data shows associations. Here causation is plausible, but the model alone doesn't prove it.
+3. **B) The sample's limits, what the model can't show, and where predictions are reliable**: Caveats tell the reader how far to trust and generalise the results.
 
 </details>
 

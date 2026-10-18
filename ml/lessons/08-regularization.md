@@ -228,9 +228,9 @@ print(kept)
    - C) scikit-learn refuses to fit otherwise
 
 4. How should you choose alpha?
-   - A) Always use alpha=1
-   - B) Try several values and keep the one that does best on unseen (validation) data
-   - C) Pick the one with the best training score
+   - A) Try several values and keep the one that does best on unseen (validation) data
+   - B) Pick the one with the best training score
+   - C) Always use alpha=1
 
 <details>
 <summary>Quiz answers</summary>
@@ -238,7 +238,7 @@ print(kept)
 1. **A) Penalises big coefficients more, making the model simpler and smoother**: alpha is the strength of the penalty. Too large and the model underfits.
 2. **B) Set some coefficients exactly to zero, dropping those features**: The absolute-value penalty pushes weak features all the way to 0.
 3. **A) The penalty treats all coefficients equally, but their sizes depend on each feature's units**: Without scaling, features in small units get punished more than features in big units.
-4. **B) Try several values and keep the one that does best on unseen (validation) data**: Like any hyperparameter, alpha is tuned on data the model didn't train on.
+4. **A) Try several values and keep the one that does best on unseen (validation) data**: Like any hyperparameter, alpha is tuned on data the model didn't train on.
 
 </details>
 

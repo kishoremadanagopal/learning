@@ -374,9 +374,9 @@ console.log(cache.keys(), cache.get("b"));
    - C) Ask for the answer
 
 2. In what order do these run: a setTimeout callback, a promise .then callback, and synchronous code?
-   - A) Synchronous code, then the .then callback, then the timer
-   - B) The timer, then .then, then synchronous code
-   - C) In the order they were written
+   - A) In the order they were written
+   - B) Synchronous code, then the .then callback, then the timer
+   - C) The timer, then .then, then synchronous code
 
 3. Why is a Map a good basis for an LRU cache in JavaScript?
    - A) It keeps insertion order, and deleting and re-adding a key is O(1)
@@ -384,17 +384,17 @@ console.log(cache.keys(), cache.get("b"));
    - C) Maps evict old entries automatically
 
 4. Why should emit loop over a copy of the listener array?
-   - A) So listeners added or removed during the emit don't skip or add calls
-   - B) Copies are faster to loop over
+   - A) Copies are faster to loop over
+   - B) So listeners added or removed during the emit don't skip or add calls
    - C) Arrays can't be looped over twice
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Restate it and ask about inputs, outputs and edge cases**: Clarifying avoids solving the wrong problem and shows how you work.
-2. **A) Synchronous code, then the .then callback, then the timer**: Sync first, then all microtasks, then one task.
+2. **B) Synchronous code, then the .then callback, then the timer**: Sync first, then all microtasks, then one task.
 3. **A) It keeps insertion order, and deleting and re-adding a key is O(1)**: Its first key is always the least recently used.
-4. **A) So listeners added or removed during the emit don't skip or add calls**: Changing an array while iterating over it shifts indexes.
+4. **B) So listeners added or removed during the emit don't skip or add calls**: Changing an array while iterating over it shifts indexes.
 
 </details>
 

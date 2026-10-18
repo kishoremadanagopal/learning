@@ -208,15 +208,15 @@ public class Main {
    - C) It runs forever without error
 
 2. Why is `factorial` declared to return `long`?
-   - A) Factorials grow beyond the range of int quickly
+   - A) It makes it faster
    - B) Recursion requires long
-   - C) It makes it faster
+   - C) Factorials grow beyond the range of int quickly
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) It throws StackOverflowError**: Each call uses stack memory; eventually the stack runs out.
-2. **A) Factorials grow beyond the range of int quickly**: 13! already exceeds int's maximum of about 2.1 billion.
+2. **C) Factorials grow beyond the range of int quickly**: 13! already exceeds int's maximum of about 2.1 billion.
 
 </details>
 

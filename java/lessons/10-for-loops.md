@@ -197,20 +197,20 @@ public class Main {
 ## Quick quiz
 
 1. What does `for (int i = 0; i < 3; i++)` produce for `i`?
-   - A) 0, 1, 2
-   - B) 1, 2, 3
-   - C) 0, 1, 2, 3
+   - A) 1, 2, 3
+   - B) 0, 1, 2, 3
+   - C) 0, 1, 2
 
 2. When should you use the enhanced for loop?
-   - A) When you need each item but not its index
-   - B) Only for strings
-   - C) When you need to change the index
+   - A) When you need to change the index
+   - B) When you need each item but not its index
+   - C) Only for strings
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) 0, 1, 2**: It starts at 0 and stops before 3.
-2. **A) When you need each item but not its index**: `for (String s : items)` reads cleaner when the position doesn't matter.
+1. **C) 0, 1, 2**: It starts at 0 and stops before 3.
+2. **B) When you need each item but not its index**: `for (String s : items)` reads cleaner when the position doesn't matter.
 
 </details>
 

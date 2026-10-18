@@ -467,32 +467,32 @@ class MinStack:
 ## Quick quiz
 
 1. A stack returns items in which order?
-   - A) Last in, first out
+   - A) Smallest first
    - B) First in, first out
-   - C) Smallest first
+   - C) Last in, first out
 
 2. Which list operations make a Python list an O(1) stack?
    - A) append and pop()
-   - B) insert(0, x) and pop(0)
-   - C) append and pop(0)
+   - B) append and pop(0)
+   - C) insert(0, x) and pop(0)
 
 3. Why does `3 5 -` in RPN give -2?
    - A) The first popped number (5) is the second operand: 3 - 5
-   - B) Minus always gives a negative answer
-   - C) RPN subtracts in reverse
+   - B) RPN subtracts in reverse
+   - C) Minus always gives a negative answer
 
 4. What causes Python's RecursionError?
-   - A) Too many nested calls: each one pushes a frame onto the limited call stack
-   - B) Using a list as a stack
-   - C) Returning None
+   - A) Returning None
+   - B) Too many nested calls: each one pushes a frame onto the limited call stack
+   - C) Using a list as a stack
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Last in, first out**: You always take from the top: the most recently added item.
+1. **C) Last in, first out**: You always take from the top: the most recently added item.
 2. **A) append and pop()**: Both work at the end of the list. Working at the front is O(n).
 3. **A) The first popped number (5) is the second operand: 3 - 5**: Pop b first, then a, and compute a - b.
-4. **A) Too many nested calls: each one pushes a frame onto the limited call stack**: The call stack is about 1,000 frames by default; deep recursion overflows it.
+4. **B) Too many nested calls: each one pushes a frame onto the limited call stack**: The call stack is about 1,000 frames by default; deep recursion overflows it.
 
 </details>
 

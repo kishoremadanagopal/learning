@@ -191,8 +191,8 @@ print(blue_share)
    - C) Randomly
 
 3. Which method counts how often each value appears?
-   - A) `value_counts()`
-   - B) `count()`
+   - A) `count()`
+   - B) `value_counts()`
    - C) `describe()`
 
 <details>
@@ -200,7 +200,7 @@ print(blue_share)
 
 1. **B) The labels attached to the values**: The index labels each value. By default it's 0, 1, 2…, but it can be any labels you like.
 2. **B) By matching labels**: pandas aligns on the index labels. Labels missing from one side give NaN.
-3. **A) `value_counts()`**: `value_counts()` returns each distinct value with its count, most common first. `count()` just counts non-missing values.
+3. **B) `value_counts()`**: `value_counts()` returns each distinct value with its count, most common first. `count()` just counts non-missing values.
 
 </details>
 

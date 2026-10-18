@@ -199,32 +199,32 @@ print(round(acc_raw, 3), round(acc_scaled, 3))
 ## Quick quiz
 
 1. How does KNN classify a new row?
-   - A) It finds the k closest training rows and takes a vote
-   - B) It draws a straight line between classes
-   - C) It asks a series of yes/no questions
+   - A) It asks a series of yes/no questions
+   - B) It finds the k closest training rows and takes a vote
+   - C) It draws a straight line between classes
 
 2. With k=1, KNN tends to:
-   - A) Overfit: jagged boundaries that follow single points
-   - B) Underfit
-   - C) Always predict the most common class
+   - A) Underfit
+   - B) Always predict the most common class
+   - C) Overfit: jagged boundaries that follow single points
 
 3. Why does adding weight_g in grams hurt an unscaled KNN?
-   - A) Its large numbers dominate the distance, drowning out width and height
-   - B) Weight is a useless feature
-   - C) KNN can't use more than two features
+   - A) KNN can't use more than two features
+   - B) Its large numbers dominate the distance, drowning out width and height
+   - C) Weight is a useless feature
 
 4. What happens at prediction time with KNN on a huge dataset?
-   - A) It's instant
-   - B) It's slow, because it compares the new row with every stored row
+   - A) It's slow, because it compares the new row with every stored row
+   - B) It's instant
    - C) It fails
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) It finds the k closest training rows and takes a vote**: KNN predicts from the most similar stored examples.
-2. **A) Overfit: jagged boundaries that follow single points**: One neighbour means every odd training point gets its own little region.
-3. **A) Its large numbers dominate the distance, drowning out width and height**: Distances add up differences in each feature's own units, so big-unit features dominate. Scale first.
-4. **B) It's slow, because it compares the new row with every stored row**: fit just stores the data; the searching happens when you predict.
+1. **B) It finds the k closest training rows and takes a vote**: KNN predicts from the most similar stored examples.
+2. **C) Overfit: jagged boundaries that follow single points**: One neighbour means every odd training point gets its own little region.
+3. **B) Its large numbers dominate the distance, drowning out width and height**: Distances add up differences in each feature's own units, so big-unit features dominate. Scale first.
+4. **A) It's slow, because it compares the new row with every stored row**: fit just stores the data; the searching happens when you predict.
 
 </details>
 

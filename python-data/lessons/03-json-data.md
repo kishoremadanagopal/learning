@@ -235,26 +235,26 @@ print(report_json)
 ## Quick quiz
 
 1. What does the JSON value `null` become in Python?
-   - A) `0`
-   - B) `None`
-   - C) `"null"`
+   - A) `"null"`
+   - B) `0`
+   - C) `None`
 
 2. Which function turns JSON **text** into Python objects?
-   - A) `json.loads`
-   - B) `json.dumps`
-   - C) `json.dump`
+   - A) `json.dumps`
+   - B) `json.dump`
+   - C) `json.loads`
 
 3. Why does `json.loads("{'a': 1}")` fail?
-   - A) JSON can't hold numbers
-   - B) JSON strings must use double quotes
-   - C) The dictionary is too short
+   - A) JSON strings must use double quotes
+   - B) The dictionary is too short
+   - C) JSON can't hold numbers
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) `None`**: `null` means "no value", which Python writes as `None`.
-2. **A) `json.loads`**: `loads` = load from a string. `dumps` goes the other way, and `load`/`dump` work with files.
-3. **B) JSON strings must use double quotes**: JSON only allows double quotes, so `'a'` is invalid. Python's single-quote style doesn't work in JSON.
+1. **C) `None`**: `null` means "no value", which Python writes as `None`.
+2. **C) `json.loads`**: `loads` = load from a string. `dumps` goes the other way, and `load`/`dump` work with files.
+3. **A) JSON strings must use double quotes**: JSON only allows double quotes, so `'a'` is invalid. Python's single-quote style doesn't work in JSON.
 
 </details>
 

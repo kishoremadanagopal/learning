@@ -521,19 +521,19 @@ print(lowest_common_ancestor(root, find(root, 5), find(root, 1)).val)
 ## Quick quiz
 
 1. Why does the diameter not always pass through the root?
-   - A) The two deepest branches can sit inside one subtree, below the root
+   - A) It always does
    - B) Because the root has no children
-   - C) It always does
+   - C) The two deepest branches can sit inside one subtree, below the root
 
 2. Checking balance by computing heights separately at every node costs:
-   - A) O(n²) in the worst case; returning heights from children makes it O(n)
-   - B) O(log n)
+   - A) O(log n)
+   - B) O(n²) in the worst case; returning heights from children makes it O(n)
    - C) O(1)
 
 3. In the LCA algorithm, when is the current node the answer?
-   - A) When p is found in one subtree and q in the other (or the node is p or q with the other below it)
-   - B) When it's the root
-   - C) When it's a leaf
+   - A) When it's a leaf
+   - B) When p is found in one subtree and q in the other (or the node is p or q with the other below it)
+   - C) When it's the root
 
 4. Which pair of traversals is enough to rebuild a binary tree with distinct values?
    - A) Preorder and inorder
@@ -543,9 +543,9 @@ print(lowest_common_ancestor(root, find(root, 5), find(root, 1)).val)
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The two deepest branches can sit inside one subtree, below the root**: That's why each node's left + right height is a candidate, not just the root's.
-2. **A) O(n²) in the worst case; returning heights from children makes it O(n)**: Combining children's results avoids recomputing heights.
-3. **A) When p is found in one subtree and q in the other (or the node is p or q with the other below it)**: The first node where the two searches meet is the lowest common ancestor.
+1. **C) The two deepest branches can sit inside one subtree, below the root**: That's why each node's left + right height is a candidate, not just the root's.
+2. **B) O(n²) in the worst case; returning heights from children makes it O(n)**: Combining children's results avoids recomputing heights.
+3. **B) When p is found in one subtree and q in the other (or the node is p or q with the other below it)**: The first node where the two searches meet is the lowest common ancestor.
 4. **A) Preorder and inorder**: Preorder gives the roots; inorder tells you which values go left and which go right.
 
 </details>

@@ -303,32 +303,32 @@ console.log(await runInOrder([job(20, "a"), job(10, "b"), broken, job(5, "never"
 ## Quick quiz
 
 1. What does an async function return?
-   - A) Always a promise
-   - B) The value after return, immediately
+   - A) The value after return, immediately
+   - B) Always a promise
    - C) undefined unless it uses await
 
 2. What does await pause?
    - A) Only the async function it's in; other code and events keep running
-   - B) The whole page
-   - C) Every other async function
+   - B) Every other async function
+   - C) The whole page
 
 3. Three independent requests are awaited one after another. How do you speed this up?
    - A) Start them together and await Promise.all
-   - B) Add more await keywords
-   - C) Use forEach with async callbacks
+   - B) Use forEach with async callbacks
+   - C) Add more await keywords
 
 4. Why doesn't await inside forEach wait?
-   - A) forEach ignores the promises its callback returns
+   - A) forEach runs callbacks in parallel threads
    - B) await is not allowed in arrow functions
-   - C) forEach runs callbacks in parallel threads
+   - C) forEach ignores the promises its callback returns
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Always a promise**: Returning fulfils the promise; throwing rejects it.
+1. **B) Always a promise**: Returning fulfils the promise; throwing rejects it.
 2. **A) Only the async function it's in; other code and events keep running**: JavaScript stays responsive while awaiting.
 3. **A) Start them together and await Promise.all**: Sequential awaits add up the waiting times.
-4. **A) forEach ignores the promises its callback returns**: Use for…of for sequence, or map with Promise.all.
+4. **C) forEach ignores the promises its callback returns**: Use for…of for sequence, or map with Promise.all.
 
 </details>
 

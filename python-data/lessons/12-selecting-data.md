@@ -185,8 +185,8 @@ print(supplier, laptop_cost)
    - C) 2
 
 3. Which selects by position, whatever the labels are?
-   - A) `loc`
-   - B) `iloc`
+   - A) `iloc`
+   - B) `loc`
    - C) `set_index`
 
 <details>
@@ -194,7 +194,7 @@ print(supplier, laptop_cost)
 
 1. **B) A DataFrame with columns a and b**: A list of names (double brackets) gives a DataFrame. A single name gives a Series.
 2. **B) 4**: `loc` slices include the end label, so it returns rows 0, 1, 2 and 3. `iloc[0:3]` would return 3.
-3. **B) `iloc`**: The "i" in `iloc` stands for integer position.
+3. **A) `iloc`**: The "i" in `iloc` stands for integer position.
 
 </details>
 

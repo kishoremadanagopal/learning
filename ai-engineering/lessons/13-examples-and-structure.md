@@ -320,31 +320,31 @@ print(extract_tags(reply, "answer"))
 
 1. Why should few-shot examples be diverse?
    - A) The model copies patterns closely, so similar examples teach it an accidental pattern
-   - B) Diverse examples use fewer tokens
-   - C) The API rejects repeated examples
+   - B) The API rejects repeated examples
+   - C) Diverse examples use fewer tokens
 
 2. Where should long documents go in a prompt?
-   - A) Near the top, before the instructions and the question
-   - B) At the very end, after the question
-   - C) In the examples
+   - A) In the examples
+   - B) Near the top, before the instructions and the question
+   - C) At the very end, after the question
 
 3. What do XML tags in a prompt do?
-   - A) Separate instructions, documents, examples and inputs so each part is unambiguous
-   - B) Switch the model into XML mode
-   - C) Make the request cheaper
+   - A) Switch the model into XML mode
+   - B) Make the request cheaper
+   - C) Separate instructions, documents, examples and inputs so each part is unambiguous
 
 4. Why is .*? used to extract tagged sections?
-   - A) It's non-greedy: it stops at the first closing tag
+   - A) It ignores newlines
    - B) It's faster to type
-   - C) It ignores newlines
+   - C) It's non-greedy: it stops at the first closing tag
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) The model copies patterns closely, so similar examples teach it an accidental pattern**: Cover each category and the tricky cases.
-2. **A) Near the top, before the instructions and the question**: Putting the question last helps on long inputs.
-3. **A) Separate instructions, documents, examples and inputs so each part is unambiguous**: Any clear, consistent tag names work.
-4. **A) It's non-greedy: it stops at the first closing tag**: A greedy .* runs to the last closing tag.
+2. **B) Near the top, before the instructions and the question**: Putting the question last helps on long inputs.
+3. **C) Separate instructions, documents, examples and inputs so each part is unambiguous**: Any clear, consistent tag names work.
+4. **C) It's non-greedy: it stops at the first closing tag**: A greedy .* runs to the last closing tag.
 
 </details>
 

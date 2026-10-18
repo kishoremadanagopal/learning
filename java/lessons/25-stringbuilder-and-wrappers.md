@@ -171,25 +171,25 @@ public class Main {
 
 1. Why prefer StringBuilder for building text in a loop?
    - A) It changes in place instead of creating a new String each time
-   - B) Strings can't be concatenated in loops
-   - C) StringBuilder is the only way to add numbers to text
+   - B) StringBuilder is the only way to add numbers to text
+   - C) Strings can't be concatenated in loops
 
 2. What does `Integer x = 500, y = 500; x == y` usually give?
-   - A) false
-   - B) true
+   - A) true
+   - B) false
    - C) A compile error
 
 3. Why does `ArrayList<int>` not compile?
-   - A) Generic types need objects, so you write `ArrayList<Integer>`
-   - B) ArrayList can only hold Strings
-   - C) It does compile
+   - A) It does compile
+   - B) Generic types need objects, so you write `ArrayList<Integer>`
+   - C) ArrayList can only hold Strings
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) It changes in place instead of creating a new String each time**: Repeated `+` on Strings copies the text every time.
-2. **A) false**: `==` compares references; values outside −128..127 aren't cached. Use `equals`.
-3. **A) Generic types need objects, so you write `ArrayList<Integer>`**: Wrappers let primitives live in collections.
+2. **B) false**: `==` compares references; values outside −128..127 aren't cached. Use `equals`.
+3. **B) Generic types need objects, so you write `ArrayList<Integer>`**: Wrappers let primitives live in collections.
 
 </details>
 

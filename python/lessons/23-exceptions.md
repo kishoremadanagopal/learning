@@ -227,26 +227,26 @@ print(validate_quantity(5))
 ## Quick quiz
 
 1. Which part of a try statement always runs?
-   - A) else
-   - B) except
-   - C) finally
+   - A) except
+   - B) finally
+   - C) else
 
 2. What does `int("12a")` raise?
    - A) TypeError
-   - B) ValueError
-   - C) SyntaxError
+   - B) SyntaxError
+   - C) ValueError
 
 3. Where should you start reading a traceback?
-   - A) The last line
+   - A) The middle
    - B) The first line
-   - C) The middle
+   - C) The last line
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **C) finally**: `finally` runs whether or not an exception happened.
-2. **B) ValueError**: The type (str) is acceptable, but the value can't be converted.
-3. **A) The last line**: The bottom line names the error; the lines above show how the program got there.
+1. **B) finally**: `finally` runs whether or not an exception happened.
+2. **C) ValueError**: The type (str) is acceptable, but the value can't be converted.
+3. **C) The last line**: The bottom line names the error; the lines above show how the program got there.
 
 </details>
 

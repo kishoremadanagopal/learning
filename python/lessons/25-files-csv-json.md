@@ -204,13 +204,13 @@ print(active_names(sample))
 
 1. Why use `with open(...) as f:`?
    - A) The file is closed automatically, even after an error
-   - B) It reads faster
-   - C) It's required to write files
+   - B) It's required to write files
+   - C) It reads faster
 
 2. What does `json.loads('{"a": null}')` return?
-   - A) {'a': 'null'}
+   - A) {'a': 0}
    - B) {'a': None}
-   - C) {'a': 0}
+   - C) {'a': 'null'}
 
 3. What type are values read by `csv.DictReader`?
    - A) They're converted automatically

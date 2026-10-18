@@ -301,32 +301,32 @@ all([later(30, "a"), later(10, "b"), "c"]).then(console.log);
 ## Quick quiz
 
 1. What does .then(fn) return?
-   - A) A new promise for whatever fn returns
-   - B) The value fn returns, immediately
+   - A) The value fn returns, immediately
+   - B) A new promise for whatever fn returns
    - C) The same promise
 
 2. A then callback forgets to return a value. What does the next then receive?
-   - A) undefined
-   - B) The previous value
+   - A) The previous value
+   - B) undefined
    - C) An error
 
 3. Which combinator never rejects?
    - A) Promise.allSettled
-   - B) Promise.all
-   - C) Promise.race
+   - B) Promise.race
+   - C) Promise.all
 
 4. What happens to an unhandled promise rejection?
-   - A) Browsers log an error; Node.js stops the program by default
-   - B) It's silently ignored everywhere
-   - C) It becomes a fulfilled promise
+   - A) It becomes a fulfilled promise
+   - B) Browsers log an error; Node.js stops the program by default
+   - C) It's silently ignored everywhere
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) A new promise for whatever fn returns**: That's what makes chaining work.
-2. **A) undefined**: Always return when the next step needs the value.
+1. **B) A new promise for whatever fn returns**: That's what makes chaining work.
+2. **B) undefined**: Always return when the next step needs the value.
 3. **A) Promise.allSettled**: It reports every outcome as fulfilled or rejected.
-4. **A) Browsers log an error; Node.js stops the program by default**: End chains with catch, or await inside try.
+4. **B) Browsers log an error; Node.js stops the program by default**: End chains with catch, or await inside try.
 
 </details>
 

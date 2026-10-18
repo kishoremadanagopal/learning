@@ -461,9 +461,9 @@ print(critical_connections(4, [[0, 1], [1, 2], [2, 0], [1, 3]]))
 ## Quick quiz
 
 1. A graph is bipartite exactly when it has no:
-   - A) Cycle of odd length
-   - B) Cycle at all
-   - C) Vertex of odd degree
+   - A) Vertex of odd degree
+   - B) Cycle of odd length
+   - C) Cycle at all
 
 2. What does each strongly connected component of a directed graph contain?
    - A) A maximal set of vertices that can all reach each other
@@ -471,9 +471,9 @@ print(critical_connections(4, [[0, 1], [1, 2], [2, 0], [1, 3]]))
    - C) A single vertex and its neighbours
 
 3. In Tarjan's method, when is the tree edge u → v a bridge?
-   - A) When low[v] > disc[u]
+   - A) When v is a leaf
    - B) When low[v] == 0
-   - C) When v is a leaf
+   - C) When low[v] > disc[u]
 
 4. Which problem is NP-hard, with no known polynomial-time algorithm?
    - A) Travelling salesman (shortest tour through every vertex)
@@ -483,9 +483,9 @@ print(critical_connections(4, [[0, 1], [1, 2], [2, 0], [1, 3]]))
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Cycle of odd length**: Even cycles can be coloured alternately; odd ones can't.
+1. **B) Cycle of odd length**: Even cycles can be coloured alternately; odd ones can't.
 2. **A) A maximal set of vertices that can all reach each other**: Shrinking each SCC to one vertex leaves a DAG.
-3. **A) When low[v] > disc[u]**: Nothing in v's subtree can climb back to u or above.
+3. **C) When low[v] > disc[u]**: Nothing in v's subtree can climb back to u or above.
 4. **A) Travelling salesman (shortest tour through every vertex)**: MST and Dijkstra are fast; TSP needs exponential time for exact answers in general.
 
 </details>

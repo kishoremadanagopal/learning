@@ -188,14 +188,14 @@ print(sd)
 ## Quick quiz
 
 1. Which measure of spread is not affected by a single extreme outlier?
-   - A) Range
-   - B) IQR
-   - C) Standard deviation
+   - A) IQR
+   - B) Standard deviation
+   - C) Range
 
 2. What does a standard deviation of 15 on an exam (mean 60) roughly mean?
    - A) Scores typically sit about 15 points from 60
-   - B) Every score is between 45 and 75
-   - C) 15 students scored 60
+   - B) 15 students scored 60
+   - C) Every score is between 45 and 75
 
 3. In a box plot, what does the box itself show?
    - A) The full range of the data
@@ -205,7 +205,7 @@ print(sd)
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) IQR**: The IQR uses only the middle 50% of values, so the extremes don't matter.
+1. **A) IQR**: The IQR uses only the middle 50% of values, so the extremes don't matter.
 2. **A) Scores typically sit about 15 points from 60**: The std is the typical distance from the mean, not a hard limit.
 3. **B) The middle 50% of values, from Q1 to Q3**: The box spans the interquartile range, with the median inside.
 

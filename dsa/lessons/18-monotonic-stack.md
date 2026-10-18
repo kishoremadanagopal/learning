@@ -317,32 +317,32 @@ print(largest_rectangle([2, 1, 5, 6, 2, 3]))
 ## Quick quiz
 
 1. Why is a monotonic stack algorithm O(n) even though it has a while loop inside a for loop?
-   - A) Each index is pushed once and popped at most once, so all the pops together are at most n
-   - B) The while loop runs at most once per step
-   - C) Python optimises nested loops
+   - A) The while loop runs at most once per step
+   - B) Python optimises nested loops
+   - C) Each index is pushed once and popped at most once, so all the pops together are at most n
 
 2. For "next greater element to the right", what order do the values on the stack keep (bottom to top)?
-   - A) Decreasing
+   - A) Random
    - B) Increasing
-   - C) Random
+   - C) Decreasing
 
 3. In the largest-rectangle algorithm, when is a bar's rectangle complete?
-   - A) When a shorter bar arrives on its right
-   - B) When a taller bar arrives
+   - A) When a taller bar arrives
+   - B) When a shorter bar arrives on its right
    - C) Only at the end of the list
 
 4. Which clue suggests a monotonic stack?
-   - A) "For each day, how many days until a higher price?"
+   - A) "Count the distinct words"
    - B) "Find the shortest path between two cities"
-   - C) "Count the distinct words"
+   - C) "For each day, how many days until a higher price?"
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Each index is pushed once and popped at most once, so all the pops together are at most n**: Count the total pops across the whole run, not per step: that's amortised analysis.
-2. **A) Decreasing**: A larger new value pops the smaller ones; whatever remains is larger than what sits above it.
-3. **A) When a shorter bar arrives on its right**: A shorter bar stops it from extending further right; the bar below it on the stack marks the left edge.
-4. **A) "For each day, how many days until a higher price?"**: "Next greater" or "previous smaller" questions are the classic monotonic-stack signal.
+1. **C) Each index is pushed once and popped at most once, so all the pops together are at most n**: Count the total pops across the whole run, not per step: that's amortised analysis.
+2. **C) Decreasing**: A larger new value pops the smaller ones; whatever remains is larger than what sits above it.
+3. **B) When a shorter bar arrives on its right**: A shorter bar stops it from extending further right; the bar below it on the stack marks the left edge.
+4. **C) "For each day, how many days until a higher price?"**: "Next greater" or "previous smaller" questions are the classic monotonic-stack signal.
 
 </details>
 

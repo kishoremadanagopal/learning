@@ -181,20 +181,20 @@ print(b, bmi_category(b))
 ## Quick quiz
 
 1. What does a function return if it has no `return` statement?
-   - A) 0
-   - B) None
-   - C) An empty string
+   - A) None
+   - B) An empty string
+   - C) 0
 
 2. What's the difference between a parameter and an argument?
-   - A) Parameters are the names in `def`; arguments are the values passed in a call
+   - A) Arguments are in `def`; parameters are in the call
    - B) They are the same thing
-   - C) Arguments are in `def`; parameters are in the call
+   - C) Parameters are the names in `def`; arguments are the values passed in a call
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) None**: Every function returns something; without `return`, it's None.
-2. **A) Parameters are the names in `def`; arguments are the values passed in a call**: In `def f(x)` x is a parameter; in `f(5)` the 5 is an argument.
+1. **A) None**: Every function returns something; without `return`, it's None.
+2. **C) Parameters are the names in `def`; arguments are the values passed in a call**: In `def f(x)` x is a parameter; in `f(5)` the 5 is an argument.
 
 </details>
 

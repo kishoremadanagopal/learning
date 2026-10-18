@@ -194,14 +194,14 @@ print(grades)
 ## Quick quiz
 
 1. What does broadcasting let you do?
-   - A) Send arrays over the internet
-   - B) Combine arrays of different shapes by stretching the smaller one
+   - A) Combine arrays of different shapes by stretching the smaller one
+   - B) Send arrays over the internet
    - C) Print an array on several lines
 
 2. What is `np.array([1.0, np.nan, 3.0]).mean()`?
-   - A) `2.0`
-   - B) `nan`
-   - C) An error
+   - A) An error
+   - B) `2.0`
+   - C) `nan`
 
 3. What does `np.where(a > 0, a, 0)` do?
    - A) Replaces negative numbers (and zeros) with 0 and keeps positive ones
@@ -211,8 +211,8 @@ print(grades)
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) Combine arrays of different shapes by stretching the smaller one**: A single number or a row is "stretched" to match a bigger array, so you don't have to copy it yourself.
-2. **B) `nan`**: Any maths involving `nan` gives `nan`. Use `np.nanmean` to skip missing values.
+1. **A) Combine arrays of different shapes by stretching the smaller one**: A single number or a row is "stretched" to match a bigger array, so you don't have to copy it yourself.
+2. **C) `nan`**: Any maths involving `nan` gives `nan`. Use `np.nanmean` to skip missing values.
 3. **A) Replaces negative numbers (and zeros) with 0 and keeps positive ones**: It chooses item by item: `a` where the condition is true, `0` where it isn't. The length stays the same.
 
 </details>

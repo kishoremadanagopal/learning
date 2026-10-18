@@ -330,31 +330,31 @@ print([round(s, 4) for s in bm25_scores("puncture repair", docs)])
 
 1. What does an inverted index map?
    - A) Each word to the documents that contain it
-   - B) Each document to its embedding
-   - C) Each query to its answer
+   - B) Each query to its answer
+   - C) Each document to its embedding
 
 2. Why does BM25 give a rare word more weight than a common one?
-   - A) A word that appears in few documents tells you more about which documents are relevant (IDF)
-   - B) Rare words are longer
+   - A) Rare words are longer
+   - B) A word that appears in few documents tells you more about which documents are relevant (IDF)
    - C) Common words are always stop words
 
 3. What does the k1 setting control?
-   - A) How quickly extra mentions of a word stop increasing the score
+   - A) The length of the query
    - B) The number of results
-   - C) The length of the query
+   - C) How quickly extra mentions of a word stop increasing the score
 
 4. Which query is BM25 likely to handle better than vector search?
-   - A) An exact part number such as SH-M8100
-   - B) "my chain keeps falling off"
-   - C) A question using synonyms of the document's words
+   - A) "my chain keeps falling off"
+   - B) A question using synonyms of the document's words
+   - C) An exact part number such as SH-M8100
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Each word to the documents that contain it**: Like the index at the back of a book.
-2. **A) A word that appears in few documents tells you more about which documents are relevant (IDF)**: Inverse document frequency rewards specificity.
-3. **A) How quickly extra mentions of a word stop increasing the score**: Smaller k1 saturates sooner.
-4. **A) An exact part number such as SH-M8100**: Exact identifiers carry little "meaning" for embeddings.
+2. **B) A word that appears in few documents tells you more about which documents are relevant (IDF)**: Inverse document frequency rewards specificity.
+3. **C) How quickly extra mentions of a word stop increasing the score**: Smaller k1 saturates sooner.
+4. **C) An exact part number such as SH-M8100**: Exact identifiers carry little "meaning" for embeddings.
 
 </details>
 

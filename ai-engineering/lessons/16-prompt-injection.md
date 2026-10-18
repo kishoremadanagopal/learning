@@ -292,14 +292,14 @@ print(is_safe_link("https://example.com.evil.net/x?d=SECRET", ["example.com"]))
 ## Quick quiz
 
 1. What is indirect prompt injection?
-   - A) Instructions hidden in content the model reads, such as a web page, email or document
-   - B) A user typing "ignore your instructions"
-   - C) A bug in the tokenizer
+   - A) A user typing "ignore your instructions"
+   - B) A bug in the tokenizer
+   - C) Instructions hidden in content the model reads, such as a web page, email or document
 
 2. Which combination makes data theft through an AI assistant possible?
-   - A) Private data, untrusted content and a way to send data out
-   - B) A long system prompt and a small model
-   - C) Streaming and caching
+   - A) Streaming and caching
+   - B) Private data, untrusted content and a way to send data out
+   - C) A long system prompt and a small model
 
 3. How should an application treat model output?
    - A) As untrusted input: escape, validate and never execute it directly
@@ -307,17 +307,17 @@ print(is_safe_link("https://example.com.evil.net/x?d=SECRET", ["example.com"]))
    - C) As safe once it passes a spell check
 
 4. Why use an allow-list rather than a block-list for links?
-   - A) Unknown domains are refused by default, so new attacker domains don't get through
-   - B) Block-lists are slower
+   - A) Block-lists are slower
+   - B) Unknown domains are refused by default, so new attacker domains don't get through
    - C) Allow-lists need no maintenance
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Instructions hidden in content the model reads, such as a web page, email or document**: The user may never see the attack.
-2. **A) Private data, untrusted content and a way to send data out**: Remove one leg of the lethal trifecta.
+1. **C) Instructions hidden in content the model reads, such as a web page, email or document**: The user may never see the attack.
+2. **B) Private data, untrusted content and a way to send data out**: Remove one leg of the lethal trifecta.
 3. **A) As untrusted input: escape, validate and never execute it directly**: Injected instructions can shape the output.
-4. **A) Unknown domains are refused by default, so new attacker domains don't get through**: Fail safe: deny unless trusted.
+4. **B) Unknown domains are refused by default, so new attacker domains don't get through**: Fail safe: deny unless trusted.
 
 </details>
 

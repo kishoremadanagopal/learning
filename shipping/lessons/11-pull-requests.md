@@ -340,8 +340,8 @@ git log --oneline
 
 1. Which belongs in a pull request description?
    - A) What changes and why, how to check it, and links such as Closes #12
-   - B) A copy of every changed line
-   - C) The reviewer's password
+   - B) The reviewer's password
+   - C) A copy of every changed line
    - D) Nothing; the code explains itself
 
 2. You push two more commits to a branch that has an open pull request. What happens?
@@ -351,23 +351,23 @@ git log --oneline
    - D) The PR is closed
 
 3. What does "Squash and merge" put on main?
-   - A) One new commit containing all the branch's changes
-   - B) Every commit of the branch plus a merge commit
-   - C) Only the branch's first commit
-   - D) Nothing until you pull
+   - A) Nothing until you pull
+   - B) Only the branch's first commit
+   - C) One new commit containing all the branch's changes
+   - D) Every commit of the branch plus a merge commit
 
 4. Who can approve a pull request on GitHub?
    - A) Someone other than its author
    - B) Only its author
-   - C) Anyone, including the author
-   - D) Only GitHub's bots
+   - C) Only GitHub's bots
+   - D) Anyone, including the author
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) What changes and why, how to check it, and links such as Closes #12**: The diff shows what changed; the description explains why and how to verify it.
 2. **A) The pull request updates to include them**: A pull request tracks its branch.
-3. **A) One new commit containing all the branch's changes**: That's why git branch -d later calls the local branch "not fully merged".
+3. **C) One new commit containing all the branch's changes**: That's why git branch -d later calls the local branch "not fully merged".
 4. **A) Someone other than its author**: Reviews are about a second pair of eyes.
 
 </details>

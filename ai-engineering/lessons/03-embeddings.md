@@ -306,32 +306,32 @@ print(top_k([0.15, 0.15, 0.9], docs, 2))
 ## Quick quiz
 
 1. What does it mean for two embeddings to have cosine similarity close to 1?
-   - A) They point in nearly the same direction: the texts are closely related in meaning
+   - A) They contain exactly the same words
    - B) They have the same length
-   - C) They contain exactly the same words
+   - C) They point in nearly the same direction: the texts are closely related in meaning
 
 2. Why are dot product and cosine similarity the same for normalised vectors?
-   - A) Normalised vectors have length 1, so dividing by the lengths changes nothing
-   - B) Because both use subtraction
+   - A) Because both use subtraction
+   - B) Normalised vectors have length 1, so dividing by the lengths changes nothing
    - C) They're never the same
 
 3. Which representation knows that "car" and "automobile" are related?
-   - A) A learned embedding from a neural model
-   - B) A bag-of-words count vector
-   - C) A one-hot vector
+   - A) A one-hot vector
+   - B) A learned embedding from a neural model
+   - C) A bag-of-words count vector
 
 4. Which task is NOT a typical use of embeddings?
-   - A) Exact arithmetic on large numbers
+   - A) Clustering similar documents
    - B) Semantic search
-   - C) Clustering similar documents
+   - C) Exact arithmetic on large numbers
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) They point in nearly the same direction: the texts are closely related in meaning**: Cosine similarity ignores length and measures the angle.
-2. **A) Normalised vectors have length 1, so dividing by the lengths changes nothing**: That's why vector databases often just use the dot product.
-3. **A) A learned embedding from a neural model**: Bag of words only matches identical words.
-4. **A) Exact arithmetic on large numbers**: Embeddings capture meaning, not precise calculation.
+1. **C) They point in nearly the same direction: the texts are closely related in meaning**: Cosine similarity ignores length and measures the angle.
+2. **B) Normalised vectors have length 1, so dividing by the lengths changes nothing**: That's why vector databases often just use the dot product.
+3. **B) A learned embedding from a neural model**: Bag of words only matches identical words.
+4. **C) Exact arithmetic on large numbers**: Embeddings capture meaning, not precise calculation.
 
 </details>
 

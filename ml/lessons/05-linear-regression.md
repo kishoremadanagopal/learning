@@ -189,32 +189,32 @@ print(round(flat_price, 1))
 ## Quick quiz
 
 1. A linear model's coefficient for age_years is -0.63 (prices in thousands). What does it mean?
-   - A) Each extra year of age lowers the predicted price by about 630, other features unchanged
-   - B) Older homes are 63% cheaper
+   - A) Older homes are 63% cheaper
+   - B) Each extra year of age lowers the predicted price by about 630, other features unchanged
    - C) Age explains 63% of the price
 
 2. Why shouldn't you compare raw coefficient sizes to find the most important feature?
-   - A) Because coefficients are random
-   - B) Because each depends on its feature's units: per m², per bedroom, per km
+   - A) Because each depends on its feature's units: per m², per bedroom, per km
+   - B) Because coefficients are random
    - C) Because negative coefficients don't count
 
 3. On a predicted-vs-actual plot, a point far above the diagonal is a home the model:
-   - A) Priced too high
-   - B) Priced too low
-   - C) Priced perfectly
+   - A) Priced perfectly
+   - B) Priced too high
+   - C) Priced too low
 
 4. "Least squares" means the model chooses coefficients that:
-   - A) Use the fewest features
-   - B) Make the sum of squared errors on the training data as small as possible
-   - C) Make every error exactly zero
+   - A) Make every error exactly zero
+   - B) Use the fewest features
+   - C) Make the sum of squared errors on the training data as small as possible
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Each extra year of age lowers the predicted price by about 630, other features unchanged**: A coefficient is the change in prediction per unit of the feature, holding the others fixed.
-2. **B) Because each depends on its feature's units: per m², per bedroom, per km**: A feature measured in small units gets a small coefficient even if it matters a lot. Scale features first (Lesson 8 and 15).
-3. **A) Priced too high**: Above the line means predicted > actual.
-4. **B) Make the sum of squared errors on the training data as small as possible**: Squaring makes every error positive and punishes big misses more.
+1. **B) Each extra year of age lowers the predicted price by about 630, other features unchanged**: A coefficient is the change in prediction per unit of the feature, holding the others fixed.
+2. **A) Because each depends on its feature's units: per m², per bedroom, per km**: A feature measured in small units gets a small coefficient even if it matters a lot. Scale features first (Lesson 8 and 15).
+3. **B) Priced too high**: Above the line means predicted > actual.
+4. **C) Make the sum of squared errors on the training data as small as possible**: Squaring makes every error positive and punishes big misses more.
 
 </details>
 

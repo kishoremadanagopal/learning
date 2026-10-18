@@ -229,26 +229,26 @@ print(top3)
 ## Quick quiz
 
 1. What does `Counter(["a", "b", "a"])` give?
-   - A) `Counter({'a': 2, 'b': 1})`
-   - B) `['a', 'b']`
-   - C) `3`
+   - A) `3`
+   - B) `Counter({'a': 2, 'b': 1})`
+   - C) `['a', 'b']`
 
 2. In `revenue.get(key, 0)`, what is the `0` for?
-   - A) It sets every value to zero
-   - B) It's returned when the key isn't in the dictionary yet
-   - C) It limits the dictionary to one key
+   - A) It limits the dictionary to one key
+   - B) It sets every value to zero
+   - C) It's returned when the key isn't in the dictionary yet
 
 3. What does `sorted(items, key=lambda p: p[1], reverse=True)` do?
-   - A) Sorts by the first item, smallest first
-   - B) Sorts by the second item, biggest first
+   - A) Sorts by the second item, biggest first
+   - B) Sorts by the first item, smallest first
    - C) Removes duplicates
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) `Counter({'a': 2, 'b': 1})`**: A Counter counts how many times each value appears.
-2. **B) It's returned when the key isn't in the dictionary yet**: `.get` returns the default when the key is missing, so the first amount for a new key starts from 0.
-3. **B) Sorts by the second item, biggest first**: `key=` chooses what to sort by (the second item), and `reverse=True` puts the largest first.
+1. **B) `Counter({'a': 2, 'b': 1})`**: A Counter counts how many times each value appears.
+2. **C) It's returned when the key isn't in the dictionary yet**: `.get` returns the default when the key is missing, so the first amount for a new key starts from 0.
+3. **A) Sorts by the second item, biggest first**: `key=` chooses what to sort by (the second item), and `reverse=True` puts the largest first.
 
 </details>
 

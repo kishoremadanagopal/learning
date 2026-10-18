@@ -268,32 +268,32 @@ print(attention_weights([1.0, 0.0], [[1.0, 0.0], [0.0, 1.0]]))
 ## Quick quiz
 
 1. In self-attention, what does a token's query get compared with?
-   - A) The keys of the tokens it can attend to
+   - A) The vocabulary
    - B) The values of every token
-   - C) The vocabulary
+   - C) The keys of the tokens it can attend to
 
 2. Why do long prompts cost more time and compute?
-   - A) Attention compares tokens pairwise, so cost grows roughly with the square of the length
-   - B) Each token is processed by a different model
-   - C) Long prompts are sent over the network twice
+   - A) Each token is processed by a different model
+   - B) Long prompts are sent over the network twice
+   - C) Attention compares tokens pairwise, so cost grows roughly with the square of the length
 
 3. What does the causal mask do in a text-generating model?
-   - A) Stops each token from attending to tokens after it
-   - B) Hides offensive words
-   - C) Removes padding tokens from the output
+   - A) Removes padding tokens from the output
+   - B) Stops each token from attending to tokens after it
+   - C) Hides offensive words
 
 4. Why is generating output slower per token than reading input?
-   - A) Output tokens are produced one at a time, each needing a pass through the model
-   - B) Output tokens are longer
-   - C) Input is cached on disk
+   - A) Input is cached on disk
+   - B) Output tokens are produced one at a time, each needing a pass through the model
+   - C) Output tokens are longer
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The keys of the tokens it can attend to**: Query–key dot products decide the attention weights; values are what gets mixed.
-2. **A) Attention compares tokens pairwise, so cost grows roughly with the square of the length**: That's also why context windows have limits.
-3. **A) Stops each token from attending to tokens after it**: The model must predict the future without seeing it.
-4. **A) Output tokens are produced one at a time, each needing a pass through the model**: The prompt can be processed in parallel; generation can't.
+1. **C) The keys of the tokens it can attend to**: Query–key dot products decide the attention weights; values are what gets mixed.
+2. **C) Attention compares tokens pairwise, so cost grows roughly with the square of the length**: That's also why context windows have limits.
+3. **B) Stops each token from attending to tokens after it**: The model must predict the future without seeing it.
+4. **B) Output tokens are produced one at a time, each needing a pass through the model**: The prompt can be processed in parallel; generation can't.
 
 </details>
 

@@ -317,31 +317,31 @@ print(check_reply(" Urgent. ", allowed_values={"low", "normal", "high"}))
 ## Quick quiz
 
 1. What is the "new colleague" test for a prompt?
-   - A) Would a capable person with no background on the task understand exactly what to do from it?
+   - A) Is it shorter than a tweet?
    - B) Would a new model version accept it?
-   - C) Is it shorter than a tweet?
+   - C) Would a capable person with no background on the task understand exactly what to do from it?
 
 2. Why explain the reason behind an instruction?
-   - A) The model can generalise from the reason to cases the rule didn't mention
-   - B) Reasons are required by the API
-   - C) It makes the prompt cheaper
+   - A) Reasons are required by the API
+   - B) It makes the prompt cheaper
+   - C) The model can generalise from the reason to cases the rule didn't mention
 
 3. Which instruction is likely to work best?
-   - A) Write the answer as two short prose paragraphs.
-   - B) Don't use Markdown.
-   - C) NEVER EVER USE BULLET POINTS!!!
+   - A) NEVER EVER USE BULLET POINTS!!!
+   - B) Write the answer as two short prose paragraphs.
+   - C) Don't use Markdown.
 
 4. How do you get JSON from the newest Claude models now that prefilling is unsupported?
    - A) Use structured outputs, or describe the format in the instructions
-   - B) Start the assistant message with a brace
-   - C) Raise the temperature
+   - B) Raise the temperature
+   - C) Start the assistant message with a brace
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Would a capable person with no background on the task understand exactly what to do from it?**: If a newcomer would be confused, the model will be too.
-2. **A) The model can generalise from the reason to cases the rule didn't mention**: "Read aloud by text-to-speech" covers more than a single banned symbol.
-3. **A) Write the answer as two short prose paragraphs.**: Say what you want; shouting makes modern models over-apply rules.
+1. **C) Would a capable person with no background on the task understand exactly what to do from it?**: If a newcomer would be confused, the model will be too.
+2. **C) The model can generalise from the reason to cases the rule didn't mention**: "Read aloud by text-to-speech" covers more than a single banned symbol.
+3. **B) Write the answer as two short prose paragraphs.**: Say what you want; shouting makes modern models over-apply rules.
 4. **A) Use structured outputs, or describe the format in the instructions**: Prefilling returns an error on Claude 4.6 and later.
 
 </details>

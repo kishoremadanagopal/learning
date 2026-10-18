@@ -293,26 +293,26 @@ print(run_tests(model, make_prompt, cases))
 
 2. A user's input contains {{system_prompt}}. What should a safe template engine do?
    - A) Insert it as literal text, without expanding it
-   - B) Replace it with the system prompt
-   - C) Raise an error and stop the app
+   - B) Raise an error and stop the app
+   - C) Replace it with the system prompt
 
 3. You switch to a newer model. What should you do with your prompts?
-   - A) Re-run the test set; a prompt tuned for one model may behave differently on another
+   - A) Double every instruction
    - B) Nothing: prompts always transfer
-   - C) Double every instruction
+   - C) Re-run the test set; a prompt tuned for one model may behave differently on another
 
 4. What makes a good prompt test set?
-   - A) Realistic inputs including edge cases, with clear checks for each
+   - A) Random strings
    - B) Only the three examples from the prompt
-   - C) Random strings
+   - C) Realistic inputs including edge cases, with clear checks for each
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Prompts contain braces, such as JSON examples, which format treats as placeholders**: Use a different placeholder style, string.Template or Jinja.
 2. **A) Insert it as literal text, without expanding it**: Single-pass substitution prevents template injection.
-3. **A) Re-run the test set; a prompt tuned for one model may behave differently on another**: Tests catch regressions after any change.
-4. **A) Realistic inputs including edge cases, with clear checks for each**: Cover the awkward cases your users will produce.
+3. **C) Re-run the test set; a prompt tuned for one model may behave differently on another**: Tests catch regressions after any change.
+4. **C) Realistic inputs including edge cases, with clear checks for each**: Cover the awkward cases your users will produce.
 
 </details>
 

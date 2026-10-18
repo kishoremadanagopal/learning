@@ -196,20 +196,20 @@ print(group_by_length(["hi", "cat", "ox", "dog"]))
 ## Quick quiz
 
 1. Why must you usually sort before `itertools.groupby`?
-   - A) It only groups items that are next to each other
-   - B) It sorts in reverse otherwise
-   - C) It only accepts sorted lists
+   - A) It only accepts sorted lists
+   - B) It only groups items that are next to each other
+   - C) It sorts in reverse otherwise
 
 2. What does `partial(pow, 2)` create?
-   - A) A function where the first argument of pow is fixed to 2
+   - A) A copy of pow
    - B) The number 2
-   - C) A copy of pow
+   - C) A function where the first argument of pow is fixed to 2
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) It only groups items that are next to each other**: Unsorted input produces several separate groups for the same key.
-2. **A) A function where the first argument of pow is fixed to 2**: Calling it with x gives `pow(2, x)`.
+1. **B) It only groups items that are next to each other**: Unsorted input produces several separate groups for the same key.
+2. **C) A function where the first argument of pow is fixed to 2**: Calling it with x gives `pow(2, x)`.
 
 </details>
 

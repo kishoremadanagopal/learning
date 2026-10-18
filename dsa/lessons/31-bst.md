@@ -649,27 +649,27 @@ print(inorder(delete_node(build([5, 3, 6, 2, 4, None, 7]), 3)))
    - C) The values level by level
 
 2. You insert 1, 2, 3, …, n in order into a plain BST. How long does a search take afterwards?
-   - A) O(n): the tree is a chain
-   - B) O(log n)
-   - C) O(1)
+   - A) O(log n)
+   - B) O(1)
+   - C) O(n): the tree is a chain
 
 3. When deleting a node with two children, what replaces it?
-   - A) Its inorder successor (the smallest value in its right subtree)
-   - B) Its left child
-   - C) The root
+   - A) The root
+   - B) Its inorder successor (the smallest value in its right subtree)
+   - C) Its left child
 
 4. What is the purpose of a rotation in an AVL or red-black tree?
-   - A) To reduce height while keeping the inorder (sorted) order
-   - B) To sort the values
-   - C) To delete a node
+   - A) To sort the values
+   - B) To delete a node
+   - C) To reduce height while keeping the inorder (sorted) order
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) The values in sorted order**: Left subtree (smaller), node, right subtree (bigger): sorted.
-2. **A) O(n): the tree is a chain**: Sorted insertions make every node a right child. Self-balancing trees prevent this.
-3. **A) Its inorder successor (the smallest value in its right subtree)**: The successor is bigger than everything on the left and smaller than everything else on the right. (The inorder predecessor works too.)
-4. **A) To reduce height while keeping the inorder (sorted) order**: A rotation lifts a child above its parent in O(1) and preserves the BST order.
+2. **C) O(n): the tree is a chain**: Sorted insertions make every node a right child. Self-balancing trees prevent this.
+3. **B) Its inorder successor (the smallest value in its right subtree)**: The successor is bigger than everything on the left and smaller than everything else on the right. (The inorder predecessor works too.)
+4. **C) To reduce height while keeping the inorder (sorted) order**: A rotation lifts a child above its parent in O(1) and preserves the BST order.
 
 </details>
 

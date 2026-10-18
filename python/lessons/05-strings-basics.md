@@ -194,16 +194,16 @@ print(f"{product} ...... ${price:.2f}")
    - C) An error
 
 3. What does `f"{7/2:.1f}"` produce?
-   - A) "3"
-   - B) "3.5"
-   - C) "3.50"
+   - A) "3.50"
+   - B) "3"
+   - C) "3.5"
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) "ana"**: Start at index 1 ('a') and stop *before* index 4, giving indexes 1, 2 and 3.
 2. **B) "c"**: Negative indexes count from the end; -1 is the last character.
-3. **B) "3.5"**: `.1f` means one digit after the decimal point.
+3. **C) "3.5"**: `.1f` means one digit after the decimal point.
 
 </details>
 

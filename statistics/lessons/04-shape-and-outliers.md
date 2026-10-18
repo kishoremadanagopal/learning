@@ -189,26 +189,26 @@ print(wet_outliers)
 ## Quick quiz
 
 1. A histogram has a long tail to the right. What's true?
-   - A) It's right-skewed and the mean is above the median
-   - B) It's left-skewed
+   - A) It's left-skewed
+   - B) It's right-skewed and the mean is above the median
    - C) The mean and median are equal
 
 2. A value has z = -2. What does that mean?
-   - A) It's 2 units below the mean
-   - B) It's 2 standard deviations below the mean
-   - C) It's an error
+   - A) It's an error
+   - B) It's 2 units below the mean
+   - C) It's 2 standard deviations below the mean
 
 3. Why is the IQR rule better than the z-score rule for skewed data?
-   - A) It finds more outliers
-   - B) It doesn't assume the data is symmetric, and outliers don't distort it
+   - A) It doesn't assume the data is symmetric, and outliers don't distort it
+   - B) It finds more outliers
    - C) It's faster
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) It's right-skewed and the mean is above the median**: The tail of large values pulls the mean up, above the median.
-2. **B) It's 2 standard deviations below the mean**: z-scores count standard deviations, so -2 is well below average.
-3. **B) It doesn't assume the data is symmetric, and outliers don't distort it**: The mean and std are themselves pulled by skew and outliers; quartiles aren't.
+1. **B) It's right-skewed and the mean is above the median**: The tail of large values pulls the mean up, above the median.
+2. **C) It's 2 standard deviations below the mean**: z-scores count standard deviations, so -2 is well below average.
+3. **A) It doesn't assume the data is symmetric, and outliers don't distort it**: The mean and std are themselves pulled by skew and outliers; quartiles aren't.
 
 </details>
 

@@ -221,21 +221,21 @@ print(first_customer)
    - C) CSV files require it
 
 2. What does subtracting two dates give?
-   - A) A Timedelta (a length of time)
-   - B) A date
+   - A) A date
+   - B) A Timedelta (a length of time)
    - C) A number of seconds as text
 
 3. What does `dayfirst=True` change?
-   - A) The weekday names
-   - B) `03/04/2025` is read as 3 April, not 4 March
+   - A) `03/04/2025` is read as 3 April, not 4 March
+   - B) The weekday names
    - C) Dates are sorted newest first
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **B) So pandas understands it as dates: parts, sorting, filtering and differences**: As text it's just characters. As datetimes you get `.dt.month`, date maths and correct comparisons.
-2. **A) A Timedelta (a length of time)**: Use `.dt.days` on a Timedelta column to get whole days.
-3. **B) `03/04/2025` is read as 3 April, not 4 March**: It tells pandas the day comes before the month, as in UK-style dates.
+2. **B) A Timedelta (a length of time)**: Use `.dt.days` on a Timedelta column to get whole days.
+3. **A) `03/04/2025` is read as 3 April, not 4 March**: It tells pandas the day comes before the month, as in UK-style dates.
 
 </details>
 

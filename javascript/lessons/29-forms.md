@@ -497,32 +497,32 @@ Open these only after a real attempt. Each one explains the solution step by ste
 ## Quick quiz
 
 1. An <input type="number"> shows 5. What is input.value?
-   - A) "5" (a string)
+   - A) undefined
    - B) 5 (a number)
-   - C) undefined
+   - C) "5" (a string)
 
 2. Why listen for submit on the form instead of click on its button?
-   - A) submit also fires when the user presses Enter, and only after validation passes
-   - B) click doesn't work on buttons inside forms
+   - A) click doesn't work on buttons inside forms
+   - B) submit also fires when the user presses Enter, and only after validation passes
    - C) submit is faster
 
 3. What does Object.fromEntries(new FormData(form)) leave out?
-   - A) Unchecked checkboxes (and all but one value of repeated names)
-   - B) Number inputs
+   - A) Number inputs
+   - B) Unchecked checkboxes (and all but one value of repeated names)
    - C) Select boxes
 
 4. The form has required fields and pattern rules. Can the server skip validating the data?
-   - A) No: client-side checks can be bypassed, so the server must check again
-   - B) Yes, the browser already did it
-   - C) Only if novalidate isn't set
+   - A) Only if novalidate isn't set
+   - B) No: client-side checks can be bypassed, so the server must check again
+   - C) Yes, the browser already did it
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) "5" (a string)**: Every value is a string; use valueAsNumber or Number().
-2. **A) submit also fires when the user presses Enter, and only after validation passes**: One submit listener covers every way of submitting.
-3. **A) Unchecked checkboxes (and all but one value of repeated names)**: Use getAll for repeated names, and has to test checkboxes.
-4. **A) No: client-side checks can be bypassed, so the server must check again**: Browser validation is a convenience for users, not security.
+1. **C) "5" (a string)**: Every value is a string; use valueAsNumber or Number().
+2. **B) submit also fires when the user presses Enter, and only after validation passes**: One submit listener covers every way of submitting.
+3. **B) Unchecked checkboxes (and all but one value of repeated names)**: Use getAll for repeated names, and has to test checkboxes.
+4. **B) No: client-side checks can be bypassed, so the server must check again**: Browser validation is a convenience for users, not security.
 
 </details>
 

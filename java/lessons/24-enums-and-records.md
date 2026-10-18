@@ -246,9 +246,9 @@ public class Main {
 ## Quick quiz
 
 1. What does a record generate automatically?
-   - A) Constructor, accessors, equals, hashCode and toString
+   - A) Setters for every field
    - B) Only a constructor
-   - C) Setters for every field
+   - C) Constructor, accessors, equals, hashCode and toString
 
 2. For `record Point(int x, int y)`, how do you read x?
    - A) `p.x()`
@@ -257,13 +257,13 @@ public class Main {
 
 3. Why use an enum instead of strings like "SMALL"?
    - A) Typos become compile errors and the set of values is fixed
-   - B) Enums use less memory
-   - C) Strings can't be used in switch
+   - B) Strings can't be used in switch
+   - C) Enums use less memory
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Constructor, accessors, equals, hashCode and toString**: Records are concise, immutable data carriers.
+1. **C) Constructor, accessors, equals, hashCode and toString**: Records are concise, immutable data carriers.
 2. **A) `p.x()`**: Record accessors are named after the components.
 3. **A) Typos become compile errors and the set of values is fixed**: The compiler knows every valid value.
 

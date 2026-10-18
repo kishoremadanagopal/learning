@@ -375,33 +375,33 @@ git status -s
 ## Quick quiz
 
 1. What does git switch -c add-tubes do?
-   - A) Creates a branch at the current commit and switches to it
+   - A) Switches to add-tubes, which must already exist
    - B) Copies all files into a new folder called add-tubes
-   - C) Switches to add-tubes, which must already exist
-   - D) Creates a branch without switching to it
+   - C) Creates a branch without switching to it
+   - D) Creates a branch at the current commit and switches to it
 
 2. You commit while on add-tubes. Which branch moves?
    - A) Only add-tubes
-   - B) Only main
+   - B) Neither; branches never move
    - C) Both main and add-tubes
-   - D) Neither; branches never move
+   - D) Only main
 
 3. git switch main fails with "Your local changes … would be overwritten". What's a safe way forward?
    - A) Commit the changes or stash them, then switch
-   - B) Delete the .git folder
+   - B) Rename the branch
    - C) Run git switch -f main
-   - D) Rename the branch
+   - D) Delete the .git folder
 
 4. Which command deletes a branch only if its work is already merged?
    - A) git branch -d name
-   - B) git branch -D name
-   - C) git switch -d name
-   - D) git stash drop name
+   - B) git switch -d name
+   - C) git stash drop name
+   - D) git branch -D name
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Creates a branch at the current commit and switches to it**: Creating a branch only writes a new name pointing at a commit; -c also switches to it.
+1. **D) Creates a branch at the current commit and switches to it**: Creating a branch only writes a new name pointing at a commit; -c also switches to it.
 2. **A) Only add-tubes**: The branch HEAD points to moves forward to the new commit; the others stay where they were.
 3. **A) Commit the changes or stash them, then switch**: -f would throw your changes away. Commit them on the current branch, or stash them for a short while.
 4. **A) git branch -d name**: -d refuses to delete unmerged work; -D deletes anyway.

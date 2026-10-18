@@ -291,27 +291,27 @@ console.log(chunk([1, 2, 3, 4, 5], 2));
 
 2. const a = [1, 2]; const b = a; b.push(3); What is a?
    - A) [1, 2, 3]
-   - B) [1, 2]
-   - C) An error, because a is const
+   - B) An error, because a is const
+   - C) [1, 2]
 
 3. Which of these does NOT change the original array?
-   - A) toSorted()
-   - B) sort()
-   - C) reverse()
-   - D) splice()
+   - A) sort()
+   - B) splice()
+   - C) toSorted()
+   - D) reverse()
 
 4. How do you make a shallow copy of an array arr?
-   - A) [...arr]
-   - B) const copy = arr
-   - C) arr.copy()
+   - A) const copy = arr
+   - B) arr.copy()
+   - C) [...arr]
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) push**: pop removes from the end; unshift and shift work on the start.
 2. **A) [1, 2, 3]**: a and b refer to the same array.
-3. **A) toSorted()**: The ES2023 to… methods return copies.
-4. **A) [...arr]**: Spread (or arr.slice()) creates a new array with the same items.
+3. **C) toSorted()**: The ES2023 to… methods return copies.
+4. **C) [...arr]**: Spread (or arr.slice()) creates a new array with the same items.
 
 </details>
 

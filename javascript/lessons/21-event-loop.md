@@ -268,8 +268,8 @@ setTimeout(() => search("bike"), 120);
 ## Quick quiz
 
 1. How many things does JavaScript's main thread do at once?
-   - A) One; asynchronous work is handed to the runtime and finished later
-   - B) As many as there are CPU cores
+   - A) As many as there are CPU cores
+   - B) One; asynchronous work is handed to the runtime and finished later
    - C) Two: one for timers and one for code
 
 2. Which runs first after the current code: a resolved promise's then callback, or a setTimeout(…, 0) callback?
@@ -278,21 +278,21 @@ setTimeout(() => search("bike"), 120);
    - C) It's random
 
 3. What happens to a 10 ms timer while a loop keeps the thread busy for 200 ms?
-   - A) It waits until the loop finishes, so it fires after about 200 ms
-   - B) It interrupts the loop after 10 ms
-   - C) It's cancelled
+   - A) It interrupts the loop after 10 ms
+   - B) It's cancelled
+   - C) It waits until the loop finishes, so it fires after about 200 ms
 
 4. Where should heavy computation go to keep a page responsive?
    - A) A Web Worker
-   - B) A setTimeout of 0
-   - C) A promise
+   - B) A promise
+   - C) A setTimeout of 0
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) One; asynchronous work is handed to the runtime and finished later**: The event loop runs callbacks one at a time.
+1. **B) One; asynchronous work is handed to the runtime and finished later**: The event loop runs callbacks one at a time.
 2. **A) The promise callback (a microtask)**: All microtasks run before the next task.
-3. **A) It waits until the loop finishes, so it fires after about 200 ms**: Synchronous code always runs to completion.
+3. **C) It waits until the loop finishes, so it fires after about 200 ms**: Synchronous code always runs to completion.
 4. **A) A Web Worker**: Promises don't add threads; workers do.
 
 </details>

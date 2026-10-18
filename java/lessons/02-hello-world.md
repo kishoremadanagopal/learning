@@ -181,25 +181,25 @@ public class Main {
 
 1. What does `System.out.print("A"); System.out.print("B");` print?
    - A) AB
-   - B) A then B on separate lines
-   - C) A B
+   - B) A B
+   - C) A then B on separate lines
 
 2. Which line is a valid Java comment?
    - A) `# total price`
-   - B) `// total price`
-   - C) `<!-- total price -->`
+   - B) `<!-- total price -->`
+   - C) `// total price`
 
 3. What does `System.out.println("Sum: " + 2 + 3);` print?
    - A) Sum: 5
-   - B) Sum: 23
-   - C) An error
+   - B) An error
+   - C) Sum: 23
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) AB**: `print` never adds a new line or a space.
-2. **B) `// total price`**: Java uses `//` for single-line comments and `/* ... */` for blocks.
-3. **B) Sum: 23**: Java works left to right. `"Sum: " + 2` is text, then `+ 3` adds the text "3". Write `"Sum: " + (2 + 3)` to get 5.
+2. **C) `// total price`**: Java uses `//` for single-line comments and `/* ... */` for blocks.
+3. **C) Sum: 23**: Java works left to right. `"Sum: " + 2` is text, then `+ 3` adds the text "3". Write `"Sum: " + (2 + 3)` to get 5.
 
 </details>
 

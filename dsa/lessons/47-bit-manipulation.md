@@ -356,22 +356,22 @@ print(max_xor([3, 10, 5, 25, 2, 8]))
    - C) x ^ x == 0
 
 3. In Python, what does ~x equal?
-   - A) −x − 1
+   - A) x with its last bit flipped
    - B) −x
-   - C) x with its last bit flipped
+   - C) −x − 1
 
 4. How do you visit every subset of n items with bitmasks?
-   - A) Loop mask from 0 to 2ⁿ − 1; item i is in the subset when bit i of mask is 1
-   - B) Loop from 0 to n
-   - C) Sort the items first
+   - A) Loop from 0 to n
+   - B) Sort the items first
+   - C) Loop mask from 0 to 2ⁿ − 1; item i is in the subset when bit i of mask is 1
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) 6 (0110)**: XOR keeps the bits where the two numbers differ.
 2. **A) x & (x − 1) == 0**: A power of two has a single 1 bit, and x − 1 turns it off.
-3. **A) −x − 1**: Python behaves as if negative numbers had infinitely many leading 1 bits.
-4. **A) Loop mask from 0 to 2ⁿ − 1; item i is in the subset when bit i of mask is 1**: Each integer below 2ⁿ is one subset.
+3. **C) −x − 1**: Python behaves as if negative numbers had infinitely many leading 1 bits.
+4. **C) Loop mask from 0 to 2ⁿ − 1; item i is in the subset when bit i of mask is 1**: Each integer below 2ⁿ is one subset.
 
 </details>
 

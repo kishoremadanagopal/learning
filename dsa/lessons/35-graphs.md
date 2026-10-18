@@ -424,30 +424,30 @@ The stack is empty and 5 was never reached: False.
 
 1. Which representation lets you list a vertex's neighbours in O(degree) and uses O(V + E) space?
    - A) An adjacency list
-   - B) An adjacency matrix
-   - C) An edge list
+   - B) An edge list
+   - C) An adjacency matrix
 
 2. Why does graph search need a visited set when tree traversal doesn't?
-   - A) Graphs can have cycles and several paths to a vertex, so you could revisit vertices forever
-   - B) Graphs are always bigger than trees
-   - C) To make the search faster on trees
+   - A) Graphs are always bigger than trees
+   - B) To make the search faster on trees
+   - C) Graphs can have cycles and several paths to a vertex, so you could revisit vertices forever
 
 3. In BFS, when should a vertex be marked as seen?
-   - A) When it's added to the queue
+   - A) After the whole search
    - B) When it's popped from the queue
-   - C) After the whole search
+   - C) When it's added to the queue
 
 4. What is the time complexity of DFS or BFS with an adjacency list?
    - A) O(V + E)
-   - B) O(V²) always
-   - C) O(E log V)
+   - B) O(E log V)
+   - C) O(V²) always
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) An adjacency list**: The matrix takes O(V²) space and O(V) to list neighbours; the edge list needs a full scan.
-2. **A) Graphs can have cycles and several paths to a vertex, so you could revisit vertices forever**: A tree has exactly one path between any two nodes; a graph may loop back.
-3. **A) When it's added to the queue**: Marking at push time stops the same vertex from being queued many times.
+2. **C) Graphs can have cycles and several paths to a vertex, so you could revisit vertices forever**: A tree has exactly one path between any two nodes; a graph may loop back.
+3. **C) When it's added to the queue**: Marking at push time stops the same vertex from being queued many times.
 4. **A) O(V + E)**: Each vertex is processed once and each edge is examined a constant number of times.
 
 </details>

@@ -409,13 +409,13 @@ git status -s
    - C) Merged
 
 3. What is HEAD~2?
-   - A) The commit two before the current one
-   - B) The second branch
-   - C) The current commit, twice
+   - A) The second branch
+   - B) The current commit, twice
+   - C) The commit two before the current one
 
 4. Which command shows prices.txt as it was in the commit before last?
-   - A) git show HEAD~2:prices.txt
-   - B) git log prices.txt
+   - A) git log prices.txt
+   - B) git show HEAD~2:prices.txt
    - C) git diff prices.txt
 
 <details>
@@ -423,8 +423,8 @@ git status -s
 
 1. **A) Changes in the working tree that aren't staged yet**: Use git diff --staged for what will be committed.
 2. **A) Modified and staged; no further unstaged changes**: Left column: staging area; right column: working tree.
-3. **A) The commit two before the current one**: ~n walks back n parents.
-4. **A) git show HEAD~2:prices.txt**: commit:path prints a file from any commit.
+3. **C) The commit two before the current one**: ~n walks back n parents.
+4. **B) git show HEAD~2:prices.txt**: commit:path prints a file from any commit.
 
 </details>
 

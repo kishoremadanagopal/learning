@@ -178,20 +178,20 @@ print(s, s.average)
 ## Quick quiz
 
 1. What does `@property` let you do?
-   - A) Run a method when an attribute is read, while keeping attribute syntax
+   - A) Speed up attribute access
    - B) Make an attribute private
-   - C) Speed up attribute access
+   - C) Run a method when an attribute is read, while keeping attribute syntax
 
 2. Which methods does `@dataclass` generate by default?
-   - A) `__init__`, `__repr__` and `__eq__`
-   - B) Only `__init__`
-   - C) `__str__` and `__hash__` only
+   - A) Only `__init__`
+   - B) `__str__` and `__hash__` only
+   - C) `__init__`, `__repr__` and `__eq__`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Run a method when an attribute is read, while keeping attribute syntax**: `t.fahrenheit` looks like an attribute but calls a method.
-2. **A) `__init__`, `__repr__` and `__eq__`**: Those three are always generated; others depend on options like `order=True`.
+1. **C) Run a method when an attribute is read, while keeping attribute syntax**: `t.fahrenheit` looks like an attribute but calls a method.
+2. **C) `__init__`, `__repr__` and `__eq__`**: Those three are always generated; others depend on options like `order=True`.
 
 </details>
 

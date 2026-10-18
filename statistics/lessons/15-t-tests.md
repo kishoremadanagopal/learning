@@ -207,14 +207,14 @@ print(round(p_rev, 3), significant)
 ## Quick quiz
 
 1. The same 30 employees are tested before and after a course. Which test fits?
-   - A) Welch's two-sample t-test
-   - B) Paired t-test
+   - A) Paired t-test
+   - B) Welch's two-sample t-test
    - C) One-sample t-test against 0 on the before scores
 
 2. Why is Welch's t-test (`equal_var=False`) a good default?
-   - A) It doesn't assume the two groups have equal spread
-   - B) It always gives smaller p-values
-   - C) It works without any data
+   - A) It works without any data
+   - B) It doesn't assume the two groups have equal spread
+   - C) It always gives smaller p-values
 
 3. Cohen's d of 0.8 means:
    - A) p = 0.8
@@ -224,8 +224,8 @@ print(round(p_rev, 3), significant)
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) Paired t-test**: Each person is measured twice, so compare each person with themselves.
-2. **A) It doesn't assume the two groups have equal spread**: When spreads differ, the classic equal-variance test can mislead; Welch's handles both cases.
+1. **A) Paired t-test**: Each person is measured twice, so compare each person with themselves.
+2. **B) It doesn't assume the two groups have equal spread**: When spreads differ, the classic equal-variance test can mislead; Welch's handles both cases.
 3. **B) The means differ by about 0.8 standard deviations, a large effect**: Cohen's d measures the size of a difference in standard-deviation units.
 
 </details>

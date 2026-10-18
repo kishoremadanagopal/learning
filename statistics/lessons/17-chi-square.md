@@ -187,20 +187,20 @@ print(round(p_city_seg, 3), dof)
 
 2. What goes into `chi2_contingency`?
    - A) Percentages
-   - B) A table of counts
-   - C) Raw text values
+   - B) Raw text values
+   - C) A table of counts
 
 3. An expected count in your table is 2. What should you do?
-   - A) Nothing
-   - B) Combine categories, or use Fisher's exact test for a 2 × 2 table
-   - C) Multiply the counts by 10
+   - A) Combine categories, or use Fisher's exact test for a 2 × 2 table
+   - B) Multiply the counts by 10
+   - C) Nothing
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Is product preference related to the customer's region?**: Two categorical variables call for a chi-square test of independence.
-2. **B) A table of counts**: Chi-square tests work on counts; percentages give wrong results.
-3. **B) Combine categories, or use Fisher's exact test for a 2 × 2 table**: The chi-square approximation needs expected counts of about 5 or more.
+2. **C) A table of counts**: Chi-square tests work on counts; percentages give wrong results.
+3. **A) Combine categories, or use Fisher's exact test for a 2 × 2 table**: The chi-square approximation needs expected counts of about 5 or more.
 
 </details>
 

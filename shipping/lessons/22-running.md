@@ -1537,20 +1537,20 @@ curl localhost:8080/
 1. docker stop took 10 seconds and the container shows Exited (137). Why?
    - A) The process didn't end on SIGTERM, so Docker killed it with SIGKILL after the timeout
    - B) The container ran out of disk space
-   - C) The image is 137 MB
-   - D) The container crashed 137 times
+   - C) The container crashed 137 times
+   - D) The image is 137 MB
 
 2. Where should a containerized app write its logs?
-   - A) To standard output and standard error, which docker logs collects
-   - B) To a log file inside the container
-   - C) To the image's history
-   - D) Nowhere: containers can't log
+   - A) Nowhere: containers can't log
+   - B) To the image's history
+   - C) To standard output and standard error, which docker logs collects
+   - D) To a log file inside the container
 
 3. A container's data must survive docker rm. What do you use?
-   - A) A volume (or a bind mount) mounted where the app writes
-   - B) docker commit after every change
-   - C) A larger writable layer
-   - D) --restart always
+   - A) docker commit after every change
+   - B) --restart always
+   - C) A volume (or a bind mount) mounted where the app writes
+   - D) A larger writable layer
 
 4. What does --restart on-failure do?
    - A) Starts the container again when its process exits with a non-zero status
@@ -1562,8 +1562,8 @@ curl localhost:8080/
 <summary>Quiz answers</summary>
 
 1. **A) The process didn't end on SIGTERM, so Docker killed it with SIGKILL after the timeout**: PID 1 doesn't get default signal handling; handle SIGTERM or use --init.
-2. **A) To standard output and standard error, which docker logs collects**: Files in the container disappear with it and need extra tools to read; stdout/stderr go to Docker's logging.
-3. **A) A volume (or a bind mount) mounted where the app writes**: The writable layer is deleted with the container; volumes live outside it.
+2. **C) To standard output and standard error, which docker logs collects**: Files in the container disappear with it and need extra tools to read; stdout/stderr go to Docker's logging.
+3. **C) A volume (or a bind mount) mounted where the app writes**: The writable layer is deleted with the container; volumes live outside it.
 4. **A) Starts the container again when its process exits with a non-zero status**: on-failure restarts after crashes; unless-stopped and always also restart after a clean exit.
 
 </details>

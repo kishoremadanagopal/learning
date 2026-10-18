@@ -298,32 +298,32 @@ for message in clear_old_tool_results(history, keep_recent=1):
 ## Quick quiz
 
 1. What is context rot?
-   - A) Models getting worse at using information as the context grows long and noisy
-   - B) Tokens expiring after an hour
-   - C) A bug in caching
+   - A) A bug in caching
+   - B) Models getting worse at using information as the context grows long and noisy
+   - C) Tokens expiring after an hour
 
 2. An agent read a 2,000-line file twenty steps ago. What's a good way to free that space?
-   - A) Replace the old tool result's content with a short placeholder
-   - B) Delete the tool_use and tool_result blocks
+   - A) Delete the tool_use and tool_result blocks
+   - B) Replace the old tool result's content with a short placeholder
    - C) Start a new conversation with no context
 
 3. What does "just-in-time" context mean for agents?
    - A) Keep references such as file paths in context and let the agent open them with tools when needed
-   - B) Load every document at the start
-   - C) Call the model only at midnight
+   - B) Call the model only at midnight
+   - C) Load every document at the start
 
 4. Which is a risk of long-term memory?
-   - A) Stale or injected memories influencing every future conversation
-   - B) Memories make the model faster
+   - A) Memories make the model faster
+   - B) Stale or injected memories influencing every future conversation
    - C) Memory files can't be deleted
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Models getting worse at using information as the context grows long and noisy**: Curating the context matters as much as its size.
-2. **A) Replace the old tool result's content with a short placeholder**: The call stays on record; the bulk goes.
+1. **B) Models getting worse at using information as the context grows long and noisy**: Curating the context matters as much as its size.
+2. **B) Replace the old tool result's content with a short placeholder**: The call stays on record; the bulk goes.
 3. **A) Keep references such as file paths in context and let the agent open them with tools when needed**: Select what's needed, when it's needed.
-4. **A) Stale or injected memories influencing every future conversation**: Date memories, let users manage them, and treat them as data.
+4. **B) Stale or injected memories influencing every future conversation**: Date memories, let users manage them, and treat them as data.
 
 </details>
 

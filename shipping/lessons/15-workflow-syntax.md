@@ -854,34 +854,34 @@ gh run list
 ## Quick quiz
 
 1. Two jobs have no needs:. How do they run?
-   - A) In parallel, each on its own fresh runner
-   - B) One after the other, in file order
-   - C) On the same runner, sharing files
-   - D) Only the first one runs
+   - A) On the same runner, sharing files
+   - B) Only the first one runs
+   - C) In parallel, each on its own fresh runner
+   - D) One after the other, in file order
 
 2. A step has if: github.ref == 'refs/heads/main'. When does it run?
-   - A) On main, and only if the steps before it succeeded
-   - B) On main, even after an earlier step failed
+   - A) Never; if: needs ${{ }}
+   - B) On main, and only if the steps before it succeeded
    - C) On every branch
-   - D) Never; if: needs ${{ }}
+   - D) On main, even after an earlier step failed
 
 3. How does a step hand a value to a later step in the same job?
    - A) echo "name=value" >> "$GITHUB_OUTPUT", read as ${{ steps.<id>.outputs.name }}
-   - B) export name=value
-   - C) By writing it to the workflow file
-   - D) set-output name=value
+   - B) set-output name=value
+   - C) export name=value
+   - D) By writing it to the workflow file
 
 4. A matrix has os: [ubuntu-latest, windows-latest] and node: [22, 24, 26]. How many jobs run?
    - A) 6
-   - B) 5
-   - C) 3
-   - D) 2
+   - B) 3
+   - C) 2
+   - D) 5
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) In parallel, each on its own fresh runner**: Jobs are independent unless needs: links them; each gets a separate runner.
-2. **A) On main, and only if the steps before it succeeded**: Without a status function, if: is treated as success() && (…). Use always() or failure() to run after failures.
+1. **C) In parallel, each on its own fresh runner**: Jobs are independent unless needs: links them; each gets a separate runner.
+2. **B) On main, and only if the steps before it succeeded**: Without a status function, if: is treated as success() && (…). Use always() or failure() to run after failures.
 3. **A) echo "name=value" >> "$GITHUB_OUTPUT", read as ${{ steps.<id>.outputs.name }}**: Each step is a separate shell; files like $GITHUB_OUTPUT and $GITHUB_ENV carry values between steps.
 4. **A) 6**: A matrix runs every combination: 2 × 3 = 6, unless exclude: removes some.
 

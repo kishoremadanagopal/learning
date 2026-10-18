@@ -291,8 +291,8 @@ print(cache_hit_rate(requests, ttl=300))
 
 2. Why report p95 latency instead of only the average?
    - A) The average hides the slow tail that some users hit regularly
-   - B) p95 is always smaller
-   - C) Averages can't be computed for latency
+   - B) Averages can't be computed for latency
+   - C) p95 is always smaller
 
 3. What's the main risk of a semantic response cache?
    - A) Returning a cached answer to a question that's similar but different in an important way

@@ -211,18 +211,18 @@ print("boosting:", round(boost_r2, 3), " linear:", round(linear_r2, 3))
 ## Quick quiz
 
 1. Why does averaging many trees beat one deep tree?
-   - A) Each tree overfits in a different way, so their errors largely cancel out
-   - B) Each tree in the forest is more accurate than a single tree
-   - C) Forests use more features than trees can
+   - A) Forests use more features than trees can
+   - B) Each tree overfits in a different way, so their errors largely cancel out
+   - C) Each tree in the forest is more accurate than a single tree
 
 2. How are the trees in gradient boosting built?
    - A) All at once, independently
-   - B) One after another, each fixing the errors of the trees before it
-   - C) By deleting branches from one big tree
+   - B) By deleting branches from one big tree
+   - C) One after another, each fixing the errors of the trees before it
 
 3. What does permutation importance measure?
-   - A) How much the test score drops when one feature's values are shuffled
-   - B) How often a feature is used in splits
+   - A) How often a feature is used in splits
+   - B) How much the test score drops when one feature's values are shuffled
    - C) The correlation of each feature with the label
 
 4. For a new table-shaped (spreadsheet-like) problem in 2026, a strong first choice is:
@@ -233,9 +233,9 @@ print("boosting:", round(boost_r2, 3), " linear:", round(linear_r2, 3))
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Each tree overfits in a different way, so their errors largely cancel out**: The individual trees are noisy; the average is stable.
-2. **B) One after another, each fixing the errors of the trees before it**: Boosting adds small corrections in sequence.
-3. **A) How much the test score drops when one feature's values are shuffled**: If shuffling a feature hurts the score, the model depended on it.
+1. **B) Each tree overfits in a different way, so their errors largely cancel out**: The individual trees are noisy; the average is stable.
+2. **C) One after another, each fixing the errors of the trees before it**: Boosting adds small corrections in sequence.
+3. **B) How much the test score drops when one feature's values are shuffled**: If shuffling a feature hurts the score, the model depended on it.
 4. **B) A tree ensemble such as a random forest or gradient boosting, next to a simple baseline**: Tree ensembles remain the go-to for tabular data; always compare with a baseline and a simple model.
 
 </details>

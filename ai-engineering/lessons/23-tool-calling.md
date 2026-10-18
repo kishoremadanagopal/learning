@@ -340,27 +340,27 @@ for result in run_tool_calls(reply, {"get_stock": get_stock}):
    - C) The user's browser
 
 2. A tool raises an error. What should you send back?
-   - A) A tool_result with is_error true and a helpful message
+   - A) The full stack trace with environment variables
    - B) Nothing; just call the model again
-   - C) The full stack trace with environment variables
+   - C) A tool_result with is_error true and a helpful message
 
 3. Why does a tool's description matter so much?
    - A) The model uses it to decide when to call the tool and what arguments to pass
-   - B) It's shown to users
-   - C) It sets the tool's timeout
+   - B) It sets the tool's timeout
+   - C) It's shown to users
 
 4. On the newest Claude models, how do you make the model call a tool when it should?
-   - A) Use tool_choice auto with clear instructions on when to use the tool
+   - A) Raise the temperature
    - B) Set tool_choice to any
-   - C) Raise the temperature
+   - C) Use tool_choice auto with clear instructions on when to use the tool
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Your application; the model only requests the call with arguments**: You stay in control of what actually runs.
-2. **A) A tool_result with is_error true and a helpful message**: The model can correct its call or explain the problem.
+2. **C) A tool_result with is_error true and a helpful message**: The model can correct its call or explain the problem.
 3. **A) The model uses it to decide when to call the tool and what arguments to pass**: Descriptions are prompts.
-4. **A) Use tool_choice auto with clear instructions on when to use the tool**: Forced tool choice isn't supported on Opus 5.5, Sonnet 5.5 and Fable 5.1.
+4. **C) Use tool_choice auto with clear instructions on when to use the tool**: Forced tool choice isn't supported on Opus 5.5, Sonnet 5.5 and Fable 5.1.
 
 </details>
 

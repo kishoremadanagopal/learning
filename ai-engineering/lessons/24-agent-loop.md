@@ -318,32 +318,32 @@ print(is_stuck([search, read, search]))
 ## Quick quiz
 
 1. What distinguishes an agent from a workflow?
-   - A) In an agent, the model decides the next step in a loop; in a workflow, your code fixes the sequence
-   - B) Agents never use tools
-   - C) Workflows can't call models
+   - A) Workflows can't call models
+   - B) In an agent, the model decides the next step in a loop; in a workflow, your code fixes the sequence
+   - C) Agents never use tools
 
 2. Why must an agent loop have a turn limit?
-   - A) A confused model could otherwise call tools forever, with each turn costing more
+   - A) Tools stop working after a while
    - B) The API allows only five tool calls
-   - C) Tools stop working after a while
+   - C) A confused model could otherwise call tools forever, with each turn costing more
 
 3. Several tool_use blocks arrive in one reply. How are their results returned?
-   - A) In one user message containing a tool_result for each call
-   - B) One message per result
-   - C) Only the first result is needed
+   - A) One message per result
+   - B) Only the first result is needed
+   - C) In one user message containing a tool_result for each call
 
 4. When is a multi-agent design worth its extra cost?
-   - A) When the task splits into parallel parts or exceeds one context window
-   - B) Always: more agents are always better
-   - C) For simple single-step questions
+   - A) Always: more agents are always better
+   - B) For simple single-step questions
+   - C) When the task splits into parallel parts or exceeds one context window
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) In an agent, the model decides the next step in a loop; in a workflow, your code fixes the sequence**: Prefer workflows when the steps are known.
-2. **A) A confused model could otherwise call tools forever, with each turn costing more**: Limits, budgets and loop detection are basic guards.
-3. **A) In one user message containing a tool_result for each call**: Every tool_use id needs a matching result.
-4. **A) When the task splits into parallel parts or exceeds one context window**: It multiplies token use and debugging effort.
+1. **B) In an agent, the model decides the next step in a loop; in a workflow, your code fixes the sequence**: Prefer workflows when the steps are known.
+2. **C) A confused model could otherwise call tools forever, with each turn costing more**: Limits, budgets and loop detection are basic guards.
+3. **C) In one user message containing a tool_result for each call**: Every tool_use id needs a matching result.
+4. **C) When the task splits into parallel parts or exceeds one context window**: It multiplies token use and debugging effort.
 
 </details>
 

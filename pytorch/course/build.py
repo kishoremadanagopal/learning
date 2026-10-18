@@ -151,12 +151,14 @@ def parse_quiz(body):
 
 
 def shuffle_options(q, seed_text):
-    """Authors write the right answer first; show the options in a fixed shuffled order (the same on every build)."""
+    """Authors write the right answer first; show the options in a fixed shuffled order (the same on every build).
+    `order` maps each shown position to the authored one, so saved answers from before shuffling can be remapped."""
     order = list(range(len(q["options"])))
     random.Random(zlib.crc32(seed_text.encode())).shuffle(order)
     q["options"] = [q["options"][i] for i in order]
     q["_options"] = [q["_options"][i] for i in order]
     q["answer"] = order.index(q["answer"])
+    q["order"] = order
 
 
 EXAM_DOMAINS = {

@@ -238,25 +238,25 @@ public class Main {
 
 1. What does `List.of(1, 2).add(3)` do?
    - A) Throws UnsupportedOperationException
-   - B) Returns [1, 2, 3]
-   - C) Doesn't compile
+   - B) Doesn't compile
+   - C) Returns [1, 2, 3]
 
 2. For `List<Integer> list = [10, 20, 30]`, what does `list.remove(1)` remove?
-   - A) 20 (the element at index 1)
-   - B) The value 1
+   - A) The value 1
+   - B) 20 (the element at index 1)
    - C) 10
 
 3. What happens if you remove from a list inside a for-each loop over it?
-   - A) ConcurrentModificationException
-   - B) It works fine
-   - C) Elements are skipped silently, always
+   - A) It works fine
+   - B) Elements are skipped silently, always
+   - C) ConcurrentModificationException
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Throws UnsupportedOperationException**: `List.of` lists are unmodifiable.
-2. **A) 20 (the element at index 1)**: An int argument chooses `remove(int index)`. Use `remove(Integer.valueOf(1))` for the value.
-3. **A) ConcurrentModificationException**: Use `removeIf` or an `Iterator`'s `remove` instead.
+2. **B) 20 (the element at index 1)**: An int argument chooses `remove(int index)`. Use `remove(Integer.valueOf(1))` for the value.
+3. **C) ConcurrentModificationException**: Use `removeIf` or an `Iterator`'s `remove` instead.
 
 </details>
 

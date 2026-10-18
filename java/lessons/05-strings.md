@@ -225,14 +225,14 @@ public class Main {
 ## Quick quiz
 
 1. Why should you compare strings with `equals` instead of `==`?
-   - A) `==` checks if they are the same object; `equals` checks the text
+   - A) `equals` is faster
    - B) `==` doesn't compile for strings
-   - C) `equals` is faster
+   - C) `==` checks if they are the same object; `equals` checks the text
 
 2. What is `"Java".substring(1, 3)`?
    - A) "Jav"
-   - B) "av"
-   - C) "ava"
+   - B) "ava"
+   - C) "av"
 
 3. After `String s = "hi"; s.toUpperCase();`, what is `s`?
    - A) "hi"
@@ -241,8 +241,8 @@ public class Main {
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) `==` checks if they are the same object; `equals` checks the text**: Two strings with the same text can be different objects, so `==` can be false.
-2. **B) "av"**: It starts at index 1 ('a') and stops before index 3.
+1. **C) `==` checks if they are the same object; `equals` checks the text**: Two strings with the same text can be different objects, so `==` can be false.
+2. **C) "av"**: It starts at index 1 ('a') and stops before index 3.
 3. **A) "hi"**: Strings are immutable. Write `s = s.toUpperCase();` to keep the change.
 
 </details>

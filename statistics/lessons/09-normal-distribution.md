@@ -186,25 +186,25 @@ print(round(promise, 1), round(late_share, 4))
 
 1. Heights are normal, mean 170, std 8. About what share are between 162 and 178?
    - A) 68%
-   - B) 95%
-   - C) 50%
+   - B) 50%
+   - C) 95%
 
 2. What does `stats.norm.ppf(0.975)` return?
-   - A) 0.975
+   - A) The area to the right of 0.975
    - B) About 1.96: the z with 97.5% of the area to its left
-   - C) The area to the right of 0.975
+   - C) 0.975
 
 3. Why is P(height = exactly 170 cm) zero for a continuous variable?
-   - A) Nobody is 170 cm
-   - B) Probabilities are areas, and a single point has no width
-   - C) The normal distribution is wrong
+   - A) Probabilities are areas, and a single point has no width
+   - B) The normal distribution is wrong
+   - C) Nobody is 170 cm
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) 68%**: 162 to 178 is the mean ± 1 std, which holds about 68%.
 2. **B) About 1.96: the z with 97.5% of the area to its left**: ppf goes from an area back to a value. 1.96 marks the top 2.5%.
-3. **B) Probabilities are areas, and a single point has no width**: You can only ask about ranges, like 169.5 to 170.5.
+3. **A) Probabilities are areas, and a single point has no width**: You can only ask about ranges, like 169.5 to 170.5.
 
 </details>
 

@@ -175,26 +175,26 @@ print(p_mobile, p_conv, p_both)
 ## Quick quiz
 
 1. P(rain) = 0.3. What is P(no rain)?
-   - A) 0.3
-   - B) 0.7
+   - A) 0.7
+   - B) 0.3
    - C) 1.3
 
 2. Two fair coins are flipped. What is P(both heads)?
    - A) 0.25
-   - B) 0.5
-   - C) 1
+   - B) 1
+   - C) 0.5
 
 3. What does the law of large numbers say?
-   - A) Big numbers are more likely
-   - B) With more repetitions, the observed share gets closer to the true probability
-   - C) After many tails, heads becomes more likely
+   - A) With more repetitions, the observed share gets closer to the true probability
+   - B) After many tails, heads becomes more likely
+   - C) Big numbers are more likely
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) 0.7**: The complement rule: 1 − 0.3.
+1. **A) 0.7**: The complement rule: 1 − 0.3.
 2. **A) 0.25**: Independent events multiply: 0.5 × 0.5.
-3. **B) With more repetitions, the observed share gets closer to the true probability**: The long-run share converges. It does not mean a coin "makes up" for past results.
+3. **A) With more repetitions, the observed share gets closer to the true probability**: The long-run share converges. It does not mean a coin "makes up" for past results.
 
 </details>
 

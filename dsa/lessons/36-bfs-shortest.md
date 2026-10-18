@@ -444,32 +444,32 @@ print(minutes_to_rot([[2, 1, 1], [0, 1, 1], [1, 0, 1]]))
 ## Quick quiz
 
 1. Why does BFS find the shortest path in an unweighted graph?
-   - A) It reaches vertices in order of their distance, so the first visit is by a shortest route
-   - B) It always goes straight towards the goal
-   - C) It tries every possible path
+   - A) It always goes straight towards the goal
+   - B) It tries every possible path
+   - C) It reaches vertices in order of their distance, so the first visit is by a shortest route
 
 2. How do you rebuild the actual path after a BFS?
-   - A) Store each vertex's parent when it's discovered, then follow parents back from the goal and reverse
+   - A) Sort the visited vertices
    - B) Run DFS afterwards
-   - C) Sort the visited vertices
+   - C) Store each vertex's parent when it's discovered, then follow parents back from the goal and reverse
 
 3. You need every cell's distance to the nearest of 50 exits. What's the efficient approach?
-   - A) One BFS with all 50 exits in the queue at distance 0
-   - B) 50 separate BFS runs, keeping the minimum
-   - C) Dijkstra from each cell
+   - A) 50 separate BFS runs, keeping the minimum
+   - B) Dijkstra from each cell
+   - C) One BFS with all 50 exits in the queue at distance 0
 
 4. In 0-1 BFS, where does a vertex reached by a 0-cost edge go?
-   - A) The front of the deque
+   - A) It's skipped
    - B) The back of the deque
-   - C) It's skipped
+   - C) The front of the deque
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) It reaches vertices in order of their distance, so the first visit is by a shortest route**: Rings of distance 0, 1, 2… are completed one after another.
-2. **A) Store each vertex's parent when it's discovered, then follow parents back from the goal and reverse**: The parent links form a shortest-path tree rooted at the start.
-3. **A) One BFS with all 50 exits in the queue at distance 0**: Multi-source BFS costs O(V + E) in total.
-4. **A) The front of the deque**: It's as close as the current vertex, so it must be handled before farther vertices.
+1. **C) It reaches vertices in order of their distance, so the first visit is by a shortest route**: Rings of distance 0, 1, 2… are completed one after another.
+2. **C) Store each vertex's parent when it's discovered, then follow parents back from the goal and reverse**: The parent links form a shortest-path tree rooted at the start.
+3. **C) One BFS with all 50 exits in the queue at distance 0**: Multi-source BFS costs O(V + E) in total.
+4. **C) The front of the deque**: It's as close as the current vertex, so it must be handled before farther vertices.
 
 </details>
 

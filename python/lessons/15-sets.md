@@ -110,19 +110,19 @@ print(shared(["chess", "hiking", "chess", "art"], ["art", "chess", "golf"]))
 ## Quick quiz
 
 1. What does `type({})` give?
-   - A) set
-   - B) dict
+   - A) dict
+   - B) set
 
 2. What is `{1, 2, 3} - {2, 4}`?
-   - A) {1, 3}
+   - A) {1, 3, 4}
    - B) {4}
-   - C) {1, 3, 4}
+   - C) {1, 3}
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) dict**: Empty braces make an empty dictionary. Use `set()` for an empty set.
-2. **A) {1, 3}**: Difference keeps items in the first set that aren't in the second.
+1. **A) dict**: Empty braces make an empty dictionary. Use `set()` for an empty set.
+2. **C) {1, 3}**: Difference keeps items in the first set that aren't in the second.
 
 </details>
 

@@ -216,20 +216,20 @@ print(wettest)
    - C) Sorts by month
 
 2. Why use a 7-day rolling average?
-   - A) To make the data longer
-   - B) To smooth out day-to-day noise so the trend is visible
-   - C) To fill missing days
+   - A) To fill missing days
+   - B) To make the data longer
+   - C) To smooth out day-to-day noise so the trend is visible
 
 3. What does `pct_change()` calculate?
-   - A) The share of the total
+   - A) The running total
    - B) The change from the previous value, as a fraction
-   - C) The running total
+   - C) The share of the total
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Totals the values for each month**: resample groups by time period. "ME" means month (labelled by its end date).
-2. **B) To smooth out day-to-day noise so the trend is visible**: Each value becomes the average of the last 7 days, which evens out spikes.
+2. **C) To smooth out day-to-day noise so the trend is visible**: Each value becomes the average of the last 7 days, which evens out spikes.
 3. **B) The change from the previous value, as a fraction**: It's (this − previous) / previous. Multiply by 100 for a percentage.
 
 </details>

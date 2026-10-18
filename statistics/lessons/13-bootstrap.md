@@ -204,13 +204,13 @@ print(round(low, 2), round(high, 2))
 
 1. What does "resampling with replacement" mean?
    - A) Drawing rows from your data where the same row can be picked more than once
-   - B) Replacing missing values
-   - C) Drawing a new sample from the population
+   - B) Drawing a new sample from the population
+   - C) Replacing missing values
 
 2. What's the bootstrap's main advantage over formulas?
    - A) It's always more accurate
-   - B) It works for almost any statistic, like a median or a correlation
-   - C) It fixes biased samples
+   - B) It fixes biased samples
+   - C) It works for almost any statistic, like a median or a correlation
 
 3. A bootstrap 95% interval for B − A runs from 1% to 4%. What does that suggest?
    - A) B is very likely truly better than A
@@ -221,7 +221,7 @@ print(round(low, 2), round(high, 2))
 <summary>Quiz answers</summary>
 
 1. **A) Drawing rows from your data where the same row can be picked more than once**: Each resample is a shuffled, slightly different copy of your sample.
-2. **B) It works for almost any statistic, like a median or a correlation**: No special formula is needed; you just recompute the statistic.
+2. **C) It works for almost any statistic, like a median or a correlation**: No special formula is needed; you just recompute the statistic.
 3. **A) B is very likely truly better than A**: The whole interval is above zero, so a zero difference looks implausible.
 
 </details>

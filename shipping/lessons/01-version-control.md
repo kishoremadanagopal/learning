@@ -266,32 +266,32 @@ git config user.name
 ## Quick quiz
 
 1. What's the difference between Git and GitHub?
-   - A) Git records the history of files; GitHub is a website that hosts Git repositories and adds collaboration tools
-   - B) They're two names for the same program
-   - C) GitHub is the newer version of Git
+   - A) They're two names for the same program
+   - B) GitHub is the newer version of Git
+   - C) Git records the history of files; GitHub is a website that hosts Git repositories and adds collaboration tools
 
 2. What does echo "lock 2900" >> prices.txt do?
-   - A) Adds the line to the end of prices.txt
+   - A) Prints the line and prices.txt
    - B) Replaces prices.txt with that line
-   - C) Prints the line and prices.txt
+   - C) Adds the line to the end of prices.txt
 
 3. What does "distributed" mean for Git?
    - A) Every copy of a repository contains the full history
-   - B) The files are split across several servers
-   - C) Only one person can work on a file at a time
+   - B) Only one person can work on a file at a time
+   - C) The files are split across several servers
 
 4. Why set user.email to the email of your GitHub account?
-   - A) So GitHub links your commits to your account
+   - A) GitHub sends you an email for every commit
    - B) Git refuses to work otherwise
-   - C) GitHub sends you an email for every commit
+   - C) So GitHub links your commits to your account
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Git records the history of files; GitHub is a website that hosts Git repositories and adds collaboration tools**: You can use Git with no GitHub at all, or with GitLab or Bitbucket instead.
-2. **A) Adds the line to the end of prices.txt**: > replaces a file; >> appends to it.
+1. **C) Git records the history of files; GitHub is a website that hosts Git repositories and adds collaboration tools**: You can use Git with no GitHub at all, or with GitLab or Bitbucket instead.
+2. **C) Adds the line to the end of prices.txt**: > replaces a file; >> appends to it.
 3. **A) Every copy of a repository contains the full history**: You can commit, browse history and branch without any network.
-4. **A) So GitHub links your commits to your account**: The email in each commit is how hosting sites know who made it.
+4. **C) So GitHub links your commits to your account**: The email in each commit is how hosting sites know who made it.
 
 </details>
 

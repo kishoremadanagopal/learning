@@ -262,27 +262,27 @@ console.log(formatPence(1250), formatPence(5), formatPence(123456), formatPence(
    - C) Decimals are strings in JavaScript
 
 2. What type does (1.5).toFixed(1) return?
-   - A) string
-   - B) number
-   - C) bigint
+   - A) number
+   - B) bigint
+   - C) string
 
 3. What is -7 % 3 in JavaScript?
-   - A) -1
-   - B) 2
+   - A) 2
+   - B) -1
    - C) 1
 
 4. Why store money as whole pence or cents?
-   - A) Integers are exact, so sums don't pick up rounding errors
-   - B) It uses less memory
-   - C) JavaScript can't store decimals
+   - A) JavaScript can't store decimals
+   - B) Integers are exact, so sums don't pick up rounding errors
+   - C) It uses less memory
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Most decimals aren't stored exactly, so tiny rounding errors appear**: Compare with a tolerance instead.
-2. **A) string**: toFixed is for display; it returns text.
-3. **A) -1**: The remainder takes the sign of the left-hand number.
-4. **A) Integers are exact, so sums don't pick up rounding errors**: Convert to pounds only when displaying.
+2. **C) string**: toFixed is for display; it returns text.
+3. **B) -1**: The remainder takes the sign of the left-hand number.
+4. **B) Integers are exact, so sums don't pick up rounding errors**: Convert to pounds only when displaying.
 
 </details>
 

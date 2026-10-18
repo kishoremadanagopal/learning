@@ -318,32 +318,32 @@ print(rob([2, 7, 9, 3, 1]))
 ## Quick quiz
 
 1. Which two properties make a problem suitable for dynamic programming?
-   - A) Overlapping subproblems and optimal substructure
-   - B) Sorted input and small numbers
-   - C) Recursion and a hash table
+   - A) Recursion and a hash table
+   - B) Overlapping subproblems and optimal substructure
+   - C) Sorted input and small numbers
 
 2. What is the main practical risk of top-down (memoised) DP in Python for large n?
-   - A) Exceeding the recursion depth limit
-   - B) It gives wrong answers
-   - C) It uses less memory than tabulation
+   - A) It gives wrong answers
+   - B) It uses less memory than tabulation
+   - C) Exceeding the recursion depth limit
 
 3. In the DP recipe, which step usually takes the most thought?
-   - A) Defining the state: what one table entry means
-   - B) Choosing a variable name
-   - C) Printing the answer
+   - A) Choosing a variable name
+   - B) Printing the answer
+   - C) Defining the state: what one table entry means
 
 4. House robber looks back two houses. How much memory does the optimised version need?
-   - A) O(1): two variables
-   - B) O(n)
+   - A) O(n)
+   - B) O(1): two variables
    - C) O(n²)
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Overlapping subproblems and optimal substructure**: Subproblems repeat, and the best answer is built from the best answers to subproblems.
-2. **A) Exceeding the recursion depth limit**: Each level is a nested call; bottom-up loops have no such limit.
-3. **A) Defining the state: what one table entry means**: Once dp[i] has a precise meaning, the transition usually follows.
-4. **A) O(1): two variables**: Keep only the values the transition still needs.
+1. **B) Overlapping subproblems and optimal substructure**: Subproblems repeat, and the best answer is built from the best answers to subproblems.
+2. **C) Exceeding the recursion depth limit**: Each level is a nested call; bottom-up loops have no such limit.
+3. **C) Defining the state: what one table entry means**: Once dp[i] has a precise meaning, the transition usually follows.
+4. **B) O(1): two variables**: Keep only the values the transition still needs.
 
 </details>
 

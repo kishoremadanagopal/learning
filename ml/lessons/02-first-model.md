@@ -196,32 +196,32 @@ print(answer)
 ## Quick quiz
 
 1. What does model.fit(X, y) do?
-   - A) Draws a chart of X and y
+   - A) Predicts y for new rows
    - B) Trains the model: it learns from the examples and stores what it learned
-   - C) Predicts y for new rows
+   - C) Draws a chart of X and y
 
 2. Why does students[["hours_studied"]] have two pairs of brackets?
-   - A) scikit-learn needs X as a table (2-D), even with one column
-   - B) It makes the code run faster
-   - C) It removes missing values
+   - A) It makes the code run faster
+   - B) It removes missing values
+   - C) scikit-learn needs X as a table (2-D), even with one column
 
 3. In scikit-learn, what does a trailing underscore, as in coef_, tell you?
-   - A) The attribute is private
-   - B) It was learned from the data during fit
-   - C) It's a hyperparameter you set
+   - A) It was learned from the data during fit
+   - B) It's a hyperparameter you set
+   - C) The attribute is private
 
 4. n_neighbors=5 in KNeighborsClassifier is:
-   - A) Something the model learns from data
-   - B) A hyperparameter: a setting you choose before training
-   - C) The number of features
+   - A) The number of features
+   - B) Something the model learns from data
+   - C) A hyperparameter: a setting you choose before training
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **B) Trains the model: it learns from the examples and stores what it learned**: fit is training. predict comes after, and uses what fit stored.
-2. **A) scikit-learn needs X as a table (2-D), even with one column**: Single brackets give a Series (1-D). Double brackets give a one-column DataFrame, which is what fit expects for X.
-3. **B) It was learned from the data during fit**: Learned attributes end with _ and only exist after fit.
-4. **B) A hyperparameter: a setting you choose before training**: Hyperparameters are chosen by you; parameters (like coef_) are learned.
+2. **C) scikit-learn needs X as a table (2-D), even with one column**: Single brackets give a Series (1-D). Double brackets give a one-column DataFrame, which is what fit expects for X.
+3. **A) It was learned from the data during fit**: Learned attributes end with _ and only exist after fit.
+4. **C) A hyperparameter: a setting you choose before training**: Hyperparameters are chosen by you; parameters (like coef_) are learned.
 
 </details>
 

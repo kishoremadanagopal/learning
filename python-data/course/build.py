@@ -18,11 +18,13 @@ import contextlib
 import html
 import io
 import json
+import random
 import re
 import os
 import shutil
 import sys
 import tempfile
+import zlib
 from pathlib import Path
 
 import markdown
@@ -128,8 +130,20 @@ def parse_quiz(body):
                 q["_explain"] = ln[2:]
         if q["answer"] is None:
             raise ValueError(f"Quiz question without a correct answer: {lines[0]}")
+        shuffle_options(q, q["_q"])
         questions.append(q)
     return questions
+
+
+def shuffle_options(q, seed_text):
+    """Authors write the right answer first; show the options in a fixed shuffled order (the same on every build).
+    `order` maps each shown position to the authored one, so saved answers from before shuffling can be remapped."""
+    order = list(range(len(q["options"])))
+    random.Random(zlib.crc32(seed_text.encode())).shuffle(order)
+    q["options"] = [q["options"][i] for i in order]
+    q["_options"] = [q["_options"][i] for i in order]
+    q["answer"] = order.index(q["answer"])
+    q["order"] = order
 
 
 def parse_extras(path):

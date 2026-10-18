@@ -301,33 +301,33 @@ docker images
 ## Quick quiz
 
 1. What is the difference between an image and a container?
-   - A) An image is a read-only package; a container is a running or stopped instance created from it
-   - B) An image runs in the cloud; a container runs on your computer
-   - C) They're two names for the same thing
-   - D) A container is a compressed image
+   - A) A container is a compressed image
+   - B) An image is a read-only package; a container is a running or stopped instance created from it
+   - C) An image runs in the cloud; a container runs on your computer
+   - D) They're two names for the same thing
 
 2. Why does a container start much faster than a virtual machine?
    - A) It's a process on the host's kernel, so there's no operating system to boot
-   - B) Containers are written in a faster language
-   - C) Docker keeps every container running in advance
+   - B) Docker keeps every container running in advance
+   - C) Containers are written in a faster language
    - D) Containers have no files
 
 3. What does -p 8080:3000 do?
    - A) Forwards port 8080 on your computer to port 3000 inside the container
-   - B) Forwards port 3000 on your computer to port 8080 in the container
-   - C) Limits the container to 8080 MB of memory
+   - B) Limits the container to 8080 MB of memory
+   - C) Forwards port 3000 on your computer to port 8080 in the container
    - D) Runs 3000 copies of the container
 
 4. You need an image that never changes, even if its publisher moves the tag. What do you use?
    - A) The image's digest (name@sha256:…)
    - B) The latest tag
-   - C) The lts tag
-   - D) docker run --rm
+   - C) docker run --rm
+   - D) The lts tag
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) An image is a read-only package; a container is a running or stopped instance created from it**: You can create many containers from one image, like many processes from one program.
+1. **B) An image is a read-only package; a container is a running or stopped instance created from it**: You can create many containers from one image, like many processes from one program.
 2. **A) It's a process on the host's kernel, so there's no operating system to boot**: A VM boots a whole guest OS; a container only starts its main process, walled off by kernel features.
 3. **A) Forwards port 8080 on your computer to port 3000 inside the container**: The order is always host:container.
 4. **A) The image's digest (name@sha256:…)**: Tags are movable labels; a digest names exact content.

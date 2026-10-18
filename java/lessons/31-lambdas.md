@@ -257,13 +257,13 @@ public class Main {
 ## Quick quiz
 
 1. What makes an interface a functional interface?
-   - A) It has exactly one abstract method
-   - B) It's annotated with @FunctionalInterface
-   - C) It has no methods
+   - A) It has no methods
+   - B) It has exactly one abstract method
+   - C) It's annotated with @FunctionalInterface
 
 2. Which method reference matches `s -> s.toUpperCase()`?
-   - A) `String::toUpperCase`
-   - B) `String.toUpperCase()`
+   - A) `String.toUpperCase()`
+   - B) `String::toUpperCase`
    - C) `toUpperCase::String`
 
 3. Which functional interface fits `n -> n > 0`?
@@ -274,8 +274,8 @@ public class Main {
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) It has exactly one abstract method**: The annotation only asks the compiler to check; the single abstract method is what counts.
-2. **A) `String::toUpperCase`**: `Type::method` calls the method on the lambda's argument.
+1. **B) It has exactly one abstract method**: The annotation only asks the compiler to check; the single abstract method is what counts.
+2. **B) `String::toUpperCase`**: `Type::method` calls the method on the lambda's argument.
 3. **A) Predicate<Integer>**: It takes a value and returns a boolean.
 
 </details>

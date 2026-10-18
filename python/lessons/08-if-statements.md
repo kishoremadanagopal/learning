@@ -185,20 +185,20 @@ print(ticket_price(2), ticket_price(10), ticket_price(30), ticket_price(70))
 
 ## Quick quiz
 
-1. With `x = 5`, what does this print? `if x > 3: print("A")` then `elif x > 1: print("B")`
-   - A) A
-   - B) B
-   - C) A and B
+1. With `x = 5`, what does this print? `if x > 3: print("big")` then `elif x > 1: print("small")`
+   - A) `big`, then `small`
+   - B) `big`
+   - C) `small`
 
 2. What defines which lines belong to an `if` block?
-   - A) Curly braces
+   - A) The word `end`
    - B) Indentation
-   - C) The word `end`
+   - C) Curly braces
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) A**: Only the first matching branch runs. Once `x > 3` matches, the `elif` is skipped.
+1. **B) `big`**: Only the first matching branch runs. Once `x > 3` matches, the `elif` is skipped.
 2. **B) Indentation**: Python uses indentation to group lines into blocks.
 
 </details>

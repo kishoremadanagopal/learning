@@ -266,25 +266,25 @@ public class Main {
 
 1. What does `var x = 5;` make x?
    - A) An int; var just lets the compiler infer it
-   - B) A variable of any type
-   - C) An Object
+   - B) An Object
+   - C) A variable of any type
 
-2. What does `sealed interface Shape permits A, B` do?
-   - A) Allows only A and B to implement Shape
-   - B) Makes Shape final
+2. What does `sealed interface Shape permits Circle, Square` do?
+   - A) Makes Shape final
+   - B) Allows only Circle and Square to implement Shape
    - C) Hides Shape from other packages
 
 3. In `if (o instanceof String s && s.length() > 3)`, where can `s` be used?
-   - A) Wherever the instanceof test is known to be true
-   - B) Everywhere in the method
-   - C) Only inside the parentheses
+   - A) Only inside the parentheses
+   - B) Wherever the instanceof test is known to be true
+   - C) Everywhere in the method
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) An int; var just lets the compiler infer it**: The type is fixed at compile time.
-2. **A) Allows only A and B to implement Shape**: The set of implementations is closed and known to the compiler.
-3. **A) Wherever the instanceof test is known to be true**: Pattern variables are scoped to where the match is guaranteed.
+2. **B) Allows only Circle and Square to implement Shape**: The set of implementations is closed and known to the compiler.
+3. **B) Wherever the instanceof test is known to be true**: Pattern variables are scoped to where the match is guaranteed.
 
 </details>
 

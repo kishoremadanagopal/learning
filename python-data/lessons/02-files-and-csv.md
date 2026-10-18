@@ -209,26 +209,26 @@ print(open("price_list.csv").read())
 ## Quick quiz
 
 1. Why use `with open(...) as f:` instead of just `f = open(...)`?
-   - A) It reads the file faster
-   - B) It closes the file automatically when the block ends
-   - C) It converts numbers for you
+   - A) It closes the file automatically when the block ends
+   - B) It converts numbers for you
+   - C) It reads the file faster
 
 2. You read `"249.0"` from a CSV file. What type is it?
-   - A) `str`
-   - B) `float`
-   - C) `int`
+   - A) `float`
+   - B) `int`
+   - C) `str`
 
 3. What does `csv.DictReader` give you for each row?
-   - A) A list of values
-   - B) A dictionary keyed by the column names
-   - C) A single string
+   - A) A dictionary keyed by the column names
+   - B) A single string
+   - C) A list of values
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) It closes the file automatically when the block ends**: A `with` block always closes the file, even if an error happens inside it.
-2. **A) `str`**: Everything read from a text file is a string. Convert it with `float()` before doing maths.
-3. **B) A dictionary keyed by the column names**: It uses the header line as keys, so you can write `row["region"]` instead of remembering positions.
+1. **A) It closes the file automatically when the block ends**: A `with` block always closes the file, even if an error happens inside it.
+2. **C) `str`**: Everything read from a text file is a string. Convert it with `float()` before doing maths.
+3. **A) A dictionary keyed by the column names**: It uses the header line as keys, so you can write `row["region"]` instead of remembering positions.
 
 </details>
 

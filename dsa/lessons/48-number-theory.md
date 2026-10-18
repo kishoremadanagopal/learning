@@ -397,9 +397,9 @@ print(comb_mod([(5, 2), (10, 0), (10, 10), (3, 5)]))
    - C) All divisors, in O(n)
 
 2. Why does the sieve of Eratosthenes start crossing out multiples of p at p²?
-   - A) Smaller multiples of p have a smaller prime factor and are already crossed out
-   - B) p² is the first multiple that is even
-   - C) To save memory
+   - A) p² is the first multiple that is even
+   - B) To save memory
+   - C) Smaller multiples of p have a smaller prime factor and are already crossed out
 
 3. How do you divide by b when working modulo a prime p?
    - A) Multiply by b's modular inverse, pow(b, p − 2, p) or pow(b, -1, p)
@@ -408,14 +408,14 @@ print(comb_mod([(5, 2), (10, 0), (10, 10), (3, 5)]))
 
 4. What does reservoir sampling achieve?
    - A) k uniformly random items from a stream, in one pass and O(k) memory
-   - B) Sorting a stream
-   - C) The k largest items of a stream
+   - B) The k largest items of a stream
+   - C) Sorting a stream
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) The greatest common divisor, in O(log min(a, b)) steps**: gcd(a, b) = gcd(b, a mod b); the numbers shrink quickly.
-2. **A) Smaller multiples of p have a smaller prime factor and are already crossed out**: For example, 3 × 2 = 6 was already crossed out as a multiple of 2.
+2. **C) Smaller multiples of p have a smaller prime factor and are already crossed out**: For example, 3 × 2 = 6 was already crossed out as a multiple of 2.
 3. **A) Multiply by b's modular inverse, pow(b, p − 2, p) or pow(b, -1, p)**: Division doesn't distribute over mod; multiplying by the inverse does.
 4. **A) k uniformly random items from a stream, in one pass and O(k) memory**: Item i replaces a kept item with probability k / (i + 1).
 

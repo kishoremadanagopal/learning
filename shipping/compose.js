@@ -1,7 +1,7 @@
 /* compose.js: Docker Compose v5 for the sandbox's pretend Docker (docker.js), printing like `docker compose` does
    when its output isn't a terminal (one line per event), and the docker/* actions that GitHub Actions uses to log in
    to a registry, work out tags and labels, and build and push images. */
-import { parseDocument } from "./yamllib.js?v=11948bf18f";
+import { parseDocument } from "./yamllib.js?v=160af99cac";
 
 export function installCompose(D, api) {
   const { MemFS } = api;

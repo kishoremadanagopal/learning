@@ -403,9 +403,9 @@ def count_subarrays(nums, k):
 ## Quick quiz
 
 1. In Two Sum with a dict, why store the current number only after checking for its complement?
-   - A) So a number can't pair with itself
-   - B) It's faster
-   - C) Dicts can't be read and written in the same step
+   - A) It's faster
+   - B) Dicts can't be read and written in the same step
+   - C) So a number can't pair with itself
 
 2. What's a good key for grouping anagrams?
    - A) The word's letters in sorted order
@@ -414,8 +414,8 @@ def count_subarrays(nums, k):
 
 3. Why does "subarray sum equals k" start with counts = {0: 1}?
    - A) It counts subarrays that start at index 0
-   - B) To avoid a KeyError
-   - C) Because k is never 0
+   - B) Because k is never 0
+   - C) To avoid a KeyError
 
 4. In longest consecutive sequence, why only start counting from x when x − 1 isn't in the set?
    - A) So each run is counted once from its start, keeping the total O(n)
@@ -425,7 +425,7 @@ def count_subarrays(nums, k):
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) So a number can't pair with itself**: With target 6 and [3], checking first means 3 doesn't find itself.
+1. **C) So a number can't pair with itself**: With target 6 and [3], checking first means 3 doesn't find itself.
 2. **A) The word's letters in sorted order**: All anagrams share their sorted letters; non-anagrams don't.
 3. **A) It counts subarrays that start at index 0**: The empty prefix has sum 0, so a prefix equal to k itself is a valid subarray.
 4. **A) So each run is counted once from its start, keeping the total O(n)**: Starting from every number would recount the same run many times.

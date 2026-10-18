@@ -252,26 +252,26 @@ console.log("Done");
 
 2. What does console.log("a", 1, true) print?
    - A) a 1 true
-   - B) a,1,true
-   - C) "a" 1 true
+   - B) "a" 1 true
+   - C) a,1,true
 
 3. Which runtime lets JavaScript read files and run servers?
-   - A) Node.js
-   - B) A web browser tab
+   - A) A web browser tab
+   - B) Node.js
    - C) ECMAScript
 
 4. Are semicolons required at the end of statements?
-   - A) Usually not, thanks to automatic semicolon insertion, but most style guides use them
+   - A) No, they're an error
    - B) Yes, always
-   - C) No, they're an error
+   - C) Usually not, thanks to automatic semicolon insertion, but most style guides use them
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) TC39, as the ECMAScript specification**: A new ECMAScript edition comes out every June.
 2. **A) a 1 true**: Arguments are printed separated by spaces; strings without quotes at the top level.
-3. **A) Node.js**: Node.js adds files, networking and processes to the language.
-4. **A) Usually not, thanks to automatic semicolon insertion, but most style guides use them**: Formatters such as Prettier add them for you.
+3. **B) Node.js**: Node.js adds files, networking and processes to the language.
+4. **C) Usually not, thanks to automatic semicolon insertion, but most style guides use them**: Formatters such as Prettier add them for you.
 
 </details>
 

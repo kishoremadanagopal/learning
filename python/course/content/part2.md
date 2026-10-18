@@ -281,10 +281,10 @@ hint: Check from youngest to oldest: if age < 3 ... elif age <= 12 ... elif age 
 :::
 
 :::quiz
-? With `x = 5`, what does this print? `if x > 3: print("A")` then `elif x > 1: print("B")`
-+ A
-- B
-- A and B
+? With `x = 5`, what does this print? `if x > 3: print("big")` then `elif x > 1: print("small")`
++ `big`
+- `small`
+- `big`, then `small`
 = Only the first matching branch runs. Once `x > 3` matches, the `elif` is skipped.
 
 ? What defines which lines belong to an `if` block?

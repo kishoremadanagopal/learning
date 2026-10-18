@@ -292,32 +292,32 @@ print(verify_claims(claims, facts))
 ## Quick quiz
 
 1. Which is an unfaithful hallucination?
-   - A) The policy says returns within 30 days, but the answer says 60
-   - B) The model refuses an off-topic request
+   - A) The model refuses an off-topic request
+   - B) The policy says returns within 30 days, but the answer says 60
    - C) The answer is shorter than expected
 
 2. Why can evaluations encourage models to guess?
-   - A) When wrong answers cost no more than "I don't know", guessing scores better on average
-   - B) Evaluations always reward long answers
-   - C) Guessing is faster to compute
+   - A) Guessing is faster to compute
+   - B) When wrong answers cost no more than "I don't know", guessing scores better on average
+   - C) Evaluations always reward long answers
 
 3. An agent reports "email sent" but the tool call returned an error. What prevents this?
    - A) Checking tool outcomes in code before the agent reports success
-   - B) A longer system prompt
-   - C) Using a smaller model
+   - B) Using a smaller model
+   - C) A longer system prompt
 
 4. Why does disagreement across several samples hint at a hallucination?
-   - A) Facts the model knows tend to come out the same each time, while invented details vary
-   - B) Disagreement means the API is broken
-   - C) Samples always disagree
+   - A) Disagreement means the API is broken
+   - B) Samples always disagree
+   - C) Facts the model knows tend to come out the same each time, while invented details vary
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The policy says returns within 30 days, but the answer says 60**: Faithfulness means agreeing with the given sources.
-2. **A) When wrong answers cost no more than "I don't know", guessing scores better on average**: Reward abstention where appropriate.
+1. **B) The policy says returns within 30 days, but the answer says 60**: Faithfulness means agreeing with the given sources.
+2. **B) When wrong answers cost no more than "I don't know", guessing scores better on average**: Reward abstention where appropriate.
 3. **A) Checking tool outcomes in code before the agent reports success**: Verify outcomes, not claims.
-4. **A) Facts the model knows tend to come out the same each time, while invented details vary**: Consistency is a useful uncertainty signal.
+4. **C) Facts the model knows tend to come out the same each time, while invented details vary**: Consistency is a useful uncertainty signal.
 
 </details>
 

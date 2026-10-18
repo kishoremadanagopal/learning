@@ -206,13 +206,13 @@ public class Main {
 ## Quick quiz
 
 1. What is `9 / 2` in Java?
-   - A) 4
+   - A) 5
    - B) 4.5
-   - C) 5
+   - C) 4
 
 2. What is `(int) 3.99`?
-   - A) 3
-   - B) 4
+   - A) 4
+   - B) 3
    - C) A compile error
 
 3. What is `17 % 5`?
@@ -223,8 +223,8 @@ public class Main {
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) 4**: Both are ints, so Java uses integer division and drops the .5.
-2. **A) 3**: Casting to int cuts off the decimal part. Use `Math.round` to round.
+1. **C) 4**: Both are ints, so Java uses integer division and drops the .5.
+2. **B) 3**: Casting to int cuts off the decimal part. Use `Math.round` to round.
 3. **B) 2**: 5 goes into 17 three times (15) with 2 left over.
 
 </details>

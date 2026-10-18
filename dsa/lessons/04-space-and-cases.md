@@ -264,13 +264,13 @@ def index_of(nums, target):
 ## Quick quiz
 
 1. What does space complexity measure?
-   - A) How the extra memory an algorithm needs grows with the input
-   - B) The size of the source code
+   - A) The size of the source code
+   - B) How the extra memory an algorithm needs grows with the input
    - C) How much disk space Python uses
 
 2. What does "in place" mean?
-   - A) The algorithm changes its input directly, using O(1) extra memory
-   - B) The algorithm runs in one place in the code
+   - A) The algorithm runs in one place in the code
+   - B) The algorithm changes its input directly, using O(1) extra memory
    - C) It returns a copy
 
 3. Why is list.append called amortised O(1)?
@@ -286,8 +286,8 @@ def index_of(nums, target):
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) How the extra memory an algorithm needs grows with the input**: Like time complexity, but for memory, not counting the input itself.
-2. **A) The algorithm changes its input directly, using O(1) extra memory**: Swapping inside the list instead of building a new one.
+1. **B) How the extra memory an algorithm needs grows with the input**: Like time complexity, but for memory, not counting the input itself.
+2. **B) The algorithm changes its input directly, using O(1) extra memory**: Swapping inside the list instead of building a new one.
 3. **A) Most appends are O(1); the occasional O(n) resize is spread over many appends**: Growing the capacity by a factor makes resizes rare enough to average out.
 4. **B) Worst case**: Every item must be checked before you can say "not found".
 

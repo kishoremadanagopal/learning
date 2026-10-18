@@ -318,17 +318,17 @@ So twice the sum is n × (n + 1), and the sum is n × (n + 1) / 2.
 
 1. An algorithm takes 3n² + 50n + 1000 steps. Its Big-O is:
    - A) O(3n²)
-   - B) O(n²)
-   - C) O(n² + n)
+   - B) O(n² + n)
+   - C) O(n²)
 
 2. If n doubles, how much longer does an O(n²) algorithm take?
-   - A) Twice as long
-   - B) About four times as long
-   - C) The same
+   - A) About four times as long
+   - B) The same
+   - C) Twice as long
 
 3. A loop over n items, followed by a separate loop over the same n items, is:
-   - A) O(n)
-   - B) O(n²)
+   - A) O(n²)
+   - B) O(n)
    - C) O(2ⁿ)
 
 4. Which line hides an O(n) loop?
@@ -339,9 +339,9 @@ So twice the sum is n × (n + 1), and the sum is n × (n + 1) / 2.
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) O(n²)**: Drop constants and keep only the fastest-growing term.
-2. **B) About four times as long**: (2n)² = 4n².
-3. **A) O(n)**: Sequential loops add: n + n = 2n, which is O(n).
+1. **C) O(n²)**: Drop constants and keep only the fastest-growing term.
+2. **A) About four times as long**: (2n)² = 4n².
+3. **B) O(n)**: Sequential loops add: n + n = 2n, which is O(n).
 4. **B) `if x in nums:` (where nums is a list)**: `in` on a list checks items one by one.
 
 </details>

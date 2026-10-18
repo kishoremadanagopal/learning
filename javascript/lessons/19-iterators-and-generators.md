@@ -302,32 +302,32 @@ console.log([...batches("hello", 3)]);
 ## Quick quiz
 
 1. What does calling a generator function do?
-   - A) Returns a generator object; the body runs only as values are requested
+   - A) Returns an array of every yielded value
    - B) Runs the whole body immediately
-   - C) Returns an array of every yielded value
+   - C) Returns a generator object; the body runs only as values are requested
 
 2. What must an object have to work with for…of?
-   - A) A [Symbol.iterator]() method returning an iterator
-   - B) A length property
-   - C) A forEach method
+   - A) A length property
+   - B) A forEach method
+   - C) A [Symbol.iterator]() method returning an iterator
 
 3. Why can while (true) yield n++ be safe?
-   - A) The generator pauses at each yield, and the consumer decides when to stop
-   - B) JavaScript stops infinite loops automatically
-   - C) yield ends the loop
+   - A) yield ends the loop
+   - B) The generator pauses at each yield, and the consumer decides when to stop
+   - C) JavaScript stops infinite loops automatically
 
 4. What's an advantage of iterator helpers like .filter().map().take() over array methods?
-   - A) They're lazy: no intermediate arrays, and they work on infinite sequences
+   - A) They sort automatically
    - B) They're always faster for small arrays
-   - C) They sort automatically
+   - C) They're lazy: no intermediate arrays, and they work on infinite sequences
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Returns a generator object; the body runs only as values are requested**: Generators are lazy.
-2. **A) A [Symbol.iterator]() method returning an iterator**: That's the iteration protocol.
-3. **A) The generator pauses at each yield, and the consumer decides when to stop**: Use take, break or a condition in the consumer.
-4. **A) They're lazy: no intermediate arrays, and they work on infinite sequences**: Each value flows through the whole pipeline on demand.
+1. **C) Returns a generator object; the body runs only as values are requested**: Generators are lazy.
+2. **C) A [Symbol.iterator]() method returning an iterator**: That's the iteration protocol.
+3. **B) The generator pauses at each yield, and the consumer decides when to stop**: Use take, break or a condition in the consumer.
+4. **C) They're lazy: no intermediate arrays, and they work on infinite sequences**: Each value flows through the whole pipeline on demand.
 
 </details>
 

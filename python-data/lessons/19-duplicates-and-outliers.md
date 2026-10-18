@@ -188,25 +188,25 @@ print(oldest)
 
 1. What does `df.duplicated()` mark as True?
    - A) Every row that has a copy, including the first
-   - B) Each row that repeats an earlier row
-   - C) Rows with missing values
+   - B) Rows with missing values
+   - C) Each row that repeats an earlier row
 
 2. An age of 230 appears. What's usually the best fix?
-   - A) Change it to 23
-   - B) Mark it as missing, since the true value is unknown
+   - A) Mark it as missing, since the true value is unknown
+   - B) Change it to 23
    - C) Delete the whole column
 
 3. Why not delete every outlier?
-   - A) Outliers can be real and important, like a very large genuine order
-   - B) pandas can't delete rows
+   - A) pandas can't delete rows
+   - B) Outliers can be real and important, like a very large genuine order
    - C) Outliers are always errors
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) Each row that repeats an earlier row**: By default the first copy is kept (False) and later repeats are True. `keep=False` marks all copies.
-2. **B) Mark it as missing, since the true value is unknown**: Guessing could be wrong. Marking it missing is honest, and you can decide later whether to fill it.
-3. **A) Outliers can be real and important, like a very large genuine order**: Investigate first. Impossible values are errors; unusual ones may be the most interesting rows.
+1. **C) Each row that repeats an earlier row**: By default the first copy is kept (False) and later repeats are True. `keep=False` marks all copies.
+2. **A) Mark it as missing, since the true value is unknown**: Guessing could be wrong. Marking it missing is honest, and you can decide later whether to fill it.
+3. **B) Outliers can be real and important, like a very large genuine order**: Investigate first. Impossible values are errors; unusual ones may be the most interesting rows.
 
 </details>
 

@@ -762,36 +762,36 @@ gh pr checks
 ## Quick quiz
 
 1. A run failed. Which command shows only the output of the failed steps?
-   - A) gh run view <ID> --log-failed
-   - B) gh run list --failed
-   - C) gh run rerun <ID>
-   - D) git log --failed
+   - A) git log --failed
+   - B) gh run rerun <ID>
+   - C) gh run list --failed
+   - D) gh run view <ID> --log-failed
 
 2. A test fails because of a real bug. What should you change?
    - A) The code, so the test passes for the right reason
-   - B) The test's expected value, so CI is green
-   - C) The workflow, so it skips that test
-   - D) Nothing: re-run until it passes
+   - B) The workflow, so it skips that test
+   - C) Nothing: re-run until it passes
+   - D) The test's expected value, so CI is green
 
 3. Which code does a pull_request run test?
-   - A) A merge commit of the branch into its base branch
-   - B) Only the branch's latest commit, ignoring main
-   - C) The base branch only
+   - A) The base branch only
+   - B) A merge commit of the branch into its base branch
+   - C) Only the branch's latest commit, ignoring main
    - D) The commit that opened the repository
 
 4. A required status check names "test". What happens if you rename the job to unit-tests?
-   - A) The required check never reports, so pull requests can't merge until the rule is updated
+   - A) Nothing; checks are matched by workflow file name
    - B) GitHub renames the rule automatically
    - C) The rule now checks unit-tests
-   - D) Nothing; checks are matched by workflow file name
+   - D) The required check never reports, so pull requests can't merge until the rule is updated
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) gh run view <ID> --log-failed**: --log-failed prints the logs of failed steps; --log prints everything.
+1. **D) gh run view <ID> --log-failed**: --log-failed prints the logs of failed steps; --log prints everything.
 2. **A) The code, so the test passes for the right reason**: The test caught a bug; changing it would hide the bug from CI and from users.
-3. **A) A merge commit of the branch into its base branch**: GitHub tests what the base branch would look like after merging (refs/pull/N/merge).
-4. **A) The required check never reports, so pull requests can't merge until the rule is updated**: Checks are matched by job name; keep job names stable or update the ruleset with them.
+3. **B) A merge commit of the branch into its base branch**: GitHub tests what the base branch would look like after merging (refs/pull/N/merge).
+4. **D) The required check never reports, so pull requests can't merge until the rule is updated**: Checks are matched by job name; keep job names stable or update the ruleset with them.
 
 </details>
 

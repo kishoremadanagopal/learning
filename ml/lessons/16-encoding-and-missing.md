@@ -253,32 +253,32 @@ print(X_test_ready[:3])
 ## Quick quiz
 
 1. Why not encode contract types as 0, 1, 2 in one column?
-   - A) The model would treat them as ordered numbers, as if two-year were "twice" one-year
-   - B) Because numbers take more memory
-   - C) It's fine for every model
+   - A) It's fine for every model
+   - B) The model would treat them as ordered numbers, as if two-year were "twice" one-year
+   - C) Because numbers take more memory
 
 2. What does handle_unknown="ignore" do in OneHotEncoder?
-   - A) Encodes a category never seen in training as all zeros instead of raising an error
+   - A) Ignores the column completely
    - B) Drops rows with missing values
-   - C) Ignores the column completely
+   - C) Encodes a category never seen in training as all zeros instead of raising an error
 
 3. Which SimpleImputer strategy suits a text column?
-   - A) "mean"
-   - B) "median"
-   - C) "most_frequent"
+   - A) "median"
+   - B) "most_frequent"
+   - C) "mean"
 
 4. What does ColumnTransformer do?
-   - A) Applies different transformers to different columns and joins the results
-   - B) Changes column names
-   - C) Transposes the table
+   - A) Changes column names
+   - B) Transposes the table
+   - C) Applies different transformers to different columns and joins the results
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The model would treat them as ordered numbers, as if two-year were "twice" one-year**: Unordered categories need one-hot encoding. Ordinal encoding is only for categories with a real order.
-2. **A) Encodes a category never seen in training as all zeros instead of raising an error**: New categories appear in real life; this keeps predictions working.
-3. **C) "most_frequent"**: You can't average text; the most common value (or a constant like "unknown") works.
-4. **A) Applies different transformers to different columns and joins the results**: It's how you scale numbers and encode text in one step.
+1. **B) The model would treat them as ordered numbers, as if two-year were "twice" one-year**: Unordered categories need one-hot encoding. Ordinal encoding is only for categories with a real order.
+2. **C) Encodes a category never seen in training as all zeros instead of raising an error**: New categories appear in real life; this keeps predictions working.
+3. **B) "most_frequent"**: You can't average text; the most common value (or a constant like "unknown") works.
+4. **C) Applies different transformers to different columns and joins the results**: It's how you scale numbers and encode text in one step.
 
 </details>
 

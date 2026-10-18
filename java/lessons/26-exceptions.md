@@ -283,24 +283,24 @@ public class Main {
 ## Quick quiz
 
 1. Which must be caught or declared with `throws`?
-   - A) Checked exceptions like IOException
-   - B) RuntimeExceptions like NullPointerException
-   - C) Errors like OutOfMemoryError
+   - A) RuntimeExceptions like NullPointerException
+   - B) Errors like OutOfMemoryError
+   - C) Checked exceptions like IOException
 
 2. When does a `finally` block run?
    - A) Always, whether or not an exception occurred
-   - B) Only after an exception
-   - C) Only if there's no exception
+   - B) Only if there's no exception
+   - C) Only after an exception
 
 3. What does try-with-resources do?
    - A) Closes the resource automatically at the end of the block
-   - B) Retries the code if it fails
-   - C) Hides all exceptions
+   - B) Hides all exceptions
+   - C) Retries the code if it fails
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Checked exceptions like IOException**: The compiler enforces handling only for checked exceptions.
+1. **C) Checked exceptions like IOException**: The compiler enforces handling only for checked exceptions.
 2. **A) Always, whether or not an exception occurred**: It's for cleanup that must always happen.
 3. **A) Closes the resource automatically at the end of the block**: Anything AutoCloseable declared in `try (...)` is closed for you.
 

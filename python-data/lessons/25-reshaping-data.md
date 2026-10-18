@@ -191,13 +191,13 @@ print(best)
 
 1. What does `pd.concat([a, b])` do?
    - A) Stacks b underneath a
-   - B) Joins a and b on a key
-   - C) Adds the numbers in a and b
+   - B) Adds the numbers in a and b
+   - C) Joins a and b on a key
 
 2. Which layout has one row per student per subject?
-   - A) Wide
+   - A) Pivot
    - B) Long
-   - C) Pivot
+   - C) Wide
 
 3. Which method turns wide data into long data?
    - A) `melt`

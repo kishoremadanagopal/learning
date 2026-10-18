@@ -366,31 +366,31 @@ print(kth_smallest([7, 10, 4, 3, 20, 15], 3))
 
 1. Which sort is stable and always O(n log n), but needs O(n) extra memory?
    - A) Merge sort
-   - B) Quicksort
-   - C) Heap sort
+   - B) Heap sort
+   - C) Quicksort
 
 2. When does quicksort with "first item as pivot" hit O(n²)?
-   - A) On already sorted (or reversed) input, where each partition removes only one item
-   - B) On random input
-   - C) When the list has negative numbers
+   - A) When the list has negative numbers
+   - B) On already sorted (or reversed) input, where each partition removes only one item
+   - C) On random input
 
 3. Quickselect is faster on average than sorting because:
-   - A) After each partition it continues into only one side
-   - B) It doesn't compare numbers
+   - A) It doesn't compare numbers
+   - B) After each partition it continues into only one side
    - C) It uses a heap
 
 4. Which O(n log n) sort uses O(1) extra space and has no bad worst case?
-   - A) Heap sort
-   - B) Merge sort
-   - C) Quicksort
+   - A) Merge sort
+   - B) Quicksort
+   - C) Heap sort
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Merge sort**: Merging needs a temporary array; in exchange, it never degrades and keeps equal items in order.
-2. **A) On already sorted (or reversed) input, where each partition removes only one item**: A random pivot avoids this pattern.
-3. **A) After each partition it continues into only one side**: n + n/2 + n/4 + ... adds up to about 2n.
-4. **A) Heap sort**: It sorts inside the array using a heap, guaranteed O(n log n).
+2. **B) On already sorted (or reversed) input, where each partition removes only one item**: A random pivot avoids this pattern.
+3. **B) After each partition it continues into only one side**: n + n/2 + n/4 + ... adds up to about 2n.
+4. **C) Heap sort**: It sorts inside the array using a heap, guaranteed O(n log n).
 
 </details>
 

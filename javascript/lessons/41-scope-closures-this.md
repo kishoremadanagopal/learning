@@ -323,32 +323,32 @@ console.log(describe("!"));
 ## Quick quiz
 
 1. What does this log? for (var i = 0; i < 3; i++) setTimeout(() => console.log(i));
-   - A) 3, 3, 3
+   - A) undefined three times
    - B) 0, 1, 2
-   - C) undefined three times
+   - C) 3, 3, 3
 
 2. Which value does a let variable have before its declaration line runs?
-   - A) None: using it throws a ReferenceError (the temporal dead zone)
+   - A) null
    - B) undefined
-   - C) null
+   - C) None: using it throws a ReferenceError (the temporal dead zone)
 
 3. setTimeout(obj.save, 100) runs save with which this?
-   - A) undefined (the method lost its object)
-   - B) obj
-   - C) the timer
+   - A) obj
+   - B) the timer
+   - C) undefined (the method lost its object)
 
 4. Where does a class method like label() live?
-   - A) On the class's prototype, shared by all instances
-   - B) Copied onto every instance
+   - A) Copied onto every instance
+   - B) On the class's prototype, shared by all instances
    - C) On the global object
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) 3, 3, 3**: var creates one shared i; the callbacks run after the loop, when i is 3. With let, each iteration has its own i.
-2. **A) None: using it throws a ReferenceError (the temporal dead zone)**: let and const are hoisted but can't be used until their line.
-3. **A) undefined (the method lost its object)**: Pass () => obj.save() or obj.save.bind(obj) instead.
-4. **A) On the class's prototype, shared by all instances**: Instances find it through the prototype chain.
+1. **C) 3, 3, 3**: var creates one shared i; the callbacks run after the loop, when i is 3. With let, each iteration has its own i.
+2. **C) None: using it throws a ReferenceError (the temporal dead zone)**: let and const are hoisted but can't be used until their line.
+3. **C) undefined (the method lost its object)**: Pass () => obj.save() or obj.save.bind(obj) instead.
+4. **B) On the class's prototype, shared by all instances**: Instances find it through the prototype chain.
 
 </details>
 

@@ -883,8 +883,8 @@ hint: sealed interface Result permits Ok, Err { } then record Ok(int value) impl
 - An Object
 = The type is fixed at compile time.
 
-? What does `sealed interface Shape permits A, B` do?
-+ Allows only A and B to implement Shape
+? What does `sealed interface Shape permits Circle, Square` do?
++ Allows only Circle and Square to implement Shape
 - Makes Shape final
 - Hides Shape from other packages
 = The set of implementations is closed and known to the compiler.

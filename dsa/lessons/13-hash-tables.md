@@ -252,9 +252,9 @@ class MyHashMap:
 ## Quick quiz
 
 1. What does a hash function do in a hash table?
-   - A) Turns a key into a number used to pick a bucket
-   - B) Sorts the keys
-   - C) Encrypts the values
+   - A) Sorts the keys
+   - B) Encrypts the values
+   - C) Turns a key into a number used to pick a bucket
 
 2. Two different keys land in the same bucket. This is called:
    - A) A collision
@@ -262,9 +262,9 @@ class MyHashMap:
    - C) A rehash attack
 
 3. Why can't a list be a dict key?
-   - A) Lists can change, which would change their hash and lose the entry
+   - A) Only strings can be keys
    - B) Lists are too long
-   - C) Only strings can be keys
+   - C) Lists can change, which would change their hash and lose the entry
 
 4. What keeps a hash table's operations O(1) on average as it grows?
    - A) Resizing when the load factor gets too high
@@ -274,9 +274,9 @@ class MyHashMap:
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Turns a key into a number used to pick a bucket**: The same key always gives the same bucket, so lookups go straight there.
+1. **C) Turns a key into a number used to pick a bucket**: The same key always gives the same bucket, so lookups go straight there.
 2. **A) A collision**: Collisions are normal; chaining or probing handles them.
-3. **A) Lists can change, which would change their hash and lose the entry**: Keys must be hashable (immutable). Use a tuple instead.
+3. **C) Lists can change, which would change their hash and lose the entry**: Keys must be hashable (immutable). Use a tuple instead.
 4. **A) Resizing when the load factor gets too high**: Fewer items per bucket means short searches.
 
 </details>

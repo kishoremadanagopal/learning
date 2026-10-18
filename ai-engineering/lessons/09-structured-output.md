@@ -367,32 +367,32 @@ print(validate({"name": "Bell", "price": "12", "colour": "red"}, schema))
 ## Quick quiz
 
 1. What does a guaranteed structured-output feature guarantee?
-   - A) The reply will parse and match your schema's structure
-   - B) Every value in the reply will be factually correct
+   - A) Every value in the reply will be factually correct
+   - B) The reply will parse and match your schema's structure
    - C) The reply will be shorter
 
 2. Why make a field nullable (or add an "unknown" option)?
-   - A) So the model isn't pushed to invent a value when the information is missing
-   - B) Because JSON requires it
+   - A) Because JSON requires it
+   - B) So the model isn't pushed to invent a value when the information is missing
    - C) To make parsing faster
 
 3. In Python, why can True slip through a check for an int field?
-   - A) bool is a subclass of int, so isinstance(True, int) is True
-   - B) JSON converts true to 1
-   - C) isinstance is broken for numbers
+   - A) JSON converts true to 1
+   - B) isinstance is broken for numbers
+   - C) bool is a subclass of int, so isinstance(True, int) is True
 
 4. Validation fails on a model's JSON. What is a good next step?
-   - A) Send the specific errors back and ask the model to fix its answer, a limited number of times
-   - B) Retry the identical request forever
-   - C) Silently fill in default values
+   - A) Silently fill in default values
+   - B) Send the specific errors back and ask the model to fix its answer, a limited number of times
+   - C) Retry the identical request forever
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The reply will parse and match your schema's structure**: Format, not correctness: still validate values that matter.
-2. **A) So the model isn't pushed to invent a value when the information is missing**: Leaving no way to say "not given" invites made-up answers.
-3. **A) bool is a subclass of int, so isinstance(True, int) is True**: Exclude bool explicitly when checking numbers.
-4. **A) Send the specific errors back and ask the model to fix its answer, a limited number of times**: Feedback plus a retry limit fixes most cases without endless loops.
+1. **B) The reply will parse and match your schema's structure**: Format, not correctness: still validate values that matter.
+2. **B) So the model isn't pushed to invent a value when the information is missing**: Leaving no way to say "not given" invites made-up answers.
+3. **C) bool is a subclass of int, so isinstance(True, int) is True**: Exclude bool explicitly when checking numbers.
+4. **B) Send the specific errors back and ask the model to fix its answer, a limited number of times**: Feedback plus a retry limit fixes most cases without endless loops.
 
 </details>
 

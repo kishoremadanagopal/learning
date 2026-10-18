@@ -225,18 +225,18 @@ print(round(acc, 3), verdict)
 
 1. What does a bag-of-words representation keep?
    - A) How many times each word appears in each text
-   - B) The order of the words
-   - C) The meaning of each sentence
+   - B) The meaning of each sentence
+   - C) The order of the words
 
 2. Why does TF-IDF often beat raw counts?
    - A) It down-weights words that appear in many texts, so distinctive words count more
-   - B) It translates the text
-   - C) It keeps word order
+   - B) It keeps word order
+   - C) It translates the text
 
 3. A word that never appeared in training shows up in a new message. A CountVectorizer pipeline will:
    - A) Ignore it
-   - B) Crash
-   - C) Add a new column automatically
+   - B) Add a new column automatically
+   - C) Crash
 
 4. You use an LLM to label support tickets. How should you check it?
    - A) Compare its labels with human labels on held-out tickets, using precision and recall

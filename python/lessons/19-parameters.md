@@ -187,26 +187,26 @@ print(record("stop"))
 ## Quick quiz
 
 1. Inside `def f(*args)`, what type is `args`?
-   - A) tuple
-   - B) list
+   - A) list
+   - B) tuple
    - C) dict
 
 2. What does `f(**{"a": 1, "b": 2})` do?
    - A) Passes one dict argument
-   - B) Calls `f(a=1, b=2)`
-   - C) Raises an error
+   - B) Raises an error
+   - C) Calls `f(a=1, b=2)`
 
 3. Why is `def f(x=[])` risky?
-   - A) The same list is reused across calls
+   - A) It makes x a tuple
    - B) Lists can't be defaults
-   - C) It makes x a tuple
+   - C) The same list is reused across calls
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) tuple**: `*args` collects positional arguments into a tuple.
-2. **B) Calls `f(a=1, b=2)`**: `**` unpacks a dict into keyword arguments.
-3. **A) The same list is reused across calls**: Defaults are evaluated once at definition time, so all calls share one list.
+1. **B) tuple**: `*args` collects positional arguments into a tuple.
+2. **C) Calls `f(a=1, b=2)`**: `**` unpacks a dict into keyword arguments.
+3. **C) The same list is reused across calls**: Defaults are evaluated once at definition time, so all calls share one list.
 
 </details>
 

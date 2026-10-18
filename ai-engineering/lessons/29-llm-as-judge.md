@@ -292,31 +292,31 @@ print(pairwise_verdict(length_judge, "Q", "short", "a much longer answer"))
 ## Quick quiz
 
 1. Why should a judge reason before giving its score?
-   - A) The verdict then follows from the analysis, which makes grading more accurate on complex criteria
-   - B) It makes the judge cheaper
+   - A) It makes the judge cheaper
+   - B) The verdict then follows from the analysis, which makes grading more accurate on complex criteria
    - C) Scores must always come last in JSON
 
 2. A judge agrees with humans 90% of the time, but 90% of cases are passes. What does Cohen's kappa tell you?
    - A) Whether the agreement is better than a grader that just says "pass" by habit
-   - B) Nothing: 90% is always good
-   - C) The judge's cost
+   - B) The judge's cost
+   - C) Nothing: 90% is always good
 
 3. How do you counter position bias in pairwise judging?
-   - A) Judge both orders and count only consistent verdicts
+   - A) Use a longer rubric
    - B) Always put the better answer first
-   - C) Use a longer rubric
+   - C) Judge both orders and count only consistent verdicts
 
 4. Which judge setup is easiest to check and debug?
    - A) One judge per criterion with a specific rubric and a pass/fail output
-   - B) One judge scoring "overall quality" from 1 to 100
-   - C) A judge with no rubric
+   - B) A judge with no rubric
+   - C) One judge scoring "overall quality" from 1 to 100
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The verdict then follows from the analysis, which makes grading more accurate on complex criteria**: Ask for reasoning first, or use a thinking model.
+1. **B) The verdict then follows from the analysis, which makes grading more accurate on complex criteria**: Ask for reasoning first, or use a thinking model.
 2. **A) Whether the agreement is better than a grader that just says "pass" by habit**: Kappa corrects for chance agreement.
-3. **A) Judge both orders and count only consistent verdicts**: Swapping turns bias into visible inconsistency.
+3. **C) Judge both orders and count only consistent verdicts**: Swapping turns bias into visible inconsistency.
 4. **A) One judge per criterion with a specific rubric and a pass/fail output**: Narrow, specific judgements are more reliable.
 
 </details>

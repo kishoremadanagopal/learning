@@ -212,26 +212,26 @@ public class Main {
 ## Quick quiz
 
 1. `Animal a = new Dog(); a.speak();` runs which `speak()`?
-   - A) Dog's
-   - B) Animal's
-   - C) Both
+   - A) Both
+   - B) Dog's
+   - C) Animal's
 
 2. What does `if (x instanceof Dog d)` do?
-   - A) Checks the type and, if it matches, makes `d` a Dog variable
-   - B) Creates a new Dog
+   - A) Creates a new Dog
+   - B) Checks the type and, if it matches, makes `d` a Dog variable
    - C) Always casts, even if x isn't a Dog
 
 3. A wrong downcast like `(Dog) someCat` causes…
-   - A) ClassCastException at runtime
-   - B) A compile error
-   - C) Nothing
+   - A) Nothing
+   - B) ClassCastException at runtime
+   - C) A compile error
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Dog's**: The object's actual type decides at runtime.
-2. **A) Checks the type and, if it matches, makes `d` a Dog variable**: Pattern matching combines the type test and the cast.
-3. **A) ClassCastException at runtime**: The compiler can't always know the actual type, so the check happens at runtime.
+1. **B) Dog's**: The object's actual type decides at runtime.
+2. **B) Checks the type and, if it matches, makes `d` a Dog variable**: Pattern matching combines the type test and the cast.
+3. **B) ClassCastException at runtime**: The compiler can't always know the actual type, so the check happens at runtime.
 
 </details>
 

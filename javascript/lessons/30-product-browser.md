@@ -451,31 +451,31 @@ Open these only after a real attempt. Each one explains the solution step by ste
 ## Quick quiz
 
 1. In the state-and-render approach, what should an event handler do?
-   - A) Update the state, then call render()
-   - B) Change the elements it needs directly
-   - C) Re-fetch the whole page
+   - A) Re-fetch the whole page
+   - B) Update the state, then call render()
+   - C) Change the elements it needs directly
 
 2. The user switches category twice quickly. Why abort the first request?
-   - A) Its response could arrive last and overwrite the newer results
-   - B) Browsers can't run two fetches at once
-   - C) Aborting makes the second request faster
+   - A) Browsers can't run two fetches at once
+   - B) Aborting makes the second request faster
+   - C) Its response could arrive last and overwrite the newer results
 
 3. What does role="status" on a message element do?
-   - A) Screen readers announce its changes without moving focus
-   - B) It styles the element as a status bar
+   - A) It styles the element as a status bar
+   - B) Screen readers announce its changes without moving focus
    - C) It makes the element update automatically
 
 4. Which is safe to keep in localStorage?
    - A) The user's preferred category
-   - B) A login token
-   - C) A password, if it's encoded with btoa
+   - B) A password, if it's encoded with btoa
+   - C) A login token
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Update the state, then call render()**: render() is the only code that changes the page, so the page always matches the state.
-2. **A) Its response could arrive last and overwrite the newer results**: Responses can arrive in any order; cancelling stale ones keeps the page consistent.
-3. **A) Screen readers announce its changes without moving focus**: It's an ARIA live region.
+1. **B) Update the state, then call render()**: render() is the only code that changes the page, so the page always matches the state.
+2. **C) Its response could arrive last and overwrite the newer results**: Responses can arrive in any order; cancelling stale ones keeps the page consistent.
+3. **B) Screen readers announce its changes without moving focus**: It's an ARIA live region.
 4. **A) The user's preferred category**: Any script on the page can read localStorage; keep secrets out of it.
 
 </details>

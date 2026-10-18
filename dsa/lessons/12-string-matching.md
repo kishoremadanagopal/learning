@@ -302,32 +302,32 @@ def build_lps(p):
 ## Quick quiz
 
 1. What is the naive pattern search's worst-case time?
-   - A) O(n + m)
-   - B) O(n · m)
+   - A) O(n · m)
+   - B) O(n + m)
    - C) O(log n)
 
 2. What does KMP's LPS table let it avoid?
    - A) Re-reading text characters after a mismatch
-   - B) Building any table
-   - C) Comparing characters
+   - B) Comparing characters
+   - C) Building any table
 
 3. Why does Rabin-Karp compare the strings when the hashes match?
-   - A) Different strings can have the same hash (a collision)
-   - B) Hashes are always wrong
-   - C) To make it slower
+   - A) Hashes are always wrong
+   - B) To make it slower
+   - C) Different strings can have the same hash (a collision)
 
 4. For everyday Python code, which should you use to find a substring?
-   - A) `pattern in text` or `text.find(pattern)`
+   - A) Rabin-Karp
    - B) Your own KMP
-   - C) Rabin-Karp
+   - C) `pattern in text` or `text.find(pattern)`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) O(n · m)**: Every start position may compare almost the whole pattern.
+1. **A) O(n · m)**: Every start position may compare almost the whole pattern.
 2. **A) Re-reading text characters after a mismatch**: It knows how much of the pattern is already matched and continues from there.
-3. **A) Different strings can have the same hash (a collision)**: A hash match means "probably equal", so confirm it.
-4. **A) `pattern in text` or `text.find(pattern)`**: The built-ins are implemented in optimised C.
+3. **C) Different strings can have the same hash (a collision)**: A hash match means "probably equal", so confirm it.
+4. **C) `pattern in text` or `text.find(pattern)`**: The built-ins are implemented in optimised C.
 
 </details>
 

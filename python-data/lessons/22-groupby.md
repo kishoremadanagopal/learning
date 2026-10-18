@@ -220,21 +220,21 @@ print(city_report)
    - C) What's the largest order?
 
 2. What's the difference between `.agg(...)` and `.transform(...)` after a groupby?
-   - A) `agg` gives one row per group; `transform` gives one value per original row
-   - B) They're the same
+   - A) They're the same
+   - B) `agg` gives one row per group; `transform` gives one value per original row
    - C) `transform` only works on text
 
 3. What does `reset_index()` do after a groupby?
-   - A) Deletes the groups
-   - B) Turns the group labels into ordinary columns
-   - C) Sorts the result
+   - A) Sorts the result
+   - B) Deletes the groups
+   - C) Turns the group labels into ordinary columns
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **B) What's the average order value per region?**: "Per region" means split by region and summarise each group.
-2. **A) `agg` gives one row per group; `transform` gives one value per original row**: `transform` broadcasts each group's result back to its rows, so you can compare rows with their group.
-3. **B) Turns the group labels into ordinary columns**: The groups move from the index into columns, giving a flat table.
+2. **B) `agg` gives one row per group; `transform` gives one value per original row**: `transform` broadcasts each group's result back to its rows, so you can compare rows with their group.
+3. **C) Turns the group labels into ordinary columns**: The groups move from the index into columns, giving a flat table.
 
 </details>
 

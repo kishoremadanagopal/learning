@@ -179,25 +179,25 @@ public class Main {
 ## Quick quiz
 
 1. Why does `nextLine()` right after `nextInt()` often return an empty string?
-   - A) `nextInt()` leaves the end of the line unread
-   - B) `nextLine()` only works once
-   - C) Scanner can't mix types
+   - A) `nextLine()` only works once
+   - B) Scanner can't mix types
+   - C) `nextInt()` leaves the end of the line unread
 
 2. What does `Integer.parseInt("12") + 1` give?
-   - A) 13
-   - B) "121"
+   - A) "121"
+   - B) 13
    - C) An error
 
 3. Which class needs an import?
    - A) `java.util.Scanner`
-   - B) `String`
-   - C) `Math`
+   - B) `Math`
+   - C) `String`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) `nextInt()` leaves the end of the line unread**: The leftover newline is read as an empty line. Read whole lines and parse them instead.
-2. **A) 13**: `parseInt` turns the text into the number 12.
+1. **C) `nextInt()` leaves the end of the line unread**: The leftover newline is read as an empty line. Read whole lines and parse them instead.
+2. **B) 13**: `parseInt` turns the text into the number 12.
 3. **A) `java.util.Scanner`**: Classes in `java.lang` are available automatically; everything else needs an import.
 
 </details>

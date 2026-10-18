@@ -210,21 +210,21 @@ public class Main {
    - C) It must be called init
 
 2. In `this.name = name;`, what does `this.name` refer to?
-   - A) The object's field
+   - A) A local variable
    - B) The parameter
-   - C) A local variable
+   - C) The object's field
 
 3. When does Java provide a default no-argument constructor?
-   - A) Only if the class declares no constructors at all
-   - B) Always
+   - A) Always
+   - B) Only if the class declares no constructors at all
    - C) Never
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) It has the class's name and no return type**: `Dog(String name) { ... }`: same name as the class, no return type, not even void.
-2. **A) The object's field**: `this.` picks the field; the plain `name` is the parameter.
-3. **A) Only if the class declares no constructors at all**: Writing any constructor removes the automatic default one.
+2. **C) The object's field**: `this.` picks the field; the plain `name` is the parameter.
+3. **B) Only if the class declares no constructors at all**: Writing any constructor removes the automatic default one.
 
 </details>
 

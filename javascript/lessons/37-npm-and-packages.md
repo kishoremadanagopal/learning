@@ -348,9 +348,9 @@ console.log(satisfies("4.9.1", "^4.1.0"), satisfies("5.0.0", "^4.1.0"));
 ## Quick quiz
 
 1. Which file should you commit so every install gets the same versions?
-   - A) package-lock.json
+   - A) .npmrc
    - B) node_modules
-   - C) .npmrc
+   - C) package-lock.json
 
 2. What does "^4.1.0" allow?
    - A) 4.1.0 up to, but not including, 5.0.0
@@ -363,17 +363,17 @@ console.log(satisfies("4.9.1", "^4.1.0"), satisfies("5.0.0", "^4.1.0"));
    - C) engines
 
 4. How did the 2025 Shai-Hulud worm spread between npm packages?
-   - A) Install scripts in poisoned versions stole maintainers' tokens and published more poisoned packages
+   - A) By editing package-lock.json files on GitHub
    - B) Through a bug in Node.js
-   - C) By editing package-lock.json files on GitHub
+   - C) Install scripts in poisoned versions stole maintainers' tokens and published more poisoned packages
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) package-lock.json**: The lockfile records exact versions; npm ci installs exactly them.
+1. **C) package-lock.json**: The lockfile records exact versions; npm ci installs exactly them.
 2. **A) 4.1.0 up to, but not including, 5.0.0**: ^ allows compatible (non-major) updates.
 3. **A) devDependencies**: It's only needed while developing, not to run the app.
-4. **A) Install scripts in poisoned versions stole maintainers' tokens and published more poisoned packages**: Install scripts run code on install; limit them and pin versions with a lockfile.
+4. **C) Install scripts in poisoned versions stole maintainers' tokens and published more poisoned packages**: Install scripts run code on install; limit them and pin versions with a lockfile.
 
 </details>
 

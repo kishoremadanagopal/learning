@@ -276,9 +276,9 @@ def rotate(nums, k):
 ## Quick quiz
 
 1. Why is `a[i]` O(1) for an array?
-   - A) The address is computed directly: start + i × slot size
-   - B) Python remembers every index you've used
-   - C) Arrays are always short
+   - A) Python remembers every index you've used
+   - B) Arrays are always short
+   - C) The address is computed directly: start + i × slot size
 
 2. What does `a.insert(0, x)` cost on a list of n items?
    - A) O(1)
@@ -286,22 +286,22 @@ def rotate(nums, k):
    - C) O(log n)
 
 3. In "best time to buy and sell", why doesn't `max(prices) - min(prices)` work?
-   - A) The minimum might come after the maximum, which is an impossible trade
-   - B) It's too slow
+   - A) It's too slow
+   - B) The minimum might come after the maximum, which is an impossible trade
    - C) max and min don't work on lists
 
 4. Rotating right by k = 10 on a list of 7 items is the same as rotating by:
-   - A) 10
-   - B) 3
-   - C) 7
+   - A) 7
+   - B) 10
+   - C) 3
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The address is computed directly: start + i × slot size**: Contiguous, equal-size slots make any position one calculation away.
+1. **C) The address is computed directly: start + i × slot size**: Contiguous, equal-size slots make any position one calculation away.
 2. **B) O(n)**: Every existing item shifts right by one.
-3. **A) The minimum might come after the maximum, which is an impossible trade**: You must buy before you sell, so order matters.
-4. **B) 3**: 10 % 7 = 3: every 7 steps brings the list back to where it started.
+3. **B) The minimum might come after the maximum, which is an impossible trade**: You must buy before you sell, so order matters.
+4. **C) 3**: 10 % 7 = 3: every 7 steps brings the list back to where it started.
 
 </details>
 

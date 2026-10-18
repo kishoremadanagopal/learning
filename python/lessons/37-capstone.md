@@ -259,20 +259,20 @@ print(longest_streak(d))
 ## Quick quiz
 
 1. In the tracker, why is `Expense` a frozen dataclass?
-   - A) Expenses shouldn't change after they're recorded, and frozen objects are safer to share
-   - B) Frozen dataclasses are faster to print
-   - C) It's required for CSV export
+   - A) It's required for CSV export
+   - B) Expenses shouldn't change after they're recorded, and frozen objects are safer to share
+   - C) Frozen dataclasses are faster to print
 
 2. Why does `from_csv` wrap each row in try/except instead of the whole loop?
-   - A) So one bad row is skipped while the others still load
-   - B) Because try/except only works inside loops
+   - A) Because try/except only works inside loops
+   - B) So one bad row is skipped while the others still load
    - C) To make the code shorter
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Expenses shouldn't change after they're recorded, and frozen objects are safer to share**: Immutability prevents accidental edits and makes objects hashable.
-2. **A) So one bad row is skipped while the others still load**: Handling errors per row gives better results and clearer messages than failing the whole import.
+1. **B) Expenses shouldn't change after they're recorded, and frozen objects are safer to share**: Immutability prevents accidental edits and makes objects hashable.
+2. **B) So one bad row is skipped while the others still load**: Handling errors per row gives better results and clearer messages than failing the whole import.
 
 </details>
 

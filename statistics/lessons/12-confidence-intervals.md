@@ -199,8 +199,8 @@ print(f"{p_mobile:.1%} ± {margin:.1%}")
 
 1. What does "95% confidence" mean?
    - A) The method captures the true value in about 95% of repeated samples
-   - B) 95% of the data is inside the interval
-   - C) The true value moves around inside the interval 95% of the time
+   - B) The true value moves around inside the interval 95% of the time
+   - C) 95% of the data is inside the interval
 
 2. You want a narrower interval without changing the confidence level. What helps?
    - A) Using 99% confidence
@@ -208,8 +208,8 @@ print(f"{p_mobile:.1%} ± {margin:.1%}")
    - C) Rounding the mean
 
 3. Why use the t distribution for a mean's interval?
-   - A) It's always narrower
-   - B) It allows for the extra uncertainty of estimating the standard deviation from the sample
+   - A) It allows for the extra uncertainty of estimating the standard deviation from the sample
+   - B) It's always narrower
    - C) The normal distribution can't be used for means
 
 <details>
@@ -217,7 +217,7 @@ print(f"{p_mobile:.1%} ± {margin:.1%}")
 
 1. **A) The method captures the true value in about 95% of repeated samples**: Confidence is about the long-run success rate of the method.
 2. **B) Collecting a bigger sample**: SE = s / √n, so more data narrows the interval.
-3. **B) It allows for the extra uncertainty of estimating the standard deviation from the sample**: With small samples the t's fatter tails give an honestly wider interval.
+3. **A) It allows for the extra uncertainty of estimating the standard deviation from the sample**: With small samples the t's fatter tails give an honestly wider interval.
 
 </details>
 

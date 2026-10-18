@@ -235,20 +235,20 @@ print(area(3, 4))
 ## Quick quiz
 
 1. What is `@deco` above `def f(): ...` equivalent to?
-   - A) `f = deco(f)`
-   - B) `deco = f(deco)`
-   - C) `f = deco`
+   - A) `f = deco`
+   - B) `f = deco(f)`
+   - C) `deco = f(deco)`
 
 2. Why use `functools.wraps` in a decorator?
    - A) It makes the function faster
-   - B) It keeps the original function's name and docstring
-   - C) It's required for decorators to work
+   - B) It's required for decorators to work
+   - C) It keeps the original function's name and docstring
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) `f = deco(f)`**: The decorator receives the function and its return value replaces it.
-2. **B) It keeps the original function's name and docstring**: Without it, the decorated function reports the wrapper's name, which confuses debugging and tools.
+1. **B) `f = deco(f)`**: The decorator receives the function and its return value replaces it.
+2. **C) It keeps the original function's name and docstring**: Without it, the decorated function reports the wrapper's name, which confuses debugging and tools.
 
 </details>
 

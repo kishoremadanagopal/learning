@@ -206,32 +206,32 @@ print(focus)
 ## Quick quiz
 
 1. A fraud model has recall 0.9. What does that mean?
-   - A) It catches 90% of the real frauds
+   - A) It's right 90% of the time overall
    - B) 90% of its alerts are real frauds
-   - C) It's right 90% of the time overall
+   - C) It catches 90% of the real frauds
 
 2. A false positive in a spam filter is:
    - A) A spam email that reached the inbox
-   - B) A real email wrongly sent to spam
-   - C) A spam correctly blocked
+   - B) A spam correctly blocked
+   - C) A real email wrongly sent to spam
 
 3. Why can a model be 95% accurate and still useless?
-   - A) If 95% of rows are one class, always predicting it scores 95% while catching nothing
-   - B) Accuracy above 90% is impossible
-   - C) Because accuracy is computed on training data
+   - A) Accuracy above 90% is impossible
+   - B) Because accuracy is computed on training data
+   - C) If 95% of rows are one class, always predicting it scores 95% while catching nothing
 
 4. Which metric balances precision and recall in one number?
-   - A) Support
-   - B) F1 score
-   - C) R²
+   - A) F1 score
+   - B) R²
+   - C) Support
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) It catches 90% of the real frauds**: Recall = TP / (TP + FN): the share of real positives that were found.
-2. **B) A real email wrongly sent to spam**: "Positive" is the predicted class (spam). False positive: predicted spam, but it wasn't.
-3. **A) If 95% of rows are one class, always predicting it scores 95% while catching nothing**: With imbalanced classes, look at recall and precision for the rare class.
-4. **B) F1 score**: F1 is the harmonic mean of precision and recall; it's low if either one is low.
+1. **C) It catches 90% of the real frauds**: Recall = TP / (TP + FN): the share of real positives that were found.
+2. **C) A real email wrongly sent to spam**: "Positive" is the predicted class (spam). False positive: predicted spam, but it wasn't.
+3. **C) If 95% of rows are one class, always predicting it scores 95% while catching nothing**: With imbalanced classes, look at recall and precision for the rare class.
+4. **A) F1 score**: F1 is the harmonic mean of precision and recall; it's low if either one is low.
 
 </details>
 

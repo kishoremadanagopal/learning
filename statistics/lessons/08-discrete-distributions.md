@@ -179,25 +179,25 @@ print(round(p_busy, 4), round(p_quiet, 4))
 
 1. Which situation fits a binomial distribution?
    - A) The number of buyers among 500 visitors, each buying with probability 0.08
-   - B) The time until the next bus
-   - C) People's heights
+   - B) People's heights
+   - C) The time until the next bus
 
 2. What does `stats.binom.cdf(3, 10, 0.5)` give?
-   - A) P(exactly 3)
-   - B) P(3 or fewer)
-   - C) P(more than 3)
+   - A) P(3 or fewer)
+   - B) P(more than 3)
+   - C) P(exactly 3)
 
 3. A Poisson distribution has λ = 5. What's its mean?
-   - A) 5
-   - B) 2.5
-   - C) √5
+   - A) 2.5
+   - B) √5
+   - C) 5
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) The number of buyers among 500 visitors, each buying with probability 0.08**: A fixed number of independent tries, each with the same success probability.
-2. **B) P(3 or fewer)**: cdf is cumulative: the probability of k or less.
-3. **A) 5**: For Poisson, the mean (and the variance) equal λ.
+2. **A) P(3 or fewer)**: cdf is cumulative: the probability of k or less.
+3. **C) 5**: For Poisson, the mean (and the variance) equal λ.
 
 </details>
 

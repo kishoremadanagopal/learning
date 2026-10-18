@@ -133,25 +133,25 @@ public class Main {
 
 1. What does the Java compiler (`javac`) produce?
    - A) Machine code for your processor
-   - B) Bytecode in `.class` files
-   - C) A web page
+   - B) A web page
+   - C) Bytecode in `.class` files
 
 2. Where does a Java program start running?
    - A) At the first line of the file
-   - B) In the `main` method
-   - C) In the last class of the file
+   - B) In the last class of the file
+   - C) In the `main` method
 
 3. When is a missing semicolon reported?
-   - A) When the code is compiled, before it runs
+   - A) Never; semicolons are optional
    - B) Only when that line runs
-   - C) Never; semicolons are optional
+   - C) When the code is compiled, before it runs
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) Bytecode in `.class` files**: The compiler turns source code into bytecode. The JVM then runs that bytecode.
-2. **B) In the `main` method**: The JVM looks for `public static void main(String[] args)` and starts there.
-3. **A) When the code is compiled, before it runs**: It's a compile error, so the program doesn't run at all until you fix it.
+1. **C) Bytecode in `.class` files**: The compiler turns source code into bytecode. The JVM then runs that bytecode.
+2. **C) In the `main` method**: The JVM looks for `public static void main(String[] args)` and starts there.
+3. **C) When the code is compiled, before it runs**: It's a compile error, so the program doesn't run at all until you fix it.
 
 </details>
 

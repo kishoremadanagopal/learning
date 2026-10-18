@@ -279,14 +279,14 @@ def second_largest(nums):
 ## Quick quiz
 
 1. What is step 3, "brute force", for?
-   - A) Getting a simple correct solution and its cost, as a starting point to improve
-   - B) Writing the fastest possible code first
-   - C) Skipping the examples
+   - A) Skipping the examples
+   - B) Getting a simple correct solution and its cost, as a starting point to improve
+   - C) Writing the fastest possible code first
 
 2. Which is an edge case for a list problem?
-   - A) An empty list
+   - A) A sorted list of positive numbers
    - B) A list of 5 normal numbers
-   - C) A sorted list of positive numbers
+   - C) An empty list
 
 3. The words "contiguous subarray" and "longest" suggest which pattern?
    - A) Binary search
@@ -294,17 +294,17 @@ def second_largest(nums):
    - C) Backtracking
 
 4. The set solution to "contains duplicate" uses O(n) extra space. What did we get for it?
-   - A) O(n) time instead of O(n²)
-   - B) Nothing; it's the same speed
-   - C) Sorted output
+   - A) Nothing; it's the same speed
+   - B) Sorted output
+   - C) O(n) time instead of O(n²)
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Getting a simple correct solution and its cost, as a starting point to improve**: A correct slow answer shows you understand the problem and where the waste is.
-2. **A) An empty list**: Edge cases are the unusual inputs at the boundaries: empty, one item, all equal, negatives, huge.
+1. **B) Getting a simple correct solution and its cost, as a starting point to improve**: A correct slow answer shows you understand the problem and where the waste is.
+2. **C) An empty list**: Edge cases are the unusual inputs at the boundaries: empty, one item, all equal, negatives, huge.
 3. **B) Sliding window**: A window that grows and shrinks over a contiguous range.
-4. **A) O(n) time instead of O(n²)**: Trading memory for speed is the most common trade-off in DSA.
+4. **C) O(n) time instead of O(n²)**: Trading memory for speed is the most common trade-off in DSA.
 
 </details>
 

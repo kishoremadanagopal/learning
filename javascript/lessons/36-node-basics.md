@@ -366,32 +366,32 @@ GREETING="Hello\\nworld"
 ## Quick quiz
 
 1. Which Node.js versions should you use in production in 2026?
-   - A) An LTS version, such as Node.js 24 (or 26 once it becomes LTS)
-   - B) The newest odd-numbered version
+   - A) The newest odd-numbered version
+   - B) An LTS version, such as Node.js 24 (or 26 once it becomes LTS)
    - C) Any version; they're all supported equally
 
 2. How does Node.js decide that a .js file is an ES module?
-   - A) The nearest package.json has "type": "module"
-   - B) The file contains the word import
-   - C) It always treats .js as CommonJS
+   - A) The file contains the word import
+   - B) It always treats .js as CommonJS
+   - C) The nearest package.json has "type": "module"
 
 3. What is process.argv[2] when you run node app.js report.csv?
-   - A) "report.csv"
-   - B) "app.js"
-   - C) "node"
+   - A) "node"
+   - B) "report.csv"
+   - C) "app.js"
 
 4. Where should an API key for local development go?
-   - A) In a .env file that isn't committed, loaded into process.env
-   - B) In a const at the top of the code
+   - A) In a const at the top of the code
+   - B) In a .env file that isn't committed, loaded into process.env
    - C) In package.json
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) An LTS version, such as Node.js 24 (or 26 once it becomes LTS)**: LTS versions get 30 months of fixes; from Node.js 27 every release becomes LTS.
-2. **A) The nearest package.json has "type": "module"**: .mjs is always ESM and .cjs always CommonJS.
-3. **A) "report.csv"**: argv[0] is the node program and argv[1] the script.
-4. **A) In a .env file that isn't committed, loaded into process.env**: Configuration that differs per machine, and secrets, stay out of the code.
+1. **B) An LTS version, such as Node.js 24 (or 26 once it becomes LTS)**: LTS versions get 30 months of fixes; from Node.js 27 every release becomes LTS.
+2. **C) The nearest package.json has "type": "module"**: .mjs is always ESM and .cjs always CommonJS.
+3. **B) "report.csv"**: argv[0] is the node program and argv[1] the script.
+4. **B) In a .env file that isn't committed, loaded into process.env**: Configuration that differs per machine, and secrets, stay out of the code.
 
 </details>
 

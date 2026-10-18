@@ -279,25 +279,25 @@ public class Main {
 ## Quick quiz
 
 1. What is the last valid index of `int[] a = new int[5];`?
-   - A) 5
-   - B) 4
-   - C) 6
+   - A) 6
+   - B) 5
+   - C) 4
 
 2. What does `new boolean[3]` contain?
-   - A) false, false, false
-   - B) null, null, null
-   - C) true, true, true
+   - A) true, true, true
+   - B) false, false, false
+   - C) null, null, null
 
 3. What does `System.out.println(Arrays.toString(new int[]{3, 1}))` print?
    - A) [3, 1]
-   - B) 3, 1
-   - C) [I@1b6d3586
+   - B) [I@1b6d3586
+   - C) 3, 1
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) 4**: Indexes run from 0 to length - 1.
-2. **A) false, false, false**: New arrays are filled with default values: false for booleans.
+1. **C) 4**: Indexes run from 0 to length - 1.
+2. **B) false, false, false**: New arrays are filled with default values: false for booleans.
 3. **A) [3, 1]**: `Arrays.toString` formats the elements. Printing the array directly shows a reference.
 
 </details>

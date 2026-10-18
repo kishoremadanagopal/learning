@@ -339,32 +339,32 @@ print(top_k_frequent([1, 1, 1, 2, 2, 3], 2))
 ## Quick quiz
 
 1. The input size is up to 10⁵. Which complexity should you aim for?
-   - A) O(n log n) or better
-   - B) O(n²)
-   - C) O(2ⁿ)
+   - A) O(2ⁿ)
+   - B) O(n log n) or better
+   - C) O(n²)
 
 2. "Find the minimum time such that all the work finishes" with a yes/no check that's easy for a given time suggests:
    - A) Binary search on the answer
-   - B) A trie
-   - C) Topological sort
+   - B) Topological sort
+   - C) A trie
 
 3. You repeatedly need the smallest item while also inserting new ones. Which structure?
    - A) A heap
-   - B) A sorted list rebuilt each time
-   - C) A stack
+   - B) A stack
+   - C) A sorted list rebuilt each time
 
 4. Which of these is the best first move in an interview after understanding the question?
-   - A) Work an example and state a brute-force solution with its complexity
-   - B) Start coding the most optimised solution immediately
-   - C) Ask for the answer
+   - A) Ask for the answer
+   - B) Work an example and state a brute-force solution with its complexity
+   - C) Start coding the most optimised solution immediately
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) O(n log n) or better**: 10¹⁰ steps (n²) is far too slow; 10⁵ × 17 is fine.
+1. **B) O(n log n) or better**: 10¹⁰ steps (n²) is far too slow; 10⁵ × 17 is fine.
 2. **A) Binary search on the answer**: If time t works, any larger t also works: a monotonic test.
 3. **A) A heap**: Push and pop-min are O(log n).
-4. **A) Work an example and state a brute-force solution with its complexity**: A correct baseline and a clear complexity target guide the optimisation.
+4. **B) Work an example and state a brute-force solution with its complexity**: A correct baseline and a clear complexity target guide the optimisation.
 
 </details>
 

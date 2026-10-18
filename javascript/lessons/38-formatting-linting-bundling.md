@@ -380,13 +380,13 @@ console.log(bundleOrder({
 
 1. What's the difference between Prettier and ESLint?
    - A) Prettier only changes layout; ESLint reports likely bugs and bad patterns
-   - B) They're the same tool
-   - C) ESLint formats code; Prettier finds bugs
+   - B) ESLint formats code; Prettier finds bugs
+   - C) They're the same tool
 
 2. Which config file does ESLint 10 use?
-   - A) eslint.config.js (flat config)
-   - B) .eslintrc.json
-   - C) package.json only
+   - A) .eslintrc.json
+   - B) package.json only
+   - C) eslint.config.js (flat config)
 
 3. What is tree shaking?
    - A) Leaving code that nothing imports out of the bundle
@@ -402,7 +402,7 @@ console.log(bundleOrder({
 <summary>Quiz answers</summary>
 
 1. **A) Prettier only changes layout; ESLint reports likely bugs and bad patterns**: Formatters fix style; linters find problems (some fixable with --fix).
-2. **A) eslint.config.js (flat config)**: The old eslintrc format was removed in ESLint 10.
+2. **C) eslint.config.js (flat config)**: The old eslintrc format was removed in ESLint 10.
 3. **A) Leaving code that nothing imports out of the bundle**: It works on the module graph built from imports.
 4. **A) So browsers can cache files forever and still get new versions after a change**: The name changes whenever the content changes.
 

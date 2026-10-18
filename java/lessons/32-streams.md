@@ -249,13 +249,13 @@ public class Main {
 
 1. When do a stream's intermediate operations run?
    - A) Only when a terminal operation is called
-   - B) Immediately, one after another
-   - C) When the stream is created
+   - B) When the stream is created
+   - C) Immediately, one after another
 
 2. What does `.map(String::length)` do to a stream of strings?
    - A) Turns it into a stream of their lengths
-   - B) Filters out empty strings
-   - C) Sorts by length
+   - B) Sorts by length
+   - C) Filters out empty strings
 
 3. Can you reuse a stream after a terminal operation?
    - A) Yes

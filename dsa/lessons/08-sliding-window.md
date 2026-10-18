@@ -277,14 +277,14 @@ def longest_unique(s):
 ## Quick quiz
 
 1. Which problem suits a sliding window?
-   - A) Longest contiguous run of days with rising temperatures
+   - A) Finding the shortest path in a map
    - B) Sorting a list
-   - C) Finding the shortest path in a map
+   - C) Longest contiguous run of days with rising temperatures
 
 2. Why is a variable sliding window O(n) even with a while loop inside the for loop?
-   - A) The left pointer only moves forward, so it moves at most n times in total
-   - B) The while loop never runs
-   - C) Python optimises it
+   - A) The while loop never runs
+   - B) Python optimises it
+   - C) The left pointer only moves forward, so it moves at most n times in total
 
 3. When moving a fixed window of size k one step right, the new sum is:
    - A) old sum + the number that joins − the number that leaves
@@ -292,17 +292,17 @@ def longest_unique(s):
    - C) the sum of the k new numbers, recomputed
 
 4. Why can't "shortest subarray with sum at least target" use this window with negative numbers?
-   - A) Shrinking or growing no longer moves the sum in a predictable direction
-   - B) Negative numbers can't be added
-   - C) The window would be too big
+   - A) Negative numbers can't be added
+   - B) The window would be too big
+   - C) Shrinking or growing no longer moves the sum in a predictable direction
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Longest contiguous run of days with rising temperatures**: Contiguous runs are what windows track.
-2. **A) The left pointer only moves forward, so it moves at most n times in total**: Count total pointer moves, not loop nesting.
+1. **C) Longest contiguous run of days with rising temperatures**: Contiguous runs are what windows track.
+2. **C) The left pointer only moves forward, so it moves at most n times in total**: Count total pointer moves, not loop nesting.
 3. **A) old sum + the number that joins − the number that leaves**: Only two numbers change.
-4. **A) Shrinking or growing no longer moves the sum in a predictable direction**: The window needs a monotonic rule; with negatives use prefix sums.
+4. **C) Shrinking or growing no longer moves the sum in a predictable direction**: The window needs a monotonic rule; with negatives use prefix sums.
 
 </details>
 

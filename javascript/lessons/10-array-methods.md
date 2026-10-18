@@ -345,31 +345,31 @@ console.log(topProducts(sales, 2));
 
 1. What does [10, 1, 5].toSorted() return?
    - A) [1, 10, 5]
-   - B) [1, 5, 10]
-   - C) [10, 5, 1]
+   - B) [10, 5, 1]
+   - C) [1, 5, 10]
 
 2. Which method returns the first item matching a condition?
-   - A) find
-   - B) filter
+   - A) filter
+   - B) find
    - C) some
 
 3. Why pass a starting value to reduce?
    - A) So it works on empty arrays and the accumulator starts with the right type
-   - B) reduce requires exactly two arguments
-   - C) It makes reduce run faster
+   - B) It makes reduce run faster
+   - C) reduce requires exactly two arguments
 
 4. How should an arrow function return an object literal?
-   - A) (x) => ({ value: x })
-   - B) (x) => { value: x }
+   - A) (x) => { value: x }
+   - B) (x) => ({ value: x })
    - C) (x) => return { value: x }
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) [1, 10, 5]**: Without a comparator, items are compared as strings.
-2. **A) find**: filter returns all matches as an array; some returns true or false.
+2. **B) find**: filter returns all matches as an array; some returns true or false.
 3. **A) So it works on empty arrays and the accumulator starts with the right type**: Without it, reduce uses the first item and throws on [].
-4. **A) (x) => ({ value: x })**: Without brackets the braces are a function body.
+4. **B) (x) => ({ value: x })**: Without brackets the braces are a function body.
 
 </details>
 

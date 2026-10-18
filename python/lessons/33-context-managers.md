@@ -178,20 +178,20 @@ say("end")
 ## Quick quiz
 
 1. When does a context manager's cleanup code run?
-   - A) Only if the block succeeds
-   - B) When the block ends, whether or not an error occurred
-   - C) When the program ends
+   - A) When the program ends
+   - B) Only if the block succeeds
+   - C) When the block ends, whether or not an error occurred
 
 2. In a `@contextmanager` generator, what separates setup from cleanup?
-   - A) The `yield`
-   - B) A `return`
+   - A) A `return`
+   - B) The `yield`
    - C) The `with` keyword
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) When the block ends, whether or not an error occurred**: That guarantee is the whole point of `with`.
-2. **A) The `yield`**: Code before `yield` runs on entry; code after it runs on exit.
+1. **C) When the block ends, whether or not an error occurred**: That guarantee is the whole point of `with`.
+2. **B) The `yield`**: Code before `yield` runs on entry; code after it runs on exit.
 
 </details>
 

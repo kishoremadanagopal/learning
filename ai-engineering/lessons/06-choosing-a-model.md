@@ -197,32 +197,32 @@ Only medium qualifies, so it's the answer.
 ## Quick quiz
 
 1. What is usually the right model for a task?
-   - A) The cheapest, fastest model that reliably meets your quality bar on your own evaluations
-   - B) Always the largest model available
-   - C) Whichever has the highest public benchmark score
+   - A) Always the largest model available
+   - B) Whichever has the highest public benchmark score
+   - C) The cheapest, fastest model that reliably meets your quality bar on your own evaluations
 
 2. Why do output tokens matter so much for cost?
-   - A) They're typically priced several times higher than input tokens
-   - B) They're free
-   - C) They're counted twice
+   - A) They're free
+   - B) They're counted twice
+   - C) They're typically priced several times higher than input tokens
 
 3. What is a key advantage of running an open-weight model yourself?
-   - A) Your data stays on your infrastructure and you can customise the model fully
-   - B) It's always more capable than hosted models
-   - C) It needs no hardware
+   - A) It's always more capable than hosted models
+   - B) It needs no hardware
+   - C) Your data stays on your infrastructure and you can customise the model fully
 
 4. What does routing mean in an LLM application?
-   - A) Sending each request to a suitable model, such as simple ones to a small model and hard ones to a large one
-   - B) Sending every request to every model
-   - C) Choosing a random model per request
+   - A) Choosing a random model per request
+   - B) Sending each request to a suitable model, such as simple ones to a small model and hard ones to a large one
+   - C) Sending every request to every model
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The cheapest, fastest model that reliably meets your quality bar on your own evaluations**: Benchmarks rarely match your exact task; measure.
-2. **A) They're typically priced several times higher than input tokens**: Long answers, and thinking tokens, can dominate the bill.
-3. **A) Your data stays on your infrastructure and you can customise the model fully**: The trade-off is the effort and cost of running it.
-4. **A) Sending each request to a suitable model, such as simple ones to a small model and hard ones to a large one**: It balances quality and cost across varied traffic.
+1. **C) The cheapest, fastest model that reliably meets your quality bar on your own evaluations**: Benchmarks rarely match your exact task; measure.
+2. **C) They're typically priced several times higher than input tokens**: Long answers, and thinking tokens, can dominate the bill.
+3. **C) Your data stays on your infrastructure and you can customise the model fully**: The trade-off is the effort and cost of running it.
+4. **B) Sending each request to a suitable model, such as simple ones to a small model and hard ones to a large one**: It balances quality and cost across varied traffic.
 
 </details>
 

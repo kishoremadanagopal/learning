@@ -277,31 +277,31 @@ def remove_all(nums, x):
 
 1. What does `nums.insert(0, x)` cost on a list of n items?
    - A) O(1)
-   - B) O(n), because every item shifts one place right
-   - C) O(log n)
+   - B) O(log n)
+   - C) O(n), because every item shifts one place right
 
 2. Which is O(1) on average?
-   - A) `x in some_list`
-   - B) `x in some_set`
+   - A) `x in some_set`
+   - B) `x in some_list`
    - C) `some_list.count(x)`
 
 3. Doubling n made your function take about four times longer. It's probably:
-   - A) O(n)
-   - B) O(n²)
-   - C) O(log n)
+   - A) O(log n)
+   - B) O(n)
+   - C) O(n²)
 
 4. What's the efficient way to build a long string from many pieces?
-   - A) Collect the pieces in a list and join them once with "".join(pieces)
-   - B) Add them one by one with +
-   - C) Convert each piece to a list
+   - A) Add them one by one with +
+   - B) Convert each piece to a list
+   - C) Collect the pieces in a list and join them once with "".join(pieces)
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) O(n), because every item shifts one place right**: Inserting at the front moves everything. Use a deque for fast front operations.
-2. **B) `x in some_set`**: Sets and dicts use hashing.
-3. **B) O(n²)**: Quadratic time grows with the square of n.
-4. **A) Collect the pieces in a list and join them once with "".join(pieces)**: join builds the result once, in O(total length).
+1. **C) O(n), because every item shifts one place right**: Inserting at the front moves everything. Use a deque for fast front operations.
+2. **A) `x in some_set`**: Sets and dicts use hashing.
+3. **C) O(n²)**: Quadratic time grows with the square of n.
+4. **C) Collect the pieces in a list and join them once with "".join(pieces)**: join builds the result once, in O(total length).
 
 </details>
 

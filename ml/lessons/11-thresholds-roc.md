@@ -212,27 +212,27 @@ print(round(auc_one, 3), round(auc_four, 3))
    - C) Both go down
 
 2. A model's AUC is 0.5. It is:
-   - A) Perfect
-   - B) No better than random guessing at ranking
+   - A) No better than random guessing at ranking
+   - B) Perfect
    - C) Half as good as random
 
 3. What does roc_auc_score need as its second argument?
-   - A) The 0/1 predictions
-   - B) The predicted probabilities (or scores) for the positive class
-   - C) The training data
+   - A) The training data
+   - B) The 0/1 predictions
+   - C) The predicted probabilities (or scores) for the positive class
 
 4. How should you choose a threshold?
-   - A) From the costs of each kind of mistake, using validation data
+   - A) The value that gives the highest test accuracy
    - B) Always 0.5
-   - C) The value that gives the highest test accuracy
+   - C) From the costs of each kind of mistake, using validation data
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Recall goes up, precision goes down**: More rows are flagged: you catch more real positives but also raise more false alarms.
-2. **B) No better than random guessing at ranking**: 0.5 is the diagonal line. 1.0 is perfect ranking.
-3. **B) The predicted probabilities (or scores) for the positive class**: AUC measures ranking, so it needs the probabilities, not hard decisions.
-4. **A) From the costs of each kind of mistake, using validation data**: The right threshold depends on what mistakes cost, and must not be tuned on the test set.
+2. **A) No better than random guessing at ranking**: 0.5 is the diagonal line. 1.0 is perfect ranking.
+3. **C) The predicted probabilities (or scores) for the positive class**: AUC measures ranking, so it needs the probabilities, not hard decisions.
+4. **C) From the costs of each kind of mistake, using validation data**: The right threshold depends on what mistakes cost, and must not be tuned on the test set.
 
 </details>
 

@@ -457,36 +457,36 @@ git log --oneline --graph --all
 ## Quick quiz
 
 1. Your main and origin/main have diverged, and you want a straight-line history. Which command?
-   - A) git pull --rebase
-   - B) git pull --no-rebase
-   - C) git push --force
-   - D) git fetch
+   - A) git push --force
+   - B) git fetch
+   - C) git pull --rebase
+   - D) git pull --no-rebase
 
 2. Why does rebasing change your commits' ids?
-   - A) It creates new commits with a different parent; ids depend on a commit's contents, including its parent
-   - B) Git renames commits after every pull
-   - C) The ids are random each time
-   - D) It doesn't; ids stay the same
+   - A) The ids are random each time
+   - B) It creates new commits with a different parent; ids depend on a commit's contents, including its parent
+   - C) It doesn't; ids stay the same
+   - D) Git renames commits after every pull
 
 3. Why prefer git push --force-with-lease over --force?
-   - A) It refuses if the remote branch changed since you last fetched, so you can't silently delete someone else's push
-   - B) It's faster
-   - C) It doesn't need a network
-   - D) It also merges the branches
+   - A) It's faster
+   - B) It also merges the branches
+   - C) It refuses if the remote branch changed since you last fetched, so you can't silently delete someone else's push
+   - D) It doesn't need a network
 
 4. Which of these should you avoid?
-   - A) Rebasing and force-pushing a shared main branch
+   - A) Cherry-picking a fix onto a release branch
    - B) Rebasing your unpushed commits with git pull --rebase
-   - C) Rebasing your own feature branch before review
-   - D) Cherry-picking a fix onto a release branch
+   - C) Rebasing and force-pushing a shared main branch
+   - D) Rebasing your own feature branch before review
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) git pull --rebase**: Rebasing replays your commits on top of the remote's; merging adds a merge commit.
-2. **A) It creates new commits with a different parent; ids depend on a commit's contents, including its parent**: A commit's id is the hash of its contents, and the parent id is part of them.
-3. **A) It refuses if the remote branch changed since you last fetched, so you can't silently delete someone else's push**: It's a force push with a safety check.
-4. **A) Rebasing and force-pushing a shared main branch**: Rewriting history others have built on makes their copies disagree with the remote.
+1. **C) git pull --rebase**: Rebasing replays your commits on top of the remote's; merging adds a merge commit.
+2. **B) It creates new commits with a different parent; ids depend on a commit's contents, including its parent**: A commit's id is the hash of its contents, and the parent id is part of them.
+3. **C) It refuses if the remote branch changed since you last fetched, so you can't silently delete someone else's push**: It's a force push with a safety check.
+4. **C) Rebasing and force-pushing a shared main branch**: Rewriting history others have built on makes their copies disagree with the remote.
 
 </details>
 

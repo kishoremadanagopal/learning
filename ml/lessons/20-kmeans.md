@@ -235,14 +235,14 @@ print({k: round(v, 3) for k, v in sil.items()}, best_k)
 ## Quick quiz
 
 1. What makes k-means "unsupervised"?
-   - A) It groups rows without any labels to learn from
-   - B) It runs without supervision from the programmer
+   - A) It runs without supervision from the programmer
+   - B) It groups rows without any labels to learn from
    - C) It needs no data
 
 2. What happens to inertia as k increases?
-   - A) It always goes down, so you look for the elbow instead of the minimum
-   - B) It always goes up
-   - C) It's lowest at the right k
+   - A) It's lowest at the right k
+   - B) It always goes down, so you look for the elbow instead of the minimum
+   - C) It always goes up
 
 3. Why scale features before k-means?
    - A) It uses distances, so features in bigger units would dominate the grouping
@@ -251,14 +251,14 @@ print({k: round(v, 3) for k, v in sil.items()}, best_k)
 
 4. You've found 5 clusters. What's the next essential step?
    - A) Describe each cluster (averages of the features) so people can understand and act on it
-   - B) Delete the smallest cluster
-   - C) Compute accuracy against the labels
+   - B) Compute accuracy against the labels
+   - C) Delete the smallest cluster
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) It groups rows without any labels to learn from**: There's no y: the model only looks at the features.
-2. **A) It always goes down, so you look for the elbow instead of the minimum**: More centres always mean shorter distances. At k = number of rows, inertia is 0.
+1. **B) It groups rows without any labels to learn from**: There's no y: the model only looks at the features.
+2. **B) It always goes down, so you look for the elbow instead of the minimum**: More centres always mean shorter distances. At k = number of rows, inertia is 0.
 3. **A) It uses distances, so features in bigger units would dominate the grouping**: Same reason as KNN.
 4. **A) Describe each cluster (averages of the features) so people can understand and act on it**: Unlabelled groups are only useful once you can explain them.
 

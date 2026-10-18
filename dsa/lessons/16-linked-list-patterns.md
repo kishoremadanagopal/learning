@@ -603,32 +603,32 @@ print(to_list(merge_lists(build([1, 2, 4]), build([1, 3, 4]))))
 ## Quick quiz
 
 1. Reversing a list, why must you save cur.next before changing it?
-   - A) Changing cur.next would otherwise lose the only link to the rest of the list
-   - B) Python requires a temporary variable for every assignment
-   - C) It makes the loop faster
+   - A) It makes the loop faster
+   - B) Changing cur.next would otherwise lose the only link to the rest of the list
+   - C) Python requires a temporary variable for every assignment
 
 2. In fast/slow pointers, where is slow when fast reaches the end?
-   - A) In the middle of the list
-   - B) At the head
+   - A) At the head
+   - B) In the middle of the list
    - C) At the end too
 
 3. Why is Floyd's cycle detection better than storing visited nodes in a set?
-   - A) It uses O(1) extra memory instead of O(n)
+   - A) It works on unsorted lists only
    - B) It's always faster
-   - C) It works on unsorted lists only
+   - C) It uses O(1) extra memory instead of O(n)
 
 4. To remove the 2nd node from the end in one pass, you:
-   - A) Move a lead pointer 2 steps ahead, then move lead and trail together until lead reaches the end
-   - B) Reverse the list twice
+   - A) Reverse the list twice
+   - B) Move a lead pointer 2 steps ahead, then move lead and trail together until lead reaches the end
    - C) Count the length first, then walk again
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Changing cur.next would otherwise lose the only link to the rest of the list**: The next pointer is the only way to reach the remaining nodes.
-2. **A) In the middle of the list**: Fast moves twice as far, so slow has covered half the distance.
-3. **A) It uses O(1) extra memory instead of O(n)**: Both are O(n) time; the two-pointer version needs no extra storage.
-4. **A) Move a lead pointer 2 steps ahead, then move lead and trail together until lead reaches the end**: The fixed gap means trail stops right before the node to remove. (Counting first also works, but takes two passes.)
+1. **B) Changing cur.next would otherwise lose the only link to the rest of the list**: The next pointer is the only way to reach the remaining nodes.
+2. **B) In the middle of the list**: Fast moves twice as far, so slow has covered half the distance.
+3. **C) It uses O(1) extra memory instead of O(n)**: Both are O(n) time; the two-pointer version needs no extra storage.
+4. **B) Move a lead pointer 2 steps ahead, then move lead and trail together until lead reaches the end**: The fixed gap means trail stops right before the node to remove. (Counting first also works, but takes two passes.)
 
 </details>
 

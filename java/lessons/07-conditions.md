@@ -200,13 +200,13 @@ public class Main {
 
 1. With `int x = 5;`, what does `if (x > 3) {...} else if (x > 1) {...}` run?
    - A) Only the first branch
-   - B) Both branches
-   - C) Only the second branch
+   - B) Only the second branch
+   - C) Both branches
 
 2. What is `true || (1 / 0 == 0)`?
-   - A) true, and the division never happens
-   - B) An ArithmeticException
-   - C) false
+   - A) An ArithmeticException
+   - B) false
+   - C) true, and the division never happens
 
 3. What does `x > 0 ? "pos" : "non-pos"` give when x is 0?
    - A) "pos"
@@ -216,7 +216,7 @@ public class Main {
 <summary>Quiz answers</summary>
 
 1. **A) Only the first branch**: Only the first true branch runs; the rest are skipped.
-2. **A) true, and the division never happens**: `||` short-circuits: the left side is already true, so the right side isn't evaluated.
+2. **C) true, and the division never happens**: `||` short-circuits: the left side is already true, so the right side isn't evaluated.
 3. **B) "non-pos"**: `0 > 0` is false, so the value after the colon is used.
 
 </details>

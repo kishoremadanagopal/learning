@@ -244,8 +244,8 @@ print(round(lift_desktop, 4), round(p_desktop, 4))
    - C) The p-value becomes too large
 
 3. Conversion goes from 10% to 12%. What are the absolute and relative lifts?
-   - A) +2 percentage points absolute, +20% relative
-   - B) +20 percentage points absolute, +2% relative
+   - A) +20 percentage points absolute, +2% relative
+   - B) +2 percentage points absolute, +20% relative
    - C) +2% both ways
 
 <details>
@@ -253,7 +253,7 @@ print(round(lift_desktop, 4), round(p_desktop, 4))
 
 1. **A) Randomisation balances everything else between the groups, so only the page differs systematically**: With random assignment, confounders are spread evenly, so a difference beyond chance is due to the change.
 2. **B) Peeking inflates the false-alarm rate well above 5%**: Repeated looks give chance many opportunities to cross 0.05. Fix the sample size or use a sequential method.
-3. **A) +2 percentage points absolute, +20% relative**: Absolute is the difference in rates; relative divides it by the starting rate.
+3. **B) +2 percentage points absolute, +20% relative**: Absolute is the difference in rates; relative divides it by the starting rate.
 
 </details>
 

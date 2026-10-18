@@ -200,26 +200,26 @@ print(a, repr(a), a + Money(2, "USD"))
 ## Quick quiz
 
 1. Which method does `print(obj)` use first?
-   - A) `__str__`
-   - B) `__repr__`
-   - C) `__print__`
+   - A) `__repr__`
+   - B) `__print__`
+   - C) `__str__`
 
 2. Which method makes `len(obj)` work?
    - A) `__length__`
-   - B) `__len__`
-   - C) `__size__`
+   - B) `__size__`
+   - C) `__len__`
 
 3. Without `__eq__`, what does `a == b` compare for two objects?
-   - A) Whether they're the same object
-   - B) All their attributes
-   - C) Their string forms
+   - A) All their attributes
+   - B) Their string forms
+   - C) Whether they're the same object
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) `__str__`**: print uses `__str__`, falling back to `__repr__` if `__str__` isn't defined.
-2. **B) `__len__`**: `len()` calls `__len__`.
-3. **A) Whether they're the same object**: The default equality is identity, like `a is b`.
+1. **C) `__str__`**: print uses `__str__`, falling back to `__repr__` if `__str__` isn't defined.
+2. **C) `__len__`**: `len()` calls `__len__`.
+3. **C) Whether they're the same object**: The default equality is identity, like `a is b`.
 
 </details>
 

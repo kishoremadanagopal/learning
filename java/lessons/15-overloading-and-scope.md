@@ -233,15 +233,15 @@ public class Main {
    - B) 9
 
 3. A method receives an array and sets `arr[0] = 5`. Does the caller see it?
-   - A) Yes, both refer to the same array
-   - B) No, arrays are copied
+   - A) No, arrays are copied
+   - B) Yes, both refer to the same array
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **B) No, the parameter lists must differ**: Java chooses an overload by its arguments, so the parameters must differ.
 2. **A) 1**: Java passes a copy of the value; the method changes only its copy.
-3. **A) Yes, both refer to the same array**: The reference is copied, but it points to the same array object.
+3. **B) Yes, both refer to the same array**: The reference is copied, but it points to the same array object.
 
 </details>
 

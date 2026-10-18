@@ -99,20 +99,20 @@ print("Let's learn together.")
 ## Quick quiz
 
 1. What does `print("2 + 2")` display?
-   - A) 4
+   - A) Nothing, it's an error
    - B) 2 + 2
-   - C) Nothing, it's an error
+   - C) 4
 
 2. When is a syntax error detected?
-   - A) Before the program starts running
-   - B) Only when that line runs
+   - A) Only when that line runs
+   - B) Before the program starts running
    - C) After the program finishes
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **B) 2 + 2**: The quotes make it text, so Python prints the characters exactly as written. Without quotes, `print(2 + 2)` would print 4.
-2. **A) Before the program starts running**: Syntax errors are found while Python parses your code into a tree, before any line runs. That's why a typo on line 50 stops line 1 from running too.
+2. **B) Before the program starts running**: Syntax errors are found while Python parses your code into a tree, before any line runs. That's why a typo on line 50 stops line 1 from running too.
 
 </details>
 

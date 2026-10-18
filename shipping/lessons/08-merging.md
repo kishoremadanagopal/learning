@@ -349,9 +349,9 @@ git log --oneline --graph
 
 1. When does git merge make a fast-forward instead of a merge commit?
    - A) When the branch you're on has no new commits since the other branch started
-   - B) When the branches changed different files
-   - C) Always, unless there's a conflict
-   - D) When you pass --no-ff
+   - B) Always, unless there's a conflict
+   - C) When you pass --no-ff
+   - D) When the branches changed different files
 
 2. What is the merge base?
    - A) The last commit both branches share
@@ -360,24 +360,24 @@ git log --oneline --graph
    - D) The commit with the conflict
 
 3. What does the section between ======= and >>>>>>> cheaper-bell contain?
-   - A) The version from the branch being merged in
+   - A) The merge base's version
    - B) The version from your current branch
-   - C) The merge base's version
-   - D) Git's suggested resolution
+   - C) Git's suggested resolution
+   - D) The version from the branch being merged in
 
 4. You're halfway through resolving a confusing conflict and want to start over. What do you run?
-   - A) git merge --abort
-   - B) git branch -D main
-   - C) git commit -am "fix"
-   - D) git switch -c retry
+   - A) git branch -D main
+   - B) git merge --abort
+   - C) git switch -c retry
+   - D) git commit -am "fix"
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) When the branch you're on has no new commits since the other branch started**: If there's nothing to combine, Git just moves the branch pointer forward.
 2. **A) The last commit both branches share**: Git compares each side with the merge base to work out what each one changed.
-3. **A) The version from the branch being merged in**: Above ======= is HEAD (your branch); below is the incoming branch.
-4. **A) git merge --abort**: It restores the files and branch to how they were before the merge began.
+3. **D) The version from the branch being merged in**: Above ======= is HEAD (your branch); below is the incoming branch.
+4. **B) git merge --abort**: It restores the files and branch to how they were before the merge began.
 
 </details>
 

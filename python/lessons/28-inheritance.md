@@ -263,19 +263,19 @@ print(s.owner, s.balance)
 
 1. What does `super().__init__(...)` do?
    - A) Runs the parent class's initializer
-   - B) Creates a new parent object
-   - C) Deletes the child's attributes
+   - B) Deletes the child's attributes
+   - C) Creates a new parent object
 
 2. A Library *has* many Books. What's the better design?
    - A) `class Library(Book)`
-   - B) A Library with a `books` list attribute
-   - C) `class Book(Library)`
+   - B) `class Book(Library)`
+   - C) A Library with a `books` list attribute
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Runs the parent class's initializer**: It lets the child reuse the parent's setup before adding its own.
-2. **B) A Library with a `books` list attribute**: That's a "has a" relationship, so composition fits better than inheritance.
+2. **C) A Library with a `books` list attribute**: That's a "has a" relationship, so composition fits better than inheritance.
 
 </details>
 

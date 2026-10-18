@@ -229,26 +229,26 @@ public class Main {
 ## Quick quiz
 
 1. What does `<T>` in `class Box<T>` declare?
-   - A) A type parameter, filled in when Box is used
-   - B) A field named T
+   - A) A field named T
+   - B) A type parameter, filled in when Box is used
    - C) An interface
 
 2. What is `new ArrayList<>()` called?
-   - A) The diamond operator; the type is inferred
-   - B) A raw type
+   - A) A raw type
+   - B) The diamond operator; the type is inferred
    - C) A wildcard
 
 3. Why does `List<? extends Number>` accept a `List<Integer>`?
-   - A) The wildcard allows any subtype of Number
-   - B) Integer and Number are the same
+   - A) Integer and Number are the same
+   - B) The wildcard allows any subtype of Number
    - C) It doesn't
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) A type parameter, filled in when Box is used**: `Box<String>` replaces T with String.
-2. **A) The diamond operator; the type is inferred**: The compiler infers the element type from the variable.
-3. **A) The wildcard allows any subtype of Number**: `List<Integer>` isn't a `List<Number>`, but it fits `List<? extends Number>`.
+1. **B) A type parameter, filled in when Box is used**: `Box<String>` replaces T with String.
+2. **B) The diamond operator; the type is inferred**: The compiler infers the element type from the variable.
+3. **B) The wildcard allows any subtype of Number**: `List<Integer>` isn't a `List<Number>`, but it fits `List<? extends Number>`.
 
 </details>
 

@@ -272,30 +272,30 @@ def pivot_index(nums):
 ## Quick quiz
 
 1. With `prefix[0] = 0` and `prefix[k]` = sum of the first k numbers, the sum of nums[i..j] inclusive is:
-   - A) prefix[j + 1] − prefix[i]
-   - B) prefix[j] − prefix[i]
-   - C) prefix[j] + prefix[i]
+   - A) prefix[j] − prefix[i]
+   - B) prefix[j] + prefix[i]
+   - C) prefix[j + 1] − prefix[i]
 
 2. What does a prefix-sum array cost to build and to query?
-   - A) O(n) to build, O(1) per query
-   - B) O(1) to build, O(n) per query
-   - C) O(n log n) to build
+   - A) O(1) to build, O(n) per query
+   - B) O(n log n) to build
+   - C) O(n) to build, O(1) per query
 
 3. A difference array makes which operation O(1)?
    - A) Adding a value to every item in a range
-   - B) Finding the maximum
-   - C) Sorting
+   - B) Sorting
+   - C) Finding the maximum
 
 4. How many lookups does a 2-D prefix sum need for any rectangle sum?
-   - A) One
+   - A) One per cell in the rectangle
    - B) Four
-   - C) One per cell in the rectangle
+   - C) One
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) prefix[j + 1] − prefix[i]**: The first j + 1 numbers minus the first i numbers.
-2. **A) O(n) to build, O(1) per query**: One pass to build, one subtraction per question.
+1. **C) prefix[j + 1] − prefix[i]**: The first j + 1 numbers minus the first i numbers.
+2. **C) O(n) to build, O(1) per query**: One pass to build, one subtraction per question.
 3. **A) Adding a value to every item in a range**: Mark the start and the end of the change; a final prefix sum applies them all.
 4. **B) Four**: Inclusion–exclusion: add the big rectangle, subtract two strips, add back the doubly subtracted corner.
 

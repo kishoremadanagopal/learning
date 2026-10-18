@@ -127,20 +127,20 @@ print("Liftoff!")
 ## Quick quiz
 
 1. What does `print("a", "b", "c", sep="")` show?
-   - A) abc
+   - A) a,b,c
    - B) a b c
-   - C) a,b,c
+   - C) abc
 
 2. Which line is ignored completely by Python?
-   - A) `print("# hello")`
-   - B) `# print("hello")`
+   - A) `# print("hello")`
+   - B) `print("# hello")`
    - C) `print("hello") #`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) abc**: `sep=""` puts nothing between the values.
-2. **B) `# print("hello")`**: A `#` inside quotes is just a character. A `#` at the start of a line makes the whole line a comment. The third line still prints.
+1. **C) abc**: `sep=""` puts nothing between the values.
+2. **A) `# print("hello")`**: A `#` inside quotes is just a character. A `#` at the start of a line makes the whole line a comment. The third line still prints.
 
 </details>
 

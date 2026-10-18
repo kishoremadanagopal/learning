@@ -167,14 +167,14 @@ public class Main {
 ## Quick quiz
 
 1. Which declaration is correct?
-   - A) `int price = 4.99;`
-   - B) `double price = 4.99;`
-   - C) `char price = "4.99";`
+   - A) `char price = "4.99";`
+   - B) `int price = 4.99;`
+   - C) `double price = 4.99;`
 
 2. What's the difference between `'A'` and `"A"`?
-   - A) `'A'` is a char, `"A"` is a String
-   - B) They are identical
-   - C) `'A'` is a String, `"A"` is a char
+   - A) `'A'` is a String, `"A"` is a char
+   - B) `'A'` is a char, `"A"` is a String
+   - C) They are identical
 
 3. What does `final int MAX = 5; MAX = 6;` do?
    - A) Sets MAX to 6
@@ -184,8 +184,8 @@ public class Main {
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) `double price = 4.99;`**: An `int` can't hold decimals, and a `char` holds one character in single quotes.
-2. **A) `'A'` is a char, `"A"` is a String**: Single quotes make a `char`; double quotes make a `String`.
+1. **C) `double price = 4.99;`**: An `int` can't hold decimals, and a `char` holds one character in single quotes.
+2. **B) `'A'` is a char, `"A"` is a String**: Single quotes make a `char`; double quotes make a `String`.
 3. **B) Causes a compile error**: A `final` variable can only be assigned once, and the compiler enforces it.
 
 </details>

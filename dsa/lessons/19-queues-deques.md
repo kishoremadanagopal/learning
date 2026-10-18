@@ -392,32 +392,32 @@ print(window_max([1, 3, -1, -3, 5, 3, 6, 7], 3))
 ## Quick quiz
 
 1. Why is `list.pop(0)` a bad way to dequeue?
-   - A) Every remaining item shifts left, so it's O(n) per call
-   - B) It removes the last item instead
-   - C) It only works on sorted lists
+   - A) It removes the last item instead
+   - B) It only works on sorted lists
+   - C) Every remaining item shifts left, so it's O(n) per call
 
 2. In a circular buffer, how does the tail index wrap from the last slot to the first?
-   - A) (head + size) % capacity
+   - A) The buffer grows instead
    - B) It's reset by copying the array
-   - C) The buffer grows instead
+   - C) (head + size) % capacity
 
 3. A queue built from two stacks has one dequeue that costs O(n). Why is it still called O(1)?
-   - A) Each item is moved between the stacks at most once, so n operations cost O(n) in total: amortised O(1)
-   - B) Because n is always small
-   - C) Because Python lists are fast
+   - A) Because n is always small
+   - B) Because Python lists are fast
+   - C) Each item is moved between the stacks at most once, so n operations cost O(n) in total: amortised O(1)
 
 4. In the sliding-window-maximum deque, why can a smaller value be removed when a larger one arrives?
-   - A) It will leave the window before the larger value does, so it can never be the maximum
-   - B) Smaller values are never needed in any problem
-   - C) Deques can only hold decreasing values
+   - A) Deques can only hold decreasing values
+   - B) It will leave the window before the larger value does, so it can never be the maximum
+   - C) Smaller values are never needed in any problem
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Every remaining item shifts left, so it's O(n) per call**: Use collections.deque and popleft(), which is O(1).
-2. **A) (head + size) % capacity**: The modulo makes indexes go round the ring with no shifting.
-3. **A) Each item is moved between the stacks at most once, so n operations cost O(n) in total: amortised O(1)**: Amortised analysis averages the rare expensive step over all the cheap ones.
-4. **A) It will leave the window before the larger value does, so it can never be the maximum**: The newer, larger value dominates it for every future window that contains it.
+1. **C) Every remaining item shifts left, so it's O(n) per call**: Use collections.deque and popleft(), which is O(1).
+2. **C) (head + size) % capacity**: The modulo makes indexes go round the ring with no shifting.
+3. **C) Each item is moved between the stacks at most once, so n operations cost O(n) in total: amortised O(1)**: Amortised analysis averages the rare expensive step over all the cheap ones.
+4. **B) It will leave the window before the larger value does, so it can never be the maximum**: The newer, larger value dominates it for every future window that contains it.
 
 </details>
 

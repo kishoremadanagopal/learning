@@ -311,32 +311,32 @@ console.log(avg(10), avg(20), avg(60));
 ## Quick quiz
 
 1. Where can a const declared inside an if block be used?
-   - A) Only inside that block
-   - B) Anywhere in the function
-   - C) Anywhere in the file
+   - A) Anywhere in the file
+   - B) Only inside that block
+   - C) Anywhere in the function
 
 2. What is a closure?
-   - A) A function together with the variables from the scope where it was created
-   - B) A function that has finished running
-   - C) A way to close the browser
+   - A) A function that has finished running
+   - B) A way to close the browser
+   - C) A function together with the variables from the scope where it was created
 
 3. Why does the var loop example print [3, 3, 3]?
-   - A) All the functions share one var variable, which is 3 when they run
-   - B) var counts in steps of 3
-   - C) map changes the values
+   - A) map changes the values
+   - B) All the functions share one var variable, which is 3 when they run
+   - C) var counts in steps of 3
 
 4. What is the temporal dead zone?
-   - A) The part of a block before a let or const declaration, where using the name is an error
-   - B) A part of the code that never runs
-   - C) The time a promise takes to resolve
+   - A) A part of the code that never runs
+   - B) The time a promise takes to resolve
+   - C) The part of a block before a let or const declaration, where using the name is an error
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Only inside that block**: let and const are block-scoped.
-2. **A) A function together with the variables from the scope where it was created**: Closures let functions keep private state.
-3. **A) All the functions share one var variable, which is 3 when they run**: let creates a new binding for each pass.
-4. **A) The part of a block before a let or const declaration, where using the name is an error**: It turns use-before-declaration into a clear ReferenceError.
+1. **B) Only inside that block**: let and const are block-scoped.
+2. **C) A function together with the variables from the scope where it was created**: Closures let functions keep private state.
+3. **B) All the functions share one var variable, which is 3 when they run**: let creates a new binding for each pass.
+4. **C) The part of a block before a let or const declaration, where using the name is an error**: It turns use-before-declaration into a clear ReferenceError.
 
 </details>
 

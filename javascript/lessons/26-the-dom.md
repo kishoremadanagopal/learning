@@ -453,9 +453,9 @@ Open these only after a real attempt. Each one explains the solution step by ste
 ## Quick quiz
 
 1. A script in <head> without defer runs document.querySelector("#cart") for a <ul id="cart"> in the body. What does it get?
-   - A) null, because the element hasn't been parsed yet
-   - B) The ul element
-   - C) An error: querySelector can't run in head
+   - A) The ul element
+   - B) An error: querySelector can't run in head
+   - C) null, because the element hasn't been parsed yet
 
 2. What does document.querySelector(".item") return when there are three .item elements?
    - A) The first one
@@ -463,22 +463,22 @@ Open these only after a real attempt. Each one explains the solution step by ste
    - C) The last one
 
 3. li has data-stock="0". What is Boolean(li.dataset.stock)?
-   - A) true, because "0" is a non-empty string
-   - B) false
-   - C) 0
+   - A) false
+   - B) 0
+   - C) true, because "0" is a non-empty string
 
 4. Which finds the li that contains a clicked button?
-   - A) button.closest("li")
-   - B) button.parentElement.parentElement
-   - C) document.querySelector("li")
+   - A) button.parentElement.parentElement
+   - B) document.querySelector("li")
+   - C) button.closest("li")
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) null, because the element hasn't been parsed yet**: Scripts run when the parser reaches them. Move the script to the end of body, or add defer.
+1. **C) null, because the element hasn't been parsed yet**: Scripts run when the parser reaches them. Move the script to the end of body, or add defer.
 2. **A) The first one**: Use querySelectorAll for every match.
-3. **A) true, because "0" is a non-empty string**: data- attributes are always strings; convert with Number() first.
-4. **A) button.closest("li")**: closest walks up the tree to the nearest match, however deep the button is nested.
+3. **C) true, because "0" is a non-empty string**: data- attributes are always strings; convert with Number() first.
+4. **C) button.closest("li")**: closest walks up the tree to the nearest match, however deep the button is nested.
 
 </details>
 

@@ -443,19 +443,19 @@ for x in [5, 15, 1, 3]:
 ## Quick quiz
 
 1. In a list-based heap, where are the children of the item at index i?
-   - A) 2i + 1 and 2i + 2
-   - B) i + 1 and i + 2
-   - C) 2i and 2i − 1
+   - A) i + 1 and i + 2
+   - B) 2i and 2i − 1
+   - C) 2i + 1 and 2i + 2
 
 2. How long does heapq.heapify take on a list of n items?
-   - A) O(n)
-   - B) O(n log n)
-   - C) O(log n)
+   - A) O(n log n)
+   - B) O(log n)
+   - C) O(n)
 
 3. To find the k largest of n numbers with a heap, which heap do you keep?
-   - A) A min-heap of size k, whose root is the weakest of the current top k
-   - B) A max-heap of all n numbers
-   - C) A min-heap of all n numbers
+   - A) A max-heap of all n numbers
+   - B) A min-heap of all n numbers
+   - C) A min-heap of size k, whose root is the weakest of the current top k
 
 4. Why add a counter to (priority, item) tuples in heapq?
    - A) So equal priorities don't fall back to comparing the items, which may not be comparable
@@ -465,9 +465,9 @@ for x in [5, 15, 1, 3]:
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) 2i + 1 and 2i + 2**: And the parent is at (i − 1) // 2.
-2. **A) O(n)**: Sifting down from the bottom up costs O(n) in total, because most nodes are near the leaves.
-3. **A) A min-heap of size k, whose root is the weakest of the current top k**: Each new number only needs to beat the root. O(n log k) time, O(k) memory.
+1. **C) 2i + 1 and 2i + 2**: And the parent is at (i − 1) // 2.
+2. **C) O(n)**: Sifting down from the bottom up costs O(n) in total, because most nodes are near the leaves.
+3. **C) A min-heap of size k, whose root is the weakest of the current top k**: Each new number only needs to beat the root. O(n log k) time, O(k) memory.
 4. **A) So equal priorities don't fall back to comparing the items, which may not be comparable**: (priority, count, item) never reaches the item in a comparison, and keeps ties in insertion order.
 
 </details>

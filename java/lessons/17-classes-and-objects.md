@@ -221,26 +221,26 @@ public class Main {
 ## Quick quiz
 
 1. What does `new` do?
-   - A) Creates an object and returns a reference to it
-   - B) Declares a new class
-   - C) Copies an existing object
+   - A) Declares a new class
+   - B) Copies an existing object
+   - C) Creates an object and returns a reference to it
 
 2. After `Box b2 = b1; b2.value = 5;`, what is `b1.value`?
-   - A) 5
-   - B) The old value
+   - A) The old value
+   - B) 5
    - C) An error
 
 3. Calling a method on a variable that is `null` throws…
-   - A) NullPointerException
-   - B) ClassCastException
-   - C) Nothing happens
+   - A) ClassCastException
+   - B) Nothing happens
+   - C) NullPointerException
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Creates an object and returns a reference to it**: `new Dog()` builds a fresh Dog object.
-2. **A) 5**: Both variables refer to the same object.
-3. **A) NullPointerException**: There's no object to call the method on.
+1. **C) Creates an object and returns a reference to it**: `new Dog()` builds a fresh Dog object.
+2. **B) 5**: Both variables refer to the same object.
+3. **C) NullPointerException**: There's no object to call the method on.
 
 </details>
 

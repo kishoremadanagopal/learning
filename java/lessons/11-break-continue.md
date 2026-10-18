@@ -177,8 +177,8 @@ public class Main {
 
 1. What does `continue` do?
    - A) Ends the loop
-   - B) Skips the rest of this iteration
-   - C) Restarts from the first iteration
+   - B) Restarts from the first iteration
+   - C) Skips the rest of this iteration
 
 2. A `break` inside an inner loop leaves…
    - A) only the inner loop
@@ -188,7 +188,7 @@ public class Main {
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) Skips the rest of this iteration**: `continue` jumps to the next iteration; `break` ends the loop.
+1. **C) Skips the rest of this iteration**: `continue` jumps to the next iteration; `break` ends the loop.
 2. **A) only the inner loop**: Use a labeled break (or return) to leave an outer loop.
 
 </details>

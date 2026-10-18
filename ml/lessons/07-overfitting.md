@@ -194,32 +194,32 @@ print(round(train_rmse, 1), round(test_rmse, 1), overfit)
 ## Quick quiz
 
 1. A model has high error on both the training and test sets. It is probably:
-   - A) Underfitting: too simple for the pattern
-   - B) Overfitting
+   - A) Overfitting
+   - B) Underfitting: too simple for the pattern
    - C) Perfect
 
 2. As a model gets more complex, what usually happens to the training error?
-   - A) It keeps falling
-   - B) It keeps rising
+   - A) It keeps rising
+   - B) It keeps falling
    - C) It stays the same
 
 3. Where is the sweet spot on a complexity curve?
-   - A) Where the training error is lowest
-   - B) Where the test (or validation) error is lowest
-   - C) At the most complex model
+   - A) Where the test (or validation) error is lowest
+   - B) At the most complex model
+   - C) Where the training error is lowest
 
 4. Which of these does NOT help against overfitting?
    - A) Collecting more training data
-   - B) Using a simpler model
-   - C) Judging the model by its training score
+   - B) Judging the model by its training score
+   - C) Using a simpler model
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Underfitting: too simple for the pattern**: Bad everywhere means the model can't even capture the training data's pattern.
-2. **A) It keeps falling**: More flexibility lets the model hug the training points, even their noise. That's why training error can't pick the model.
-3. **B) Where the test (or validation) error is lowest**: The goal is good predictions on unseen data.
-4. **C) Judging the model by its training score**: Training score rewards memorising. The other two genuinely reduce overfitting.
+1. **B) Underfitting: too simple for the pattern**: Bad everywhere means the model can't even capture the training data's pattern.
+2. **B) It keeps falling**: More flexibility lets the model hug the training points, even their noise. That's why training error can't pick the model.
+3. **A) Where the test (or validation) error is lowest**: The goal is good predictions on unseen data.
+4. **B) Judging the model by its training score**: Training score rewards memorising. The other two genuinely reduce overfitting.
 
 </details>
 

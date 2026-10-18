@@ -185,25 +185,25 @@ print(n_needed)
 
 1. A Type I error is:
    - A) Concluding there's an effect when there isn't one (a false alarm)
-   - B) Missing a real effect
-   - C) A mistake in the code
+   - B) A mistake in the code
+   - C) Missing a real effect
 
 2. What's the most direct way to increase power without more false alarms?
-   - A) Lower α to 0.01
-   - B) Collect a larger sample
+   - A) Collect a larger sample
+   - B) Lower α to 0.01
    - C) Run more tests
 
 3. You test 40 different customer segments and find 2 "significant" at α = 0.05. What's the concern?
-   - A) None: 2 effects were found
-   - B) About 2 false alarms are expected by chance alone with 40 tests
-   - C) The sample was too large
+   - A) About 2 false alarms are expected by chance alone with 40 tests
+   - B) The sample was too large
+   - C) None: 2 effects were found
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Concluding there's an effect when there isn't one (a false alarm)**: Rejecting a true null hypothesis; its probability is α.
-2. **B) Collect a larger sample**: More data shrinks the standard error, making real effects easier to detect.
-3. **B) About 2 false alarms are expected by chance alone with 40 tests**: Multiple testing: correct for the number of tests or treat the findings as hypotheses to check.
+2. **A) Collect a larger sample**: More data shrinks the standard error, making real effects easier to detect.
+3. **A) About 2 false alarms are expected by chance alone with 40 tests**: Multiple testing: correct for the number of tests or treat the findings as hypotheses to check.
 
 </details>
 

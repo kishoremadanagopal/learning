@@ -263,26 +263,26 @@ plt.show()
 ## Quick quiz
 
 1. What should come first in an analysis?
-   - A) Turning the brief into specific questions
+   - A) Removing outliers
    - B) Drawing charts
-   - C) Removing outliers
+   - C) Turning the brief into specific questions
 
 2. Why check `len(df) == len(sales)` after the joins?
-   - A) To make the code faster
-   - B) To catch a join that dropped or duplicated orders
-   - C) pandas requires it
+   - A) To catch a join that dropped or duplicated orders
+   - B) pandas requires it
+   - C) To make the code faster
 
 3. What belongs first in a write-up?
    - A) The code
-   - B) The answer to the question
-   - C) A list of every number calculated
+   - B) A list of every number calculated
+   - C) The answer to the question
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Turning the brief into specific questions**: Clear questions decide which data, steps and charts you need.
-2. **B) To catch a join that dropped or duplicated orders**: A bad join silently changes your totals. Checking the row count catches it.
-3. **B) The answer to the question**: Lead with the finding, then the evidence, then the recommendation.
+1. **C) Turning the brief into specific questions**: Clear questions decide which data, steps and charts you need.
+2. **A) To catch a join that dropped or duplicated orders**: A bad join silently changes your totals. Checking the row count catches it.
+3. **C) The answer to the question**: Lead with the finding, then the evidence, then the recommendation.
 
 </details>
 

@@ -193,9 +193,9 @@ print(scaled.describe().loc[["min", "max"]])
 ## Quick quiz
 
 1. Why fit the scaler on the training data only?
-   - A) The test set stands for future data, whose statistics you can't know when training
+   - A) scikit-learn doesn't allow it
    - B) Fitting on the test data is slower
-   - C) scikit-learn doesn't allow it
+   - C) The test set stands for future data, whose statistics you can't know when training
 
 2. After StandardScaler, each training column has:
    - A) Mean 0 and standard deviation 1
@@ -203,22 +203,22 @@ print(scaled.describe().loc[["min", "max"]])
    - C) Median 0 and no outliers
 
 3. Which model does NOT need scaled features?
-   - A) k-nearest neighbours
-   - B) Logistic regression with a penalty
+   - A) Logistic regression with a penalty
+   - B) k-nearest neighbours
    - C) A random forest
 
 4. A column has a few extreme outliers. Which scaler is least affected?
-   - A) StandardScaler
+   - A) RobustScaler
    - B) MinMaxScaler
-   - C) RobustScaler
+   - C) StandardScaler
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The test set stands for future data, whose statistics you can't know when training**: Fitting on test data leaks information from it into training, making scores look better than they will be.
+1. **C) The test set stands for future data, whose statistics you can't know when training**: Fitting on test data leaks information from it into training, making scores look better than they will be.
 2. **A) Mean 0 and standard deviation 1**: That's standardising. MinMaxScaler gives 0 to 1.
 3. **C) A random forest**: Trees split on one feature at a time, so units don't matter.
-4. **C) RobustScaler**: It uses the median and IQR, which outliers barely move.
+4. **A) RobustScaler**: It uses the median and IQR, which outliers barely move.
 
 </details>
 

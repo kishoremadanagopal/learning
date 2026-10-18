@@ -153,19 +153,19 @@ public class Main {
 
 1. What happens in a classic `case` without `break`?
    - A) Execution continues into the next case
-   - B) A compile error
-   - C) The switch ends anyway
+   - B) The switch ends anyway
+   - C) A compile error
 
 2. Why does a switch *expression* need a `default`?
-   - A) It must produce a value for every possible input
-   - B) It's optional
-   - C) Only for strings
+   - A) It's optional
+   - B) Only for strings
+   - C) It must produce a value for every possible input
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Execution continues into the next case**: That's fall-through, the classic switch's biggest trap.
-2. **A) It must produce a value for every possible input**: An expression always has to return something, so every case must be covered.
+2. **C) It must produce a value for every possible input**: An expression always has to return something, so every case must be covered.
 
 </details>
 

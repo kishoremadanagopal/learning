@@ -172,9 +172,9 @@ print(apply_twice(lambda x: x + 3, 10))
    - C) [1, 2, 3]
 
 2. What does `list(filter(lambda x: x > 2, [1, 2, 3, 4]))` give?
-   - A) [True, True]
+   - A) [1, 2]
    - B) [3, 4]
-   - C) [1, 2]
+   - C) [True, True]
 
 <details>
 <summary>Quiz answers</summary>

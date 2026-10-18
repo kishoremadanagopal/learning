@@ -200,32 +200,32 @@ print(best_depth, round(best_acc, 3), full_train_acc)
 ## Quick quiz
 
 1. Why don't decision trees need scaled features?
-   - A) Each split compares one feature with a cut-off, so units don't matter
+   - A) They only work with 0/1 features
    - B) They scale features automatically inside fit
-   - C) They only work with 0/1 features
+   - C) Each split compares one feature with a cut-off, so units don't matter
 
 2. A tree with no depth limit scores 1.00 on training data and 0.67 on test data. What's happening?
-   - A) Underfitting
-   - B) Overfitting: it grew until it memorised the training rows
-   - C) Data leakage
+   - A) Overfitting: it grew until it memorised the training rows
+   - B) Data leakage
+   - C) Underfitting
 
 3. What does a leaf of a classification tree predict?
-   - A) The most common class among the training rows that reached it
+   - A) A random class
    - B) The average of all labels
-   - C) A random class
+   - C) The most common class among the training rows that reached it
 
 4. What shape are the regions a decision tree draws on a 2-D chart?
-   - A) Circles
-   - B) Rectangles, with horizontal and vertical edges
-   - C) Diagonal stripes
+   - A) Rectangles, with horizontal and vertical edges
+   - B) Diagonal stripes
+   - C) Circles
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Each split compares one feature with a cut-off, so units don't matter**: "weight <= 150 g" and "weight <= 0.15 kg" split the rows identically.
-2. **B) Overfitting: it grew until it memorised the training rows**: Unlimited trees keep splitting until every leaf is pure. Limit max_depth or min_samples_leaf.
-3. **A) The most common class among the training rows that reached it**: Each leaf votes with the training rows that ended up in it.
-4. **B) Rectangles, with horizontal and vertical edges**: Every question is about one feature, so every boundary is parallel to an axis.
+1. **C) Each split compares one feature with a cut-off, so units don't matter**: "weight <= 150 g" and "weight <= 0.15 kg" split the rows identically.
+2. **A) Overfitting: it grew until it memorised the training rows**: Unlimited trees keep splitting until every leaf is pure. Limit max_depth or min_samples_leaf.
+3. **C) The most common class among the training rows that reached it**: Each leaf votes with the training rows that ended up in it.
+4. **A) Rectangles, with horizontal and vertical edges**: Every question is about one feature, so every boundary is parallel to an axis.
 
 </details>
 

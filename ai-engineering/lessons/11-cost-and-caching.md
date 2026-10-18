@@ -322,18 +322,18 @@ print(round(cache_savings(10_000, 2, 2.0, ttl="1h"), 4))
 
 1. Your cache_read_input_tokens stays at 0. What is the most likely cause?
    - A) Something early in the prompt changes on every call, such as a timestamp, or the prefix is below the minimum length
-   - B) Caching only works on Fridays
-   - C) The output is too long
+   - B) The output is too long
+   - C) Caching only works on Fridays
 
 2. Where should a user's question go in a cached prompt?
-   - A) At the end, after the stable instructions and documents
-   - B) At the very start
-   - C) In the tool definitions
+   - A) At the very start
+   - B) In the tool definitions
+   - C) At the end, after the stable instructions and documents
 
 3. Which job suits the Batch API?
-   - A) Classifying 200,000 support tickets overnight
-   - B) A live chat reply
-   - C) Autocomplete as the user types
+   - A) Autocomplete as the user types
+   - B) Classifying 200,000 support tickets overnight
+   - C) A live chat reply
 
 4. Batch results come back. How do you match each result to its request?
    - A) By the custom_id you gave each request
@@ -344,8 +344,8 @@ print(round(cache_savings(10_000, 2, 2.0, ttl="1h"), 4))
 <summary>Quiz answers</summary>
 
 1. **A) Something early in the prompt changes on every call, such as a timestamp, or the prefix is below the minimum length**: Caching needs an identical prefix of at least the minimum length.
-2. **A) At the end, after the stable instructions and documents**: Stable content first, variable content last.
-3. **A) Classifying 200,000 support tickets overnight**: Batches are half price but asynchronous.
+2. **C) At the end, after the stable instructions and documents**: Stable content first, variable content last.
+3. **B) Classifying 200,000 support tickets overnight**: Batches are half price but asynchronous.
 4. **A) By the custom_id you gave each request**: Results can arrive in any order.
 
 </details>

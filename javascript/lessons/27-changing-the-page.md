@@ -462,14 +462,14 @@ Open these only after a real attempt. Each one explains the solution step by ste
    - C) el.innerHTML = `<b>${username}</b>`
 
 2. What does parent.replaceChildren() with no arguments do?
-   - A) Removes all of parent's children
-   - B) Nothing
-   - C) Throws an error
+   - A) Nothing
+   - B) Throws an error
+   - C) Removes all of parent's children
 
 3. You run button.setAttribute("disabled", "false"). What happens?
-   - A) The button is disabled, because the attribute is present
-   - B) The button is enabled
-   - C) An error is thrown
+   - A) An error is thrown
+   - B) The button is disabled, because the attribute is present
+   - C) The button is enabled
 
 4. You append an element that is already in the page to another list. What happens?
    - A) It moves to the new place
@@ -480,8 +480,8 @@ Open these only after a real attempt. Each one explains the solution step by ste
 <summary>Quiz answers</summary>
 
 1. **A) el.textContent = username**: textContent never parses HTML, so nothing in the name can run.
-2. **A) Removes all of parent's children**: It replaces the children with nothing; pass elements to replace them with those.
-3. **A) The button is disabled, because the attribute is present**: Boolean attributes are on whenever present; use button.disabled = false.
+2. **C) Removes all of parent's children**: It replaces the children with nothing; pass elements to replace them with those.
+3. **B) The button is disabled, because the attribute is present**: Boolean attributes are on whenever present; use button.disabled = false.
 4. **A) It moves to the new place**: An element has one position; use cloneNode(true) for a copy.
 
 </details>

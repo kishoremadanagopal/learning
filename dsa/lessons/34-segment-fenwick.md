@@ -474,27 +474,27 @@ print(count_smaller([5, 2, 6, 1]))
    - C) The highest set bit of i
 
 2. Why can't a Fenwick tree easily answer range minimums?
-   - A) A range is found by subtracting two prefixes, and minimum has no "subtract"
+   - A) Minimums need O(n) memory
    - B) Fenwick trees only store positive numbers
-   - C) Minimums need O(n) memory
+   - C) A range is found by subtracting two prefixes, and minimum has no "subtract"
 
 3. What does lazy propagation make fast?
-   - A) Updating every item in a range, in O(log n)
+   - A) Sorting the array
    - B) Building the tree in O(1)
-   - C) Sorting the array
+   - C) Updating every item in a range, in O(log n)
 
 4. The data never changes and you need many range-minimum queries. What's fastest per query?
-   - A) A sparse table: O(1) per query after O(n log n) preprocessing
+   - A) Scanning the range each time
    - B) A Fenwick tree
-   - C) Scanning the range each time
+   - C) A sparse table: O(1) per query after O(n log n) preprocessing
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) The lowest set bit of i, which is the length of the block tree[i] covers**: For i = 12 (1100), i & -i = 4 (0100): tree[12] covers items 9–12.
-2. **A) A range is found by subtracting two prefixes, and minimum has no "subtract"**: Segment trees combine covering nodes directly, so they handle min, max and gcd.
-3. **A) Updating every item in a range, in O(log n)**: Fully covered nodes store a pending update instead of touching every leaf.
-4. **A) A sparse table: O(1) per query after O(n log n) preprocessing**: Two overlapping power-of-two blocks cover any range; overlap doesn't affect a minimum.
+2. **C) A range is found by subtracting two prefixes, and minimum has no "subtract"**: Segment trees combine covering nodes directly, so they handle min, max and gcd.
+3. **C) Updating every item in a range, in O(log n)**: Fully covered nodes store a pending update instead of touching every leaf.
+4. **C) A sparse table: O(1) per query after O(n log n) preprocessing**: Two overlapping power-of-two blocks cover any range; overlap doesn't affect a minimum.
 
 </details>
 

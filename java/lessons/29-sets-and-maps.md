@@ -267,25 +267,25 @@ public class Main {
 ## Quick quiz
 
 1. What does `set.add(x)` return if x is already in the set?
-   - A) false
-   - B) true
-   - C) It throws an exception
+   - A) It throws an exception
+   - B) false
+   - C) true
 
 2. Which map keeps its keys sorted?
-   - A) HashMap
-   - B) LinkedHashMap
-   - C) TreeMap
+   - A) TreeMap
+   - B) HashMap
+   - C) LinkedHashMap
 
 3. What must you override to use your own class as a HashMap key?
    - A) Both equals and hashCode
-   - B) Only equals
-   - C) Only toString
+   - B) Only toString
+   - C) Only equals
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) false**: Sets ignore duplicates; `add` reports whether anything changed.
-2. **C) TreeMap**: TreeMap is a sorted map.
+1. **B) false**: Sets ignore duplicates; `add` reports whether anything changed.
+2. **A) TreeMap**: TreeMap is a sorted map.
 3. **A) Both equals and hashCode**: Hash collections use hashCode to locate and equals to compare. Records do both for you.
 
 </details>

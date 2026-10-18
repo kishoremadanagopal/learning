@@ -160,26 +160,26 @@ print(kinds)
 ## Quick quiz
 
 1. A poll asks 1,000 voters out of millions. What are the 1,000?
-   - A) The population
-   - B) A sample
+   - A) A sample
+   - B) The population
    - C) A parameter
 
 2. Which is descriptive statistics?
-   - A) "The average order this month was 54 dollars."
-   - B) "Page B will convert better for all future visitors."
+   - A) "Page B will convert better for all future visitors."
+   - B) "The average order this month was 54 dollars."
    - C) "Our customers in general prefer email."
 
 3. Survey answers on a 1-5 "agree" scale are best described as:
-   - A) Continuous
-   - B) Ordinal
-   - C) Not a variable
+   - A) Ordinal
+   - B) Not a variable
+   - C) Continuous
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) A sample**: The sample is the part you measure; the population is everyone you want to draw conclusions about.
-2. **A) "The average order this month was 54 dollars."**: Describing the data you have is descriptive. Generalising to everyone is inferential.
-3. **B) Ordinal**: They're categories with a natural order, so they're ordinal.
+1. **A) A sample**: The sample is the part you measure; the population is everyone you want to draw conclusions about.
+2. **B) "The average order this month was 54 dollars."**: Describing the data you have is descriptive. Generalising to everyone is inferential.
+3. **A) Ordinal**: They're categories with a natural order, so they're ordinal.
 
 </details>
 

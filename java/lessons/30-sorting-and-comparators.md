@@ -177,26 +177,26 @@ public class Main {
 ## Quick quiz
 
 1. What should `a.compareTo(b)` return when a comes before b?
-   - A) A negative number
-   - B) A positive number
-   - C) Zero
+   - A) A positive number
+   - B) Zero
+   - C) A negative number
 
 2. How do you sort people by age, then by name for equal ages?
-   - A) `Comparator.comparingInt(Person::age).thenComparing(Person::name)`
-   - B) `Comparator.comparing(Person::name).thenComparing(Person::age)`
-   - C) Sort twice by age
+   - A) `Comparator.comparing(Person::name).thenComparing(Person::age)`
+   - B) Sort twice by age
+   - C) `Comparator.comparingInt(Person::age).thenComparing(Person::name)`
 
 3. Why use `Integer.compare(a, b)` instead of `a - b` in compareTo?
-   - A) Subtraction can overflow for large values
-   - B) It's required by the interface
+   - A) It's required by the interface
+   - B) Subtraction can overflow for large values
    - C) `a - b` doesn't compile
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) A negative number**: Negative: a first. Zero: equal. Positive: b first.
-2. **A) `Comparator.comparingInt(Person::age).thenComparing(Person::name)`**: `thenComparing` adds a tie-breaker.
-3. **A) Subtraction can overflow for large values**: With large positive and negative ints, `a - b` can wrap around and flip the sign.
+1. **C) A negative number**: Negative: a first. Zero: equal. Positive: b first.
+2. **C) `Comparator.comparingInt(Person::age).thenComparing(Person::name)`**: `thenComparing` adds a tie-breaker.
+3. **B) Subtraction can overflow for large values**: With large positive and negative ints, `a - b` can wrap around and flip the sign.
 
 </details>
 

@@ -495,32 +495,32 @@ print(to_list(insert_sorted(build([1, 3, 7]), 5)))
 ## Quick quiz
 
 1. Why is reading the 1,000th item of a linked list slow?
-   - A) You must follow 999 pointers from the head: O(n)
-   - B) Linked lists store items in random order
-   - C) Python checks every item for errors
+   - A) Python checks every item for errors
+   - B) You must follow 999 pointers from the head: O(n)
+   - C) Linked lists store items in random order
 
 2. Which operation is O(1) for a linked list but O(n) for a Python list?
-   - A) Reading the last item
-   - B) Inserting at the front
+   - A) Inserting at the front
+   - B) Reading the last item
    - C) Searching for a value
 
 3. What is a dummy (sentinel) node for?
-   - A) It sits before the head so that changing the head needs no special case
-   - B) It marks the end of the list instead of None
-   - C) It stores the list's length
+   - A) It marks the end of the list instead of None
+   - B) It stores the list's length
+   - C) It sits before the head so that changing the head needs no special case
 
 4. What does a doubly linked list let you do in O(1) that a singly linked list can't?
-   - A) Remove a node you hold, without searching for the node before it
-   - B) Access any position directly
+   - A) Access any position directly
+   - B) Remove a node you hold, without searching for the node before it
    - C) Sort the list
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) You must follow 999 pointers from the head: O(n)**: Nodes aren't side by side in memory, so there's no way to jump straight to position i.
-2. **B) Inserting at the front**: A new head just points at the old head. A Python list must shift every item.
-3. **A) It sits before the head so that changing the head needs no special case**: With a dummy, every real node has a node before it, including the head. Return dummy.next.
-4. **A) Remove a node you hold, without searching for the node before it**: With prev pointers, the node already knows its neighbour on each side.
+1. **B) You must follow 999 pointers from the head: O(n)**: Nodes aren't side by side in memory, so there's no way to jump straight to position i.
+2. **A) Inserting at the front**: A new head just points at the old head. A Python list must shift every item.
+3. **C) It sits before the head so that changing the head needs no special case**: With a dummy, every real node has a node before it, including the head. Return dummy.next.
+4. **B) Remove a node you hold, without searching for the node before it**: With prev pointers, the node already knows its neighbour on each side.
 
 </details>
 

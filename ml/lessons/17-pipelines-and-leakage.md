@@ -268,8 +268,8 @@ leaky = max(aucs, key=aucs.get)
 ## Quick quiz
 
 1. What's the main benefit of putting preprocessing inside a Pipeline?
-   - A) Every step learns from the training data only, and new raw rows get exactly the same treatment
-   - B) It makes the model more accurate on its own
+   - A) It makes the model more accurate on its own
+   - B) Every step learns from the training data only, and new raw rows get exactly the same treatment
    - C) It removes the need for a test set
 
 2. Which is target leakage?
@@ -278,22 +278,22 @@ leaky = max(aucs, key=aucs.get)
    - C) Scaling features
 
 3. A model scores 99.8% on a hard problem. What should you do first?
-   - A) Suspect leakage and check whether any feature carries the answer
-   - B) Deploy it immediately
-   - C) Add more features
+   - A) Add more features
+   - B) Suspect leakage and check whether any feature carries the answer
+   - C) Deploy it immediately
 
 4. In pipe = Pipeline([("prep", prep), ("model", LogisticRegression())]), how do you reach the logistic regression?
-   - A) pipe.named_steps["model"] or pipe[-1]
-   - B) pipe.model
+   - A) pipe.model
+   - B) pipe.named_steps["model"] or pipe[-1]
    - C) pipe.steps.model
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Every step learns from the training data only, and new raw rows get exactly the same treatment**: Pipelines prevent leakage and make the model easy to use on raw data.
+1. **B) Every step learns from the training data only, and new raw rows get exactly the same treatment**: Pipelines prevent leakage and make the model easy to use on raw data.
 2. **B) Using "account closed date" to predict whether a customer will leave**: The closed date only exists after the customer leaves, so it gives away the answer.
-3. **A) Suspect leakage and check whether any feature carries the answer**: Results that are too good to be true usually are.
-4. **A) pipe.named_steps["model"] or pipe[-1]**: Steps can be reached by name or by position.
+3. **B) Suspect leakage and check whether any feature carries the answer**: Results that are too good to be true usually are.
+4. **B) pipe.named_steps["model"] or pipe[-1]**: Steps can be reached by name or by position.
 
 </details>
 

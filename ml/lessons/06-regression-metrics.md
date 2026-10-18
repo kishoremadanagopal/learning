@@ -220,18 +220,18 @@ print(round(base_mae, 2), round(model_mae, 2), round(saved, 2))
 
 1. A price model has MAE = 41 (thousands). What's the plain-English reading?
    - A) Its predictions are typically off by about 41,000
-   - B) It's right 41% of the time
-   - C) It explains 41% of the variation
+   - B) It explains 41% of the variation
+   - C) It's right 41% of the time
 
 2. RMSE is much bigger than MAE. What does that tell you?
-   - A) The model is perfect
-   - B) A few predictions are very wrong
-   - C) You used the wrong units
+   - A) A few predictions are very wrong
+   - B) You used the wrong units
+   - C) The model is perfect
 
 3. A model has R² = -0.2 on the test set. That means:
-   - A) It explains 20% of the variation
-   - B) It does worse than always predicting the average
-   - C) The metric is broken
+   - A) It does worse than always predicting the average
+   - B) The metric is broken
+   - C) It explains 20% of the variation
 
 4. Which argument comes first in mean_absolute_error?
    - A) The actual values (y_test)
@@ -242,8 +242,8 @@ print(round(base_mae, 2), round(model_mae, 2), round(saved, 2))
 <summary>Quiz answers</summary>
 
 1. **A) Its predictions are typically off by about 41,000**: MAE is in the label's units: the average size of the errors.
-2. **B) A few predictions are very wrong**: Squaring makes big errors count extra, so a big RMSE-MAE gap points to some large misses.
-3. **B) It does worse than always predicting the average**: R² below 0 means the model loses to the simplest baseline.
+2. **A) A few predictions are very wrong**: Squaring makes big errors count extra, so a big RMSE-MAE gap points to some large misses.
+3. **A) It does worse than always predicting the average**: R² below 0 means the model loses to the simplest baseline.
 4. **A) The actual values (y_test)**: scikit-learn metrics are metric(y_true, y_pred). For MAE the order doesn't change the answer, but for many others (like precision) it does, so build the habit.
 
 </details>

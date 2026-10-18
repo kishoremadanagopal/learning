@@ -149,20 +149,20 @@ public class Main {
 ## Quick quiz
 
 1. In `int[][] g = new int[3][5];`, what is `g.length`?
-   - A) 3
+   - A) 15
    - B) 5
-   - C) 15
+   - C) 3
 
 2. How do you print a 2D array readably?
-   - A) `Arrays.toString(g)`
-   - B) `Arrays.deepToString(g)`
-   - C) `System.out.println(g)`
+   - A) `Arrays.deepToString(g)`
+   - B) `System.out.println(g)`
+   - C) `Arrays.toString(g)`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) 3**: `g.length` is the number of rows; `g[0].length` is the number of columns.
-2. **B) `Arrays.deepToString(g)`**: `deepToString` goes inside the nested arrays.
+1. **C) 3**: `g.length` is the number of rows; `g[0].length` is the number of columns.
+2. **A) `Arrays.deepToString(g)`**: `deepToString` goes inside the nested arrays.
 
 </details>
 

@@ -213,26 +213,26 @@ print(domains)
 ## Quick quiz
 
 1. Why does `value_counts()` show `"Sales"` and `"sales"` separately?
-   - A) Text comparisons are exact, including capital letters
+   - A) One of them is missing
    - B) pandas counts randomly
-   - C) One of them is missing
+   - C) Text comparisons are exact, including capital letters
 
 2. What's the difference between `s.str.replace("a", "b")` and `s.replace({"a": "b"})`?
-   - A) None
+   - A) `.replace` only works on numbers
    - B) `.str.replace` changes part of each string; `.replace` swaps whole values
-   - C) `.replace` only works on numbers
+   - C) None
 
 3. What does `.str.split("@").str[1]` give for `"ada@example.com"`?
    - A) `"ada"`
-   - B) `"example.com"`
-   - C) `["ada", "example.com"]`
+   - B) `["ada", "example.com"]`
+   - C) `"example.com"`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Text comparisons are exact, including capital letters**: To a computer they're different strings. Standardise the case before counting.
+1. **C) Text comparisons are exact, including capital letters**: To a computer they're different strings. Standardise the case before counting.
 2. **B) `.str.replace` changes part of each string; `.replace` swaps whole values**: Use `.str.replace` for characters inside text, and `.replace` to map complete values.
-3. **B) `"example.com"`**: Split makes a list of parts; `.str[1]` takes the second part.
+3. **C) `"example.com"`**: Split makes a list of parts; `.str[1]` takes the second part.
 
 </details>
 

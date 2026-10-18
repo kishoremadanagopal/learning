@@ -222,26 +222,26 @@ print(math_by_band.round(1))
 ## Quick quiz
 
 1. What does `s.map({"N": "North"})` do to a value `"S"`?
-   - A) Leaves it as "S"
-   - B) Makes it missing, since "S" isn't in the dictionary
-   - C) Raises an error
+   - A) Makes it missing, since "S" isn't in the dictionary
+   - B) Raises an error
+   - C) Leaves it as "S"
 
 2. Why prefer `np.where` over `df.apply(func, axis=1)` when possible?
-   - A) It's vectorised, so much faster on big tables
-   - B) `apply` gives wrong answers
-   - C) `np.where` works on text only
+   - A) `apply` gives wrong answers
+   - B) `np.where` works on text only
+   - C) It's vectorised, so much faster on big tables
 
 3. How do `cut` and `qcut` differ?
-   - A) They're the same
-   - B) `cut` uses edges you choose; `qcut` makes groups of roughly equal size
-   - C) `qcut` only works on dates
+   - A) `cut` uses edges you choose; `qcut` makes groups of roughly equal size
+   - B) `qcut` only works on dates
+   - C) They're the same
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) Makes it missing, since "S" isn't in the dictionary**: Unmapped values become NaN, which helps you spot codes you didn't cover.
-2. **A) It's vectorised, so much faster on big tables**: Row-wise `apply` is a Python loop in disguise. Vectorised tools do the work in fast compiled code.
-3. **B) `cut` uses edges you choose; `qcut` makes groups of roughly equal size**: `cut` bins by value ranges; `qcut` bins by quantiles so each bin has a similar count.
+1. **A) Makes it missing, since "S" isn't in the dictionary**: Unmapped values become NaN, which helps you spot codes you didn't cover.
+2. **C) It's vectorised, so much faster on big tables**: Row-wise `apply` is a Python loop in disguise. Vectorised tools do the work in fast compiled code.
+3. **A) `cut` uses edges you choose; `qcut` makes groups of roughly equal size**: `cut` bins by value ranges; `qcut` bins by quantiles so each bin has a similar count.
 
 </details>
 

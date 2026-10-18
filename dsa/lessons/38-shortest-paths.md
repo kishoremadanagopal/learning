@@ -404,14 +404,14 @@ The route 0 → 1 → 2 → 3 (400) would need a third round, which k = 1 doesn'
 ## Quick quiz
 
 1. Why can't Dijkstra's algorithm handle negative edge weights?
-   - A) It finalises a vertex once popped, but a later negative edge could make that vertex cheaper
+   - A) It would run forever
    - B) Heaps can't store negative numbers
-   - C) It would run forever
+   - C) It finalises a vertex once popped, but a later negative edge could make that vertex cheaper
 
 2. How do you handle a shorter distance for a vertex already in heapq, which has no decrease-key?
-   - A) Push a new (distance, vertex) pair and skip stale pairs when they're popped
-   - B) Remove the old pair with list.remove
-   - C) Rebuild the heap
+   - A) Rebuild the heap
+   - B) Push a new (distance, vertex) pair and skip stale pairs when they're popped
+   - C) Remove the old pair with list.remove
 
 3. How does Bellman-Ford detect a negative cycle?
    - A) An extra (V-th) round of relaxation still improves some distance
@@ -419,17 +419,17 @@ The route 0 → 1 → 2 → 3 (400) would need a third round, which k = 1 doesn'
    - C) The graph has more edges than vertices
 
 4. When is A* guaranteed to find a shortest path?
-   - A) When its heuristic never overestimates the remaining cost
-   - B) Always
-   - C) Only on trees
+   - A) Always
+   - B) Only on trees
+   - C) When its heuristic never overestimates the remaining cost
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) It finalises a vertex once popped, but a later negative edge could make that vertex cheaper**: Settled distances must never improve; negative edges break that guarantee.
-2. **A) Push a new (distance, vertex) pair and skip stale pairs when they're popped**: This "lazy deletion" keeps each operation O(log n).
+1. **C) It finalises a vertex once popped, but a later negative edge could make that vertex cheaper**: Settled distances must never improve; negative edges break that guarantee.
+2. **B) Push a new (distance, vertex) pair and skip stale pairs when they're popped**: This "lazy deletion" keeps each operation O(log n).
 3. **A) An extra (V-th) round of relaxation still improves some distance**: After V − 1 rounds, all shortest paths are final unless a negative cycle exists.
-4. **A) When its heuristic never overestimates the remaining cost**: An admissible heuristic (like Manhattan distance on a 4-way grid) keeps it correct.
+4. **C) When its heuristic never overestimates the remaining cost**: An admissible heuristic (like Manhattan distance on a 4-way grid) keeps it correct.
 
 </details>
 

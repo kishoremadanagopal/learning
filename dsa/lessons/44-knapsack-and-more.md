@@ -396,13 +396,13 @@ print(knapsack([1, 3, 4, 5], [1, 4, 5, 7], 7))
    - C) Because n is always small
 
 3. In interval DP like matrix-chain order, which intervals are computed first?
-   - A) The shortest ones
-   - B) The longest ones
+   - A) The longest ones
+   - B) The shortest ones
    - C) Those that start at 0
 
 4. What does dp[mask][j] mean in the Held-Karp TSP algorithm?
-   - A) The shortest path that visits exactly the cities in mask and ends at city j
-   - B) The distance between cities mask and j
+   - A) The distance between cities mask and j
+   - B) The shortest path that visits exactly the cities in mask and ends at city j
    - C) The number of tours through j
 
 <details>
@@ -410,8 +410,8 @@ print(knapsack([1, 3, 4, 5], [1, 4, 5, 7], 7))
 
 1. **A) So dp[w − weight] still holds the value from before this item, and the item is used at most once**: Looping upwards allows reuse, which gives the unbounded knapsack.
 2. **A) W is a numeric value, so the time grows exponentially in the number of digits of W**: Knapsack is NP-hard in general; the DP is fast only when W is moderate.
-3. **A) The shortest ones**: Every split of a range needs both shorter sides to be done already.
-4. **A) The shortest path that visits exactly the cities in mask and ends at city j**: Sets of visited cities are stored as the bits of mask.
+3. **B) The shortest ones**: Every split of a range needs both shorter sides to be done already.
+4. **B) The shortest path that visits exactly the cities in mask and ends at city j**: Sets of visited cities are stored as the bits of mask.
 
 </details>
 

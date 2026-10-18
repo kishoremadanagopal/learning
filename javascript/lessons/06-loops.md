@@ -289,32 +289,32 @@ console.log(yearsToTarget(100, 0.07, 200), yearsToTarget(500, 0.05, 400), yearsT
 ## Quick quiz
 
 1. Which loop is the simplest way to visit every item of an array?
-   - A) for (const item of items)
-   - B) for (const item in items)
-   - C) do … while
+   - A) do … while
+   - B) for (const item of items)
+   - C) for (const item in items)
 
 2. With for (let i = 0; i < arr.length; i++), what is the last value of i inside the loop?
-   - A) arr.length - 1
-   - B) arr.length
-   - C) arr.length + 1
+   - A) arr.length
+   - B) arr.length + 1
+   - C) arr.length - 1
 
 3. What does continue do?
-   - A) Skips the rest of this pass and moves to the next one
+   - A) Restarts the loop from the beginning
    - B) Ends the loop
-   - C) Restarts the loop from the beginning
+   - C) Skips the rest of this pass and moves to the next one
 
 4. What must every while loop have?
-   - A) Something in the body that eventually makes the condition false
-   - B) A counter called i
-   - C) A break statement
+   - A) A counter called i
+   - B) A break statement
+   - C) Something in the body that eventually makes the condition false
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) for (const item of items)**: for…in gives keys (indexes as strings), not values.
-2. **A) arr.length - 1**: Exactly the last valid index.
-3. **A) Skips the rest of this pass and moves to the next one**: break ends the loop; continue skips one pass.
-4. **A) Something in the body that eventually makes the condition false**: Otherwise it runs forever.
+1. **B) for (const item of items)**: for…in gives keys (indexes as strings), not values.
+2. **C) arr.length - 1**: Exactly the last valid index.
+3. **C) Skips the rest of this pass and moves to the next one**: break ends the loop; continue skips one pass.
+4. **C) Something in the body that eventually makes the condition false**: Otherwise it runs forever.
 
 </details>
 

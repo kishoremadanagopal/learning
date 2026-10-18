@@ -370,8 +370,8 @@ print(min_cost_connect([[0, 0], [2, 2], [3, 10], [5, 2], [7, 0]]))
 ## Quick quiz
 
 1. What do path compression and union by size give union-find?
-   - A) Nearly O(1) amortised time per operation (O(α(n)))
-   - B) O(log n) per operation in the worst case, at best
+   - A) O(log n) per operation in the worst case, at best
+   - B) Nearly O(1) amortised time per operation (O(α(n)))
    - C) The ability to split groups
 
 2. How does union-find detect a cycle as undirected edges are added?
@@ -380,21 +380,21 @@ print(min_cost_connect([[0, 0], [2, 2], [3, 10], [5, 2], [7, 0]]))
    - C) The number of groups goes up
 
 3. How many edges does a spanning tree of a connected graph with V vertices have?
-   - A) V − 1
+   - A) E − 1
    - B) V
-   - C) E − 1
+   - C) V − 1
 
 4. Which algorithm builds an MST by sorting all edges and adding the cheapest ones that don't form a cycle?
    - A) Kruskal's algorithm
-   - B) Prim's algorithm
-   - C) Dijkstra's algorithm
+   - B) Dijkstra's algorithm
+   - C) Prim's algorithm
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Nearly O(1) amortised time per operation (O(α(n)))**: α(n), the inverse Ackermann function, is at most 4 in practice.
+1. **B) Nearly O(1) amortised time per operation (O(α(n)))**: α(n), the inverse Ackermann function, is at most 4 in practice.
 2. **A) The edge's two ends already have the same root**: If u and v are already connected, adding u–v closes a loop.
-3. **A) V − 1**: Any fewer can't connect everything; any more creates a cycle.
+3. **C) V − 1**: Any fewer can't connect everything; any more creates a cycle.
 4. **A) Kruskal's algorithm**: Prim instead grows a single tree from a start vertex.
 
 </details>

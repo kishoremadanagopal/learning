@@ -337,36 +337,36 @@ gh release list
 ## Quick quiz
 
 1. Which rule stops anyone from pushing straight to main?
-   - A) Require a pull request before merging
-   - B) Block force pushes
-   - C) Restrict deletions
+   - A) Block force pushes
+   - B) Restrict deletions
+   - C) Require a pull request before merging
    - D) Require linear history
 
 2. In trunk-based development, how do teams ship unfinished features safely?
    - A) They merge small changes daily and hide unfinished work behind feature flags
    - B) They keep feature branches open for months
-   - C) They push to main without tests
-   - D) They use a separate repository per feature
+   - C) They use a separate repository per feature
+   - D) They push to main without tests
 
 3. A release fixes a bug without changing behaviour otherwise. Version 2.3.1 becomes…
-   - A) 2.3.2
-   - B) 2.4.0
-   - C) 3.0.0
-   - D) 2.3.1-fix
+   - A) 3.0.0
+   - B) 2.3.1-fix
+   - C) 2.4.0
+   - D) 2.3.2
 
 4. You contribute to an open-source project you can't push to. Where do you push your branch?
-   - A) To your fork, then open a pull request into the original repository
-   - B) Straight to the project's main
-   - C) Nowhere; you email the files
-   - D) To the project's upstream remote
+   - A) To the project's upstream remote
+   - B) Nowhere; you email the files
+   - C) Straight to the project's main
+   - D) To your fork, then open a pull request into the original repository
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Require a pull request before merging**: With it, changes reach main only through pull requests.
+1. **C) Require a pull request before merging**: With it, changes reach main only through pull requests.
 2. **A) They merge small changes daily and hide unfinished work behind feature flags**: Feature flags let incomplete code be merged but switched off.
-3. **A) 2.3.2**: Compatible bug fixes increase PATCH.
-4. **A) To your fork, then open a pull request into the original repository**: Forks are your own copy on GitHub; the PR proposes your branch to the original.
+3. **D) 2.3.2**: Compatible bug fixes increase PATCH.
+4. **D) To your fork, then open a pull request into the original repository**: Forks are your own copy on GitHub; the PR proposes your branch to the original.
 
 </details>
 

@@ -328,31 +328,31 @@ print(len(train), "train,", len(test), "test")
 
 1. Your support bot needs to answer from a policy document that changes monthly. What's the right tool?
    - A) Retrieval (RAG), so answers use the current document
-   - B) Fine-tuning on the policy each month
-   - C) Training a model from scratch
+   - B) Training a model from scratch
+   - C) Fine-tuning on the policy each month
 
 2. When is fine-tuning most likely to pay off?
    - A) A narrow, repetitive task with many good examples, where a smaller tuned model can replace a larger prompted one
-   - B) When you have 12 examples
-   - C) When a better prompt already solves it
+   - B) When a better prompt already solves it
+   - C) When you have 12 examples
 
 3. What does LoRA do?
-   - A) Trains small adapter matrices while keeping the original weights frozen
-   - B) Deletes layers to make the model smaller
-   - C) Adds retrieval to a model
+   - A) Deletes layers to make the model smaller
+   - B) Adds retrieval to a model
+   - C) Trains small adapter matrices while keeping the original weights frozen
 
 4. Why remove near-duplicates before splitting train and test sets?
-   - A) Otherwise the same example can appear in both, and the test score measures memorisation
-   - B) To make training faster
-   - C) Because JSONL forbids duplicates
+   - A) To make training faster
+   - B) Because JSONL forbids duplicates
+   - C) Otherwise the same example can appear in both, and the test score measures memorisation
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Retrieval (RAG), so answers use the current document**: Fine-tuning changes behaviour; RAG supplies changing knowledge.
 2. **A) A narrow, repetitive task with many good examples, where a smaller tuned model can replace a larger prompted one**: Prove the need with evals first.
-3. **A) Trains small adapter matrices while keeping the original weights frozen**: Parameter-efficient fine-tuning cuts memory and cost.
-4. **A) Otherwise the same example can appear in both, and the test score measures memorisation**: Leakage makes results look better than they are.
+3. **C) Trains small adapter matrices while keeping the original weights frozen**: Parameter-efficient fine-tuning cuts memory and cost.
+4. **C) Otherwise the same example can appear in both, and the test score measures memorisation**: Leakage makes results look better than they are.
 
 </details>
 

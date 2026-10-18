@@ -969,34 +969,34 @@ gh run list --workflow pages.yml
 1. Why should the deploy job use an artifact from the build job rather than build again?
    - A) So it ships exactly the files the tests ran against
    - B) Artifacts make the site load faster
-   - C) The deploy job can't run npm
-   - D) GitHub Pages only accepts zip files
+   - C) GitHub Pages only accepts zip files
+   - D) The deploy job can't run npm
 
 2. What does id-token: write let a deploy job do?
-   - A) Request a short-lived OIDC token that proves which workflow and branch it is
-   - B) Write to the repository's code
-   - C) Read secrets from other repositories
-   - D) Skip required reviewers
+   - A) Read secrets from other repositories
+   - B) Request a short-lived OIDC token that proves which workflow and branch it is
+   - C) Skip required reviewers
+   - D) Write to the repository's code
 
 3. For a deployment workflow, which concurrency setting is safest?
-   - A) A fixed group with cancel-in-progress: false, so deployments queue
-   - B) cancel-in-progress: true, so the newest deployment stops the running one
+   - A) cancel-in-progress: true, so the newest deployment stops the running one
+   - B) A fixed group with cancel-in-progress: false, so deployments queue
    - C) No concurrency setting at all
    - D) A different group for every run
 
 4. A required reviewer protects the production environment. What happens when a deploy job targets it?
-   - A) The job waits until a reviewer approves it
-   - B) The job fails immediately
+   - A) The job fails immediately
+   - B) The workflow file must be approved first
    - C) The job runs, and the reviewer is notified afterwards
-   - D) The workflow file must be approved first
+   - D) The job waits until a reviewer approves it
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) So it ships exactly the files the tests ran against**: Building once means what you tested is what you deploy, with no second build that could differ.
-2. **A) Request a short-lived OIDC token that proves which workflow and branch it is**: OIDC tokens replace stored keys: GitHub Pages and the clouds trust them instead.
-3. **A) A fixed group with cancel-in-progress: false, so deployments queue**: Cancelling a deployment halfway can leave production half-updated; queue them instead.
-4. **A) The job waits until a reviewer approves it**: Protection rules hold the job before it starts; the reviewer approves (or rejects) the deployment.
+2. **B) Request a short-lived OIDC token that proves which workflow and branch it is**: OIDC tokens replace stored keys: GitHub Pages and the clouds trust them instead.
+3. **B) A fixed group with cancel-in-progress: false, so deployments queue**: Cancelling a deployment halfway can leave production half-updated; queue them instead.
+4. **D) The job waits until a reviewer approves it**: Protection rules hold the job before it starts; the reviewer approves (or rejects) the deployment.
 
 </details>
 

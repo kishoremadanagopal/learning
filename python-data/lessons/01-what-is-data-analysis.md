@@ -181,26 +181,26 @@ print(customers.head())
 ## Quick quiz
 
 1. In a table of sales, what is one **row**?
-   - A) One fact, like the price
+   - A) The list of column names
    - B) One record, like a single order
-   - C) The list of column names
+   - C) One fact, like the price
 
 2. What does CSV stand for?
-   - A) Computer Spreadsheet Value
-   - B) Comma-separated values
-   - C) Column sorted view
+   - A) Comma-separated values
+   - B) Column sorted view
+   - C) Computer Spreadsheet Value
 
 3. Which import is the standard way to load pandas?
-   - A) `import pandas`
-   - B) `import pandas as pd`
-   - C) `from pandas import *`
+   - A) `from pandas import *`
+   - B) `import pandas`
+   - C) `import pandas as pd`
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **B) One record, like a single order**: Each row is one thing being described (here, one order). Columns are the facts about it.
-2. **B) Comma-separated values**: A CSV file is plain text with one row per line and commas between the columns.
-3. **B) `import pandas as pd`**: Everyone uses the short name `pd`, so code you read and write looks the same everywhere.
+2. **A) Comma-separated values**: A CSV file is plain text with one row per line and commas between the columns.
+3. **C) `import pandas as pd`**: Everyone uses the short name `pd`, so code you read and write looks the same everywhere.
 
 </details>
 

@@ -218,8 +218,8 @@ print(weights.round(2))
 ## Quick quiz
 
 1. What is the first principal component?
-   - A) The direction in which the data varies the most
-   - B) The first column of the data
+   - A) The first column of the data
+   - B) The direction in which the data varies the most
    - C) The most important feature for predicting the label
 
 2. PCA's explained_variance_ratio_ is [0.73, 0.25, 0.02]. Keeping two components keeps:
@@ -228,22 +228,22 @@ print(weights.round(2))
    - C) Two thirds of the rows
 
 3. Why scale before PCA?
-   - A) Otherwise the feature with the biggest units dominates the first component
+   - A) Scaling removes outliers
    - B) PCA only works on values between 0 and 1
-   - C) Scaling removes outliers
+   - C) Otherwise the feature with the biggest units dominates the first component
 
 4. A downside of training a model on PCA components is:
-   - A) The components are mixtures of features, so the model is harder to explain
-   - B) It always lowers accuracy
+   - A) It always lowers accuracy
+   - B) The components are mixtures of features, so the model is harder to explain
    - C) It leaks the test set
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) The direction in which the data varies the most**: PCA finds directions of biggest variation; it never looks at a label.
+1. **B) The direction in which the data varies the most**: PCA finds directions of biggest variation; it never looks at a label.
 2. **A) About 98% of the variation**: Add the first two shares.
-3. **A) Otherwise the feature with the biggest units dominates the first component**: PCA looks for large variation, and unscaled grams vary far more than centimetres.
-4. **A) The components are mixtures of features, so the model is harder to explain**: You trade some interpretability for fewer columns.
+3. **C) Otherwise the feature with the biggest units dominates the first component**: PCA looks for large variation, and unscaled grams vary far more than centimetres.
+4. **B) The components are mixtures of features, so the model is harder to explain**: You trade some interpretability for fewer columns.
 
 </details>
 

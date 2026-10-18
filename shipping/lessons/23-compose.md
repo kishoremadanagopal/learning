@@ -1538,35 +1538,35 @@ curl localhost:8080
 
 1. In a Compose project, how does the web service reach the api service?
    - A) By its service name, http://api:3000, on the project's network
-   - B) At http://localhost:3000
+   - B) Services can't talk to each other
    - C) Only through a published port on your computer
-   - D) Services can't talk to each other
+   - D) At http://localhost:3000
 
 2. What does docker compose down do by default?
-   - A) Stops and removes the containers and the project network, but keeps named volumes
-   - B) Deletes the images and volumes too
-   - C) Only stops the containers
-   - D) Pulls newer images
+   - A) Pulls newer images
+   - B) Only stops the containers
+   - C) Deletes the images and volumes too
+   - D) Stops and removes the containers and the project network, but keeps named volumes
 
 3. depends_on: api (without a condition) makes Compose wait until…
    - A) the api container has started, not until its program is ready
-   - B) api's health check passes
-   - C) api has exited successfully
-   - D) api has finished building only
+   - B) api has finished building only
+   - C) api's health check passes
+   - D) api has exited successfully
 
 4. A compose file starts with version: "3.8". What happens?
-   - A) Compose ignores it and warns that the attribute is obsolete
-   - B) Compose uses an older file format
-   - C) The file is rejected
-   - D) It selects Docker Engine 3.8
+   - A) Compose uses an older file format
+   - B) The file is rejected
+   - C) It selects Docker Engine 3.8
+   - D) Compose ignores it and warns that the attribute is obsolete
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) By its service name, http://api:3000, on the project's network**: Compose creates a network where each service name resolves to its container.
-2. **A) Stops and removes the containers and the project network, but keeps named volumes**: Add -v to delete named volumes as well.
+2. **D) Stops and removes the containers and the project network, but keeps named volumes**: Add -v to delete named volumes as well.
 3. **A) the api container has started, not until its program is ready**: Use a healthcheck with condition: service_healthy to wait for readiness.
-4. **A) Compose ignores it and warns that the attribute is obsolete**: The version key is from the old docker-compose tool; today's Compose doesn't need it.
+4. **D) Compose ignores it and warns that the attribute is obsolete**: The version key is from the old docker-compose tool; today's Compose doesn't need it.
 
 </details>
 

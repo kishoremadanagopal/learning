@@ -207,25 +207,25 @@ plt.show()
 
 1. What does `df.plot.bar()` do with a DataFrame of three columns?
    - A) Draws only the first column
-   - B) Draws a bar for each column, grouped by the index, with a legend
-   - C) Raises an error
+   - B) Raises an error
+   - C) Draws a bar for each column, grouped by the index, with a legend
 
 2. Why use `sharey=True` in a grid of charts?
-   - A) So every chart uses the same y scale and can be compared fairly
-   - B) To share one title
-   - C) To make the charts smaller
+   - A) To share one title
+   - B) To make the charts smaller
+   - C) So every chart uses the same y scale and can be compared fairly
 
 3. Which title is best for a chart of revenue by region?
-   - A) "Revenue by region"
+   - A) "North brings in 30% of all revenue"
    - B) "groupby region sum"
-   - C) "North brings in 30% of all revenue"
+   - C) "Revenue by region"
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) Draws a bar for each column, grouped by the index, with a legend**: Each column becomes a bar series, and the index provides the categories.
-2. **A) So every chart uses the same y scale and can be compared fairly**: Different scales can make a small change look as big as a large one.
-3. **C) "North brings in 30% of all revenue"**: Title the finding, so the reader knows what to notice.
+1. **C) Draws a bar for each column, grouped by the index, with a legend**: Each column becomes a bar series, and the index provides the categories.
+2. **C) So every chart uses the same y scale and can be compared fairly**: Different scales can make a small change look as big as a large one.
+3. **A) "North brings in 30% of all revenue"**: Title the finding, so the reader knows what to notice.
 
 </details>
 

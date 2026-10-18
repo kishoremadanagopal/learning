@@ -206,21 +206,21 @@ print(team)
    - C) A NumPy array
 
 2. `df.shape` is `(1095, 4)`. What does that mean?
-   - A) 1095 columns and 4 rows
-   - B) 1095 rows and 4 columns
+   - A) 1095 rows and 4 columns
+   - B) 1095 columns and 4 rows
    - C) 1095 missing values
 
 3. Which command shows column types and how many values are missing in each?
-   - A) `df.head()`
-   - B) `df.info()`
+   - A) `df.info()`
+   - B) `df.head()`
    - C) `df.shape`
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) A Series**: Every column of a DataFrame is a Series, sharing the table's index.
-2. **B) 1095 rows and 4 columns**: Shape is always (rows, columns).
-3. **B) `df.info()`**: `info()` lists each column with its non-null count and dtype.
+2. **A) 1095 rows and 4 columns**: Shape is always (rows, columns).
+3. **A) `df.info()`**: `info()` lists each column with its non-null count and dtype.
 
 </details>
 

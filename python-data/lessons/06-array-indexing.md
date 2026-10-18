@@ -224,25 +224,25 @@ print(science, third)
 ## Quick quiz
 
 1. What does `arr[:, 0]` select from a 2-D array?
-   - A) The first row
-   - B) The first column, from every row
-   - C) The first item only
+   - A) The first item only
+   - B) The first row
+   - C) The first column, from every row
 
 2. Which line correctly keeps values between 5 and 15?
    - A) `a[a > 5 and a < 15]`
-   - B) `a[(a > 5) & (a < 15)]`
-   - C) `a[a > 5 & a < 15]`
+   - B) `a[a > 5 & a < 15]`
+   - C) `a[(a > 5) & (a < 15)]`
 
 3. `part = a[1:4]` then `part[0] = 99`. What happens to `a`?
    - A) `a` changes too, because a slice is a view
-   - B) Nothing, a slice is a copy
-   - C) An error is raised
+   - B) An error is raised
+   - C) Nothing, a slice is a copy
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) The first column, from every row**: `:` means "every row", and `0` picks column 0.
-2. **B) `a[(a > 5) & (a < 15)]`**: Use `&` with each condition in brackets. `and` doesn't work on arrays, and without brackets `&` runs first.
+1. **C) The first column, from every row**: `:` means "every row", and `0` picks column 0.
+2. **C) `a[(a > 5) & (a < 15)]`**: Use `&` with each condition in brackets. `and` doesn't work on arrays, and without brackets `&` runs first.
 3. **A) `a` changes too, because a slice is a view**: Slices share the original's numbers. Use `.copy()` when you want to change one without the other.
 
 </details>

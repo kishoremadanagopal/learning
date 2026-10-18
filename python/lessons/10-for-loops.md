@@ -175,14 +175,14 @@ triangle(4)
 
 2. What does `enumerate(["a", "b"])` produce?
    - A) ("a", "b")
-   - B) (0, "a") and (1, "b")
-   - C) (1, "a") and (2, "b")
+   - B) (1, "a") and (2, "b")
+   - C) (0, "a") and (1, "b")
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) [2, 5, 8]**: Start at 2, add 3 each time, stop before 10.
-2. **B) (0, "a") and (1, "b")**: It pairs each item with its index, starting at 0 unless you pass `start=`.
+2. **C) (0, "a") and (1, "b")**: It pairs each item with its index, starting at 0 unless you pass `start=`.
 
 </details>
 

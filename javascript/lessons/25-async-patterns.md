@@ -340,31 +340,31 @@ console.log(await retry(flaky), "after", calls, "calls");
 ## Quick quiz
 
 1. Promise.race([request, timeout(200)]) rejects after 200 ms. Is the request cancelled?
-   - A) No; only the waiting stops. Pass an AbortSignal to cancel the request itself
-   - B) Yes, race cancels the losing promises
-   - C) Only if the server supports it
+   - A) Yes, race cancels the losing promises
+   - B) Only if the server supports it
+   - C) No; only the waiting stops. Pass an AbortSignal to cancel the request itself
 
 2. Which errors are worth retrying?
    - A) Temporary ones: network errors, timeouts, 429 and 5xx responses
-   - B) All errors
-   - C) 400 and 404
+   - B) 400 and 404
+   - C) All errors
 
 3. Why add jitter to exponential backoff?
-   - A) So many clients don't all retry at the same moment
-   - B) To make retries faster
+   - A) To make retries faster
+   - B) So many clients don't all retry at the same moment
    - C) To avoid the need for timeouts
 
 4. How do chat apps show an LLM's answer word by word?
    - A) They read the response body as a stream and display each chunk as it arrives
-   - B) They poll the server every millisecond
-   - C) The browser does it automatically for long responses
+   - B) The browser does it automatically for long responses
+   - C) They poll the server every millisecond
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) No; only the waiting stops. Pass an AbortSignal to cancel the request itself**: Promises can't be cancelled; operations can, through signals.
+1. **C) No; only the waiting stops. Pass an AbortSignal to cancel the request itself**: Promises can't be cancelled; operations can, through signals.
 2. **A) Temporary ones: network errors, timeouts, 429 and 5xx responses**: Client errors fail the same way every time.
-3. **A) So many clients don't all retry at the same moment**: Synchronised retries can overload a recovering server.
+3. **B) So many clients don't all retry at the same moment**: Synchronised retries can overload a recovering server.
 4. **A) They read the response body as a stream and display each chunk as it arrives**: LLM APIs stream with server-sent events.
 
 </details>

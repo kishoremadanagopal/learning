@@ -205,14 +205,14 @@ print(second_largest([4, 9, 2, 9, 7]))
 ## Quick quiz
 
 1. After `x = [1, 2]`, `y = x`, `y.append(3)`, what is `x`?
-   - A) [1, 2]
-   - B) [1, 2, 3]
-   - C) An error
+   - A) [1, 2, 3]
+   - B) An error
+   - C) [1, 2]
 
 2. What does `[3, 1, 2].sort()` return?
-   - A) [1, 2, 3]
-   - B) None
-   - C) [3, 2, 1]
+   - A) [3, 2, 1]
+   - B) [1, 2, 3]
+   - C) None
 
 3. How do you get the last item of a list `items`?
    - A) `items[len(items)]`
@@ -222,8 +222,8 @@ print(second_largest([4, 9, 2, 9, 7]))
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) [1, 2, 3]**: `y = x` doesn't copy; both names refer to the same list.
-2. **B) None**: `.sort()` sorts in place and returns None. Use `sorted()` to get a new list back.
+1. **A) [1, 2, 3]**: `y = x` doesn't copy; both names refer to the same list.
+2. **C) None**: `.sort()` sorts in place and returns None. Use `sorted()` to get a new list back.
 3. **B) `items[-1]`**: `items[len(items)]` is one past the end and raises IndexError.
 
 </details>

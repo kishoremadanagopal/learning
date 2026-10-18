@@ -126,18 +126,18 @@ print([n for n in range(20) if is_prime(n)])
 
 1. What does `continue` do?
    - A) Ends the loop
-   - B) Skips the rest of this iteration and moves to the next
-   - C) Restarts the loop from the beginning
+   - B) Restarts the loop from the beginning
+   - C) Skips the rest of this iteration and moves to the next
 
 2. When does a `for ... else` block run?
-   - A) Always
-   - B) Only if the loop body never ran
+   - A) Only if the loop body never ran
+   - B) Always
    - C) When the loop ends without `break`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **B) Skips the rest of this iteration and moves to the next**: `continue` jumps straight to the next item; `break` ends the loop.
+1. **C) Skips the rest of this iteration and moves to the next**: `continue` jumps straight to the next item; `break` ends the loop.
 2. **C) When the loop ends without `break`**: The `else` is skipped only when `break` exits the loop.
 
 </details>

@@ -396,32 +396,32 @@ console.log(nextStatus("placed"), nextStatus("delivered"));
 ## Quick quiz
 
 1. What is the difference between private name and #name in a TypeScript class?
-   - A) private is only checked by the compiler; #name is also private at runtime
-   - B) There is no difference
-   - C) #name is only for static fields
+   - A) There is no difference
+   - B) #name is only for static fields
+   - C) private is only checked by the compiler; #name is also private at runtime
 
 2. Why can't Node.js's type stripping run code with an enum?
    - A) An enum generates JavaScript code, so it can't simply be deleted
-   - B) Enums are deprecated in JavaScript
-   - C) Node.js doesn't support strings
+   - B) Node.js doesn't support strings
+   - C) Enums are deprecated in JavaScript
 
 3. What does noUncheckedIndexedAccess change?
-   - A) Reading arr[i] gives T | undefined, because the item may not exist
-   - B) Arrays become read-only
+   - A) Arrays become read-only
+   - B) Reading arr[i] gives T | undefined, because the item may not exist
    - C) It checks array indexes at runtime
 
 4. Since TypeScript 6.0, how do you use types from @types/node?
-   - A) Install it and list "node" in the tsconfig "types" option
-   - B) Nothing: every @types package is included automatically
-   - C) Import it in every file
+   - A) Nothing: every @types package is included automatically
+   - B) Import it in every file
+   - C) Install it and list "node" in the tsconfig "types" option
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) private is only checked by the compiler; #name is also private at runtime**: private is erased; JavaScript's # fields are enforced by the engine.
+1. **C) private is only checked by the compiler; #name is also private at runtime**: private is erased; JavaScript's # fields are enforced by the engine.
 2. **A) An enum generates JavaScript code, so it can't simply be deleted**: Type stripping only removes syntax; erasableSyntaxOnly reports the rest.
-3. **A) Reading arr[i] gives T | undefined, because the item may not exist**: It makes TypeScript honest about out-of-range reads.
-4. **A) Install it and list "node" in the tsconfig "types" option**: The types option now defaults to an empty list.
+3. **B) Reading arr[i] gives T | undefined, because the item may not exist**: It makes TypeScript honest about out-of-range reads.
+4. **C) Install it and list "node" in the tsconfig "types" option**: The types option now defaults to an empty list.
 
 </details>
 

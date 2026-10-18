@@ -369,14 +369,14 @@ print(course_order(2, [[0, 1], [1, 0]]))
 ## Quick quiz
 
 1. When does a directed graph have a topological order?
-   - A) Exactly when it has no directed cycle (it's a DAG)
+   - A) Only when it's a tree
    - B) Always
-   - C) Only when it's a tree
+   - C) Exactly when it has no directed cycle (it's a DAG)
 
 2. In Kahn's algorithm, which vertices go into the queue first?
-   - A) Those with in-degree 0
+   - A) The highest-numbered ones
    - B) Those with the most edges
-   - C) The highest-numbered ones
+   - C) Those with in-degree 0
 
 3. How does Kahn's algorithm reveal a cycle?
    - A) Fewer than V vertices make it into the order
@@ -391,8 +391,8 @@ print(course_order(2, [[0, 1], [1, 0]]))
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Exactly when it has no directed cycle (it's a DAG)**: A cycle would require each task on it to come before itself.
-2. **A) Those with in-degree 0**: Nothing has to come before them.
+1. **C) Exactly when it has no directed cycle (it's a DAG)**: A cycle would require each task on it to come before itself.
+2. **C) Those with in-degree 0**: Nothing has to come before them.
 3. **A) Fewer than V vertices make it into the order**: Vertices on a cycle never reach in-degree 0.
 4. **A) A grey vertex, one still on the current path**: A black vertex was finished by another route, which is fine (think of a diamond).
 

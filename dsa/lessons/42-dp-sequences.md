@@ -381,13 +381,13 @@ print(length_of_lis([10, 9, 2, 5, 3, 7, 101, 18]))
    - C) It makes no difference
 
 3. In Kadane's algorithm, what does best_here represent?
-   - A) The largest sum of a subarray ending at the current position
+   - A) The sum of all positive numbers
    - B) The largest sum seen anywhere so far
-   - C) The sum of all positive numbers
+   - C) The largest sum of a subarray ending at the current position
 
 4. In the O(n log n) LIS method, what does tails[k] hold?
-   - A) The smallest last value of an increasing subsequence of length k + 1
-   - B) The k-th number of the longest subsequence
+   - A) The k-th number of the longest subsequence
+   - B) The smallest last value of an increasing subsequence of length k + 1
    - C) The count of subsequences of length k
 
 <details>
@@ -395,8 +395,8 @@ print(length_of_lis([10, 9, 2, 5, 3, 7, 101, 18]))
 
 1. **A) 3 coins (4 + 1 + 1), while the best is 2 (3 + 3)**: Greedy isn't safe for every coin system; DP checks every last coin.
 2. **A) The loop over coin values**: With amounts outside, 1 + 2 and 2 + 1 are counted separately.
-3. **A) The largest sum of a subarray ending at the current position**: Each step either extends the previous run or starts again at x.
-4. **A) The smallest last value of an increasing subsequence of length k + 1**: Smaller endings are easier to extend, and the list stays sorted.
+3. **C) The largest sum of a subarray ending at the current position**: Each step either extends the previous run or starts again at x.
+4. **B) The smallest last value of an increasing subsequence of length k + 1**: Smaller endings are easier to extend, and the list stays sorted.
 
 </details>
 

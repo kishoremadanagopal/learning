@@ -422,9 +422,9 @@ print(decode("2[abc]3[cd]ef"))
 ## Quick quiz
 
 1. In "longest consecutive sequence", why only start counting at x when x − 1 isn't in the set?
-   - A) So each run is counted once from its start, keeping the total work O(n)
-   - B) Because negative numbers aren't allowed
-   - C) To sort the numbers
+   - A) To sort the numbers
+   - B) So each run is counted once from its start, keeping the total work O(n)
+   - C) Because negative numbers aren't allowed
 
 2. Why is binary search valid in the TimeMap's get?
    - A) Timestamps are appended in increasing order, so each key's list is already sorted
@@ -433,18 +433,18 @@ print(decode("2[abc]3[cd]ef"))
 
 3. In the two-pointer rain-water solution, which side moves?
    - A) The side with the lower bar, because its own maximum limits the water there
-   - B) Always the left side
-   - C) The side with the taller bar
+   - B) The side with the taller bar
+   - C) Always the left side
 
 4. What is the best way to practise after finishing a topic-by-topic course?
    - A) Mixed problem sets where the technique isn't announced, revisited over time
-   - B) Re-reading the same lesson many times
-   - C) Memorising solutions word for word
+   - B) Memorising solutions word for word
+   - C) Re-reading the same lesson many times
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) So each run is counted once from its start, keeping the total work O(n)**: Counting from every member of a run would make it O(n²).
+1. **B) So each run is counted once from its start, keeping the total work O(n)**: Counting from every member of a run would make it O(n²).
 2. **A) Timestamps are appended in increasing order, so each key's list is already sorted**: "Latest timestamp ≤ t" is bisect_right − 1 on a sorted list.
 3. **A) The side with the lower bar, because its own maximum limits the water there**: The other side is known to have a bar at least as tall.
 4. **A) Mixed problem sets where the technique isn't announced, revisited over time**: Choosing the technique is the skill interviews test.

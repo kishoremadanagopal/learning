@@ -399,27 +399,27 @@ console.log(new Circle(1).describe(), new Rect(2, 3.5).describe());
    - C) A static field
 
 2. const f = obj.method; f(); What is this inside method?
-   - A) undefined (in strict mode), because the function was called on its own
-   - B) obj
+   - A) obj
+   - B) undefined (in strict mode), because the function was called on its own
    - C) The global object, always
 
 3. In a subclass constructor, what must happen before you use this?
-   - A) Call super(...)
+   - A) Nothing; this is ready immediately
    - B) Call this.init()
-   - C) Nothing; this is ready immediately
+   - C) Call super(...)
 
 4. Why do arrow functions help with callbacks in classes?
-   - A) They use the this of the surrounding code instead of having their own
-   - B) They run faster
+   - A) They run faster
+   - B) They use the this of the surrounding code instead of having their own
    - C) They can't be detached
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) A private field, accessible only inside the class**: Code outside the class can't read or write it.
-2. **A) undefined (in strict mode), because the function was called on its own**: Use bind or an arrow function to keep this.
-3. **A) Call super(...)**: super runs the parent's constructor.
-4. **A) They use the this of the surrounding code instead of having their own**: An arrow function in a class field keeps its instance.
+2. **B) undefined (in strict mode), because the function was called on its own**: Use bind or an arrow function to keep this.
+3. **C) Call super(...)**: super runs the parent's constructor.
+4. **B) They use the this of the surrounding code instead of having their own**: An arrow function in a class field keeps its instance.
 
 </details>
 

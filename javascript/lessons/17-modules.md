@@ -312,13 +312,13 @@ console.log(resolve("src/app/main.js", "zod"));
 
 2. A module is imported by three other files. How many times does its top-level code run?
    - A) Once
-   - B) Three times
-   - C) Never, until a function is called
+   - B) Never, until a function is called
+   - C) Three times
 
 3. What does import("./chart.js") (with brackets) do?
    - A) Loads the module at run time and returns a promise
-   - B) The same as a static import at the top
-   - C) Imports only the default export
+   - B) Imports only the default export
+   - C) The same as a static import at the top
 
 4. In the browser, what makes a script an ES module?
    - A) <script type="module">
