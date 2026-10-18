@@ -359,43 +359,43 @@ print(model[0].bias[:3], round(model[3].weight.std().item(), 4))
 ## Quick quiz
 
 1. A 30-layer network with sigmoid activations barely learns: its first layers' gradients are near zero. What is this, and a standard fix?
-   - A) Vanishing gradients; use ReLU-family activations, proper initialisation, normalisation and residual connections
-   - B) Exploding gradients; lower the batch size
-   - C) Overfitting; add dropout
-   - D) Underfitting; remove layers
+   - A) Exploding gradients; lower the batch size
+   - B) Vanishing gradients; use ReLU-family activations, proper initialisation, normalisation and residual connections
+   - C) Underfitting; remove layers
+   - D) Overfitting; add dropout
 
 2. Which initialisation suits layers followed by ReLU?
-   - A) Kaiming (He): std = √(2 / fan_in)
-   - B) All zeros
+   - A) A constant 0.01
+   - B) Kaiming (He): std = √(2 / fan_in)
    - C) Xavier with gain 1 for every network
-   - D) A constant 0.01
+   - D) All zeros
 
 3. Why are Transformers built with LayerNorm rather than BatchNorm?
-   - A) LayerNorm normalises each sample's features on its own, so it doesn't depend on the batch, behaves the same in training and inference, and handles variable-length sequences
-   - B) LayerNorm has no learnable parameters
-   - C) BatchNorm can't be used on GPUs
-   - D) LayerNorm is faster to compute than a linear layer
+   - A) BatchNorm can't be used on GPUs
+   - B) LayerNorm is faster to compute than a linear layer
+   - C) LayerNorm normalises each sample's features on its own, so it doesn't depend on the batch, behaves the same in training and inference, and handles variable-length sequences
+   - D) LayerNorm has no learnable parameters
 
 4. What does a residual connection compute?
    - A) `out = x + F(x)`
-   - B) `out = F(x) − x`
-   - C) `out = F(F(x))`
+   - B) `out = F(F(x))`
+   - C) `out = F(x) − x`
    - D) `out = x · F(x)`
 
 5. Validation loss stops improving after epoch 12 while training loss keeps falling. With early stopping (patience 3), which weights should you keep?
-   - A) The weights from epoch 12, the best validation loss
-   - B) The weights from the last epoch
-   - C) The weights from epoch 15, when training stopped
-   - D) The initial weights
+   - A) The initial weights
+   - B) The weights from epoch 15, when training stopped
+   - C) The weights from the last epoch
+   - D) The weights from epoch 12, the best validation loss
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Vanishing gradients; use ReLU-family activations, proper initialisation, normalisation and residual connections**: Sigmoid's slope is at most 0.25, and the factors multiply through every layer.
-2. **A) Kaiming (He): std = √(2 / fan_in)**: The factor 2 compensates for ReLU discarding the negative half of its inputs.
-3. **A) LayerNorm normalises each sample's features on its own, so it doesn't depend on the batch, behaves the same in training and inference, and handles variable-length sequences**: BatchNorm's statistics depend on the batch and on padding, which suits sequence models poorly.
+1. **B) Vanishing gradients; use ReLU-family activations, proper initialisation, normalisation and residual connections**: Sigmoid's slope is at most 0.25, and the factors multiply through every layer.
+2. **B) Kaiming (He): std = √(2 / fan_in)**: The factor 2 compensates for ReLU discarding the negative half of its inputs.
+3. **C) LayerNorm normalises each sample's features on its own, so it doesn't depend on the batch, behaves the same in training and inference, and handles variable-length sequences**: BatchNorm's statistics depend on the batch and on padding, which suits sequence models poorly.
 4. **A) `out = x + F(x)`**: The block learns a change to its input, and gradients pass through the addition unchanged.
-5. **A) The weights from epoch 12, the best validation loss**: Early stopping saves a copy of the best state_dict and restores it at the end.
+5. **D) The weights from epoch 12, the best validation loss**: Early stopping saves a copy of the best state_dict and restores it at the end.
 
 </details>
 

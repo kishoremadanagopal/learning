@@ -381,48 +381,48 @@ print("best epoch:", best)
 
 1. What does `model.eval()` change?
    - A) The behaviour of layers like Dropout and BatchNorm
-   - B) It turns off gradient tracking
-   - C) It freezes the parameters so the optimizer can't change them
+   - B) It freezes the parameters so the optimizer can't change them
+   - C) It turns off gradient tracking
    - D) It moves the model to the CPU
 
 2. A model with dropout gets slightly different validation accuracy every time you evaluate it. What's the most likely bug?
-   - A) The evaluation runs without `model.eval()`
-   - B) The evaluation runs inside `torch.no_grad()`
-   - C) The learning rate is too high
-   - D) The validation data isn't shuffled
+   - A) The evaluation runs inside `torch.no_grad()`
+   - B) The learning rate is too high
+   - C) The validation data isn't shuffled
+   - D) The evaluation runs without `model.eval()`
 
 3. Training loss keeps falling but validation loss has been rising for 10 epochs. What is happening?
-   - A) Overfitting: keep the weights from the best validation epoch, add regularisation, or get more data
-   - B) Underfitting: train for longer
-   - C) The learning rate is too low
-   - D) The validation set is too big
+   - A) The learning rate is too low
+   - B) The validation set is too big
+   - C) Overfitting: keep the weights from the best validation epoch, add regularisation, or get more data
+   - D) Underfitting: train for longer
 
 4. Why should the training data be reshuffled every epoch?
-   - A) So mini-batches differ each epoch and the model can't learn from the order of the data
-   - B) So the validation set changes
-   - C) Because PyTorch requires it
+   - A) So the validation set changes
+   - B) Because PyTorch requires it
+   - C) So mini-batches differ each epoch and the model can't learn from the order of the data
    - D) To make training deterministic
 
 5. You keep `best = model.state_dict()` when validation improves, and load it at the end. What goes wrong?
-   - A) The state_dict shares memory with the live parameters, so `best` ends up holding the final weights
-   - B) Nothing; this is correct
+   - A) Nothing; this is correct
+   - B) state_dict() only contains buffers
    - C) load_state_dict rejects dicts from the same model
-   - D) state_dict() only contains buffers
+   - D) The state_dict shares memory with the live parameters, so `best` ends up holding the final weights
 
 6. A BatchNorm model raises "Expected more than 1 value per channel when training" when predicting one sample. What fixes it?
    - A) Calling `model.eval()` before predicting
-   - B) Wrapping the call in `torch.no_grad()`
+   - B) Lowering the learning rate
    - C) Converting the input to float64
-   - D) Lowering the learning rate
+   - D) Wrapping the call in `torch.no_grad()`
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) The behaviour of layers like Dropout and BatchNorm**: eval() sets training=False on every submodule; use torch.no_grad() to stop gradient tracking.
-2. **A) The evaluation runs without `model.eval()`**: In training mode, dropout randomly zeroes activations on every call.
-3. **A) Overfitting: keep the weights from the best validation epoch, add regularisation, or get more data**: The model is memorising the training data.
-4. **A) So mini-batches differ each epoch and the model can't learn from the order of the data**: Fresh random batches give better gradient estimates and generalisation.
-5. **A) The state_dict shares memory with the live parameters, so `best` ends up holding the final weights**: Copy it with copy.deepcopy (or clone each tensor).
+2. **D) The evaluation runs without `model.eval()`**: In training mode, dropout randomly zeroes activations on every call.
+3. **C) Overfitting: keep the weights from the best validation epoch, add regularisation, or get more data**: The model is memorising the training data.
+4. **C) So mini-batches differ each epoch and the model can't learn from the order of the data**: Fresh random batches give better gradient estimates and generalisation.
+5. **D) The state_dict shares memory with the live parameters, so `best` ends up holding the final weights**: Copy it with copy.deepcopy (or clone each tensor).
 6. **A) Calling `model.eval()` before predicting**: In training mode, batch norm needs batch statistics; eval mode uses the running averages.
 
 </details>

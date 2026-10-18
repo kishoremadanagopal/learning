@@ -267,36 +267,36 @@ print(doubled_tensor)
 ## Quick quiz
 
 1. What does `torch.tensor([[1, 2], [3, 4], [5, 6]]).shape` return?
-   - A) `torch.Size([3, 2])`
-   - B) `torch.Size([2, 3])`
+   - A) `(3, 2, 1)`
+   - B) `torch.Size([3, 2])`
    - C) `torch.Size([6])`
-   - D) `(3, 2, 1)`
+   - D) `torch.Size([2, 3])`
 
 2. `x = torch.tensor([4.0, 5.0])`. What is `type(x.sum())`?
-   - A) `torch.Tensor`, holding a 0-dimensional tensor
+   - A) `int`
    - B) `float`
-   - C) `int`
+   - C) `torch.Tensor`, holding a 0-dimensional tensor
    - D) `numpy.float32`
 
 3. A batch of 16 RGB images, each 64 × 64 pixels, in PyTorch's usual layout. What's its shape?
    - A) `[16, 3, 64, 64]`
-   - B) `[16, 64, 64, 3]`
+   - B) `[64, 64, 3, 16]`
    - C) `[3, 16, 64, 64]`
-   - D) `[64, 64, 3, 16]`
+   - D) `[16, 64, 64, 3]`
 
 4. Which of these is NOT one of the three attributes that describe every tensor?
-   - A) `.grad_fn`
-   - B) `.shape`
-   - C) `.dtype`
-   - D) `.device`
+   - A) `.device`
+   - B) `.dtype`
+   - C) `.grad_fn`
+   - D) `.shape`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) `torch.Size([3, 2])`**: Three inner lists (rows) of two numbers each: 3 rows, 2 columns. `torch.Size` is a subclass of tuple.
-2. **A) `torch.Tensor`, holding a 0-dimensional tensor**: Reductions return tensors. Call `.item()` to get a Python number.
+1. **B) `torch.Size([3, 2])`**: Three inner lists (rows) of two numbers each: 3 rows, 2 columns. `torch.Size` is a subclass of tuple.
+2. **C) `torch.Tensor`, holding a 0-dimensional tensor**: Reductions return tensors. Call `.item()` to get a Python number.
 3. **A) `[16, 3, 64, 64]`**: PyTorch's convention is NCHW: batch, channels, height, width. (Libraries such as PIL and Matplotlib use height, width, channels.)
-4. **A) `.grad_fn`**: `grad_fn` exists only on tensors produced by operations that autograd records; shape, dtype and device describe every tensor.
+4. **C) `.grad_fn`**: `grad_fn` exists only on tensors produced by operations that autograd records; shape, dtype and device describe every tensor.
 
 </details>
 

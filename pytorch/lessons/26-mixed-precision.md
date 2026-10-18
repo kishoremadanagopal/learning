@@ -355,50 +355,50 @@ answers = {
 ## Quick quiz
 
 1. Inside `torch.autocast(device_type="cuda", dtype=torch.float16)`, what dtype does `nn.Linear` produce, and what dtype are its weights?
-   - A) float16 output; the weights remain float32
-   - B) float16 output and float16 weights
-   - C) float32 output; the weights become float16
-   - D) float32 output and weights
+   - A) float32 output and weights
+   - B) float32 output; the weights become float16
+   - C) float16 output; the weights remain float32
+   - D) float16 output and float16 weights
 
 2. Why does float16 training need a GradScaler but bfloat16 usually doesn't?
-   - A) float16's small exponent range lets small gradients underflow to zero; bfloat16 has float32's range
-   - B) bfloat16 has more mantissa bits
-   - C) GradScaler doesn't support bfloat16
-   - D) float16 can't be used on GPUs without it
+   - A) bfloat16 has more mantissa bits
+   - B) float16 can't be used on GPUs without it
+   - C) float16's small exponent range lets small gradients underflow to zero; bfloat16 has float32's range
+   - D) GradScaler doesn't support bfloat16
 
 3. When should `scaler.unscale_(optimizer)` be called explicitly?
    - A) Before clipping or inspecting gradients, so they have their true sizes
-   - B) After `scaler.update()`
-   - C) Before `scaler.scale(loss).backward()`
-   - D) Never: step() can't run without it
+   - B) Never: step() can't run without it
+   - C) After `scaler.update()`
+   - D) Before `scaler.scale(loss).backward()`
 
 4. A GradScaler's `step()` finds inf values in the gradients. What happens?
-   - A) The optimizer step is skipped, and `update()` lowers the scale (by backoff_factor, 0.5 by default)
-   - B) The step runs with the inf values
+   - A) The step runs with the inf values
+   - B) The gradients are set to zero and the step runs
    - C) Training stops with an error
-   - D) The gradients are set to zero and the step runs
+   - D) The optimizer step is skipped, and `update()` lowers the scale (by backoff_factor, 0.5 by default)
 
 5. Where should `loss.backward()` be called relative to the autocast block?
-   - A) Outside it, after the forward pass and loss
-   - B) Inside it, so backward also runs in float16
-   - C) Before entering it
-   - D) It doesn't matter, but inside is required for bfloat16
+   - A) Before entering it
+   - B) Outside it, after the forward pass and loss
+   - C) It doesn't matter, but inside is required for bfloat16
+   - D) Inside it, so backward also runs in float16
 
 6. Which loss raises an error under CUDA autocast?
-   - A) `F.binary_cross_entropy` (on probabilities)
-   - B) `F.binary_cross_entropy_with_logits`
-   - C) `F.cross_entropy`
-   - D) `F.mse_loss`
+   - A) `F.binary_cross_entropy_with_logits`
+   - B) `F.binary_cross_entropy` (on probabilities)
+   - C) `F.mse_loss`
+   - D) `F.cross_entropy`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) float16 output; the weights remain float32**: Autocast casts copies of the weights per operation; the stored weights stay float32.
-2. **A) float16's small exponent range lets small gradients underflow to zero; bfloat16 has float32's range**: Scaling the loss moves gradients into float16's representable range.
+1. **C) float16 output; the weights remain float32**: Autocast casts copies of the weights per operation; the stored weights stay float32.
+2. **C) float16's small exponent range lets small gradients underflow to zero; bfloat16 has float32's range**: Scaling the loss moves gradients into float16's representable range.
 3. **A) Before clipping or inspecting gradients, so they have their true sizes**: step() unscales automatically if you didn't; call unscale_ yourself only when you need real gradients first.
-4. **A) The optimizer step is skipped, and `update()` lowers the scale (by backoff_factor, 0.5 by default)**: Occasional skipped steps are expected, especially early in training.
-5. **A) Outside it, after the forward pass and loss**: Backward operations automatically use the dtypes of their forward counterparts.
-6. **A) `F.binary_cross_entropy` (on probabilities)**: A sigmoid followed by BCE is unstable in float16; use BCEWithLogitsLoss, which is safe.
+4. **D) The optimizer step is skipped, and `update()` lowers the scale (by backoff_factor, 0.5 by default)**: Occasional skipped steps are expected, especially early in training.
+5. **B) Outside it, after the forward pass and loss**: Backward operations automatically use the dtypes of their forward counterparts.
+6. **B) `F.binary_cross_entropy` (on probabilities)**: A sigmoid followed by BCE is unstable in float16; use BCEWithLogitsLoss, which is safe.
 
 </details>
 

@@ -344,43 +344,43 @@ print(len(train), len(val), len(test))
 ## Quick quiz
 
 1. Which two methods must a map-style `Dataset` implement?
-   - A) `__len__` and `__getitem__`
+   - A) `forward` and `backward`
    - B) `__iter__` and `__next__`
-   - C) `forward` and `backward`
-   - D) `load` and `transform`
+   - C) `load` and `transform`
+   - D) `__len__` and `__getitem__`
 
 2. `ds = TensorDataset(x, y)` with `x` of shape `[100, 4]` and `y` of shape `[100]`. What is `ds[7]`?
-   - A) The tuple `(x[7], y[7])`, with shapes `[4]` and `[]`
-   - B) `x[7]` only
+   - A) `x[7]` only
+   - B) The tuple `(x[7], y[7])`, with shapes `[4]` and `[]`
    - C) A tensor of shape `[5]`
    - D) A batch of 7 samples
 
 3. You split 50 samples with `random_split(ds, [0.8, 0.1, 0.1])`. What are the lengths?
-   - A) 40, 5, 5
-   - B) 41, 5, 4
-   - C) 40, 6, 4
-   - D) It raises an error because fractions aren't allowed
+   - A) 40, 6, 4
+   - B) 40, 5, 5
+   - C) It raises an error because fractions aren't allowed
+   - D) 41, 5, 4
 
 4. Why should a split use `generator=torch.Generator().manual_seed(...)`?
    - A) So the same samples land in the same subset on every run, keeping scores comparable and validation data out of training
    - B) Because random_split fails without a generator
-   - C) To make the split stratified by class
-   - D) To make the split faster
+   - C) To make the split faster
+   - D) To make the split stratified by class
 
 5. A dataset of 200,000 photos on disk. What should its `__init__` do?
-   - A) Store the file paths (and labels); read each image in `__getitem__`
-   - B) Read every image into one big tensor
-   - C) Train the model
-   - D) Shuffle the images
+   - A) Train the model
+   - B) Shuffle the images
+   - C) Store the file paths (and labels); read each image in `__getitem__`
+   - D) Read every image into one big tensor
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) `__len__` and `__getitem__`**: A map-style dataset maps an index to a sample; iterable-style datasets implement `__iter__` instead.
-2. **A) The tuple `(x[7], y[7])`, with shapes `[4]` and `[]`**: TensorDataset indexes every tensor along dim 0 and returns the results as a tuple.
-3. **A) 40, 5, 5**: 50 × 0.8 = 40 and 50 × 0.1 = 5 exactly, so there's no remainder to distribute.
+1. **D) `__len__` and `__getitem__`**: A map-style dataset maps an index to a sample; iterable-style datasets implement `__iter__` instead.
+2. **B) The tuple `(x[7], y[7])`, with shapes `[4]` and `[]`**: TensorDataset indexes every tensor along dim 0 and returns the results as a tuple.
+3. **B) 40, 5, 5**: 50 × 0.8 = 40 and 50 × 0.1 = 5 exactly, so there's no remainder to distribute.
 4. **A) So the same samples land in the same subset on every run, keeping scores comparable and validation data out of training**: Without a fixed generator the split depends on the global random state, which changes between runs.
-5. **A) Store the file paths (and labels); read each image in `__getitem__`**: Lazy loading keeps memory small and lets DataLoader workers read files in parallel.
+5. **C) Store the file paths (and labels); read each image in `__getitem__`**: Lazy loading keeps memory small and lets DataLoader workers read files in parallel.
 
 </details>
 

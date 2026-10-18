@@ -364,50 +364,50 @@ print(result, best)
 ## Quick quiz
 
 1. `x = torch.ones(3)` is on the CPU. After `x.to("cuda")`, where is `x`?
-   - A) Still on the CPU: `.to()` returns a new tensor on the GPU, which this line throws away
-   - B) On the GPU
-   - C) On both devices
-   - D) It raises an error
+   - A) It raises an error
+   - B) On both devices
+   - C) Still on the CPU: `.to()` returns a new tensor on the GPU, which this line throws away
+   - D) On the GPU
 
 2. `a` is on `cuda:0` and `b` on the CPU, both with shape `[3]`. What does `a + b` do?
-   - A) Raises a RuntimeError saying the tensors are on different devices
-   - B) Copies `b` to the GPU automatically and returns a CUDA tensor
-   - C) Copies `a` to the CPU and returns a CPU tensor
-   - D) Returns a tensor split across both devices
+   - A) Copies `a` to the CPU and returns a CPU tensor
+   - B) Returns a tensor split across both devices
+   - C) Raises a RuntimeError saying the tensors are on different devices
+   - D) Copies `b` to the GPU automatically and returns a CUDA tensor
 
 3. Which expression turns a GPU tensor `p` that requires grad into a NumPy array?
    - A) `p.detach().cpu().numpy()`
-   - B) `p.numpy()`
-   - C) `p.cpu().numpy()`
-   - D) `numpy.array(p)`
+   - B) `p.cpu().numpy()`
+   - C) `numpy.array(p)`
+   - D) `p.numpy()`
 
 4. What is the most portable way to choose a device in modern PyTorch code?
    - A) `torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"`
-   - B) `"cuda"`
-   - C) `torch.device("gpu")`
-   - D) `"cuda" if torch.cuda.device_count() > 1 else "mps"`
+   - B) `"cuda" if torch.cuda.device_count() > 1 else "mps"`
+   - C) `"cuda"`
+   - D) `torch.device("gpu")`
 
 5. Why is `torch.zeros(1000, 1000, device="cuda")` better than `torch.zeros(1000, 1000).cuda()`?
-   - A) It allocates directly on the GPU, skipping a CPU allocation and a copy
-   - B) It uses less GPU memory
-   - C) `.cuda()` doesn't work on zeros
-   - D) They're different: one is float64
+   - A) They're different: one is float64
+   - B) It allocates directly on the GPU, skipping a CPU allocation and a copy
+   - C) It uses less GPU memory
+   - D) `.cuda()` doesn't work on zeros
 
 6. Why should you call `torch.cuda.synchronize()` before stopping a timer around GPU code?
-   - A) GPU operations run asynchronously, so without it you may time only the queuing, not the work
-   - B) It frees GPU memory
-   - C) It moves results to the CPU
-   - D) It makes random numbers reproducible
+   - A) It makes random numbers reproducible
+   - B) GPU operations run asynchronously, so without it you may time only the queuing, not the work
+   - C) It frees GPU memory
+   - D) It moves results to the CPU
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Still on the CPU: `.to()` returns a new tensor on the GPU, which this line throws away**: For tensors, .to() is not in place. Write `x = x.to("cuda")`.
-2. **A) Raises a RuntimeError saying the tensors are on different devices**: PyTorch never moves data implicitly between devices (except 0-D CPU tensors, which act like Python numbers).
+1. **C) Still on the CPU: `.to()` returns a new tensor on the GPU, which this line throws away**: For tensors, .to() is not in place. Write `x = x.to("cuda")`.
+2. **C) Raises a RuntimeError saying the tensors are on different devices**: PyTorch never moves data implicitly between devices (except 0-D CPU tensors, which act like Python numbers).
 3. **A) `p.detach().cpu().numpy()`**: numpy() needs CPU memory and a tensor outside autograd, so detach and copy first.
 4. **A) `torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"`**: torch.accelerator covers CUDA, MPS, XPU and others, and falls back to the CPU. "gpu" isn't a device type at all.
-5. **A) It allocates directly on the GPU, skipping a CPU allocation and a copy**: Both give the same tensor, but creating it on the device avoids a slow CPU-to-GPU transfer.
-6. **A) GPU operations run asynchronously, so without it you may time only the queuing, not the work**: CUDA kernels are launched asynchronously; synchronize waits until they finish.
+5. **B) It allocates directly on the GPU, skipping a CPU allocation and a copy**: Both give the same tensor, but creating it on the device avoids a slow CPU-to-GPU transfer.
+6. **B) GPU operations run asynchronously, so without it you may time only the queuing, not the work**: CUDA kernels are launched asynchronously; synchronize waits until they finish.
 
 </details>
 

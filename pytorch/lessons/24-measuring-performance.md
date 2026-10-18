@@ -381,43 +381,43 @@ print(op_counts(lambda: model(x).sum().backward(), ["aten::linear", "aten::relu"
 ## Quick quiz
 
 1. You time `y = model(x)` on a GPU with `time.perf_counter()` before and after, without anything else. What is wrong?
-   - A) GPU operations are asynchronous, so the call returns before the work finishes; synchronize before reading the clock
+   - A) The model must be in eval mode to be timed
    - B) perf_counter can't measure GPU code at all
-   - C) Nothing: the measurement is accurate
-   - D) The model must be in eval mode to be timed
+   - C) GPU operations are asynchronous, so the call returns before the work finishes; synchronize before reading the clock
+   - D) Nothing: the measurement is accurate
 
 2. In the profiler table, what is the difference between "Self CPU" and "CPU total"?
-   - A) Self CPU excludes the time spent in operations it called; CPU total includes them
-   - B) Self CPU is for the forward pass, CPU total for backward
-   - C) Self CPU counts one call, CPU total all calls
-   - D) They are always equal
+   - A) They are always equal
+   - B) Self CPU excludes the time spent in operations it called; CPU total includes them
+   - C) Self CPU is for the forward pass, CPU total for backward
+   - D) Self CPU counts one call, CPU total all calls
 
 3. With `schedule(wait=1, warmup=1, active=3)`, which steps are recorded?
-   - A) Steps 3, 4 and 5 (after skipping 1 and warming up for 1), with `prof.step()` marking each step
+   - A) Only the warm-up step
    - B) Steps 1 to 3
-   - C) Every step
-   - D) Only the warm-up step
+   - C) Steps 3, 4 and 5 (after skipping 1 and warming up for 1), with `prof.step()` marking each step
+   - D) Every step
 
 4. Training uses little of the GPU, and the profiler shows most time in `enumerate(DataLoader)`. What should you try first?
-   - A) More DataLoader workers (num_workers) and pin_memory=True
-   - B) A bigger model
+   - A) A bigger model
+   - B) More DataLoader workers (num_workers) and pin_memory=True
    - C) torch.compile
    - D) A higher learning rate
 
 5. What does `torch.cuda.max_memory_allocated()` report?
-   - A) The peak memory used by tensors since the start or the last `reset_peak_memory_stats()`
-   - B) The GPU's total memory
-   - C) Memory reserved by the caching allocator right now
-   - D) The memory used by the current process on the CPU
+   - A) Memory reserved by the caching allocator right now
+   - B) The memory used by the current process on the CPU
+   - C) The peak memory used by tensors since the start or the last `reset_peak_memory_stats()`
+   - D) The GPU's total memory
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) GPU operations are asynchronous, so the call returns before the work finishes; synchronize before reading the clock**: Use torch.cuda.synchronize() (or torch.utils.benchmark, or CUDA events) around the timed region.
-2. **A) Self CPU excludes the time spent in operations it called; CPU total includes them**: An aten::linear row's CPU total includes the aten::addmm it calls; its self time doesn't.
-3. **A) Steps 3, 4 and 5 (after skipping 1 and warming up for 1), with `prof.step()` marking each step**: Waiting and warm-up steps aren't recorded; warm-up excludes start-up costs from the trace.
-4. **A) More DataLoader workers (num_workers) and pin_memory=True**: The GPU is waiting for data; speeding up the model won't help.
-5. **A) The peak memory used by tensors since the start or the last `reset_peak_memory_stats()`**: Use it to find the peak during a training step, which decides whether a batch size fits.
+1. **C) GPU operations are asynchronous, so the call returns before the work finishes; synchronize before reading the clock**: Use torch.cuda.synchronize() (or torch.utils.benchmark, or CUDA events) around the timed region.
+2. **B) Self CPU excludes the time spent in operations it called; CPU total includes them**: An aten::linear row's CPU total includes the aten::addmm it calls; its self time doesn't.
+3. **C) Steps 3, 4 and 5 (after skipping 1 and warming up for 1), with `prof.step()` marking each step**: Waiting and warm-up steps aren't recorded; warm-up excludes start-up costs from the trace.
+4. **B) More DataLoader workers (num_workers) and pin_memory=True**: The GPU is waiting for data; speeding up the model won't help.
+5. **C) The peak memory used by tensors since the start or the last `reset_peak_memory_stats()`**: Use it to find the peak during a training step, which decides whether a batch size fits.
 
 </details>
 

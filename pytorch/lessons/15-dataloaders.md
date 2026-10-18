@@ -397,43 +397,43 @@ print(x, lengths, y, sep="\n")
 ## Quick quiz
 
 1. A DataLoader over 103 samples has `batch_size=10`. What is `len(loader)` with and without `drop_last=True`?
-   - A) 10 with drop_last=True, 11 without
-   - B) 11 in both cases
+   - A) 11 in both cases
+   - B) 10 with drop_last=True, 11 without
    - C) 10 in both cases
    - D) 103 in both cases
 
 2. What does `shuffle=True` do across epochs?
-   - A) Visits the samples in a new random order every epoch
+   - A) Shuffles only the last batch
    - B) Shuffles once when the DataLoader is created and reuses that order
    - C) Shuffles the features within each sample
-   - D) Shuffles only the last batch
+   - D) Visits the samples in a new random order every epoch
 
 3. A dataset's `__getitem__` returns `(features, label)` where `features` is a tensor of shape `[5]` and `label` a Python int. With `batch_size=8`, what does the loader yield?
-   - A) A list `[features of shape [8, 5], labels of shape [8] (int64)]`
-   - B) A list of 8 tuples
-   - C) One tensor of shape `[8, 6]`
-   - D) A tuple `(features [5, 8], labels [8])`
+   - A) A list of 8 tuples
+   - B) One tensor of shape `[8, 6]`
+   - C) A tuple `(features [5, 8], labels [8])`
+   - D) A list `[features of shape [8, 5], labels of shape [8] (int64)]`
 
 4. `__getitem__` returns `[0.5, 1.2]` (Python floats). What dtype do the batched values have?
-   - A) `torch.float64`
-   - B) `torch.float32`
+   - A) `torch.float32`
+   - B) `torch.float64`
    - C) `torch.float16`
    - D) They stay Python floats
 
 5. Which is the right place to move batches to the GPU?
-   - A) Inside the training loop: `xb, yb = xb.to(device), yb.to(device)`
-   - B) In the Dataset's `__init__`, moving the whole dataset
-   - C) In `collate_fn`, before the batch is assembled
-   - D) Nowhere: the DataLoader moves batches automatically
+   - A) In `collate_fn`, before the batch is assembled
+   - B) Nowhere: the DataLoader moves batches automatically
+   - C) In the Dataset's `__init__`, moving the whole dataset
+   - D) Inside the training loop: `xb, yb = xb.to(device), yb.to(device)`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) 10 with drop_last=True, 11 without**: Without drop_last the 3 leftover samples form an 11th, smaller batch.
-2. **A) Visits the samples in a new random order every epoch**: A RandomSampler draws a fresh permutation every time iteration starts.
-3. **A) A list `[features of shape [8, 5], labels of shape [8] (int64)]`**: default_collate stacks the tensors on a new dim 0, turns the ints into an int64 tensor, and returns the tuple's fields as a list.
-4. **A) `torch.float64`**: default_collate turns Python floats into float64 tensors; return float32 tensors from the dataset instead.
-5. **A) Inside the training loop: `xb, yb = xb.to(device), yb.to(device)`**: The DataLoader produces CPU tensors; you move each batch to the model's device as you use it.
+1. **B) 10 with drop_last=True, 11 without**: Without drop_last the 3 leftover samples form an 11th, smaller batch.
+2. **D) Visits the samples in a new random order every epoch**: A RandomSampler draws a fresh permutation every time iteration starts.
+3. **D) A list `[features of shape [8, 5], labels of shape [8] (int64)]`**: default_collate stacks the tensors on a new dim 0, turns the ints into an int64 tensor, and returns the tuple's fields as a list.
+4. **B) `torch.float64`**: default_collate turns Python floats into float64 tensors; return float32 tensors from the dataset instead.
+5. **D) Inside the training loop: `xb, yb = xb.to(device), yb.to(device)`**: The DataLoader produces CPU tensors; you move each batch to the model's device as you use it.
 
 </details>
 

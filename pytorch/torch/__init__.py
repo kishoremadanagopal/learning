@@ -181,6 +181,43 @@ def compile(model=None, *, fullgraph=False, dynamic=None, backend="inductor", mo
     return compiled
 _core._PROFILER_HOOK[0] = profiler._backward_range
 
+
+def _accept_python_dtypes():
+    """Like PyTorch, accept Python's int, float and bool wherever a dtype goes: dtype=int means torch.int64,
+    float means torch.float64 and bool means torch.bool (as in torch.zeros(2, dtype=int) or x.to(float))."""
+    import builtins
+    import functools
+    import inspect
+    py = {builtins.int: int64, builtins.float: float64, builtins.bool: bool}
+
+    def fix(fn, positional=False):
+        @functools.wraps(fn)
+        def wrapper(*args, **kwargs):
+            d = kwargs.get("dtype")
+            if isinstance(d, type) and d in py:
+                kwargs["dtype"] = py[d]
+            if positional:
+                args = tuple(py[a] if isinstance(a, type) and a in py else a for a in args)
+            return fn(*args, **kwargs)
+        return wrapper
+
+    def takes_dtype(fn):
+        try:
+            return "dtype" in inspect.signature(fn).parameters
+        except (TypeError, ValueError):
+            return False
+
+    g = globals()
+    for name, obj in list(g.items()):
+        if inspect.isfunction(obj) and not name.startswith("_") and takes_dtype(obj):
+            g[name] = fix(obj)
+    for name, obj in list(vars(_core.Tensor).items()):
+        if inspect.isfunction(obj) and (name in ("to", "type") or takes_dtype(obj)):
+            setattr(_core.Tensor, name, fix(obj, positional=name in ("to", "type")))
+
+
+_accept_python_dtypes()
+
 for _junk in ("np", "math", "numbers", "warnings", "namedtuple", "builtins", "MT19937", "Node", "AccumulateGrad"):
     globals().pop(_junk, None)
 del _junk

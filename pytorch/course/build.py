@@ -21,11 +21,13 @@ import io
 import json
 import re
 import os
+import random
 import shutil
 import signal
 import sys
 import tempfile
 import time
+import zlib
 from pathlib import Path
 
 import markdown
@@ -44,7 +46,7 @@ sys.path.insert(0, str(ROOT))
 import runner  # noqa: E402
 
 FENCE_RE = re.compile(r"^```([\w-]*)([^\n]*)\n(.*?)\n```[ \t]*$", re.S | re.M)
-BLOCK_RE = re.compile(r"^:::(exercise|quiz)([^\n]*)\n(.*?)\n:::[ \t]*$", re.S | re.M)
+BLOCK_RE = re.compile(r"^:::(exercise|quiz|exam)([^\n]*)\n(.*?)\n:::[ \t]*$", re.S | re.M)
 
 
 # ---------------------------------------------------------------- parsing
@@ -143,7 +145,67 @@ def parse_quiz(body):
                 q["_explain"] = ln[2:]
         if q["answer"] is None:
             raise ValueError(f"Quiz question without a correct answer: {lines[0]}")
+        shuffle_options(q, q["_q"])
         questions.append(q)
+    return questions
+
+
+def shuffle_options(q, seed_text):
+    """Authors write the right answer first; show the options in a fixed shuffled order (the same on every build)."""
+    order = list(range(len(q["options"])))
+    random.Random(zlib.crc32(seed_text.encode())).shuffle(order)
+    q["options"] = [q["options"][i] for i in order]
+    q["_options"] = [q["_options"][i] for i in order]
+    q["answer"] = order.index(q["answer"])
+
+
+EXAM_DOMAINS = {
+    "fundamentals": "PyTorch fundamentals",
+    "performance": "Performance and optimization",
+    "model": "Model development",
+    "data": "Data handling",
+}
+EXAM_WEIGHTS = {"fundamentals": 38, "performance": 26, "model": 20, "data": 16}
+
+
+def parse_exam(body, exam_id):
+    """Mock-exam questions. Each starts with `?? domain lesson-id kind`, where kind says how tests verify it:
+    output (the code's printed output must equal the right option), error (the code must raise the error the
+    right option names), runs (the code must run without an error) or text (nothing to run). Then the question
+    (Markdown, code fences allowed), `+`/`-` option lines and an `=` explanation."""
+    questions = []
+    for chunk in re.split(r"^\?\?[ \t]+", body.strip(), flags=re.M):
+        if not chunk.strip():
+            continue
+        head, *lines = chunk.rstrip().splitlines()
+        domain, lesson, kind = head.split()
+        if domain not in EXAM_DOMAINS or kind not in ("output", "error", "runs", "text"):
+            raise ValueError(f"[{exam_id}] bad exam question header: {head}")
+        text, options, answer, explain, in_fence = [], [], None, "", False
+        for ln in lines:
+            if ln.startswith("```"):
+                in_fence = not in_fence
+            if not in_fence and ln.startswith(("+ ", "- ")):
+                if ln.startswith("+ "):
+                    answer = len(options)
+                options.append(ln[2:].strip())
+            elif not in_fence and ln.startswith("= "):
+                explain = ln[2:].strip()
+            elif not options:
+                text.append(ln)
+        md = "\n".join(text).strip()
+        codes = [m.group(3) for m in FENCE_RE.finditer(md) if m.group(1) == "python"]
+        if answer is None or not explain or len(options) != 4:
+            raise ValueError(f"[{exam_id}] exam question needs 4 options, one marked +, and an = explanation: {md[:80]}")
+        if (kind == "text") != (not codes):
+            raise ValueError(f"[{exam_id}] kind {kind!r} doesn't match the question's python code: {md[:80]}")
+        q_html, _ = md_to_html(md, runnable=False)
+        q = {"q": q_html, "options": [inline_md(o) for o in options], "answer": answer, "explain": inline_md(explain),
+             "domain": domain, "lesson": lesson, "kind": kind, "code": codes[0] if codes else "",
+             "_q": md, "_options": options, "_explain": explain}
+        shuffle_options(q, md)
+        questions.append(q)
+    random.Random(zlib.crc32(exam_id.encode())).shuffle(questions)
     return questions
 
 
@@ -176,11 +238,13 @@ def parse_file(path):
             continue
         head, body = chunk.split("\n---\n", 1)
         meta = dict(ln.split(": ", 1) for ln in head.strip().splitlines() if ": " in ln)
-        exercises, quiz = [], []
+        exercises, quiz, exam = [], [], []
 
         def take(m):
             if m.group(1) == "exercise":
                 exercises.append(parse_exercise(m.group(2), m.group(3)))
+            elif m.group(1) == "exam":
+                exam.extend(parse_exam(m.group(3), meta["id"]))
             else:
                 quiz.extend(parse_quiz(m.group(3)))
             return ""
@@ -191,6 +255,7 @@ def parse_file(path):
             "id": meta["id"], "title": meta["title"].strip('"'), "minutes": int(meta.get("minutes", 10)),
             "summary": meta.get("summary", ""), "part": parts[-1]["id"],
             "html": body_html, "examples": examples, "exercises": exercises, "quiz": quiz, "_md": body,
+            "exam": exam, "examMinutes": int(meta.get("exam", 0)),
         })
     return parts, lessons
 
@@ -217,6 +282,14 @@ def build(only=None):
     extras = {}
     for f in sorted(CONTENT.glob("extras*.md"), key=_file_number):
         extras.update(parse_extras(f))
+    blank = {"topics": "", "terms": [], "mistakes": [], "glance": []}
+    for l in lessons:
+        if l["exam"]:
+            extras.setdefault(l["id"], dict(blank, topics=l["summary"].rstrip(".")))
+            known = set(ids)
+            bad = {q["lesson"] for q in l["exam"]} - known
+            if bad and not only:
+                raise ValueError(f"[{l['id']}] exam questions point to unknown lessons: {bad}")
     missing = [i for i in ids if i not in extras]
     if missing:
         raise ValueError(f"No key terms / mistakes in extras.md for: {missing}")
@@ -235,7 +308,7 @@ def build(only=None):
             if len(cells) != 4:
                 raise ValueError(f"[{l['id']}] glance rows need 4 cells (concept | code | gives you | remember): {g}")
             rows.append(cells)
-        if not rows:
+        if not rows and not l["exam"]:
             raise ValueError(f"[{l['id']}] needs a glance: table (concept | code | gives you | remember)")
         l["_glance"] = rows
         l["glance"] = [[inline_md(c.replace("\\|", "|")) for c in r] for r in rows]
@@ -285,7 +358,45 @@ def ex_range(lesson):
     return str(nums[0]) if len(nums) == 1 else f"{nums[0]}–{nums[-1]}"
 
 
+def exam_markdown(l, lessons):
+    by_id = {x["id"]: x for x in lessons}
+    qs = l["exam"]
+    counts = {d: sum(q["domain"] == d for q in qs) for d in EXAM_DOMAINS}
+    lines = [
+        f"# Lesson {l['n']}: {l['title']}",
+        "",
+        f"▶ **Take it in the [sandbox]({SITE_URL}#{l['id']})** for the real experience: {'an' if str(l['examMinutes']).startswith('8') or l['examMinutes'] in (11, 18) else 'a'} {l['examMinutes']}-minute timer, no feedback until you submit, then your score per domain and the lessons to review.",
+        "",
+        gh_fences(l["_md"]).replace("\n### ", "\n## "),
+        "",
+        "| Domain | Exam weight | Questions here |",
+        "|---|---|---|",
+        *[f"| {EXAM_DOMAINS[d]} | {EXAM_WEIGHTS[d]}% | {counts[d]} |" for d in EXAM_DOMAINS],
+        "",
+        "## Questions",
+        "",
+    ]
+    for k, q in enumerate(qs, start=1):
+        lines += [f"**{k}.** {gh_fences(q['_q'])}", ""]
+        lines += [f"- {'ABCD'[o]}) {opt}" for o, opt in enumerate(q["_options"])]
+        lines += [""]
+    lines += ["## Answers", "", "<details>", "<summary>Show the answers (after you've finished)</summary>", ""]
+    for k, q in enumerate(qs, start=1):
+        src = by_id[q["lesson"]]
+        lines += [f"{k}. **{'ABCD'[q['answer']]}) {q['_options'][q['answer']]}**: {q['_explain']} *({EXAM_DOMAINS[q['domain']]}; review [lesson {src['n']}]({Path(src['file']).name}))*"]
+    lines += ["", "</details>", ""]
+    i = l["n"] - 1
+    prev = lessons[i - 1] if i > 0 else None
+    nxt = lessons[i + 1] if i + 1 < len(lessons) else None
+    nav = [f"Previous: [Lesson {prev['n']}]({Path(prev['file']).name})" if prev else "Back to the [course home](../README.md)",
+           f"Next: [Lesson {nxt['n']}: {nxt['title']}]({Path(nxt['file']).name})" if nxt else "Back to the [course home](../README.md)"]
+    lines += ["---", " · ".join(nav), ""]
+    return re.sub(r"\n{3,}", "\n\n", "\n".join(lines))
+
+
 def lesson_markdown(l, lessons):
+    if l["exam"]:
+        return exam_markdown(l, lessons)
     i = l["n"] - 1
     lines = [
         f"# Lesson {l['n']}: {l['title']}",
@@ -310,9 +421,9 @@ def lesson_markdown(l, lessons):
         "",
         *[f"- {m}" for m in l["_mistakes"]],
         "",
-        "## Exercises",
-        "",
     ]
+    if l["exercises"]:
+        lines += ["## Exercises", ""]
     for k, ex in enumerate(l["exercises"], start=1):
         lines += [f"### {k}. {ex['title']}", "", gh_fences(ex["_prompt"]), ""]
         if any(ln.strip() and not ln.strip().startswith("#") for ln in ex["starter"].splitlines()):
@@ -321,8 +432,9 @@ def lesson_markdown(l, lessons):
             lines += ["<details>", "<summary>🧭 How to approach it</summary>", "", gh_fences(ex["_approach"]), "", "</details>", ""]
         for h, hint in enumerate(ex["_hints"], start=1):
             lines += ["<details>", f"<summary>💡 Hint {h}</summary>", "", hint, "", "</details>", ""]
-    lines += [f"**In the sandbox:** exercise{'s' if len(l['exercises']) > 1 else ''} {ex_range(l)}. Press **Check** to run the hidden tests.", ""]
-    lines += ["### Answers and walkthroughs", "", "Open these only after a real attempt. Each one explains the solution step by step.", ""]
+    if l["exercises"]:
+        lines += [f"**In the sandbox:** exercise{'s' if len(l['exercises']) > 1 else ''} {ex_range(l)}. Press **Check** to run the hidden tests.", ""]
+        lines += ["### Answers and walkthroughs", "", "Open these only after a real attempt. Each one explains the solution step by step.", ""]
     for k, ex in enumerate(l["exercises"], start=1):
         lines += ["<details>", f"<summary>✅ {k}. {ex['title']}</summary>", "", f"```python\n{ex['solution']}\n```", ""]
         if ex["_walkthrough"]:
@@ -419,10 +531,12 @@ def readme_markdown(data, datasets):
     n_ex = sum(len(l["exercises"]) for l in lessons)
     n_run = sum(len(l["examples"]) for l in lessons)
     n_q = sum(len(l["quiz"]) for l in lessons)
+    exams = [l for l in lessons if l["exam"]]
+    n_mock = sum(len(l["exam"]) for l in exams)
     out = [
         "# PyTorch: from tensors to the PyTorch Certified Associate exam",
         "",
-        f"A beginner-first PyTorch course that follows the official exam outline of the **PyTorch Certified Associate (PTCA)**, launched by the PyTorch Foundation and the Linux Foundation in June 2026: {len(lessons)} lessons so far on tensors, devices, autograd, data loading, building and training models, and making them fast.",
+        f"A beginner-first PyTorch course that follows the official exam outline of the **PyTorch Certified Associate (PTCA)**, launched by the PyTorch Foundation and the Linux Foundation in June 2026: {len(lessons) - len(exams)} lessons on tensors, devices, autograd, data loading, building and training models, and making them fast{f', then {len(exams)} timed mock exams' if exams else ''}.",
         "",
         "PyTorch is the framework most AI research and production models are written in. Knowing it well is core for the **AI engineer** path, and a big plus for **data / AI analysts** who move into machine learning.",
         "",
@@ -433,6 +547,7 @@ def readme_markdown(data, datasets):
         f"- every lesson, with **{n_run} examples** you can run and change",
         f"- **{n_ex} exercises** with hidden tests, each with an approach, hints and a walkthrough",
         f"- **{n_q} exam-style quiz questions**, with explanations",
+        *([f"- **{len(exams)} timed mock exams** ({n_mock} questions) weighted like the real exam, scored per domain"] if exams else []),
         "- diagrams for the key ideas",
         "- practice data files (from Part 3) that reset before every run",
         "- your progress and code saved in your own browser",
@@ -447,6 +562,7 @@ def readme_markdown(data, datasets):
         "| Price | US$250 for the exam (US$299 with the official training pathway); one free retake |",
         "| Valid | 2 years; no prerequisites |",
         "| Domains | PyTorch fundamentals 38% · performance and optimization 26% · model development 20% · data handling 16% |",
+        "| Questions | the number of questions and the pass mark aren't published |",
         "",
         "Check the latest details on the [Linux Foundation's PTCA page](https://training.linuxfoundation.org/certification/pytorch-certified-associate-ptca/) before you book: prices and outlines can change.",
         "",
@@ -454,7 +570,8 @@ def readme_markdown(data, datasets):
         "",
         "| | |",
         "|---|---|",
-        f"| 📘 [Lessons](#lessons) | {len(lessons)} lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and an exam-style quiz |",
+        f"| 📘 [Lessons](#lessons) | {len(lessons) - len(exams)} lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and an exam-style quiz |",
+        *([f"| ⏱️ [Mock exams](#part-{exams[0]['part']}-{[p for p in parts if p['id'] == exams[0]['part']][0]['title'].lower().replace(' ', '-')}-{[p for p in parts if p['id'] == exams[0]['part']][0]['level'].lower()}) | {len(exams)} timed mock exams of {len(exams[0]['exam'])} questions, weighted by the exam's domains |"] if exams else []),
         "| 📖 [Glossary](glossary.md) | every PyTorch term used in the course, defined in plain English |",
         "| 🧾 [Cheat sheet](cheatsheet.md) | the API you need for the exam on a few pages, and every concept at a glance |",
         "",
@@ -465,6 +582,7 @@ def readme_markdown(data, datasets):
         "3. Try each exercise before opening help; press **Check** to run the hidden tests.",
         "4. Stuck? Open **How to approach it**, then the hints one at a time, and the **walkthrough** only after a real attempt.",
         "5. Do the quiz at the end of each lesson: its questions are written like the exam's.",
+        *(["6. When you've finished the lessons, read the exam strategy lesson and take the mock exams under exam conditions: timed, no notes, no running code.",] if exams else []),
         "",
         "## Lessons",
         "",
@@ -511,6 +629,18 @@ The lessons run on `torch/`, the sandbox's PyTorch: a pure-Python package on Num
 | `torch/` | the sandbox's PyTorch (copied to the site and loaded by the worker) |
 | `page.html`, `app.js`, `worker.js` | the sandbox page, its logic, and the Web Worker that runs Python |
 | `build.py` | builds everything and tests the lesson code |
+
+## Mock exams
+
+A lesson with `exam: <minutes>` in its header is a timed mock exam. Its questions go in an `:::exam` block; each starts with `?? <domain> <lesson-id> <kind>`:
+
+| Part | Meaning |
+|---|---|
+| domain | `fundamentals`, `performance`, `model` or `data` (the exam's four domains) |
+| lesson-id | the lesson to review if the question is missed |
+| kind | `output`: `--test` runs the question's python code and checks it prints the right option exactly; `error`: the code must raise the error the right option names; `runs`: it must run without an error; `text`: no code to run |
+
+Then the question (Markdown; code fences allowed), four options (`+` marks the right one; write it first, the build shuffles the options) and an `=` explanation. The build also shuffles the question order, the same way on every build.
 
 ## Exercise checks
 
@@ -689,6 +819,33 @@ def test(data):
             if not ex["hints"] or not ex["walkthrough"]:
                 problems += 1
                 print(f"[{l['id']}] exercise {ex['title']!r}: needs at least one hint and a walkthrough")
+        for k, q in enumerate(l["exam"], start=1):
+            if q["kind"] == "text":
+                continue
+            res = _guarded(runner.run, q["code"], "", encode_figures=False)
+            out = _text(res["parts"], "out").strip()
+            err = _text(res["parts"], "err").strip()
+            right = q["_options"][q["answer"]]
+            flat = lambda t: re.sub(r"\s+", " ", t.replace("`", "")).strip()
+            label = f"[{l['id']}] question {k} ({q['_q'][:60]!r})"
+            if q["kind"] == "error":
+                raised = [ln for ln in err.splitlines() if re.match(r"^[\w.]*(Error|Exception)\b", ln)]
+                last = raised[-1] if raised else ""
+                name = last.split(":", 1)[0].split(".")[-1]
+                if res["ok"] or not name or name not in right:
+                    problems += 1
+                    print(f"{label}: should raise the error named in the right option ({right!r}); got {last or 'no error'}")
+            elif not res["ok"]:
+                problems += 1
+                print(f"{label}: the code raises an error:\n{err[-400:]}")
+            elif q["kind"] == "output":
+                if flat(out) != flat(right):
+                    problems += 1
+                    print(f"{label}: prints {out!r}, but the right option is {right!r}")
+                for o in q["_options"]:
+                    if o != right and flat(o) == flat(out):
+                        problems += 1
+                        print(f"{label}: a wrong option {o!r} matches the output too")
         for q in l["quiz"]:
             if len(q["options"]) not in (3, 4):
                 problems += 1
@@ -696,7 +853,8 @@ def test(data):
     n_ex = sum(len(l["examples"]) for l in data["lessons"])
     n_x = sum(len(l["exercises"]) for l in data["lessons"])
     n_q = sum(len(l["quiz"]) for l in data["lessons"])
-    print(f"{len(data['lessons'])} lessons, {n_ex} examples, {n_x} exercises, {n_q} quiz questions; {problems} problems")
+    n_m = sum(len(l["exam"]) for l in data["lessons"])
+    print(f"{len(data['lessons'])} lessons, {n_ex} examples, {n_x} exercises, {n_q} quiz questions, {n_m} mock-exam questions; {problems} problems")
     return problems
 
 

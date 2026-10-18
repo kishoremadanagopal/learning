@@ -300,43 +300,43 @@ print(first_and_last(s))
 ## Quick quiz
 
 1. `x = torch.arange(24).reshape(2, 3, 4)`. What is `x[1, :, 2].shape`?
-   - A) `torch.Size([3])`
-   - B) `torch.Size([1, 3, 1])`
-   - C) `torch.Size([2, 3])`
-   - D) `torch.Size([3, 1])`
+   - A) `torch.Size([1, 3, 1])`
+   - B) `torch.Size([3])`
+   - C) `torch.Size([3, 1])`
+   - D) `torch.Size([2, 3])`
 
 2. `a = torch.zeros(3); b = a[1:]; b += 1`. What is `a`?
-   - A) `tensor([0., 1., 1.])`
-   - B) `tensor([0., 0., 0.])`
-   - C) `tensor([1., 1., 1.])`
-   - D) It raises an error
+   - A) `tensor([1., 1., 1.])`
+   - B) `tensor([0., 1., 1.])`
+   - C) It raises an error
+   - D) `tensor([0., 0., 0.])`
 
 3. Which operation returns a tensor that does NOT share memory with `x`?
    - A) `x[x > 0]`
-   - B) `x[1:3]`
-   - C) `x.view(-1)`
-   - D) `x.t()`
+   - B) `x.t()`
+   - C) `x[1:3]`
+   - D) `x.view(-1)`
 
 4. `t = torch.tensor([3.0, 4.0])`. Which line raises an error?
-   - A) `if t > 2: print("big")`
-   - B) `if (t > 2).all(): print("big")`
-   - C) `print(t.tolist())`
-   - D) `print(t.sum().item())`
+   - A) `print(t.sum().item())`
+   - B) `if t > 2: print("big")`
+   - C) `if (t > 2).all(): print("big")`
+   - D) `print(t.tolist())`
 
 5. How do you get the value of the 0-D tensor `loss` as a Python float?
-   - A) `loss.item()`
-   - B) `loss.numpy()`
-   - C) `float(loss.tolist()[0])`
+   - A) `float(loss.tolist()[0])`
+   - B) `loss.item()`
+   - C) `loss.numpy()`
    - D) `loss.data`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) `torch.Size([3])`**: Each integer index removes its dimension; the slice keeps the middle one of size 3.
-2. **A) `tensor([0., 1., 1.])`**: Slicing returns a view, so the in-place add writes into a's memory.
+1. **B) `torch.Size([3])`**: Each integer index removes its dimension; the slice keeps the middle one of size 3.
+2. **B) `tensor([0., 1., 1.])`**: Slicing returns a view, so the in-place add writes into a's memory.
 3. **A) `x[x > 0]`**: Boolean-mask (and index-tensor) indexing copies the selected elements; slicing, view and t() return views.
-4. **A) `if t > 2: print("big")`**: A two-element bool tensor has no single truth value; reduce it with .all() or .any() first.
-5. **A) `loss.item()`**: .item() converts a one-element tensor to a Python number. (float(loss) works too.)
+4. **B) `if t > 2: print("big")`**: A two-element bool tensor has no single truth value; reduce it with .all() or .any() first.
+5. **B) `loss.item()`**: .item() converts a one-element tensor to a Python number. (float(loss) works too.)
 
 </details>
 

@@ -358,48 +358,48 @@ print(round(losses[0], 3), round(losses[-1], 5))
 ## Quick quiz
 
 1. A model outputs logits of shape `[64, 10]` for 10 classes. Which target does `nn.CrossEntropyLoss` expect?
-   - A) An int64 tensor of shape `[64]` with values from 0 to 9
+   - A) An int64 tensor of shape `[10]`
    - B) A float tensor of shape `[64, 1]`
    - C) A one-hot int64 tensor of shape `[64, 10]`
-   - D) An int64 tensor of shape `[10]`
+   - D) An int64 tensor of shape `[64]` with values from 0 to 9
 
 2. Why shouldn't you apply `softmax` to the model's outputs before `nn.CrossEntropyLoss`?
    - A) CrossEntropyLoss already applies log_softmax; adding softmax applies it twice
-   - B) softmax outputs can't be differentiated
-   - C) softmax changes the dtype
+   - B) softmax changes the dtype
+   - C) softmax outputs can't be differentiated
    - D) It would make the loss negative
 
 3. Which loss suits a model that predicts several independent yes/no tags per image?
-   - A) `nn.BCEWithLogitsLoss` with float 0/1 targets of shape `[batch, n_tags]`
-   - B) `nn.CrossEntropyLoss` with int64 targets
+   - A) `nn.CrossEntropyLoss` with int64 targets
+   - B) `nn.NLLLoss`
    - C) `nn.MSELoss` on class indices
-   - D) `nn.NLLLoss`
+   - D) `nn.BCEWithLogitsLoss` with float 0/1 targets of shape `[batch, n_tags]`
 
 4. What does `optimizer.zero_grad()` do by default in current PyTorch?
-   - A) Sets each parameter's `.grad` to `None`
-   - B) Sets the learning rate to 0
-   - C) Sets every parameter to 0
-   - D) Fills each `.grad` with zeros
+   - A) Sets every parameter to 0
+   - B) Fills each `.grad` with zeros
+   - C) Sets each parameter's `.grad` to `None`
+   - D) Sets the learning rate to 0
 
 5. `pred` has shape `[32, 1]` and `y` has shape `[32]`. What happens with `nn.MSELoss()(pred, y)`?
    - A) It broadcasts to `[32, 32]`, gives a wrong loss, and warns about different sizes
-   - B) It raises a shape error
-   - C) It computes the right loss
-   - D) It squeezes pred automatically
+   - B) It computes the right loss
+   - C) It squeezes pred automatically
+   - D) It raises a shape error
 
 6. What does AdamW change compared with Adam?
    - A) Weight decay is applied directly to the weights (decoupled) instead of being added to the gradient
-   - B) It doesn't use momentum
-   - C) It uses a fixed step size for all parameters
-   - D) It has no learning rate
+   - B) It has no learning rate
+   - C) It doesn't use momentum
+   - D) It uses a fixed step size for all parameters
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) An int64 tensor of shape `[64]` with values from 0 to 9**: Class indices, one per sample (float class probabilities of shape [64, 10] are also accepted).
+1. **D) An int64 tensor of shape `[64]` with values from 0 to 9**: Class indices, one per sample (float class probabilities of shape [64, 10] are also accepted).
 2. **A) CrossEntropyLoss already applies log_softmax; adding softmax applies it twice**: CrossEntropyLoss expects raw logits.
-3. **A) `nn.BCEWithLogitsLoss` with float 0/1 targets of shape `[batch, n_tags]`**: Multi-label: an independent sigmoid per output.
-4. **A) Sets each parameter's `.grad` to `None`**: set_to_none=True has been the default since PyTorch 2.0; it saves memory.
+3. **D) `nn.BCEWithLogitsLoss` with float 0/1 targets of shape `[batch, n_tags]`**: Multi-label: an independent sigmoid per output.
+4. **C) Sets each parameter's `.grad` to `None`**: set_to_none=True has been the default since PyTorch 2.0; it saves memory.
 5. **A) It broadcasts to `[32, 32]`, gives a wrong loss, and warns about different sizes**: Fix the shapes with pred.squeeze(1) or y.unsqueeze(1).
 6. **A) Weight decay is applied directly to the weights (decoupled) instead of being added to the gradient**: Decoupled weight decay works better with adaptive step sizes; AdamW's default weight_decay is 0.01.
 

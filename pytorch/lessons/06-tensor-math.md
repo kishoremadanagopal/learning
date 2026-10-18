@@ -340,50 +340,50 @@ print(pairwise_dist(torch.tensor([[0.0, 0.0], [3.0, 4.0]]), torch.tensor([[0.0, 
 ## Quick quiz
 
 1. `a` has shape `[5, 1, 4]` and `b` has shape `[3, 1]`. What is the shape of `a + b`?
-   - A) `[5, 3, 4]`
-   - B) `[5, 1, 4]`
-   - C) `[5, 3, 1]`
-   - D) It raises an error
+   - A) `[5, 1, 4]`
+   - B) It raises an error
+   - C) `[5, 3, 4]`
+   - D) `[5, 3, 1]`
 
 2. `x` has shape `[32, 10]` (a batch of class scores). What does `x.argmax(dim=1)` return?
    - A) A tensor of shape `[32]`: the predicted class index for each sample
-   - B) A tensor of shape `[10]`: the best sample for each class
-   - C) One number: the position of the largest score
+   - B) One number: the position of the largest score
+   - C) A tensor of shape `[10]`: the best sample for each class
    - D) A tensor of shape `[32, 1]`
 
 3. What is the shape of `torch.ones(4, 3) @ torch.ones(3)`?
-   - A) `torch.Size([4])`
-   - B) `torch.Size([4, 3])`
+   - A) `torch.Size([4, 3])`
+   - B) `torch.Size([4])`
    - C) `torch.Size([3])`
    - D) It raises an error
 
 4. `x = torch.tensor([[1., 2.], [3., 4.]])`. What does `x * x` compute?
-   - A) The element-wise square: `[[1., 4.], [9., 16.]]`
-   - B) The matrix product: `[[7., 10.], [15., 22.]]`
-   - C) The dot product: `30.`
+   - A) The dot product: `30.`
+   - B) The element-wise square: `[[1., 4.], [9., 16.]]`
+   - C) The matrix product: `[[7., 10.], [15., 22.]]`
    - D) It raises an error
 
 5. Which line leaves `x` unchanged?
-   - A) `y = x.add(1)`
-   - B) `x.add_(1)`
+   - A) `x.zero_()`
+   - B) `y = x.add(1)`
    - C) `x += 1`
-   - D) `x.zero_()`
+   - D) `x.add_(1)`
 
 6. `x` has shape `[8, 3]`. Which expression divides each row by its own sum?
-   - A) `x / x.sum(dim=1, keepdim=True)`
-   - B) `x / x.sum(dim=1)`
-   - C) `x / x.sum(dim=0)`
-   - D) `x / x.sum()`
+   - A) `x / x.sum()`
+   - B) `x / x.sum(dim=0)`
+   - C) `x / x.sum(dim=1)`
+   - D) `x / x.sum(dim=1, keepdim=True)`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) `[5, 3, 4]`**: From the right: 4 and 1 → 4; 1 and 3 → 3; 5 and (missing) → 5.
+1. **C) `[5, 3, 4]`**: From the right: 4 and 1 → 4; 1 and 3 → 3; 5 and (missing) → 5.
 2. **A) A tensor of shape `[32]`: the predicted class index for each sample**: The dim you reduce disappears: dim 1 (classes) goes, leaving one index per sample.
-3. **A) `torch.Size([4])`**: A matrix times a vector: [4, 3] @ [3] gives [4] (one dot product per row).
-4. **A) The element-wise square: `[[1., 4.], [9., 16.]]`**: `*` is element-wise; use `@` for the matrix product.
-5. **A) `y = x.add(1)`**: Methods without a trailing underscore return a new tensor; `_` methods and `+=` modify x in place.
-6. **A) `x / x.sum(dim=1, keepdim=True)`**: keepdim keeps shape [8, 1], which broadcasts across the 3 columns. Without it, [8] lines up against the columns and fails.
+3. **B) `torch.Size([4])`**: A matrix times a vector: [4, 3] @ [3] gives [4] (one dot product per row).
+4. **B) The element-wise square: `[[1., 4.], [9., 16.]]`**: `*` is element-wise; use `@` for the matrix product.
+5. **B) `y = x.add(1)`**: Methods without a trailing underscore return a new tensor; `_` methods and `+=` modify x in place.
+6. **D) `x / x.sum(dim=1, keepdim=True)`**: keepdim keeps shape [8, 1], which broadcasts across the 3 columns. Without it, [8] lines up against the columns and fails.
 
 </details>
 

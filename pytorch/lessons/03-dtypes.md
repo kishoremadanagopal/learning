@@ -338,39 +338,39 @@ answers = {
 1. What is the dtype of `torch.tensor([1, 2]) / torch.tensor([2, 2])`?
    - A) `torch.float32`
    - B) `torch.int64`
-   - C) `torch.float64`
-   - D) `torch.int32`
+   - C) `torch.int32`
+   - D) `torch.float64`
 
 2. Why is bfloat16 often preferred over float16 for training?
-   - A) It has the same exponent range as float32, so values rarely overflow or underflow
-   - B) It is more precise than float16
-   - C) It uses less memory than float16
-   - D) It is the only 16-bit type GPUs support
+   - A) It uses less memory than float16
+   - B) It has the same exponent range as float32, so values rarely overflow or underflow
+   - C) It is the only 16-bit type GPUs support
+   - D) It is more precise than float16
 
 3. `x = torch.tensor([2.9, -2.9])`. What does `x.long()` return?
-   - A) `tensor([ 2, -2])`
-   - B) `tensor([ 3, -3])`
-   - C) `tensor([ 2, -3])`
-   - D) `tensor([ 3, -2])`
+   - A) `tensor([ 3, -3])`
+   - B) `tensor([ 3, -2])`
+   - C) `tensor([ 2, -2])`
+   - D) `tensor([ 2, -3])`
 
 4. `h = torch.ones(3, dtype=torch.float16)`. What is `(h * 3.0).dtype`?
    - A) `torch.float16`
-   - B) `torch.float32`
-   - C) `torch.float64`
+   - B) `torch.float64`
+   - C) `torch.float32`
    - D) `torch.int64`
 
 5. Which check is the right way to compare two float tensors computed in different ways?
    - A) `torch.allclose(a, b)`
    - B) `torch.equal(a, b)`
-   - C) `a == b`
-   - D) `a is b`
+   - C) `a is b`
+   - D) `a == b`
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) `torch.float32`**: True division always returns a floating-point result; for integer inputs that's the default dtype, float32.
-2. **A) It has the same exponent range as float32, so values rarely overflow or underflow**: bfloat16 trades mantissa bits (precision) for float32's 8 exponent bits (range). Both use 2 bytes.
-3. **A) `tensor([ 2, -2])`**: Converting to an integer dtype truncates toward zero.
+2. **B) It has the same exponent range as float32, so values rarely overflow or underflow**: bfloat16 trades mantissa bits (precision) for float32's 8 exponent bits (range). Both use 2 bytes.
+3. **C) `tensor([ 2, -2])`**: Converting to an integer dtype truncates toward zero.
 4. **A) `torch.float16`**: A Python scalar can only raise the category (int → float), never the size within a category.
 5. **A) `torch.allclose(a, b)`**: Rounding makes exact float equality unreliable; allclose compares within a tolerance (rtol=1e-05, atol=1e-08 by default).
 

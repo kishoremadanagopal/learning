@@ -344,27 +344,27 @@ print(add_bias_column(val))
 
 1. `x = torch.zeros(4, 6)`. Which call raises an error?
    - A) `x.view(5, -1)`
-   - B) `x.view(-1)`
-   - C) `x.reshape(3, 8)`
+   - B) `x.reshape(3, 8)`
+   - C) `x.view(-1)`
    - D) `x.view(2, 3, 4)`
 
 2. `x = torch.rand(2, 3, 4)`. What is `x.permute(2, 0, 1).shape`?
-   - A) `torch.Size([4, 2, 3])`
-   - B) `torch.Size([3, 4, 2])`
-   - C) `torch.Size([2, 4, 3])`
-   - D) `torch.Size([4, 3, 2])`
+   - A) `torch.Size([2, 4, 3])`
+   - B) `torch.Size([4, 2, 3])`
+   - C) `torch.Size([4, 3, 2])`
+   - D) `torch.Size([3, 4, 2])`
 
 3. Why does `x.t().view(-1)` raise an error when `x` is 2 × 3?
    - A) The transpose is not contiguous in memory, and view never copies
-   - B) view can't take -1
-   - C) Transposed tensors can't be reshaped at all
+   - B) Transposed tensors can't be reshaped at all
+   - C) view can't take -1
    - D) view only works on 1-D tensors
 
 4. `a` and `b` both have shape `[5, 3]`. What are the shapes of `torch.cat([a, b])` and `torch.stack([a, b])`?
-   - A) `[10, 3]` and `[2, 5, 3]`
+   - A) `[10, 3]` and `[5, 3, 2]`
    - B) `[2, 5, 3]` and `[10, 3]`
    - C) `[5, 6]` and `[2, 5, 3]`
-   - D) `[10, 3]` and `[5, 3, 2]`
+   - D) `[10, 3]` and `[2, 5, 3]`
 
 5. `x` has shape `[1, 10, 1]`. What is `x.squeeze(1).shape`?
    - A) `torch.Size([1, 10, 1])`
@@ -376,9 +376,9 @@ print(add_bias_column(val))
 <summary>Quiz answers</summary>
 
 1. **A) `x.view(5, -1)`**: 24 elements can't be split into rows of 5. Every other shape multiplies to 24.
-2. **A) `torch.Size([4, 2, 3])`**: New dim i is old dim dims[i]: old dim 2 (size 4), then 0 (size 2), then 1 (size 3).
+2. **B) `torch.Size([4, 2, 3])`**: New dim i is old dim dims[i]: old dim 2 (size 4), then 0 (size 2), then 1 (size 3).
 3. **A) The transpose is not contiguous in memory, and view never copies**: Use .reshape(-1) or .contiguous().view(-1).
-4. **A) `[10, 3]` and `[2, 5, 3]`**: cat joins along an existing dim (0 by default); stack adds a new dim (0 by default).
+4. **D) `[10, 3]` and `[2, 5, 3]`**: cat joins along an existing dim (0 by default); stack adds a new dim (0 by default).
 5. **A) `torch.Size([1, 10, 1])`**: squeeze(dim) only removes that dim when its size is 1; dim 1 has size 10, so nothing changes.
 
 </details>

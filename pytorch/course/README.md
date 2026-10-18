@@ -22,6 +22,18 @@ The lessons run on `torch/`, the sandbox's PyTorch: a pure-Python package on Num
 | `page.html`, `app.js`, `worker.js` | the sandbox page, its logic, and the Web Worker that runs Python |
 | `build.py` | builds everything and tests the lesson code |
 
+## Mock exams
+
+A lesson with `exam: <minutes>` in its header is a timed mock exam. Its questions go in an `:::exam` block; each starts with `?? <domain> <lesson-id> <kind>`:
+
+| Part | Meaning |
+|---|---|
+| domain | `fundamentals`, `performance`, `model` or `data` (the exam's four domains) |
+| lesson-id | the lesson to review if the question is missed |
+| kind | `output`: `--test` runs the question's python code and checks it prints the right option exactly; `error`: the code must raise the error the right option names; `runs`: it must run without an error; `text`: no code to run |
+
+Then the question (Markdown; code fences allowed), four options (`+` marks the right one; write it first, the build shuffles the options) and an `=` explanation. The build also shuffles the question order, the same way on every build.
+
 ## Exercise checks
 
 Check code runs after the learner's code, in the same namespace, with these helpers:

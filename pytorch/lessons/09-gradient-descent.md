@@ -338,37 +338,37 @@ After 50 steps at lr 1.1 the error is 3 · 1.2⁵⁰ ≈ 27,000. The same "too b
    - D) To switch dropout off
 
 2. The loss rises every step and becomes `nan`. What's the most likely cause?
-   - A) The learning rate is too high
-   - B) The learning rate is too low
+   - A) The learning rate is too low
+   - B) The model has too few parameters
    - C) The gradients were zeroed
-   - D) The model has too few parameters
+   - D) The learning rate is too high
 
 3. In `w -= lr * w.grad`, what is the role of the minus sign?
-   - A) It moves w against the gradient, the direction in which the loss decreases
-   - B) It undoes the previous step
-   - C) It keeps w positive
-   - D) It normalises the gradient
+   - A) It undoes the previous step
+   - B) It normalises the gradient
+   - C) It moves w against the gradient, the direction in which the loss decreases
+   - D) It keeps w positive
 
 4. What is one epoch?
-   - A) One full pass through the training data
+   - A) One call to backward()
    - B) One gradient step
    - C) One mini-batch
-   - D) One call to backward()
+   - D) One full pass through the training data
 
 5. After `with torch.no_grad(): w = w - lr * w.grad`, what goes wrong on the next step?
-   - A) `w` is now a new tensor that doesn't require grad, so the next backward() can't produce `w.grad`
-   - B) Nothing; it's the same as `w -= lr * w.grad`
-   - C) The learning rate doubles
-   - D) The gradient is computed twice
+   - A) Nothing; it's the same as `w -= lr * w.grad`
+   - B) `w` is now a new tensor that doesn't require grad, so the next backward() can't produce `w.grad`
+   - C) The gradient is computed twice
+   - D) The learning rate doubles
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) So the update isn't recorded in the graph (in-place changes to a leaf that requires grad are an error otherwise)**: The update is not part of the model's computation, so autograd must not record it.
-2. **A) The learning rate is too high**: Steps that overshoot the minimum grow each time, so the loss diverges.
-3. **A) It moves w against the gradient, the direction in which the loss decreases**: The gradient points uphill; gradient descent steps downhill.
-4. **A) One full pass through the training data**: With mini-batches, an epoch contains many steps (number of samples ÷ batch size).
-5. **A) `w` is now a new tensor that doesn't require grad, so the next backward() can't produce `w.grad`**: Assignment creates a new tensor; in-place `-=` updates the original leaf.
+2. **D) The learning rate is too high**: Steps that overshoot the minimum grow each time, so the loss diverges.
+3. **C) It moves w against the gradient, the direction in which the loss decreases**: The gradient points uphill; gradient descent steps downhill.
+4. **D) One full pass through the training data**: With mini-batches, an epoch contains many steps (number of samples ÷ batch size).
+5. **B) `w` is now a new tensor that doesn't require grad, so the next backward() can't produce `w.grad`**: Assignment creates a new tensor; in-place `-=` updates the original leaf.
 
 </details>
 

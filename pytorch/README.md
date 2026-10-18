@@ -1,6 +1,6 @@
 # PyTorch: from tensors to the PyTorch Certified Associate exam
 
-A beginner-first PyTorch course that follows the official exam outline of the **PyTorch Certified Associate (PTCA)**, launched by the PyTorch Foundation and the Linux Foundation in June 2026: 27 lessons so far on tensors, devices, autograd, data loading, building and training models, and making them fast.
+A beginner-first PyTorch course that follows the official exam outline of the **PyTorch Certified Associate (PTCA)**, launched by the PyTorch Foundation and the Linux Foundation in June 2026: 28 lessons on tensors, devices, autograd, data loading, building and training models, and making them fast, then 3 timed mock exams.
 
 PyTorch is the framework most AI research and production models are written in. Knowing it well is core for the **AI engineer** path, and a big plus for **data / AI analysts** who move into machine learning.
 
@@ -10,7 +10,8 @@ The sandbox runs Python 3.14 in your browser (via [Pyodide](https://pyodide.org)
 
 - every lesson, with **159 examples** you can run and change
 - **54 exercises** with hidden tests, each with an approach, hints and a walkthrough
-- **150 exam-style quiz questions**, with explanations
+- **155 exam-style quiz questions**, with explanations
+- **3 timed mock exams** (120 questions) weighted like the real exam, scored per domain
 - diagrams for the key ideas
 - practice data files (from Part 3) that reset before every run
 - your progress and code saved in your own browser
@@ -25,6 +26,7 @@ The sandbox runs Python 3.14 in your browser (via [Pyodide](https://pyodide.org)
 | Price | US$250 for the exam (US$299 with the official training pathway); one free retake |
 | Valid | 2 years; no prerequisites |
 | Domains | PyTorch fundamentals 38% · performance and optimization 26% · model development 20% · data handling 16% |
+| Questions | the number of questions and the pass mark aren't published |
 
 Check the latest details on the [Linux Foundation's PTCA page](https://training.linuxfoundation.org/certification/pytorch-certified-associate-ptca/) before you book: prices and outlines can change.
 
@@ -32,7 +34,8 @@ Check the latest details on the [Linux Foundation's PTCA page](https://training.
 
 | | |
 |---|---|
-| 📘 [Lessons](#lessons) | 27 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and an exam-style quiz |
+| 📘 [Lessons](#lessons) | 28 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and an exam-style quiz |
+| ⏱️ [Mock exams](#part-6-mock-exams-exam) | 3 timed mock exams of 40 questions, weighted by the exam's domains |
 | 📖 [Glossary](glossary.md) | every PyTorch term used in the course, defined in plain English |
 | 🧾 [Cheat sheet](cheatsheet.md) | the API you need for the exam on a few pages, and every concept at a glance |
 
@@ -43,6 +46,7 @@ Check the latest details on the [Linux Foundation's PTCA page](https://training.
 3. Try each exercise before opening help; press **Check** to run the hidden tests.
 4. Stuck? Open **How to approach it**, then the hints one at a time, and the **walkthrough** only after a real attempt.
 5. Do the quiz at the end of each lesson: its questions are written like the exam's.
+6. When you've finished the lessons, read the exam strategy lesson and take the mock exams under exam conditions: timed, no notes, no running code.
 
 ## Lessons
 
@@ -97,6 +101,15 @@ Check the latest details on the [Linux Foundation's PTCA page](https://training.
 | 25 | [torch.compile and execution speed-ups](lessons/25-torch-compile.md) | eager execution and its overheads, torch.compile on models and functions, TorchDynamo and FX graphs, TorchInductor, Triton and C++ kernels, operator fusion, first-call compile time, OptimizedModule and _orig_mod, the _orig_mod. state-dict prefix, modes (default, reduce-overhead with CUDA graphs, max-autotune), fullgraph, backends, graph breaks and their causes (.item(), data-dependent control flow, unsupported code), finding breaks with TORCH_LOGS and torch._dynamo.explain, torch.compiler.disable, recompilation, dynamic shapes and mark_dynamic, inference_mode, TF32 and set_float32_matmul_precision, cudnn.benchmark, channels_last, torch.export | 49–50 |
 | 26 | [Mixed precision training](lessons/26-mixed-precision.md) | why 16-bit is faster (tensor cores, memory bandwidth), float16 versus bfloat16 range and precision, torch.autocast for CUDA and CPU, the lower-precision and float32 operation lists, operations that follow their inputs, float64 left alone, float32 master weights, backward outside autocast, nested enabled=False, the deprecated torch.cuda.amp.autocast, gradient underflow and loss scaling, torch.amp.GradScaler (scale, step, update, unscale_, get_scale, state_dict), skipped steps and the adaptive scale, clipping after unscale_, bfloat16 without a scaler, binary_cross_entropy versus BCEWithLogitsLoss under autocast | 51–52 |
 | 27 | [Distributed training](lessons/27-distributed-training.md) | why distribute training, data parallelism, all-reduce of gradients, why averaged shard gradients equal the full-batch gradient, effective batch size and learning-rate scaling, processes, world size, rank and local rank, NCCL and Gloo backends, torchrun and its environment variables, init_process_group and destroy_process_group, DistributedDataParallel and model.module, DistributedSampler (interleaving, padding, drop_last, shuffle, seed, set_epoch), rank-0 logging and saving, barrier, no_sync for gradient accumulation, Fully Sharded Data Parallel (FSDP2 fully_shard, MixedPrecisionPolicy, FSDP1), tensor and pipeline parallelism | 53–54 |
+
+### Part 6: Mock Exams (Exam)
+
+| # | Lesson | Topics | Sandbox |
+|---|---|---|---|
+| 28 | [Exam strategy and final review](lessons/28-exam-strategy.md) | the PTCA's format, domains and what isn't published, question types (predict the output, find the error, choose the API, order the steps, explain why), a method for code questions, the most common traps, pacing over 120 minutes, a high-yield checklist per domain, using the mock exams, preparing for an online proctored exam | — |
+| 29 | [Mock exam 1](lessons/29-mock-exam-1.md) | 40 questions across all four domains, weighted like the real exam, in 80 minutes | — |
+| 30 | [Mock exam 2](lessons/30-mock-exam-2.md) | 40 new questions across all four domains, weighted like the real exam, in 80 minutes | — |
+| 31 | [Mock exam 3](lessons/31-mock-exam-3.md) | A final 40 questions across all four domains, weighted like the real exam, in 80 minutes | — |
 
 ## Running it on your own computer
 

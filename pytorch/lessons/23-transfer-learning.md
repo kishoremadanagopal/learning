@@ -404,50 +404,50 @@ print(get_features(model, model[1], torch.randn(3, 4)).shape)
 ## Quick quiz
 
 1. You freeze a pretrained backbone and replace its head. Which parameters should the optimizer receive?
-   - A) Only the parameters with `requires_grad=True` (the new head)
-   - B) All of `model.parameters()`, including the frozen ones, to keep their momentum
-   - C) Only the backbone's parameters
-   - D) No parameters: frozen models don't need an optimizer
+   - A) All of `model.parameters()`, including the frozen ones, to keep their momentum
+   - B) No parameters: frozen models don't need an optimizer
+   - C) Only the parameters with `requires_grad=True` (the new head)
+   - D) Only the backbone's parameters
 
 2. Why use a smaller learning rate for pretrained layers than for a new head when fine-tuning?
-   - A) Large updates would destroy the useful pretrained features; the new, random head needs to change much more
-   - B) Pretrained layers can't have a learning rate above 1e-5
-   - C) It makes the model smaller
-   - D) To freeze them
+   - A) To freeze them
+   - B) Large updates would destroy the useful pretrained features; the new, random head needs to change much more
+   - C) Pretrained layers can't have a learning rate above 1e-5
+   - D) It makes the model smaller
 
 3. `new.load_state_dict(state, strict=False)` where `state` lacks the head's keys. What happens?
-   - A) The matching keys load, and the result lists the head's keys under `missing_keys`
-   - B) It raises a RuntimeError for the missing keys
+   - A) It raises a RuntimeError for the missing keys
+   - B) The matching keys load, and the result lists the head's keys under `missing_keys`
    - C) Nothing loads
    - D) The head is filled with zeros
 
 4. A frozen backbone contains BatchNorm layers. What still changes during `model.train()` if you do nothing else?
-   - A) The BatchNorm running mean and variance
-   - B) The BatchNorm weight and bias
-   - C) The convolution weights
-   - D) Nothing
+   - A) Nothing
+   - B) The convolution weights
+   - C) The BatchNorm weight and bias
+   - D) The BatchNorm running mean and variance
 
 5. What does `module.register_forward_hook(fn)` give you?
-   - A) A call to `fn(module, inputs, output)` after each forward pass of that module, and a handle to remove it
-   - B) A way to change the module's forward code permanently
-   - C) The module's gradients during backward
+   - A) The module's gradients during backward
+   - B) A call to `fn(module, inputs, output)` after each forward pass of that module, and a handle to remove it
+   - C) A way to change the module's forward code permanently
    - D) A copy of the module
 
 6. Which method lists only a module's direct submodules, with their names?
-   - A) `named_children()`
-   - B) `named_modules()`
-   - C) `named_parameters()`
-   - D) `state_dict()`
+   - A) `named_modules()`
+   - B) `named_parameters()`
+   - C) `state_dict()`
+   - D) `named_children()`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Only the parameters with `requires_grad=True` (the new head)**: Passing only trainable parameters keeps the optimizer from touching frozen weights and saves memory.
-2. **A) Large updates would destroy the useful pretrained features; the new, random head needs to change much more**: Discriminative learning rates adapt pretrained features gently.
-3. **A) The matching keys load, and the result lists the head's keys under `missing_keys`**: strict=False tolerates missing and unexpected keys, but shape mismatches still raise an error.
-4. **A) The BatchNorm running mean and variance**: Running statistics are buffers updated in train mode regardless of requires_grad; keep those layers in eval().
-5. **A) A call to `fn(module, inputs, output)` after each forward pass of that module, and a handle to remove it**: Forward hooks observe (or, by returning a value, replace) a module's output.
-6. **A) `named_children()`**: named_modules() recurses through every level; named_children() stops at the first.
+1. **C) Only the parameters with `requires_grad=True` (the new head)**: Passing only trainable parameters keeps the optimizer from touching frozen weights and saves memory.
+2. **B) Large updates would destroy the useful pretrained features; the new, random head needs to change much more**: Discriminative learning rates adapt pretrained features gently.
+3. **B) The matching keys load, and the result lists the head's keys under `missing_keys`**: strict=False tolerates missing and unexpected keys, but shape mismatches still raise an error.
+4. **D) The BatchNorm running mean and variance**: Running statistics are buffers updated in train mode regardless of requires_grad; keep those layers in eval().
+5. **B) A call to `fn(module, inputs, output)` after each forward pass of that module, and a handle to remove it**: Forward hooks observe (or, by returning a value, replace) a module's output.
+6. **D) `named_children()`**: named_modules() recurses through every level; named_children() stops at the first.
 
 </details>
 

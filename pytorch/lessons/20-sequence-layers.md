@@ -350,49 +350,49 @@ print(causal_attention(q, k, v))
 
 1. `lstm = nn.LSTM(10, 20, num_layers=2, batch_first=True)` receives `x` of shape `[8, 15, 10]`. What are the shapes of `output` and `h_n`?
    - A) `[8, 15, 20]` and `[2, 8, 20]`
-   - B) `[8, 15, 20]` and `[8, 2, 20]`
+   - B) `[8, 20]` and `[8, 20]`
    - C) `[15, 8, 20]` and `[2, 8, 20]`
-   - D) `[8, 20]` and `[8, 20]`
+   - D) `[8, 15, 20]` and `[8, 2, 20]`
 
 2. What does `nn.Embedding(1000, 64)` do with an int64 tensor of shape `[4, 12]`?
-   - A) Returns a `[4, 12, 64]` tensor, looking up a learned 64-dim row for each id
-   - B) Returns `[4, 64]`, averaging over the sequence
+   - A) Returns `[4, 64]`, averaging over the sequence
+   - B) Raises an error because the input isn't float
    - C) One-hot encodes the ids into `[4, 12, 1000]`
-   - D) Raises an error because the input isn't float
+   - D) Returns a `[4, 12, 64]` tensor, looking up a learned 64-dim row for each id
 
 3. In `nn.MultiheadAttention`, what does `True` mean in a boolean `key_padding_mask`?
    - A) That key position is ignored (masked out)
-   - B) That key position is the only one attended to
+   - B) It's invalid: masks must be float
    - C) That the query is padding
-   - D) It's invalid: masks must be float
+   - D) That key position is the only one attended to
 
 4. Why is the attention score divided by √d (the size of the query and key vectors)?
-   - A) To keep the scores' scale stable as d grows, so softmax doesn't become too peaked and gradients don't vanish
-   - B) To make the output a probability
-   - C) To normalise the values
-   - D) To reduce memory use
+   - A) To make the output a probability
+   - B) To keep the scores' scale stable as d grows, so softmax doesn't become too peaked and gradients don't vanish
+   - C) To reduce memory use
+   - D) To normalise the values
 
 5. `nn.MultiheadAttention(embed_dim=100, num_heads=8)` raises an error. Why?
-   - A) embed_dim must be divisible by num_heads
+   - A) batch_first is missing
    - B) num_heads must be a power of 2
    - C) embed_dim must be at most 64
-   - D) batch_first is missing
+   - D) embed_dim must be divisible by num_heads
 
 6. What does a causal mask do?
-   - A) Stops each position from attending to later positions
-   - B) Stops attention to padding tokens
+   - A) Stops attention to padding tokens
+   - B) Shuffles the sequence
    - C) Makes attention weights sum to 1
-   - D) Shuffles the sequence
+   - D) Stops each position from attending to later positions
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) `[8, 15, 20]` and `[2, 8, 20]`**: batch_first affects input and output only; h_n is always [num_layers × directions, batch, hidden].
-2. **A) Returns a `[4, 12, 64]` tensor, looking up a learned 64-dim row for each id**: An embedding is a lookup table indexed by the integer ids.
+2. **D) Returns a `[4, 12, 64]` tensor, looking up a learned 64-dim row for each id**: An embedding is a lookup table indexed by the integer ids.
 3. **A) That key position is ignored (masked out)**: In MultiheadAttention a True entry blocks attention; in F.scaled_dot_product_attention a True entry allows it.
-4. **A) To keep the scores' scale stable as d grows, so softmax doesn't become too peaked and gradients don't vanish**: Dot products of random d-dimensional vectors grow like √d; scaling compensates.
-5. **A) embed_dim must be divisible by num_heads**: Each head gets embed_dim / num_heads features; 100 / 8 isn't a whole number.
-6. **A) Stops each position from attending to later positions**: It's an upper-triangular block (-inf or False above the diagonal), used for left-to-right generation.
+4. **B) To keep the scores' scale stable as d grows, so softmax doesn't become too peaked and gradients don't vanish**: Dot products of random d-dimensional vectors grow like √d; scaling compensates.
+5. **D) embed_dim must be divisible by num_heads**: Each head gets embed_dim / num_heads features; 100 / 8 isn't a whole number.
+6. **D) Stops each position from attending to later positions**: It's an upper-triangular block (-inf or False above the diagonal), used for left-to-right generation.
 
 </details>
 

@@ -400,10 +400,10 @@ print(linear_output_shape((32, 3), layer))
 ## Quick quiz
 
 1. `layer = nn.Linear(20, 5)`. What is `layer.weight.shape`?
-   - A) `torch.Size([5, 20])`
-   - B) `torch.Size([20, 5])`
-   - C) `torch.Size([5])`
-   - D) `torch.Size([20])`
+   - A) `torch.Size([20])`
+   - B) `torch.Size([5, 20])`
+   - C) `torch.Size([20, 5])`
+   - D) `torch.Size([5])`
 
 2. How many parameters does `nn.Linear(100, 10)` have?
    - A) 1010
@@ -414,31 +414,31 @@ print(linear_output_shape((32, 3), layer))
 3. A model's `__init__` creates its layers but doesn't call `super().__init__()`. What happens?
    - A) Assigning the first layer raises "cannot assign module before Module.__init__() call"
    - B) The model works but can't be moved to the GPU
-   - C) The layers are created but not trained
-   - D) Nothing; super().__init__() is optional
+   - C) Nothing; super().__init__() is optional
+   - D) The layers are created but not trained
 
 4. A model stores its layers as `self.layers = [nn.Linear(4, 4), nn.Linear(4, 4)]`. What does `list(model.parameters())` return?
    - A) An empty list: layers in a plain list aren't registered
    - B) The four weight and bias tensors
-   - C) Two Linear modules
-   - D) It raises an error
+   - C) It raises an error
+   - D) Two Linear modules
 
 5. Why call `model(x)` rather than `model.forward(x)`?
    - A) Calling the module runs forward() together with PyTorch's hooks and bookkeeping
-   - B) forward() doesn't exist on nn.Module
-   - C) model(x) automatically moves x to the right device
-   - D) model(x) disables gradients
+   - B) model(x) automatically moves x to the right device
+   - C) model(x) disables gradients
+   - D) forward() doesn't exist on nn.Module
 
 6. What does `model.to("cuda")` return for an `nn.Module`?
    - A) The same module, whose parameters were moved in place
-   - B) A copy of the model on the GPU, leaving the original on the CPU
-   - C) None
-   - D) A list of moved parameters
+   - B) A list of moved parameters
+   - C) A copy of the model on the GPU, leaving the original on the CPU
+   - D) None
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) `torch.Size([5, 20])`**: The weight is [out_features, in_features]; the layer computes x @ weight.T + bias.
+1. **B) `torch.Size([5, 20])`**: The weight is [out_features, in_features]; the layer computes x @ weight.T + bias.
 2. **A) 1010**: 100 × 10 weights + 10 biases.
 3. **A) Assigning the first layer raises "cannot assign module before Module.__init__() call"**: nn.Module's registries are set up by its __init__; without them there's nowhere to register layers.
 4. **A) An empty list: layers in a plain list aren't registered**: Use nn.ModuleList so the layers (and their parameters) are registered.

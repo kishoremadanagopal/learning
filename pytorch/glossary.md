@@ -60,7 +60,9 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Device** | Where a tensor's data lives: `cpu`, `cuda` (an NVIDIA GPU) or `mps` (an Apple GPU). [1] |
 | **Device-agnostic code** | Code that chooses the device once and runs unchanged on a CPU or a GPU. [7] |
 | **dim argument** | The dimension a reduction combines over; it disappears from the result. [6] |
+| **Distractor** | A wrong option written to look right, usually the result of a specific common mistake. [28] |
 | **Divergence** | The loss growing (often to inf or nan) because the steps overshoot, usually from too high a learning rate. [9] |
+| **Domain** | One of the exam outline's four topic areas, each worth a fixed share of the questions. [28] |
 | **drop_last** | Skips the final batch if it's smaller than batch_size. [15] |
 | **Dropout** | Randomly zeroing activations during training to reduce overfitting. [12] |
 | **dtype** | The data type shared by every element of a tensor, such as `torch.float32` or `torch.int64`. [1] |
@@ -130,6 +132,7 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Mean squared error (MSE)** | The average of the squared differences between predictions and targets. [9] |
 | **Mini-batch** | A small random subset of the training data used for one step. [9] |
 | **Mixed precision** | Running some operations in 16-bit floats and others in float32 within one model. [26] |
+| **Mock exam** | A practice exam taken under real conditions: timed, in one sitting, without notes. [28] |
 | **model.train() / model.eval()** | Switch layers such as dropout and batch norm between training and evaluation behaviour. [12] |
 | **Momentum** | A running average of past gradients used as the update direction, which smooths noisy steps. [11, 22] |
 | **MPS** | Metal Performance Shaders, the `mps` device type for Apple silicon GPUs. [7] |
@@ -154,6 +157,7 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Overfitting one batch** | Training on a single small batch until the loss is near zero, to prove the pipeline can learn. [18] |
 | **Overflow** | A value too large for its dtype, becoming `inf` for floats or wrapping around for integers. [3] |
 | **Oversampling** | Drawing rare-class samples more often so the classes are balanced during training. [16] |
+| **Pacing** | Spreading your time over the questions, so no single question costs you several others. [28] |
 | **Padding** | Filling shorter sequences with a pad value so they can share one tensor. [15, 19] |
 | **pad_sequence** | Pads a list of variable-length tensors to the longest one (`torch.nn.utils.rnn`). [15] |
 | **Parameter group** | A set of parameters in an optimizer with its own hyperparameters such as lr and weight_decay. [22] |
@@ -164,6 +168,8 @@ Every term used in the course, A to Z. The number in brackets is the lesson wher
 | **Pooling** | Summarising each window with its maximum or average, with no learned parameters. [19] |
 | **Positional embedding** | Information about each token's position, added to its embedding because attention ignores order. [20] |
 | **Process group** | The set of processes that communicate, created with `init_process_group`. [27] |
+| **Process of elimination** | Ruling out options you can show are wrong, to narrow down the right one. [28] |
+| **Proctored exam** | An exam supervised by a proctor, here remotely through your webcam, microphone and screen. [28] |
 | **Profiler** | A tool that records every operation run, how often, and how long it took (`torch.profiler.profile`). [24] |
 | **PTCA** | The PyTorch Certified Associate exam from the PyTorch Foundation and the Linux Foundation (2026). [1] |
 | **PyTorch** | An open-source Python library for building and training neural networks, built on tensors and automatic differentiation. [1] |

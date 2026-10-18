@@ -445,3 +445,9 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | Accumulate | `with model.no_sync():` on non-final micro-batches | fewer all-reduces | last backward syncs | [27](lessons/27-distributed-training.md) |
 | Too big for one GPU | `fully_shard(block)` per block, then `fully_shard(model)` | sharded params, grads, optimizer state | FSDP2 | [27](lessons/27-distributed-training.md) |
 | Clean up | `dist.destroy_process_group()` | process group closed | at the end of main | [27](lessons/27-distributed-training.md) |
+| Domains | fundamentals 38 · performance 26 · model development 20 · data 16 | where the points are | fundamentals + performance ≈ two thirds | [28](lessons/28-exam-strategy.md) |
+| Code question | read the question, trace shapes/dtypes line by line, check traps, eliminate | the answer | write each shape down | [28](lessons/28-exam-strategy.md) |
+| Common traps | `/` → float, views share memory, `.grad` accumulates, `eval()` ≠ `no_grad()` | fewer careless errors | see the trap table | [28](lessons/28-exam-strategy.md) |
+| Pacing | 120 minutes; check your pace at the halfway mark | time for every question | guess, flag, move on | [28](lessons/28-exam-strategy.md) |
+| Mock exams | 40 questions, 80 minutes, weighted like the exam | your score per domain | aim for 80% or more | [28](lessons/28-exam-strategy.md) |
+| Exam day | ID, webcam, microphone, quiet room, system check in advance | a smooth start | read the candidate handbook | [28](lessons/28-exam-strategy.md) |

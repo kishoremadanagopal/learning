@@ -373,49 +373,49 @@ print(accumulated_step(model, nn.MSELoss(), opt, batches))
 ## Quick quiz
 
 1. What is the main difference between `Adam(weight_decay=...)` and `AdamW(weight_decay=...)`?
-   - A) AdamW applies weight decay directly to the weights, decoupled from the adaptive gradient step; Adam adds it to the gradient
-   - B) AdamW doesn't use momentum
-   - C) Adam doesn't support weight decay
-   - D) AdamW uses a fixed learning rate
+   - A) AdamW uses a fixed learning rate
+   - B) AdamW applies weight decay directly to the weights, decoupled from the adaptive gradient step; Adam adds it to the gradient
+   - C) AdamW doesn't use momentum
+   - D) Adam doesn't support weight decay
 
 2. In which order should these be called in an epoch-based training loop?
-   - A) `optimizer.step()` for each batch, then `scheduler.step()` once at the end of the epoch
-   - B) `scheduler.step()` then `optimizer.step()`
-   - C) `scheduler.step()` before `loss.backward()`
-   - D) Only `scheduler.step()`; it calls the optimizer itself
+   - A) Only `scheduler.step()`; it calls the optimizer itself
+   - B) `scheduler.step()` before `loss.backward()`
+   - C) `scheduler.step()` then `optimizer.step()`
+   - D) `optimizer.step()` for each batch, then `scheduler.step()` once at the end of the epoch
 
 3. `StepLR(opt, step_size=10, gamma=0.1)` with initial lr 0.1. What is the lr after 25 calls to `scheduler.step()`?
-   - A) 0.001
-   - B) 0.01
-   - C) 0.0001
-   - D) 0.1
+   - A) 0.1
+   - B) 0.0001
+   - C) 0.001
+   - D) 0.01
 
 4. Which scheduler needs a metric passed to `step()`?
-   - A) `ReduceLROnPlateau`
-   - B) `CosineAnnealingLR`
-   - C) `OneCycleLR`
-   - D) `LinearLR`
+   - A) `CosineAnnealingLR`
+   - B) `ReduceLROnPlateau`
+   - C) `LinearLR`
+   - D) `OneCycleLR`
 
 5. With gradient accumulation over 4 micro-batches, why divide each micro-batch's loss by 4?
-   - A) So the accumulated gradient equals the gradient of the average loss over the whole batch
-   - B) To make training faster
-   - C) Because backward() can only be called on small values
-   - D) To avoid zeroing the gradients
+   - A) Because backward() can only be called on small values
+   - B) So the accumulated gradient equals the gradient of the average loss over the whole batch
+   - C) To avoid zeroing the gradients
+   - D) To make training faster
 
 6. What does an optimizer's `param_groups` let you do?
    - A) Use different hyperparameters (like lr or weight_decay) for different sets of parameters
-   - B) Train several models at once on different GPUs
-   - C) Group parameters by dtype
-   - D) Freeze parameters automatically
+   - B) Group parameters by dtype
+   - C) Freeze parameters automatically
+   - D) Train several models at once on different GPUs
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) AdamW applies weight decay directly to the weights, decoupled from the adaptive gradient step; Adam adds it to the gradient**: Decoupled weight decay regularises every weight consistently, which is why AdamW is standard for Transformers.
-2. **A) `optimizer.step()` for each batch, then `scheduler.step()` once at the end of the epoch**: Calling the scheduler first skips the initial learning rate, and PyTorch warns about it.
-3. **A) 0.001**: It is multiplied by 0.1 after steps 10 and 20: 0.1 → 0.01 → 0.001.
-4. **A) `ReduceLROnPlateau`**: It lowers the lr when the metric (usually validation loss) stops improving for `patience` steps.
-5. **A) So the accumulated gradient equals the gradient of the average loss over the whole batch**: Gradients from each backward() add up; dividing by 4 turns the sum into a mean.
+1. **B) AdamW applies weight decay directly to the weights, decoupled from the adaptive gradient step; Adam adds it to the gradient**: Decoupled weight decay regularises every weight consistently, which is why AdamW is standard for Transformers.
+2. **D) `optimizer.step()` for each batch, then `scheduler.step()` once at the end of the epoch**: Calling the scheduler first skips the initial learning rate, and PyTorch warns about it.
+3. **C) 0.001**: It is multiplied by 0.1 after steps 10 and 20: 0.1 → 0.01 → 0.001.
+4. **B) `ReduceLROnPlateau`**: It lowers the lr when the metric (usually validation loss) stops improving for `patience` steps.
+5. **B) So the accumulated gradient equals the gradient of the average loss over the whole batch**: Gradients from each backward() add up; dividing by 4 turns the sum into a mean.
 6. **A) Use different hyperparameters (like lr or weight_decay) for different sets of parameters**: Each group is a dict of parameters plus its own settings; schedulers update every group's lr.
 
 </details>

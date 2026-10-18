@@ -368,43 +368,43 @@ print(model(torch.randn(2, 1, 28, 28)).shape)
 ## Quick quiz
 
 1. An input of shape `[16, 3, 64, 64]` goes through `nn.Conv2d(3, 32, kernel_size=3, stride=2, padding=1)`. What is the output shape?
-   - A) `[16, 32, 32, 32]`
+   - A) `[16, 3, 32, 32]`
    - B) `[16, 32, 64, 64]`
-   - C) `[16, 32, 31, 31]`
-   - D) `[16, 3, 32, 32]`
+   - C) `[16, 32, 32, 32]`
+   - D) `[16, 32, 31, 31]`
 
 2. How many parameters does `nn.Conv2d(16, 32, kernel_size=3)` have?
    - A) 4,640
-   - B) 4,608
+   - B) 147,456
    - C) 512
-   - D) 147,456
+   - D) 4,608
 
 3. What does `nn.MaxPool2d(2)` do to a `[8, 64, 20, 20]` tensor?
-   - A) Gives `[8, 64, 10, 10]`, keeping the largest value of each 2 × 2 window
-   - B) Gives `[8, 32, 20, 20]`, halving the channels
-   - C) Gives `[8, 64, 19, 19]`
-   - D) Adds 2 learned weights per channel
+   - A) Gives `[8, 64, 19, 19]`
+   - B) Adds 2 learned weights per channel
+   - C) Gives `[8, 32, 20, 20]`, halving the channels
+   - D) Gives `[8, 64, 10, 10]`, keeping the largest value of each 2 × 2 window
 
 4. Why do many CNNs end with `nn.AdaptiveAvgPool2d(1)` before the classifier?
    - A) It reduces each feature map to one value whatever the input's height and width, so the model accepts any image size
-   - B) It adds learnable parameters to the classifier
-   - C) It replaces the need for ReLU
+   - B) It replaces the need for ReLU
+   - C) It adds learnable parameters to the classifier
    - D) It normalises the batch
 
 5. A grayscale `[1, 1, 28, 28]` image is passed to `nn.Conv2d(3, 8, 3)`. What happens?
-   - A) A RuntimeError saying the weight expected the input to have 3 channels, but got 1
-   - B) PyTorch repeats the channel three times automatically
-   - C) It works and outputs `[1, 8, 26, 26]`
-   - D) It works and outputs `[1, 3, 26, 26]`
+   - A) PyTorch repeats the channel three times automatically
+   - B) A RuntimeError saying the weight expected the input to have 3 channels, but got 1
+   - C) It works and outputs `[1, 3, 26, 26]`
+   - D) It works and outputs `[1, 8, 26, 26]`
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) `[16, 32, 32, 32]`**: ⌊(64 + 2 − 2 − 1) / 2⌋ + 1 = 32 per side, and 32 output channels.
+1. **C) `[16, 32, 32, 32]`**: ⌊(64 + 2 − 2 − 1) / 2⌋ + 1 = 32 per side, and 32 output channels.
 2. **A) 4,640**: 32 × 16 × 3 × 3 = 4,608 weights plus 32 biases.
-3. **A) Gives `[8, 64, 10, 10]`, keeping the largest value of each 2 × 2 window**: Pooling works on each channel separately, has no parameters, and with stride = kernel_size halves height and width.
+3. **D) Gives `[8, 64, 10, 10]`, keeping the largest value of each 2 × 2 window**: Pooling works on each channel separately, has no parameters, and with stride = kernel_size halves height and width.
 4. **A) It reduces each feature map to one value whatever the input's height and width, so the model accepts any image size**: Global average pooling gives a fixed [N, C, 1, 1] output, removing the dependence of the linear layer's input size on the image size.
-5. **A) A RuntimeError saying the weight expected the input to have 3 channels, but got 1**: in_channels must match the input's channel dimension (dim 1).
+5. **B) A RuntimeError saying the weight expected the input to have 3 channels, but got 1**: in_channels must match the input's channel dimension (dim 1).
 
 </details>
 

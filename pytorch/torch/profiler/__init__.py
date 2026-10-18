@@ -127,9 +127,25 @@ def _wrap(fn, name):
     return wrapper
 
 
+def _wrap_matmul(fn):
+    """aten::matmul dispatches to the kernel that fits the shapes (mm, bmm, mv or dot), which shows as its child."""
+    @functools.wraps(fn)
+    def wrapper(a, b, *args, **kwargs):
+        p = _active[0]
+        if p is None or not p._recording:
+            return fn(a, b, *args, **kwargs)
+        da, db = getattr(a, "ndim", 0), getattr(b, "ndim", 0)
+        inner = {(1, 1): "aten::dot", (2, 1): "aten::mv", (2, 2): "aten::mm"}.get((da, db), "aten::mm" if db == 2 else "aten::bmm")
+        with _Range("aten::matmul", _shapes((a, b))):
+            with _Range(inner, _shapes((a, b))):
+                return fn(a, b, *args, **kwargs)
+    wrapper._profiled = fn
+    return wrapper
+
+
 _TENSOR_OPS = {"add": "aten::add", "__add__": "aten::add", "__radd__": "aten::add", "sub": "aten::sub", "__sub__": "aten::sub",
                "__rsub__": "aten::rsub", "mul": "aten::mul", "__mul__": "aten::mul", "__rmul__": "aten::mul", "div": "aten::div",
-               "__truediv__": "aten::div", "__matmul__": "aten::matmul", "pow": "aten::pow", "__pow__": "aten::pow",
+               "__truediv__": "aten::div", "pow": "aten::pow", "__pow__": "aten::pow",
                "sum": "aten::sum", "mean": "aten::mean", "relu": "aten::relu", "sigmoid": "aten::sigmoid", "tanh": "aten::tanh",
                "exp": "aten::exp", "softmax": "aten::softmax", "log_softmax": "aten::log_softmax", "to": "aten::to",
                "copy_": "aten::copy_", "zero_": "aten::zero_", "fill_": "aten::fill_", "clone": "aten::clone",
@@ -154,7 +170,8 @@ def _install():
     for attr, name in _TENSOR_OPS.items():
         if hasattr(_core.Tensor, attr):
             patch(_core.Tensor, attr, _wrap(getattr(_core.Tensor, attr), name))
-    patch(_core, "matmul", _wrap(_core.matmul, "aten::matmul"))
+    patch(_core, "matmul", _wrap_matmul(_core.matmul))
+    patch(torch, "matmul", _wrap_matmul(torch.matmul))
     for attr, name in (("linear", "aten::linear"), ("max_pool2d", "aten::max_pool2d"), ("avg_pool2d", "aten::avg_pool2d"),
                        ("adaptive_avg_pool2d", "aten::adaptive_avg_pool2d"), ("cross_entropy", "aten::cross_entropy_loss"),
                        ("mse_loss", "aten::mse_loss"), ("dropout", "aten::dropout"), ("nll_loss", "aten::nll_loss"),

@@ -202,6 +202,41 @@ code, pre, kbd { font-family: var(--mono); }
 .q-opt code { font-size: .9em; }
 .q-explain { font-size: 14px; color: var(--muted); }
 .q-explain b { color: var(--ink); }
+.chip.lvl-Exam { background: var(--ok-soft); color: var(--ok); }
+.q-opt.chosen { border-color: var(--blue); background: var(--blue-soft); }
+.q-num { font: 600 11.5px/1.3 var(--body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q-num .muted { text-transform: none; letter-spacing: 0; font-weight: 500; }
+.exam-q .q-text.prose { font-weight: 500; }
+.exam-q .q-text.prose p { margin: 0 0 6px; }
+.exam-q .q-text.prose pre { margin: 8px 0; }
+.exam-start { margin: 22px 0; padding: 16px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); display: grid; gap: 12px; justify-items: start; }
+.exam-start p { margin: 0; }
+.exam-bar { position: sticky; top: 50px; z-index: 4; display: flex; align-items: center; gap: 16px; margin: 14px 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font-size: 14px; font-variant-numeric: tabular-nums; }
+.exam-bar #examCount { margin-right: auto; color: var(--muted); }
+.exam-clock { font: 600 15px/1 var(--mono); }
+.exam-clock.low { color: var(--err); }
+.exam-submit-row { margin: 18px 0 8px; display: grid; gap: 12px; justify-items: start; }
+.exam-confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--sunken); font-size: 14px; }
+.exam-result { margin: 18px 0; padding: 18px 20px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); }
+.exam-result.pass { border-color: var(--ok); }
+.exam-result.fail { border-color: var(--err); }
+.exam-result h3 { margin: 14px 0 6px; font-size: 15px; }
+.exam-score { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.exam-score b { font: 700 40px/1 var(--display); }
+.exam-result.pass .exam-score b { color: var(--ok); }
+.exam-result.fail .exam-score b { color: var(--err); }
+.exam-score span, .exam-result .muted, .exam-q .muted { color: var(--muted); font-size: 13.5px; }
+.exam-review { margin: 0; padding-left: 20px; }
+.exam-domains { width: 100%; border-collapse: collapse; font-size: 14px; }
+.exam-domains th, .exam-domains td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.exam-domains th { font: 600 13px/1.3 var(--body); color: var(--muted); background: var(--sunken); }
+.exam-domains tr:last-child td { border-bottom: 0; }
+.exam-q .q-opt code { white-space: pre; background: none; border: 0; padding: 0; }
+.exam-q, .exam-q > * { min-width: 0; }
+.quiz { grid-template-columns: minmax(0, 1fr); }
+.exam-q .q-text pre { overflow-x: auto; }
+.exam-q .q-opt { overflow-x: auto; }
+.exam-clock { white-space: nowrap; }
 
 .pager { display: flex; justify-content: space-between; gap: 12px; margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); flex-wrap: wrap; }
 .pager a { text-decoration: none; display: grid; gap: 2px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); min-width: 0; max-width: 100%; }
@@ -348,7 +383,7 @@ code, pre, kbd { font-family: var(--mono); }
   </section>
 </div>
 
-<script src="lessons.js?v=c7855c4635"></script>
-<script src="app.js?v=c7855c4635"></script>
+<script src="lessons.js?v=c7b42cf544"></script>
+<script src="app.js?v=c7b42cf544"></script>
 </body>
 </html>

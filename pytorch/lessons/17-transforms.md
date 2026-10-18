@@ -359,43 +359,43 @@ print(channel_stats(imgs))
 ## Quick quiz
 
 1. What does `v2.ToDtype(torch.float32, scale=True)` do to a uint8 image?
-   - A) Converts it to float32 and divides by 255, so values are in 0–1
-   - B) Converts it to float32 and leaves the values 0–255
-   - C) Normalises it to mean 0 and standard deviation 1
-   - D) Converts it to float32 and multiplies by 255
+   - A) Converts it to float32 and multiplies by 255
+   - B) Converts it to float32 and divides by 255, so values are in 0–1
+   - C) Converts it to float32 and leaves the values 0–255
+   - D) Normalises it to mean 0 and standard deviation 1
 
 2. Which transform belongs in the training pipeline but NOT the validation pipeline?
-   - A) `v2.RandomHorizontalFlip()`
-   - B) `v2.ToImage()`
-   - C) `v2.ToDtype(torch.float32, scale=True)`
-   - D) `v2.Normalize(mean, std)`
+   - A) `v2.Normalize(mean, std)`
+   - B) `v2.ToDtype(torch.float32, scale=True)`
+   - C) `v2.ToImage()`
+   - D) `v2.RandomHorizontalFlip()`
 
 3. You fine-tune a model pretrained on ImageNet. Which normalisation should you use?
-   - A) ImageNet's mean and std, `[0.485, 0.456, 0.406]` and `[0.229, 0.224, 0.225]`
-   - B) `mean=[0, 0, 0], std=[1, 1, 1]`
-   - C) Your dataset's mean and std, computed over train and test together
-   - D) No normalisation, because the model is pretrained
+   - A) Your dataset's mean and std, computed over train and test together
+   - B) No normalisation, because the model is pretrained
+   - C) `mean=[0, 0, 0], std=[1, 1, 1]`
+   - D) ImageNet's mean and std, `[0.485, 0.456, 0.406]` and `[0.229, 0.224, 0.225]`
 
 4. Where is data augmentation usually applied?
-   - A) In the Dataset's `__getitem__`, through its `transform`, so each epoch sees a new random variation
-   - B) Once, before training, saving the augmented images to disk
-   - C) In the model's `forward`
-   - D) In the optimizer
+   - A) Once, before training, saving the augmented images to disk
+   - B) In the optimizer
+   - C) In the Dataset's `__getitem__`, through its `transform`, so each epoch sees a new random variation
+   - D) In the model's `forward`
 
 5. An image tensor has shape `[3, 32, 32]` and dtype uint8. What happens with `v2.Normalize(mean, std)` applied directly?
-   - A) A TypeError: Normalize needs a float tensor
-   - B) It normalises the 0–255 values
-   - C) It converts to float automatically
-   - D) It normalises only the first channel
+   - A) It normalises the 0–255 values
+   - B) A TypeError: Normalize needs a float tensor
+   - C) It normalises only the first channel
+   - D) It converts to float automatically
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Converts it to float32 and divides by 255, so values are in 0–1**: scale=True rescales the value range between integer and float dtypes.
-2. **A) `v2.RandomHorizontalFlip()`**: Random augmentation is for training only; conversion and normalisation must be identical in both.
-3. **A) ImageNet's mean and std, `[0.485, 0.456, 0.406]` and `[0.229, 0.224, 0.225]`**: Inputs should match the distribution the pretrained weights were trained on.
-4. **A) In the Dataset's `__getitem__`, through its `transform`, so each epoch sees a new random variation**: Per-sample, per-load transforms give fresh variations every epoch.
-5. **A) A TypeError: Normalize needs a float tensor**: Convert with `ToDtype(torch.float32, scale=True)` first.
+1. **B) Converts it to float32 and divides by 255, so values are in 0–1**: scale=True rescales the value range between integer and float dtypes.
+2. **D) `v2.RandomHorizontalFlip()`**: Random augmentation is for training only; conversion and normalisation must be identical in both.
+3. **D) ImageNet's mean and std, `[0.485, 0.456, 0.406]` and `[0.229, 0.224, 0.225]`**: Inputs should match the distribution the pretrained weights were trained on.
+4. **C) In the Dataset's `__getitem__`, through its `transform`, so each epoch sees a new random variation**: Per-sample, per-load transforms give fresh variations every epoch.
+5. **B) A TypeError: Normalize needs a float tensor**: Convert with `ToDtype(torch.float32, scale=True)` first.
 
 </details>
 

@@ -322,9 +322,9 @@ print(roll_dice(10, seed=1))
 
 2. What is the dtype of `torch.tensor([1, 2, 3.0])`?
    - A) `torch.float32`
-   - B) `torch.int64`
-   - C) `torch.float64`
-   - D) It raises an error because the types are mixed
+   - B) It raises an error because the types are mixed
+   - C) `torch.int64`
+   - D) `torch.float64`
 
 3. `arr = np.zeros(3); t = torch.from_numpy(arr); arr[0] = 5`. What is `t[0]`?
    - A) `tensor(5., dtype=torch.float64)`
@@ -333,14 +333,14 @@ print(roll_dice(10, seed=1))
    - D) It raises an error
 
 4. You call `torch.manual_seed(7)` and then `torch.rand(2)` twice, getting `a` and `b`. Which statement is true?
-   - A) `a` and `b` differ, but the pair is the same on every run of the program
-   - B) `a` and `b` are equal
+   - A) `a` and `b` are equal
+   - B) `a` and `b` differ, but the pair is the same on every run of the program
    - C) `a` and `b` differ on every run of the program
    - D) `torch.rand` ignores the seed
 
 5. Which function returns integers where `high` is excluded?
-   - A) `torch.randint(low, high, size)`
-   - B) `torch.linspace(low, high, steps)`
+   - A) `torch.linspace(low, high, steps)`
+   - B) `torch.randint(low, high, size)`
    - C) `torch.full(size, high)`
    - D) `torch.rand(size) * high`
 
@@ -350,8 +350,8 @@ print(roll_dice(10, seed=1))
 1. **A) `torch.arange(0, 8, 2)`**: arange excludes the end, so the end must be past 6. linspace(0, 6, 3) gives 0, 3, 6 as floats.
 2. **A) `torch.float32`**: One float makes the whole tensor floating point, using the default dtype, float32 (unlike NumPy, which would choose float64).
 3. **A) `tensor(5., dtype=torch.float64)`**: from_numpy shares memory with the array, and keeps NumPy's float64 dtype, which the repr shows because it isn't the default.
-4. **A) `a` and `b` differ, but the pair is the same on every run of the program**: Seeding fixes the whole sequence of draws. The second call continues the sequence, so it differs from the first.
-5. **A) `torch.randint(low, high, size)`**: Like Python's range, randint's upper bound is exclusive.
+4. **B) `a` and `b` differ, but the pair is the same on every run of the program**: Seeding fixes the whole sequence of draws. The second call continues the sequence, so it differs from the first.
+5. **B) `torch.randint(low, high, size)`**: Like Python's range, randint's upper bound is exclusive.
 
 </details>
 

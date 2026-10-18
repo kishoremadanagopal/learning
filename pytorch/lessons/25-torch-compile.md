@@ -341,48 +341,48 @@ print(scale_rows(torch.tensor([[1.0, 2.0], [-3.0, 1.0], [0.0, 0.0]])))
 
 1. What does the first call to a `torch.compile`d model do that later calls don't?
    - A) Traces the code and compiles optimised kernels, so it is much slower
-   - B) Moves the model to the GPU
-   - C) Trains the model for one step
+   - B) Trains the model for one step
+   - C) Moves the model to the GPU
    - D) Nothing: every call costs the same
 
 2. Which line inside a compiled function most likely causes a graph break?
-   - A) `if loss.item() > 0.5:`
-   - B) `y = torch.relu(x @ w)`
-   - C) `z = x.sum(dim=1)`
-   - D) `out = torch.where(x > 0, x, 0)`
+   - A) `out = torch.where(x > 0, x, 0)`
+   - B) `z = x.sum(dim=1)`
+   - C) `if loss.item() > 0.5:`
+   - D) `y = torch.relu(x @ w)`
 
 3. You compile a model and save `compiled.state_dict()`. Loading it into a fresh `MyModel()` fails. Why?
    - A) The keys start with `_orig_mod.`; save `compiled._orig_mod.state_dict()` (or strip the prefix)
-   - B) Compiled models can't be saved
+   - B) state_dict() of a compiled model is empty
    - C) The weights are stored in float16
-   - D) state_dict() of a compiled model is empty
+   - D) Compiled models can't be saved
 
 4. Which `torch.compile` mode uses CUDA graphs to cut kernel-launch overhead?
-   - A) `mode="reduce-overhead"`
-   - B) `mode="default"`
-   - C) `fullgraph=True`
-   - D) `backend="eager"`
+   - A) `backend="eager"`
+   - B) `mode="reduce-overhead"`
+   - C) `mode="default"`
+   - D) `fullgraph=True`
 
 5. What does `torch.set_float32_matmul_precision("high")` enable?
-   - A) TF32 tensor-core matmuls for float32 on supporting GPUs: faster, with slightly lower precision
-   - B) float64 matmuls
+   - A) float64 matmuls
+   - B) torch.compile for every model
    - C) Automatic mixed precision with GradScaler
-   - D) torch.compile for every model
+   - D) TF32 tensor-core matmuls for float32 on supporting GPUs: faster, with slightly lower precision
 
 6. Why can varying batch sizes slow down a compiled model?
    - A) Each new shape can trigger a recompilation until the dimension is treated as dynamic
-   - B) Compiled models only accept one batch size
-   - C) Larger batches always disable compilation
-   - D) The optimizer state is recompiled
+   - B) Larger batches always disable compilation
+   - C) The optimizer state is recompiled
+   - D) Compiled models only accept one batch size
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Traces the code and compiles optimised kernels, so it is much slower**: Exclude the first call(s) from timings; compiled code is cached and reused.
-2. **A) `if loss.item() > 0.5:`**: .item() needs the actual value in Python, which ends the graph; the others are tensor operations.
+2. **C) `if loss.item() > 0.5:`**: .item() needs the actual value in Python, which ends the graph; the others are tensor operations.
 3. **A) The keys start with `_orig_mod.`; save `compiled._orig_mod.state_dict()` (or strip the prefix)**: torch.compile wraps the model in an OptimizedModule whose submodule is called _orig_mod.
-4. **A) `mode="reduce-overhead"`**: CUDA graphs replay a recorded sequence of kernels with one launch, which helps most for small batches.
-5. **A) TF32 tensor-core matmuls for float32 on supporting GPUs: faster, with slightly lower precision**: "highest" (the default) keeps full float32 precision.
+4. **B) `mode="reduce-overhead"`**: CUDA graphs replay a recorded sequence of kernels with one launch, which helps most for small batches.
+5. **D) TF32 tensor-core matmuls for float32 on supporting GPUs: faster, with slightly lower precision**: "highest" (the default) keeps full float32 precision.
 6. **A) Each new shape can trigger a recompilation until the dimension is treated as dynamic**: Use drop_last=True, dynamic=True or mark_dynamic to avoid repeated recompiles.
 
 </details>

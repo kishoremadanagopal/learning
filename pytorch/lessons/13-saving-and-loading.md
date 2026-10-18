@@ -391,49 +391,49 @@ print(predict(model, torch.tensor([[0.5, -0.2], [2.0, 1.0]]), ["low", "mid", "hi
 
 1. What is the recommended way to save a trained model for later use?
    - A) `torch.save(model.state_dict(), "model.pt")`
-   - B) `torch.save(model, "model.pt")`
-   - C) `pickle.dump(model.parameters(), f)`
-   - D) `model.save("model.pt")`
+   - B) `model.save("model.pt")`
+   - C) `torch.save(model, "model.pt")`
+   - D) `pickle.dump(model.parameters(), f)`
 
 2. Since PyTorch 2.6, `torch.load("whole_model.pt")` on a file made with `torch.save(model, ...)` raises an error. Why?
    - A) torch.load defaults to weights_only=True, which refuses to unpickle arbitrary classes for security
    - B) Whole models can't be saved in PyTorch 2.6
-   - C) The file must be loaded with model.load()
-   - D) The model must be on the GPU
+   - C) The model must be on the GPU
+   - D) The file must be loaded with model.load()
 
 3. A checkpoint was saved on a GPU machine. How do you load it on a laptop without a GPU?
-   - A) `torch.load(path, map_location="cpu")`
+   - A) `torch.load(path, device="cpu")`
    - B) `torch.load(path).cpu()`
-   - C) `torch.load(path, device="cpu")`
-   - D) It can't be done
+   - C) It can't be done
+   - D) `torch.load(path, map_location="cpu")`
 
 4. To resume training exactly, what should a checkpoint contain besides the model's state_dict?
-   - A) The optimizer's state_dict (and the epoch and other loop state)
+   - A) The training data
    - B) Only the learning rate
-   - C) The training data
+   - C) The optimizer's state_dict (and the epoch and other loop state)
    - D) The model's class source code
 
 5. `load_state_dict` raises "size mismatch for 0.weight". What does `strict=False` do about it?
-   - A) Nothing: strict=False only allows missing or unexpected keys, not shape mismatches
-   - B) It loads the tensor anyway, padding with zeros
-   - C) It skips that tensor and continues
-   - D) It resizes the model's layer
+   - A) It resizes the model's layer
+   - B) Nothing: strict=False only allows missing or unexpected keys, not shape mismatches
+   - C) It loads the tensor anyway, padding with zeros
+   - D) It skips that tensor and continues
 
 6. You predict a single sample of shape `[10]` with a model trained on batches of shape `[batch, 10]`. What should you do first?
-   - A) Add a batch dimension: `x.unsqueeze(0)`
-   - B) Transpose it with `x.T`
+   - A) Transpose it with `x.T`
+   - B) Convert it to float64
    - C) Repeat it 32 times
-   - D) Convert it to float64
+   - D) Add a batch dimension: `x.unsqueeze(0)`
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) `torch.save(model.state_dict(), "model.pt")`**: Save the state_dict; rebuild the architecture in code and load_state_dict to restore it.
 2. **A) torch.load defaults to weights_only=True, which refuses to unpickle arbitrary classes for security**: Pass weights_only=False only for files you trust, or save state_dicts instead.
-3. **A) `torch.load(path, map_location="cpu")`**: map_location remaps the stored tensors' devices while loading.
-4. **A) The optimizer's state_dict (and the epoch and other loop state)**: Optimizers such as Adam and SGD with momentum keep state that affects every future step.
-5. **A) Nothing: strict=False only allows missing or unexpected keys, not shape mismatches**: Shapes must always match; build the right architecture.
-6. **A) Add a batch dimension: `x.unsqueeze(0)`**: Models are written for batches; a batch of one has shape [1, 10].
+3. **D) `torch.load(path, map_location="cpu")`**: map_location remaps the stored tensors' devices while loading.
+4. **C) The optimizer's state_dict (and the epoch and other loop state)**: Optimizers such as Adam and SGD with momentum keep state that affects every future step.
+5. **B) Nothing: strict=False only allows missing or unexpected keys, not shape mismatches**: Shapes must always match; build the right architecture.
+6. **D) Add a batch dimension: `x.unsqueeze(0)`**: Models are written for batches; a batch of one has shape [1, 10].
 
 </details>
 

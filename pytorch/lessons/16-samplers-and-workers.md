@@ -355,50 +355,50 @@ for workers in (0, 2, 3):
 ## Quick quiz
 
 1. You pass both `shuffle=True` and `sampler=WeightedRandomSampler(...)` to a DataLoader. What happens?
-   - A) A ValueError: sampler option is mutually exclusive with shuffle
-   - B) The sampler's draws are shuffled again
+   - A) The weights are ignored
+   - B) A ValueError: sampler option is mutually exclusive with shuffle
    - C) shuffle is silently ignored
-   - D) The weights are ignored
+   - D) The sampler's draws are shuffled again
 
 2. A dataset has 950 negative and 50 positive examples. Which DataLoader setup draws positives about as often as negatives?
-   - A) `WeightedRandomSampler` with weight 1/950 for each negative and 1/50 for each positive
-   - B) `shuffle=True`
+   - A) `drop_last=True`
+   - B) `WeightedRandomSampler` with weight 1/950 for each negative and 1/50 for each positive
    - C) `RandomSampler(ds, replacement=True)`
-   - D) `drop_last=True`
+   - D) `shuffle=True`
 
 3. An `IterableDataset` yields 100 items and the DataLoader has `num_workers=4`. Without any use of `get_worker_info()`, how many items does one epoch produce?
-   - A) 400
-   - B) 100
-   - C) 25
+   - A) 25
+   - B) 400
+   - C) 100
    - D) It raises an error
 
 4. What does `pin_memory=True` in a DataLoader do?
-   - A) Puts each batch in page-locked CPU memory so copies to the GPU are faster and can be asynchronous with `non_blocking=True`
-   - B) Moves each batch to the GPU automatically
-   - C) Keeps the dataset in GPU memory
+   - A) Moves each batch to the GPU automatically
+   - B) Keeps the dataset in GPU memory
+   - C) Puts each batch in page-locked CPU memory so copies to the GPU are faster and can be asynchronous with `non_blocking=True`
    - D) Stops the operating system from swapping the model
 
 5. Inside a DataLoader worker, what does `torch.utils.data.get_worker_info()` return?
-   - A) An object with the worker's `id`, `num_workers`, `seed` and its copy of the `dataset`
+   - A) The process ID of the main process
    - B) `None`
    - C) The batch index being loaded
-   - D) The process ID of the main process
+   - D) An object with the worker's `id`, `num_workers`, `seed` and its copy of the `dataset`
 
 6. When does `persistent_workers=True` help?
-   - A) When starting worker processes at the beginning of every epoch is slow
+   - A) When the dataset doesn't fit in memory
    - B) When num_workers is 0
-   - C) When the dataset doesn't fit in memory
+   - C) When starting worker processes at the beginning of every epoch is slow
    - D) When batches have different sizes
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) A ValueError: sampler option is mutually exclusive with shuffle**: The sampler decides the order, so shuffle has nothing left to do; PyTorch refuses the combination.
-2. **A) `WeightedRandomSampler` with weight 1/950 for each negative and 1/50 for each positive**: Weights inversely proportional to class size give each class the same total probability.
-3. **A) 400**: Each worker iterates its own copy of the whole dataset unless `__iter__` shards the work.
-4. **A) Puts each batch in page-locked CPU memory so copies to the GPU are faster and can be asynchronous with `non_blocking=True`**: Pinned memory speeds up host-to-device transfers; you still call `.to(device, non_blocking=True)`.
-5. **A) An object with the worker's `id`, `num_workers`, `seed` and its copy of the `dataset`**: It returns None only in the main process.
-6. **A) When starting worker processes at the beginning of every epoch is slow**: It keeps the workers (and their dataset copies) alive between epochs; it requires num_workers > 0.
+1. **B) A ValueError: sampler option is mutually exclusive with shuffle**: The sampler decides the order, so shuffle has nothing left to do; PyTorch refuses the combination.
+2. **B) `WeightedRandomSampler` with weight 1/950 for each negative and 1/50 for each positive**: Weights inversely proportional to class size give each class the same total probability.
+3. **B) 400**: Each worker iterates its own copy of the whole dataset unless `__iter__` shards the work.
+4. **C) Puts each batch in page-locked CPU memory so copies to the GPU are faster and can be asynchronous with `non_blocking=True`**: Pinned memory speeds up host-to-device transfers; you still call `.to(device, non_blocking=True)`.
+5. **D) An object with the worker's `id`, `num_workers`, `seed` and its copy of the `dataset`**: It returns None only in the main process.
+6. **C) When starting worker processes at the beginning of every epoch is slow**: It keeps the workers (and their dataset copies) alive between epochs; it requires num_workers > 0.
 
 </details>
 

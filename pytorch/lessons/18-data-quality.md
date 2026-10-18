@@ -368,49 +368,49 @@ print(class_weights(fruit_labels, 3))
 
 1. You normalise features with the mean and std of the whole dataset, then split into training and validation sets. What is the problem?
    - A) Data leakage: validation data influenced the preprocessing, so validation scores are optimistic
-   - B) None: normalisation statistics don't depend on the data
-   - C) The training set will contain NaN values
-   - D) The model can no longer be saved
+   - B) The model can no longer be saved
+   - C) None: normalisation statistics don't depend on the data
+   - D) The training set will contain NaN values
 
 2. The loss becomes `nan` after a few steps. Which check should come first?
-   - A) `torch.isfinite(x).all()` on the input batches (and the labels)
-   - B) Increase the batch size
-   - C) Switch from SGD to Adam
-   - D) Call `model.eval()`
+   - A) Call `model.eval()`
+   - B) Switch from SGD to Adam
+   - C) Increase the batch size
+   - D) `torch.isfinite(x).all()` on the input batches (and the labels)
 
 3. A 3-class classifier with random weights gives a first training loss of about 7.5 on balanced data. What does that suggest?
-   - A) Something is off: the expected starting cross-entropy is about ln(3) ≈ 1.10, so check the inputs' scale, the labels or the model's output
-   - B) Training is going well
-   - C) The batch size is too small
-   - D) The dataset is too large
+   - A) The batch size is too small
+   - B) The dataset is too large
+   - C) Something is off: the expected starting cross-entropy is about ln(3) ≈ 1.10, so check the inputs' scale, the labels or the model's output
+   - D) Training is going well
 
 4. Why overfit a single batch before a long training run?
-   - A) It quickly proves the model, loss and optimizer can learn; if the loss won't approach 0 on 16 examples, the pipeline has a bug
+   - A) It calculates the normalisation statistics
    - B) It's the best way to get a good final model
-   - C) It replaces the validation set
-   - D) It calculates the normalisation statistics
+   - C) It quickly proves the model, loss and optimizer can learn; if the loss won't approach 0 on 16 examples, the pipeline has a bug
+   - D) It replaces the validation set
 
 5. A rare class makes up 3% of a dataset. A random 80/20 split of 100 samples might put none of it in validation. What fixes that?
    - A) A stratified split, taking 20% of each class separately
    - B) Shuffling the DataLoader
-   - C) Using drop_last=True
-   - D) Normalising the features
+   - C) Normalising the features
+   - D) Using drop_last=True
 
 6. `nn.CrossEntropyLoss(weight=w)`: what should `w` contain?
-   - A) One weight per class, larger for rarer classes
-   - B) One weight per sample in the batch
-   - C) One weight per model parameter
-   - D) The learning rate for each class
+   - A) The learning rate for each class
+   - B) One weight per class, larger for rarer classes
+   - C) One weight per sample in the batch
+   - D) One weight per model parameter
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) Data leakage: validation data influenced the preprocessing, so validation scores are optimistic**: Fit preprocessing (statistics, vocabularies, imputers) on the training split only, and apply it to the others.
-2. **A) `torch.isfinite(x).all()` on the input batches (and the labels)**: A single NaN or inf in the data propagates to the loss and then to every weight; also consider a too-high learning rate.
-3. **A) Something is off: the expected starting cross-entropy is about ln(3) ≈ 1.10, so check the inputs' scale, the labels or the model's output**: A fresh model should be close to uniform over classes; a much larger loss points to badly scaled inputs or a bug.
-4. **A) It quickly proves the model, loss and optimizer can learn; if the loss won't approach 0 on 16 examples, the pipeline has a bug**: A model that can't memorise one tiny batch usually has a wiring bug (labels, loss, zero_grad, learning rate).
+2. **D) `torch.isfinite(x).all()` on the input batches (and the labels)**: A single NaN or inf in the data propagates to the loss and then to every weight; also consider a too-high learning rate.
+3. **C) Something is off: the expected starting cross-entropy is about ln(3) ≈ 1.10, so check the inputs' scale, the labels or the model's output**: A fresh model should be close to uniform over classes; a much larger loss points to badly scaled inputs or a bug.
+4. **C) It quickly proves the model, loss and optimizer can learn; if the loss won't approach 0 on 16 examples, the pipeline has a bug**: A model that can't memorise one tiny batch usually has a wiring bug (labels, loss, zero_grad, learning rate).
 5. **A) A stratified split, taking 20% of each class separately**: Stratification preserves each class's proportion in every split.
-6. **A) One weight per class, larger for rarer classes**: The class weights multiply each sample's loss according to its target class.
+6. **B) One weight per class, larger for rarer classes**: The class weights multiply each sample's loss according to its target class.
 
 </details>
 

@@ -419,59 +419,59 @@ print([g.shape for g in grads])
 ## Quick quiz
 
 1. In DistributedDataParallel, what is communicated between GPUs during `backward()`?
-   - A) Gradients, which are averaged across processes with an all-reduce
-   - B) The model's parameters after every step
-   - C) The input batches
-   - D) The loss values only
+   - A) The model's parameters after every step
+   - B) The loss values only
+   - C) Gradients, which are averaged across processes with an all-reduce
+   - D) The input batches
 
 2. Training with DDP on 4 GPUs uses `batch_size=64` in each DataLoader. What is the effective batch size per optimizer step?
    - A) 256
    - B) 64
-   - C) 16
-   - D) 4
+   - C) 4
+   - D) 16
 
 3. What happens if you forget `sampler.set_epoch(epoch)` with a shuffling DistributedSampler?
    - A) Every epoch uses the same shuffled order
-   - B) Each rank sees the whole dataset
-   - C) Training raises an error
+   - B) Training raises an error
+   - C) Each rank sees the whole dataset
    - D) The data isn't shuffled at all, even in the first epoch
 
 4. Which backend should `init_process_group` use for multi-GPU training on NVIDIA GPUs?
    - A) `nccl`
-   - B) `gloo`
-   - C) `mpi`
+   - B) `mpi`
+   - C) `gloo`
    - D) `tcp`
 
 5. When is FSDP preferable to DDP?
-   - A) When the parameters, gradients and optimizer state don't fit in one GPU's memory
-   - B) When the dataset is small
+   - A) When the dataset is small
+   - B) When the parameters, gradients and optimizer state don't fit in one GPU's memory
    - C) When training on a CPU
    - D) Always: DDP is deprecated
 
 6. In a DDP script, which process should save the checkpoint?
-   - A) Only rank 0, saving `model.module.state_dict()`
-   - B) Every rank, each to the same file
-   - C) The rank with the lowest loss
-   - D) No rank: DDP saves automatically
+   - A) Every rank, each to the same file
+   - B) No rank: DDP saves automatically
+   - C) Only rank 0, saving `model.module.state_dict()`
+   - D) The rank with the lowest loss
 
 7. `torchrun --nproc_per_node=4 train.py` on one machine. What does it do?
-   - A) Starts 4 processes and sets RANK, LOCAL_RANK, WORLD_SIZE and the master address and port for each
-   - B) Runs train.py on 4 CPU threads
-   - C) Starts 1 process that uses 4 GPUs automatically
+   - A) Starts 1 process that uses 4 GPUs automatically
+   - B) Starts 4 processes and sets RANK, LOCAL_RANK, WORLD_SIZE and the master address and port for each
+   - C) Runs train.py on 4 CPU threads
    - D) Copies the dataset 4 times
 
 <details>
 <summary>Quiz answers</summary>
 
-1. **A) Gradients, which are averaged across processes with an all-reduce**: Each process holds full parameters and its own data; averaging gradients keeps the copies identical.
+1. **C) Gradients, which are averaged across processes with an all-reduce**: Each process holds full parameters and its own data; averaging gradients keeps the copies identical.
 2. **A) 256**: Each of the 4 processes processes 64 samples, and their gradients are averaged into one step.
 3. **A) Every epoch uses the same shuffled order**: The shuffle is seeded with seed + epoch; without set_epoch, epoch stays 0.
 4. **A) `nccl`**: NCCL implements fast GPU-to-GPU collectives; Gloo is for CPUs.
-5. **A) When the parameters, gradients and optimizer state don't fit in one GPU's memory**: FSDP shards them across GPUs; DDP keeps a full copy everywhere and is simpler and faster when the model fits.
-6. **A) Only rank 0, saving `model.module.state_dict()`**: One writer avoids conflicts; .module avoids "module." prefixes in the keys.
-7. **A) Starts 4 processes and sets RANK, LOCAL_RANK, WORLD_SIZE and the master address and port for each**: Each process then calls init_process_group and uses its LOCAL_RANK to pick a GPU.
+5. **B) When the parameters, gradients and optimizer state don't fit in one GPU's memory**: FSDP shards them across GPUs; DDP keeps a full copy everywhere and is simpler and faster when the model fits.
+6. **C) Only rank 0, saving `model.module.state_dict()`**: One writer avoids conflicts; .module avoids "module." prefixes in the keys.
+7. **B) Starts 4 processes and sets RANK, LOCAL_RANK, WORLD_SIZE and the master address and port for each**: Each process then calls init_process_group and uses its LOCAL_RANK to pick a GPU.
 
 </details>
 
 ---
-Previous: [Lesson 26](26-mixed-precision.md) · Back to the [course home](../README.md)
+Previous: [Lesson 26](26-mixed-precision.md) · Next: [Lesson 28: Exam strategy and final review](28-exam-strategy.md)

@@ -10,10 +10,15 @@
 
   /* ---------- Storage (per-browser progress) ---------- */
   const KEY = "pytorch-course:v1";
-  let state = { passed: {}, quiz: {}, code: {}, last: null };
+  let state = { passed: {}, quiz: {}, code: {}, exams: {}, last: null, quizOrder: 2 };
   try {
     const raw = window.localStorage.getItem(KEY);
-    if (raw) state = Object.assign(state, JSON.parse(raw));
+    if (raw) {
+      const saved = JSON.parse(raw);
+      if (saved.quizOrder !== 2) saved.quiz = {};   // quiz options were reordered: old answers no longer line up
+      state = Object.assign(state, saved, { quizOrder: 2 });
+      state.exams = state.exams || {};
+    }
   } catch (e) { /* storage unavailable: progress lasts for this visit only */ }
   let saveTimer = null;
   function save() {
@@ -25,7 +30,8 @@
 
   const exKey = (lesson, i) => `${lesson.id}#${i}`;
   const lessonDone = (lesson) =>
-    lesson.exercises.length > 0
+    lesson.exam.length ? !!(state.exams[lesson.id] && state.exams[lesson.id].done)
+    : lesson.exercises.length > 0
       ? lesson.exercises.every((_, i) => state.passed[exKey(lesson, i)])
       : lesson.quiz.every((_, i) => state.quiz[`${lesson.id}#${i}`] !== undefined);
   const partLessons = (partId) => LESSONS.filter((l) => l.part === partId);
@@ -314,6 +320,7 @@
     const done = LESSONS.filter(lessonDone).length;
     const nEx = LESSONS.reduce((a, l) => a + l.exercises.length, 0);
     const nQ = LESSONS.reduce((a, l) => a + l.quiz.length, 0);
+    const nMock = LESSONS.filter((l) => l.exam.length).length;
     const nRun = LESSONS.reduce((a, l) => a + l.examples.length, 0);
     const next = LESSONS.find((l) => !lessonDone(l)) || LESSONS[0];
     const resume = state.last && LESSONS.find((l) => l.id === state.last);
@@ -324,7 +331,7 @@
         <span class="eyebrow">PyTorch · PTCA exam prep</span>
         <h1>Learn <em>PyTorch</em>, pass the PTCA.</h1>
         <p>Tensors, devices, autograd, data loading, building and training models, and making them fast, following the official outline of the PyTorch Certified Associate exam. Every example runs right here in your browser on the course's own copy of PyTorch, with a pretend GPU to practise on. Exercises are checked with hidden tests, every lesson ends with exam-style questions, and when you're stuck you get an approach, hints and a full walkthrough.</p>
-        <div class="stats"><span><b>${PARTS.length}</b> part${PARTS.length === 1 ? "" : "s"}</span><span><b>${LESSONS.length}</b> lessons</span><span><b>${nRun}</b> runnable examples</span><span><b>${nEx}</b> auto-checked exercises</span><span><b>${nQ}</b> quiz questions</span></div>
+        <div class="stats"><span><b>${PARTS.length}</b> part${PARTS.length === 1 ? "" : "s"}</span><span><b>${LESSONS.length}</b> lessons</span><span><b>${nRun}</b> runnable examples</span><span><b>${nEx}</b> auto-checked exercises</span><span><b>${nQ}</b> quiz questions</span>${nMock ? `<span><b>${nMock}</b> timed mock exams</span>` : ""}</div>
         <div class="cta-row">
           <a class="btn-primary" href="#${target.id}">${done || resume ? "Continue" : "Start"}: ${esc(target.title)} →</a>
           <a class="btn-ghost" href="#pytorch-and-tensors">About the exam</a>
@@ -349,9 +356,161 @@
     renderNav("home");
   }
 
+  /* ---------- Mock exams ---------- */
+  const DOMAINS = { fundamentals: "PyTorch fundamentals", performance: "Performance and optimization", model: "Model development", data: "Data handling" };
+  const WEIGHTS = { fundamentals: 38, performance: 26, model: 20, data: 16 };
+  const PASS_TARGET = 80;
+  let examTimer = null;
+  const fmtTime = (ms) => { const t = Math.max(0, Math.round(ms / 1000)); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`; };
+
+  function renderExam(lesson) {
+    clearInterval(examTimer);
+    const idx = LESSONS.indexOf(lesson);
+    const part = PARTS.find((p) => p.id === lesson.part);
+    const prev = LESSONS[idx - 1], next = LESSONS[idx + 1];
+    const qs = lesson.exam, limit = lesson.examMinutes * 60000;
+    const st = state.exams[lesson.id] || null;
+    $("crumb").innerHTML = `<a href="#home">Home</a> / Part ${part.id}: ${esc(part.title)} / ${esc(lesson.title)}`;
+    const counts = {};
+    qs.forEach((q) => { counts[q.domain] = (counts[q.domain] || 0) + 1; });
+    let html = `<header class="lesson-head">
+        <div class="lesson-meta"><span>Lesson ${idx + 1} of ${LESSONS.length}</span><span class="chip lvl-${esc(part.level)}">${esc(part.level)}</span><span>${qs.length} questions · ${lesson.examMinutes} min</span></div>
+        <h1>${esc(lesson.title)}</h1>
+        <p>${esc(lesson.summary)}</p>
+      </header>`;
+    const pager = `<nav class="pager">
+      ${prev ? `<a href="#${prev.id}"><small>← Previous</small>${esc(prev.title)}</a>` : `<a href="#home"><small>←</small>Course home</a>`}
+      ${next ? `<a class="next" href="#${next.id}"><small>Next →</small>${esc(next.title)}</a>` : `<a class="next" href="#home"><small>Finished</small>Back to course home</a>`}
+    </nav>`;
+    const domainTable = `<div class="table-wrap"><table class="exam-domains"><thead><tr><th>Domain</th><th>Exam weight</th><th>Questions here</th></tr></thead><tbody>${Object.keys(DOMAINS).map((d) => `<tr><td>${DOMAINS[d]}</td><td>${WEIGHTS[d]}%</td><td>${counts[d] || 0}</td></tr>`).join("")}</tbody></table></div>`;
+    const qHTML = (q, qi, mode) => `<div class="q exam-q" data-q="${qi}"><div class="q-num">Question ${qi + 1} of ${qs.length}${mode === "review" ? ` · <span class="muted">${DOMAINS[q.domain]}</span>` : ""}</div><div class="q-text prose">${q.q}</div><div class="q-opts">` +
+      q.options.map((o, oi) => `<button class="q-opt" type="button" data-o="${oi}"${mode === "review" ? " disabled" : ""}><span class="key">${"ABCD"[oi]}</span><span>${o}</span></button>`).join("") +
+      `</div>${mode === "review" ? '<div class="q-explain"></div>' : ""}</div>`;
+
+    if (!st) {
+      html += `<div class="prose">${lesson.html}</div>${domainTable}
+        <div class="exam-start"><p><b>Ready?</b> The timer starts when you press Start and keeps running if you leave this page. You can change answers until you submit; nothing is marked until then.</p>
+        <button class="btn-primary" type="button" id="examStart">Start the ${lesson.examMinutes}-minute exam</button></div>` + pager;
+      page.innerHTML = html;
+      page.querySelectorAll("pre.plain").forEach((el) => { el.innerHTML = highlight(el.textContent); });
+      $("examStart").addEventListener("click", () => {
+        state.exams[lesson.id] = { start: Date.now(), answers: {}, done: false };
+        save();
+        renderExam(lesson);
+        $("main").scrollTop = 0;
+      });
+      renderNav(lesson.id);
+      return;
+    }
+
+    if (!st.done) {
+      html += `<div class="exam-bar" role="status"><span id="examClock" class="exam-clock"></span><span id="examCount"></span><button class="btn-primary" type="button" id="examSubmit">Submit</button></div>
+        <div class="quiz">${qs.map((q, qi) => qHTML(q, qi, "take")).join("")}</div>
+        <div class="exam-submit-row"><div id="examConfirm" class="exam-confirm" hidden></div><button class="btn-primary" type="button" id="examSubmit2">Submit the exam</button></div>`;
+      page.innerHTML = html;
+      page.querySelectorAll("pre.plain").forEach((el) => { el.innerHTML = highlight(el.textContent); });
+      const counter = () => {
+        const n = Object.keys(st.answers).length;
+        $("examCount").textContent = `${n} of ${qs.length} answered`;
+      };
+      page.querySelectorAll(".exam-q").forEach((qel) => {
+        const qi = +qel.dataset.q;
+        const mark = () => qel.querySelectorAll(".q-opt").forEach((b) => b.classList.toggle("chosen", st.answers[qi] === +b.dataset.o));
+        mark();
+        qel.querySelectorAll(".q-opt").forEach((b) => b.addEventListener("click", () => {
+          st.answers[qi] = +b.dataset.o; save(); mark(); counter();
+        }));
+      });
+      const finish = () => {
+        clearInterval(examTimer);
+        st.done = true; st.end = Math.min(Date.now(), st.start + limit);
+        save();
+        renderExam(lesson);
+        $("main").scrollTop = 0;
+      };
+      const ask = () => {
+        const left = qs.length - Object.keys(st.answers).length;
+        const box = $("examConfirm");
+        box.innerHTML = `<span>${left ? `${left} question${left === 1 ? " is" : "s are"} unanswered (an unanswered question scores 0, so guess). ` : ""}Submit now? You can't change answers afterwards.</span>
+          <button class="btn-primary" type="button" data-act="yes">Submit</button><button class="btn-ghost" type="button" data-act="no">Keep going</button>`;
+        box.hidden = false;
+        box.querySelector('[data-act="yes"]').addEventListener("click", finish);
+        box.querySelector('[data-act="no"]').addEventListener("click", () => { box.hidden = true; });
+        box.scrollIntoView({ block: "center" });
+      };
+      $("examSubmit").addEventListener("click", ask);
+      $("examSubmit2").addEventListener("click", ask);
+      const tick = () => {
+        const left = st.start + limit - Date.now();
+        const clock = $("examClock");
+        if (!clock) { clearInterval(examTimer); return; }
+        clock.textContent = `⏱ ${fmtTime(left)} left`;
+        clock.classList.toggle("low", left < 5 * 60000);
+        if (left <= 0) finish();
+      };
+      counter();
+      tick();
+      examTimer = setInterval(tick, 1000);
+      renderNav(lesson.id);
+      return;
+    }
+
+    // Results and review
+    const right = qs.filter((q, qi) => st.answers[qi] === q.answer).length;
+    const pct = Math.round((right / qs.length) * 100);
+    const per = Object.keys(DOMAINS).map((d) => {
+      const ids = qs.map((q, qi) => qi).filter((qi) => qs[qi].domain === d);
+      const ok = ids.filter((qi) => st.answers[qi] === qs[qi].answer).length;
+      return { d, ok, n: ids.length };
+    });
+    const missed = {};
+    qs.forEach((q, qi) => { if (st.answers[qi] !== q.answer) missed[q.lesson] = (missed[q.lesson] || 0) + 1; });
+    const review = Object.entries(missed).sort((a, b) => b[1] - a[1] || LESSONS.findIndex((l) => l.id === a[0]) - LESSONS.findIndex((l) => l.id === b[0]));
+    const used = st.end ? fmtTime(st.end - st.start) : "";
+    html += `<section class="exam-result ${pct >= PASS_TARGET ? "pass" : "fail"}">
+        <div class="exam-score"><b>${pct}%</b><span>${right} of ${qs.length} correct${used ? ` · time used ${used} of ${lesson.examMinutes}:00` : ""}</span></div>
+        <p>${pct >= PASS_TARGET ? "Above the course's 80% target: you're on track. Take the other mock exams, and review the questions you missed." : "Below the course's 80% target. Review the lessons below, then retake this exam another day."} (The real exam's pass mark isn't published; 80% on these leaves a safety margin.)</p>
+        <div class="table-wrap"><table class="exam-domains"><thead><tr><th>Domain</th><th>Exam weight</th><th>Your score</th></tr></thead><tbody>${per.map((r) => `<tr><td>${DOMAINS[r.d]}</td><td>${WEIGHTS[r.d]}%</td><td>${r.ok} / ${r.n}${r.n ? ` (${Math.round((r.ok / r.n) * 100)}%)` : ""}</td></tr>`).join("")}</tbody></table></div>
+        ${review.length ? `<h3>Lessons to review</h3><ul class="exam-review">${review.map(([id, n]) => { const l = LESSONS.find((x) => x.id === id); return `<li><a href="#${id}">Lesson ${LESSONS.indexOf(l) + 1}: ${esc(l.title)}</a> <span class="muted">${n} missed</span></li>`; }).join("")}</ul>` : "<p><b>A perfect score.</b></p>"}
+        <div class="cta-row"><button class="btn-ghost" type="button" id="examRetake">Retake this exam</button></div>
+      </section>
+      <h2 class="section-title">Review every question</h2>
+      <div class="quiz">${qs.map((q, qi) => qHTML(q, qi, "review")).join("")}</div>` + pager;
+    page.innerHTML = html;
+    page.querySelectorAll("pre.plain").forEach((el) => { el.innerHTML = highlight(el.textContent); });
+    page.querySelectorAll(".exam-q").forEach((qel) => {
+      const qi = +qel.dataset.q, q = qs[qi], chosen = st.answers[qi];
+      qel.querySelectorAll(".q-opt").forEach((b, oi) => {
+        if (oi === q.answer) b.classList.add("right");
+        else if (oi === chosen) b.classList.add("wrong");
+      });
+      const l = LESSONS.find((x) => x.id === q.lesson);
+      const verdict = chosen === undefined ? "Not answered." : chosen === q.answer ? "Correct." : "Not quite.";
+      qel.querySelector(".q-explain").innerHTML = `<b>${verdict}</b> ${q.explain} <a href="#${q.lesson}">Review lesson ${LESSONS.indexOf(l) + 1}: ${esc(l.title)}</a>` +
+        (q.code ? ` · <button class="mini-btn" type="button" data-act="try">▶ Try the code</button>` : "");
+      const tryBtn = qel.querySelector('[data-act="try"]');
+      if (tryBtn) tryBtn.addEventListener("click", () => {
+        ctx = { mode: "example", page: lesson.id };
+        clearActiveExercise();
+        setIdeHeader("Mock exam", `Question ${qi + 1}`);
+        setCode(q.code);
+        showStdin("");
+        doRun();
+      });
+    });
+    $("examRetake").addEventListener("click", () => {
+      delete state.exams[lesson.id];
+      save();
+      renderExam(lesson);
+      $("main").scrollTop = 0;
+    });
+    renderNav(lesson.id);
+  }
+
   function renderLesson(lesson) {
     ctx.page = lesson.id;
     state.last = lesson.id; save();
+    if (lesson.exam.length) { renderExam(lesson); return; }
     const idx = LESSONS.indexOf(lesson);
     const part = PARTS.find((p) => p.id === lesson.part);
     const prev = LESSONS[idx - 1], next = LESSONS[idx + 1];
@@ -530,6 +689,7 @@
     const id = decodeURIComponent(location.hash.replace(/^#/, ""));
     document.body.classList.remove("nav-open");
     const lesson = LESSONS.find((l) => l.id === id);
+    clearInterval(examTimer);
     if (lesson) renderLesson(lesson); else renderHome();
     $("main").scrollTop = 0;
   }

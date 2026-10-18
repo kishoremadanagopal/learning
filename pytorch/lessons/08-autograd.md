@@ -355,48 +355,48 @@ print(w_grad, b_grad, scale_grad, loss_value, pred)
 1. `x = torch.tensor(2.0, requires_grad=True); y = x ** 3; y.backward()`. What is `x.grad`?
    - A) `tensor(12.)`
    - B) `tensor(8.)`
-   - C) `tensor(6.)`
-   - D) `None`
+   - C) `None`
+   - D) `tensor(6.)`
 
 2. You call `loss.backward()` in two training steps without zeroing gradients. What does each weight's `.grad` hold after the second call?
-   - A) The sum of both steps' gradients
+   - A) The average of the two gradients
    - B) Only the second step's gradient
-   - C) Only the first step's gradient
-   - D) The average of the two gradients
+   - C) The sum of both steps' gradients
+   - D) Only the first step's gradient
 
 3. Which tensor is a leaf?
-   - A) `w = torch.randn(3, requires_grad=True)`
-   - B) `y = w * 2`
-   - C) `z = w.sum()`
-   - D) `w.exp()`
+   - A) `z = w.sum()`
+   - B) `w.exp()`
+   - C) `w = torch.randn(3, requires_grad=True)`
+   - D) `y = w * 2`
 
 4. `y` has shape `[5]` and requires grad. What does `y.backward()` do?
-   - A) Raises "grad can be implicitly created only for scalar outputs"
+   - A) Computes gradients of y[0]
    - B) Computes gradients of y.sum()
-   - C) Computes gradients of y[0]
+   - C) Raises "grad can be implicitly created only for scalar outputs"
    - D) Nothing
 
 5. What is the difference between `torch.no_grad()` and `torch.inference_mode()`?
-   - A) Both stop recording; inference_mode is faster, but its tensors can't be used in autograd later
-   - B) no_grad also switches dropout off
-   - C) inference_mode still records the graph
-   - D) There is no difference
+   - A) no_grad also switches dropout off
+   - B) There is no difference
+   - C) Both stop recording; inference_mode is faster, but its tensors can't be used in autograd later
+   - D) inference_mode still records the graph
 
 6. Why does calling `loss.backward()` a second time on the same loss raise an error?
-   - A) The graph's saved values were freed by the first backward()
-   - B) Gradients can only be computed once per tensor
-   - C) The loss became a leaf
-   - D) requires_grad was reset to False
+   - A) The loss became a leaf
+   - B) requires_grad was reset to False
+   - C) The graph's saved values were freed by the first backward()
+   - D) Gradients can only be computed once per tensor
 
 <details>
 <summary>Quiz answers</summary>
 
 1. **A) `tensor(12.)`**: dy/dx = 3x² = 12 at x = 2.
-2. **A) The sum of both steps' gradients**: backward() accumulates into .grad; zero it (optimizer.zero_grad()) every step.
-3. **A) `w = torch.randn(3, requires_grad=True)`**: Tensors you create directly are leaves; results of recorded operations have a grad_fn.
-4. **A) Raises "grad can be implicitly created only for scalar outputs"**: Reduce to a scalar first (y.sum() or y.mean()), or pass gradient= with y's shape.
-5. **A) Both stop recording; inference_mode is faster, but its tensors can't be used in autograd later**: Neither changes layer behaviour (that's model.eval()); inference_mode adds optimisations and restrictions.
-6. **A) The graph's saved values were freed by the first backward()**: backward() frees the graph to save memory; recompute the forward pass, or use retain_graph=True.
+2. **C) The sum of both steps' gradients**: backward() accumulates into .grad; zero it (optimizer.zero_grad()) every step.
+3. **C) `w = torch.randn(3, requires_grad=True)`**: Tensors you create directly are leaves; results of recorded operations have a grad_fn.
+4. **C) Raises "grad can be implicitly created only for scalar outputs"**: Reduce to a scalar first (y.sum() or y.mean()), or pass gradient= with y's shape.
+5. **C) Both stop recording; inference_mode is faster, but its tensors can't be used in autograd later**: Neither changes layer behaviour (that's model.eval()); inference_mode adds optimisations and restrictions.
+6. **C) The graph's saved values were freed by the first backward()**: backward() frees the graph to save memory; recompute the forward pass, or use retain_graph=True.
 
 </details>
 
