@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="579.888pt" height="291.6pt" viewBox="0 0 579.888 291.6" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M -0 291.6 
+L 579.888 291.6 
+L 579.888 0 
+L -0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 22.7232 68.184 
+L 146.9088 68.184 
+Q 151.344 68.184 151.344 63.7488 
+L 151.344 33.8112 
+Q 151.344 29.376 146.9088 29.376 
+L 22.7232 29.376 
+Q 18.288 29.376 18.288 33.8112 
+L 18.288 63.7488 
+Q 18.288 68.184 22.7232 68.184 
+z
+" clip-path="url(#p0141299da9)" style="fill: #dcf3ee; stroke: #159a7f; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 189.0432 68.184 
+L 363.1248 68.184 
+Q 367.56 68.184 367.56 63.7488 
+L 367.56 33.8112 
+Q 367.56 29.376 363.1248 29.376 
+L 189.0432 29.376 
+Q 184.608 29.376 184.608 33.8112 
+L 184.608 63.7488 
+Q 184.608 68.184 189.0432 68.184 
+z
+" clip-path="url(#p0141299da9)" style="fill: #e3eef8; stroke: #1f6fb2; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 410.8032 68.184 
+L 557.1648 68.184 
+Q 561.6 68.184 561.6 63.7488 
+L 561.6 33.8112 
+Q 561.6 29.376 557.1648 29.376 
+L 410.8032 29.376 
+Q 406.368 29.376 406.368 33.8112 
+L 406.368 63.7488 
+Q 406.368 68.184 410.8032 68.184 
+z
+" clip-path="url(#p0141299da9)" style="fill: #fdecd6; stroke: #e07b00; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 156.115819 48.78 
+Q 167.975925 48.78 178.047176 48.78 
+" clip-path="url(#p0141299da9)" style="fill: none; stroke: #1f2933; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 172.447176 45.98 
+L 178.047176 48.78 
+L 172.447176 51.58 
+z
+" clip-path="url(#p0141299da9)" style="fill: #1f2933; stroke: #1f2933; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 39.3552 245.592 
+L 174.6288 245.592 
+Q 179.064 245.592 179.064 241.1568 
+L 179.064 128.0592 
+Q 179.064 123.624 174.6288 123.624 
+L 39.3552 123.624 
+Q 34.92 123.624 34.92 128.0592 
+L 34.92 241.1568 
+Q 34.92 245.592 39.3552 245.592 
+z
+" clip-path="url(#p0141299da9)" style="fill: #e3eef8; stroke: #1f6fb2; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 274.166957 71.521685 
+Q 191.537337 95.904196 110.087272 119.938641 
+" clip-path="url(#p0141299da9)" style="fill: none; stroke: #1f6fb2; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 116.250763 121.039265 
+L 110.087272 119.938641 
+L 114.665865 115.668222 
+z
+" clip-path="url(#p0141299da9)" style="fill: #1f6fb2; stroke: #1f6fb2; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 211.2192 245.592 
+L 346.4928 245.592 
+Q 350.928 245.592 350.928 241.1568 
+L 350.928 128.0592 
+Q 350.928 123.624 346.4928 123.624 
+L 211.2192 123.624 
+Q 206.784 123.624 206.784 128.0592 
+L 206.784 241.1568 
+Q 206.784 245.592 211.2192 245.592 
+z
+" clip-path="url(#p0141299da9)" style="fill: #e3eef8; stroke: #1f6fb2; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 276.194819 72.950744 
+Q 277.469941 95.902942 278.676844 117.627196 
+" clip-path="url(#p0141299da9)" style="fill: none; stroke: #1f6fb2; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 281.161901 111.880502 
+L 278.676844 117.627196 
+L 275.570523 112.191134 
+z
+" clip-path="url(#p0141299da9)" style="fill: #1f6fb2; stroke: #1f6fb2; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 383.0832 245.592 
+L 518.3568 245.592 
+Q 522.792 245.592 522.792 241.1568 
+L 522.792 128.0592 
+Q 522.792 123.624 518.3568 123.624 
+L 383.0832 123.624 
+Q 378.648 123.624 378.648 128.0592 
+L 378.648 241.1568 
+Q 378.648 245.592 383.0832 245.592 
+z
+" clip-path="url(#p0141299da9)" style="fill: #e3eef8; stroke: #1f6fb2; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 278.005273 71.504935 
+Q 363.402027 95.904008 447.616262 119.965218 
+" clip-path="url(#p0141299da9)" style="fill: none; stroke: #1f6fb2; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 443.000948 115.734512 
+L 447.616262 119.965218 
+L 441.462509 121.119047 
+z
+" clip-path="url(#p0141299da9)" style="fill: #1f6fb2; stroke: #1f6fb2; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="84.816" y="51.426641" transform="rotate(-0 84.816 51.426641)">Deployment shop</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 9px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="276.084" y="51.287344" transform="rotate(-0 276.084 51.287344)">ReplicaSet shop-64f8dc496f</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 9px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="483.984" y="51.287344" transform="rotate(-0 483.984 51.287344)">ReplicaSet shop-664bf8b7f8</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #e07b00" x="483.984" y="87.161469" transform="rotate(-0 483.984 87.161469)">version 2: 0 pods now (kept for rollback)</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f6fb2" x="276.084" y="87.161469" transform="rotate(-0 276.084 87.161469)">version 1: 3 pods</text>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f6fb2" x="106.992" y="145.787375" transform="rotate(-0 106.992 145.787375)">pod 1</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 9px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="106.992" y="167.711344" transform="rotate(-0 106.992 167.711344)">app=shop</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 7.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #52606d" x="106.992" y="186.697453" transform="rotate(-0 106.992 186.697453)">pod-template-hash=64f8dc496f</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="106.992" y="226.062641" transform="rotate(-0 106.992 226.062641)">shop:1.0</text>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f6fb2" x="278.856" y="145.787375" transform="rotate(-0 278.856 145.787375)">pod 2</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 9px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="278.856" y="167.711344" transform="rotate(-0 278.856 167.711344)">app=shop</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 7.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #52606d" x="278.856" y="186.697453" transform="rotate(-0 278.856 186.697453)">pod-template-hash=64f8dc496f</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="278.856" y="226.062641" transform="rotate(-0 278.856 226.062641)">shop:1.0</text>
+   </g>
+   <g id="text_14">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #1f6fb2" x="450.72" y="145.787375" transform="rotate(-0 450.72 145.787375)">pod 3</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 9px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="450.72" y="167.711344" transform="rotate(-0 450.72 167.711344)">app=shop</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 7.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #52606d" x="450.72" y="186.697453" transform="rotate(-0 450.72 186.697453)">pod-template-hash=64f8dc496f</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #1f2933" x="450.72" y="226.062641" transform="rotate(-0 450.72 226.062641)">shop:1.0</text>
+   </g>
+   <g id="text_18">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans', 'Helvetica', 'Arial', sans-serif; text-anchor: middle; fill: #52606d" x="284.4" y="267.341469" transform="rotate(-0 284.4 267.341469)">A deleted pod is noticed by its ReplicaSet, which creates a replacement to keep three running.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p0141299da9">
+   <rect x="7.2" y="7.2" width="565.488" height="277.2"/>
+  </clipPath>
+ </defs>
+</svg>

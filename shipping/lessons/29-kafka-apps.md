@@ -3081,4 +3081,4 @@ docker compose logs billing | grep Invoice
 </details>
 
 ---
-Previous: [Lesson 28](28-kafka-reliability.md) · Back to the [course home](../README.md)
+Previous: [Lesson 28](28-kafka-reliability.md) · Next: [Lesson 30: Clusters, nodes and pods](30-k8s-first-cluster.md)

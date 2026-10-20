@@ -5,7 +5,7 @@
      with fixed durations so the course's examples print the same every time
    - npm test / npm run <script> run package.json scripts through the sandbox's shell
    It's a teaching simulation: the JavaScript really runs, but it's the browser's engine, not Node.js itself. */
-import { inspect } from "./runner.js?v=176761161d";
+import { inspect } from "./runner.js?v=9640047aae";
 
 export const NODE_RELEASES = {
   22: { version: "v22.23.3", npm: "10.9.9" },

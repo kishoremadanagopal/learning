@@ -12,6 +12,7 @@
    containers with namespaces and cgroups; this runs JavaScript in your browser. */
 import { installCompose } from "./compose.js";
 import { installKafka } from "./kafka.js";
+import { installKubernetes } from "./k8s.js";
 
 export function installDocker(api) {
   const { Shell, MemFS, registerCommand, registeredCommand, NET, addHelpers, tokenize } = api;
@@ -2221,6 +2222,7 @@ export function installDocker(api) {
   const DOCKER = { EXTRA, HUB, BUSYBOX, ALPINE_RELEASE, BASE_TIME, LOOPBACK, containerByName, syncIn, syncOut, engine, now, tick, hex, short, humanSize, humanDuration, table, parseRef, imageOf, tagsOf, setTag, pull, build, createContainer, startContainer, stopContainer, removeContainer, execIn, settle, refreshHealth, statusText, portsText, ellipsis, quoteGo, commandString, createNetwork, parsePorts, parseEnvList, durationNs, DockerError, findContainer, pushImage, registries, iso, uuid, VERSION, parseMemory, writeDockerConfig, tokenOk, mkdirp };
   const COMPOSE = installCompose(DOCKER, api);
   installKafka(DOCKER, api);
+  installKubernetes(DOCKER, api);
 
   addHelpers((sh, AssertionError) => ({
     // the sandbox's Docker: images, containers, volumes and networks, for exercise checks

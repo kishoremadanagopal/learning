@@ -9,8 +9,8 @@
      groups with committed offsets, lag, rebalances and offset resets, and producers with acks and min.insync.replicas
    - the @confluentinc/kafka-javascript client (its KafkaJS-compatible API) for Node.js programs, installed with npm
    It's a teaching simulation: there's no JVM and no network protocol, and everything happens instantly. */
-import { Buffer } from "./gitlib.js?v=176761161d";
-import { NODE_PACKAGES, NPM_PACKAGES } from "./nodejs.js?v=176761161d";
+import { Buffer } from "./gitlib.js?v=9640047aae";
+import { NODE_PACKAGES, NPM_PACKAGES } from "./nodejs.js?v=9640047aae";
 
 export function installKafka(D, api) {
   const { addHelpers, NET } = api;

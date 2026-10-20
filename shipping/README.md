@@ -1,6 +1,6 @@
 # Shipping software: Git, CI/CD, Docker, Kafka, Kubernetes, the cloud and observability
 
-A hands-on course that starts from zero: 29 lessons on how code gets from your computer to users and stays healthy there: version control with Git and GitHub, automated testing and deployment with GitHub Actions, containers with Docker, event streaming with Kafka, running containers with Kubernetes, deploying to the cloud, and observing running systems with logs, metrics and traces, ending with a project that ships a small service end to end.
+A hands-on course that starts from zero: 34 lessons on how code gets from your computer to users and stays healthy there: version control with Git and GitHub, automated testing and deployment with GitHub Actions, containers with Docker, event streaming with Kafka, running containers with Kubernetes, deploying to the cloud, and observing running systems with logs, metrics and traces, ending with a project that ships a small service end to end.
 
 Every engineering and data team uses these tools every day. AI engineers ship models and agents as containerised services behind CI/CD pipelines; analysts version their SQL and notebooks with Git and schedule pipelines that read event streams. Knowing them is what turns code that works on your laptop into software other people can rely on.
 
@@ -8,9 +8,9 @@ Every engineering and data team uses these tools every day. AI engineers ship mo
 
 The sandbox is a terminal in your browser. Type real `git` commands: a real Git engine runs in the page, with branches, merges, conflicts and a pretend GitHub. Docker, Kubernetes, Kafka and cloud commands run against faithful simulations, and you write real Dockerfiles, workflow files and manifests that are checked automatically. Nothing to install and no sign-up. Lessons also include **Try it on your own computer** labs, with official download links, for when you want to run the real tools.
 
-- every lesson, with **136 examples** you can run and change
-- **58 exercises** with automatic checks, each with an approach, hints and a walkthrough
-- **116 quiz questions**, with explanations
+- every lesson, with **160 examples** you can run and change
+- **66 exercises** with automatic checks, each with an approach, hints and a walkthrough
+- **136 quiz questions**, with explanations
 - your progress and work saved in your own browser
 
 **Before you start:** nothing. Lesson 1 teaches the few terminal commands you need. Some later examples read short Python or JavaScript programs; you don't need to write either.
@@ -19,7 +19,7 @@ The sandbox is a terminal in your browser. Type real `git` commands: a real Git 
 
 | | |
 |---|---|
-| 📘 [Lessons](#lessons) | 29 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
+| 📘 [Lessons](#lessons) | 34 lessons, each with key terms, examples, common mistakes, exercises, walkthroughs and a quiz |
 | 📖 [Glossary](glossary.md) | every term used in the course, defined in plain English |
 | 🧾 [Cheat sheet](cheatsheet.md) | the syntax and patterns on one page, and every task at a glance |
 
@@ -86,11 +86,20 @@ The sandbox is a terminal in your browser. Type real `git` commands: a real Git 
 | 28 | [Replication and reliable producers](lessons/28-kafka-reliability.md) | why one broker isn't enough, replication factor, leaders and followers, in-sync replicas (ISR), combined and isolated KRaft modes, a cluster with Docker Compose (a controller and three brokers), the image's KAFKA_* variables and losing the defaults, CLUSTER_ID and controller quorum voters, YAML anchors and merge keys, topics with --replication-factor 3, leaders spread over brokers, leader election when a broker stops, --under-replicated-partitions, preferred leaders and auto.leader.rebalance.enable, acks (0, 1, all) and min.insync.replicas, NotEnoughReplicasException and the console producer's retries, the durable recipe (RF 3, min ISR 2, acks=all), idempotent producers (default since Kafka 3.0), retries and delivery.timeout.ms, linger.ms, transactions, read_committed and exactly_once_v2, eligible leader replicas (KIP-966, on by default since 4.1), kafka-metadata-quorum.sh, three controllers, availability zones and broker.rack | 55–56 |
 | 29 | [Kafka in your services](lessons/29-kafka-apps.md) | Node.js clients in 2026 (@confluentinc/kafka-javascript, KafkaJS, @platformatic/kafka), npm install and the package's prebuilt librdkafka, the KafkaJS-compatible API (KafkaJS.Kafka, kafkaJS settings), producer.connect, send and disconnect, delivery reports, the client's log objects, murmur2 for keys and random partitions without, publishing order events from the shop's API, the billing worker (consumer, subscribe, run, eachMessage), graceful shutdown on SIGTERM and session.timeout.ms, Kafka in Docker Compose with health checks, creating topics explicitly and auto.create.topics.enable, listeners, advertised listeners and the listener security protocol map, internal and external listeners, the "bootstrap works but sending fails" mistake, message.timeout.ms, scaling a worker with --scale, designing events (past-tense names, keys, IDs, versions, compatible changes), schemas and Schema Registry, the dual-write problem, the outbox pattern and Debezium, Kafka Connect, Kafka Streams, Apache Flink, MirrorMaker 2, managed Kafka (Confluent Cloud, Amazon MSK, Google Cloud, Aiven, Azure Event Hubs) and Kafka-compatible systems (Redpanda, WarpStream), confluent-kafka for Python, kafka-clients for Java | 57–58 |
 
+### Part 6: Kubernetes Basics (Intermediate)
+
+| # | Lesson | Topics | Sandbox |
+|---|---|---|---|
+| 30 | [Clusters, nodes and pods](lessons/30-k8s-first-cluster.md) | what Kubernetes does and why (desired state, control loops), the control plane (API server, etcd, scheduler, controller manager) and nodes (kubelet, container runtime), kind (Kubernetes in Docker) and its nodes as containers, kubectl create cluster and the kubeconfig, contexts (kind-kind), kubectl cluster-info and config get-contexts, namespaces and -A, system pods in kube-system, kind load docker-image, the Pod object and its YAML manifest (apiVersion, kind, metadata, spec.containers), kubectl apply -f, get pods -o wide, describe and its events, kubectl logs, pod phases (Pending, ContainerCreating, Running, Completed, Error, CrashLoopBackOff), ErrImagePull and ImagePullBackOff, kubectl run with --restart=Never, deleting a bare pod, Docker Desktop's Kubernetes and Rancher, OrbStack | 59–60 |
+| 31 | [Deployments and rolling updates](lessons/31-k8s-deployments.md) | why controllers create pods, Deployments, ReplicaSets and pod templates, labels and selectors (app=shop), the pod-template-hash, self-healing when a pod is deleted, scaling with kubectl scale (which pods are removed), rolling updates with kubectl set image and rollout status, the strategy with maxSurge and maxUnavailable, rollout history and rollout undo, the old ReplicaSets kept at zero replicas, kubectl create deployment --dry-run=client -o yaml, declarative updates with kubectl apply, kubectl diff, rollout restart, and GitOps (Argo CD, Flux) | 61–62 |
+| 32 | [Services and networking](lessons/32-k8s-services.md) | why pod IPs change, Services and label selectors, ClusterIP addresses, cluster DNS (short names, namespaces, svc.cluster.local), kubectl expose with --name, --port and --target-port, endpoints and EndpointSlices, readiness and endpoints, load balancing by connection, testing from a temporary pod with kubectl run --rm -i, kubectl logs with label selectors and --prefix, kubectl port-forward, service types ClusterIP, NodePort and LoadBalancer, Ingress and the Gateway API, service environment variables | 63 |
+| 33 | [Configuration and secrets](lessons/33-k8s-config.md) | keeping configuration out of the image, ConfigMaps (--from-literal, --from-file, -o yaml), env with valueFrom.configMapKeyRef, envFrom with configMapRef, why changing a ConfigMap doesn't restart pods, rollout restart, kubectl create --dry-run=client -o yaml \| kubectl apply -f -, Secrets (generic, --from-literal), base64 as encoding not encryption, jsonpath and base64 -d, secretKeyRef, mounting ConfigMaps as files (volumes and volumeMounts), kubectl patch with a JSON patch, kubectl exec and printenv, RBAC, encryption at rest, External Secrets and Sealed Secrets, Kustomize generators | 64–65 |
+| 34 | [Health checks, resources and scaling](lessons/34-k8s-health-scaling.md) | readiness, liveness and startup probes, httpGet probes, initialDelaySeconds, periodSeconds and failureThreshold, what each probe does on failure, a readiness failure and a stuck rollout, rollout undo after a bad release, CrashLoopBackOff and kubectl logs --previous, restart back-off, resource requests and limits (CPU and memory), the scheduler's use of requests, OOMKilled and CPU throttling, kubectl set resources, kubectl autoscale and the HorizontalPodAutoscaler, metrics and kubectl top, terminationGracePeriodSeconds and SIGTERM, preStop hooks, kubectl get events, separate checks for dependencies | 66 |
+
 ### Coming next
 
 The course is being written one part at a time. Still to come:
 
-6. Kubernetes basics: pods, deployments, services, configuration and scaling
 7. Deploying to the cloud: regions, managed services, containers in the cloud, costs and security
 8. Observability: logs, metrics, traces, dashboards and alerts
 9. Project: ship a small service end to end

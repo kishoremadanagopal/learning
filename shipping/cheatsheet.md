@@ -357,6 +357,49 @@ process.on("SIGTERM", async () => { await consumer.disconnect(); process.exit(0)
 
 Remember: order is per partition, so key by what must stay in order; a group uses at most one consumer per partition; lag = log-end offset − committed offset; durable topics use replication factor 3, `min.insync.replicas=2` and `acks=all`; containers need a listener that advertises a name they can resolve (`kafka:19092`), your computer one that advertises `localhost:9092`.
 
+## Kubernetes [30–34]
+
+Local cluster: `kind create cluster` (and `kind load docker-image shop:1.0` for images that aren't in a registry). Context: `kubectl config current-context`.
+
+| Task | Command |
+|---|---|
+| pods | `kubectl apply -f pod.yaml`, `kubectl get pods -o wide` (`-A`, `-l app=shop`, `--show-labels`), `kubectl describe pod NAME`, `kubectl logs NAME` (`--previous`, `-l app=shop --prefix`) |
+| one-off command | `kubectl run NAME --image=busybox:1.37 --restart=Never -- echo hi` (`--rm -i` to run and remove) |
+| deployments | `kubectl create deployment shop --image=shop:1.0 --replicas=3`, `kubectl scale deployment/shop --replicas=5`, `kubectl set image deployment/shop shop=shop:2.0` |
+| rollouts | `kubectl rollout status deployment/shop`, `kubectl rollout history deployment/shop`, `kubectl rollout undo deployment/shop`, `kubectl rollout restart deployment/shop` |
+| services | `kubectl expose deployment shop --name=shop-svc --port=80 --target-port=3000`, `kubectl get svc`, `kubectl get endpointslices`, `kubectl port-forward service/shop 8080:80` |
+| configuration | `kubectl create configmap NAME --from-literal=KEY=VALUE`, `kubectl create secret generic NAME --from-literal=KEY=VALUE`, `kubectl get secret NAME -o jsonpath='{.data.KEY}' \| base64 -d` |
+| health and scaling | `kubectl set resources deployment/shop --requests=cpu=50m --limits=cpu=200m`, `kubectl autoscale deployment shop --min=2 --max=6 --cpu=70%`, `kubectl get hpa` |
+| inspect | `kubectl get all`, `kubectl exec deploy/shop -- printenv KEY`, `kubectl get events --sort-by=.lastTimestamp`, `kubectl diff -f FILE.yaml`, `kubectl apply --dry-run=client -f FILE.yaml` |
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shop
+spec:
+  replicas: 3
+  selector:
+    matchLabels: {app: shop}
+  template:
+    metadata:
+      labels: {app: shop}
+    spec:
+      containers:
+        - name: shop
+          image: ghcr.io/ada/shop:1.0
+          ports: [{containerPort: 3000}]
+          envFrom: [{configMapRef: {name: shop-config}}]
+          readinessProbe:
+            httpGet: {path: /health, port: 3000}
+            periodSeconds: 5
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {memory: 256Mi}
+```
+
+Remember: you change objects, controllers do the rest; Services find pods by label and send traffic only to ready ones; a ConfigMap change needs `rollout restart`; base64 isn't encryption; and a bare pod isn't recreated when it's deleted.
+
 ## Every task at a glance
 
 Generated from the **At a glance** table at the end of each lesson. The number in brackets links to the lesson.
@@ -521,3 +564,39 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | Rebuild and restart one service | docker compose up -d --build api | rebuilds the image, recreates the container | — | [29](lessons/29-kafka-apps.md) |
 | Run more workers | docker compose up -d --scale billing=2 | adds containers | docker compose up -d --scale billing=1 | [29](lessons/29-kafka-apps.md) |
 | Check a worker's group | kafka-consumer-groups.sh … --describe --group billing --members | nothing | — | [29](lessons/29-kafka-apps.md) |
+| Create a local cluster | kind create cluster | creates containers and a context | kind delete cluster | [30](lessons/30-k8s-first-cluster.md) |
+| Apply a manifest | kubectl apply -f FILE.yaml | creates or updates objects | kubectl delete -f FILE.yaml | [30](lessons/30-k8s-first-cluster.md) |
+| List pods | kubectl get pods (-o wide, -A) | nothing | — | [30](lessons/30-k8s-first-cluster.md) |
+| Explain a pod's state | kubectl describe pod NAME | nothing | — | [30](lessons/30-k8s-first-cluster.md) |
+| Read a container's output | kubectl logs NAME (--previous) | nothing | — | [30](lessons/30-k8s-first-cluster.md) |
+| Run a one-off command | kubectl run NAME --image=IMAGE --restart=Never -- COMMAND | creates a pod | kubectl delete pod NAME | [30](lessons/30-k8s-first-cluster.md) |
+| Copy a local image into kind | kind load docker-image IMAGE | copies into each node | — | [30](lessons/30-k8s-first-cluster.md) |
+| Delete a pod | kubectl delete pod NAME | removes the pod (a Deployment replaces it) | — | [30](lessons/30-k8s-first-cluster.md) |
+| Create a Deployment | kubectl create deployment NAME --image=IMAGE --replicas=N | creates the Deployment, ReplicaSet and pods | kubectl delete deployment NAME | [31](lessons/31-k8s-deployments.md) |
+| Scale | kubectl scale deployment NAME --replicas=N | adds or removes pods | scale back | [31](lessons/31-k8s-deployments.md) |
+| Update the image | kubectl set image deployment/NAME CONTAINER=IMAGE | starts a rolling update | kubectl rollout undo deployment/NAME | [31](lessons/31-k8s-deployments.md) |
+| Wait for a rollout | kubectl rollout status deployment/NAME | nothing | — | [31](lessons/31-k8s-deployments.md) |
+| Show history | kubectl rollout history deployment/NAME | nothing | — | [31](lessons/31-k8s-deployments.md) |
+| Roll back | kubectl rollout undo deployment/NAME | a new rollout to the previous template | kubectl rollout undo again | [31](lessons/31-k8s-deployments.md) |
+| Restart all pods | kubectl rollout restart deployment/NAME | replaces every pod | — | [31](lessons/31-k8s-deployments.md) |
+| Write a manifest from a command | kubectl create deployment … --dry-run=client -o yaml > FILE | nothing in the cluster | — | [31](lessons/31-k8s-deployments.md) |
+| See what an apply would change | kubectl diff -f FILE.yaml | nothing | — | [31](lessons/31-k8s-deployments.md) |
+| Expose a Deployment | kubectl expose deployment NAME --name=SVC --port=80 --target-port=3000 | creates a Service | kubectl delete service SVC | [32](lessons/32-k8s-services.md) |
+| List services | kubectl get services (svc) | nothing | — | [32](lessons/32-k8s-services.md) |
+| See endpoints | kubectl get endpointslices -l kubernetes.io/service-name=SVC | nothing | — | [32](lessons/32-k8s-services.md) |
+| Test from inside the cluster | kubectl run tester --image=busybox:1.37 --restart=Never --rm -i -- wget -qO- http://SVC | runs and removes a pod | — | [32](lessons/32-k8s-services.md) |
+| Tunnel to your computer | kubectl port-forward service/SVC 8080:80 | forwards until stopped | Ctrl+C | [32](lessons/32-k8s-services.md) |
+| Logs of all matching pods | kubectl logs -l app=NAME --prefix | nothing | — | [32](lessons/32-k8s-services.md) |
+| Create a ConfigMap | kubectl create configmap NAME --from-literal=KEY=VALUE | creates the object | kubectl delete configmap NAME | [33](lessons/33-k8s-config.md) |
+| Update a ConfigMap | kubectl create configmap NAME … --dry-run=client -o yaml \| kubectl apply -f - | changes the object | — | [33](lessons/33-k8s-config.md) |
+| Create a Secret | kubectl create secret generic NAME --from-literal=KEY=VALUE | creates the object | kubectl delete secret NAME | [33](lessons/33-k8s-config.md) |
+| Read a Secret value | kubectl get secret NAME -o jsonpath='{.data.KEY}' \| base64 -d | nothing | — | [33](lessons/33-k8s-config.md) |
+| Make pods pick up changes | kubectl rollout restart deployment/NAME | replaces every pod | — | [33](lessons/33-k8s-config.md) |
+| Check a pod's environment | kubectl exec deploy/NAME -- printenv KEY | nothing | — | [33](lessons/33-k8s-config.md) |
+| Add a readiness probe | edit the container with readinessProbe.httpGet, or kubectl patch | pods get new readiness rules | remove the probe in the manifest | [34](lessons/34-k8s-health-scaling.md) |
+| See probe failures | kubectl describe pod NAME (events) | nothing | — | [34](lessons/34-k8s-health-scaling.md) |
+| Read the last crashed run | kubectl logs NAME --previous | nothing | — | [34](lessons/34-k8s-health-scaling.md) |
+| Set resources | kubectl set resources deployment/NAME --requests=cpu=50m --limits=cpu=200m | new pods get the values | kubectl set resources again | [34](lessons/34-k8s-health-scaling.md) |
+| Autoscale | kubectl autoscale deployment NAME --min=2 --max=6 --cpu-percent=70 | creates an HPA | kubectl delete hpa NAME | [34](lessons/34-k8s-health-scaling.md) |
+| Scale by hand | kubectl scale deployment NAME --replicas=N | changes the count | scale back | [34](lessons/34-k8s-health-scaling.md) |
+| See recent events | kubectl get events --sort-by=.lastTimestamp | nothing | — | [34](lessons/34-k8s-health-scaling.md) |

@@ -356,3 +356,46 @@ process.on("SIGTERM", async () => { await consumer.disconnect(); process.exit(0)
 ```
 
 Remember: order is per partition, so key by what must stay in order; a group uses at most one consumer per partition; lag = log-end offset − committed offset; durable topics use replication factor 3, `min.insync.replicas=2` and `acks=all`; containers need a listener that advertises a name they can resolve (`kafka:19092`), your computer one that advertises `localhost:9092`.
+
+## Kubernetes [30–34]
+
+Local cluster: `kind create cluster` (and `kind load docker-image shop:1.0` for images that aren't in a registry). Context: `kubectl config current-context`.
+
+| Task | Command |
+|---|---|
+| pods | `kubectl apply -f pod.yaml`, `kubectl get pods -o wide` (`-A`, `-l app=shop`, `--show-labels`), `kubectl describe pod NAME`, `kubectl logs NAME` (`--previous`, `-l app=shop --prefix`) |
+| one-off command | `kubectl run NAME --image=busybox:1.37 --restart=Never -- echo hi` (`--rm -i` to run and remove) |
+| deployments | `kubectl create deployment shop --image=shop:1.0 --replicas=3`, `kubectl scale deployment/shop --replicas=5`, `kubectl set image deployment/shop shop=shop:2.0` |
+| rollouts | `kubectl rollout status deployment/shop`, `kubectl rollout history deployment/shop`, `kubectl rollout undo deployment/shop`, `kubectl rollout restart deployment/shop` |
+| services | `kubectl expose deployment shop --name=shop-svc --port=80 --target-port=3000`, `kubectl get svc`, `kubectl get endpointslices`, `kubectl port-forward service/shop 8080:80` |
+| configuration | `kubectl create configmap NAME --from-literal=KEY=VALUE`, `kubectl create secret generic NAME --from-literal=KEY=VALUE`, `kubectl get secret NAME -o jsonpath='{.data.KEY}' \| base64 -d` |
+| health and scaling | `kubectl set resources deployment/shop --requests=cpu=50m --limits=cpu=200m`, `kubectl autoscale deployment shop --min=2 --max=6 --cpu=70%`, `kubectl get hpa` |
+| inspect | `kubectl get all`, `kubectl exec deploy/shop -- printenv KEY`, `kubectl get events --sort-by=.lastTimestamp`, `kubectl diff -f FILE.yaml`, `kubectl apply --dry-run=client -f FILE.yaml` |
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shop
+spec:
+  replicas: 3
+  selector:
+    matchLabels: {app: shop}
+  template:
+    metadata:
+      labels: {app: shop}
+    spec:
+      containers:
+        - name: shop
+          image: ghcr.io/ada/shop:1.0
+          ports: [{containerPort: 3000}]
+          envFrom: [{configMapRef: {name: shop-config}}]
+          readinessProbe:
+            httpGet: {path: /health, port: 3000}
+            periodSeconds: 5
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {memory: 256Mi}
+```
+
+Remember: you change objects, controllers do the rest; Services find pods by label and send traffic only to ready ones; a ConfigMap change needs `rollout restart`; base64 isn't encryption; and a bare pod isn't recreated when it's deleted.

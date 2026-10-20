@@ -596,6 +596,54 @@ def kafka_listeners_fig():
     return f
 
 
+# ---------------------------------------------------------------- Part 6: Kubernetes
+
+@fig("k8s-deployment")
+def k8s_deployment_fig():
+    f, ax = diag.canvas(10.2, 5.0)
+    sbox(ax, 0.2, 3.9, 2.4, 0.7, "Deployment shop", color=TEAL, mono=True, fontsize=9.5)
+    sbox(ax, 3.2, 3.9, 3.3, 0.7, "ReplicaSet shop-64f8dc496f", color=BLUE, mono=True, fontsize=9)
+    sbox(ax, 7.2, 3.9, 2.8, 0.7, "ReplicaSet shop-664bf8b7f8", color=ORANGE, mono=True, fontsize=9)
+    arrow(ax, 2.65, 4.25, 3.15, 4.25, color=INK)
+    label(ax, 8.6, 3.6, "version 2: 0 pods now (kept for rollback)", size=8.5, color=ORANGE)
+    label(ax, 4.85, 3.6, "version 1: 3 pods", size=8.5, color=BLUE)
+    for i in range(3):
+        x = 0.5 + i * 3.1
+        sbox(ax, x, 0.7, 2.6, 2.2, "", color=BLUE)
+        label(ax, x + 1.3, 2.55, f"pod {i + 1}", size=10, bold=True, color=BLUE)
+        label(ax, x + 1.3, 2.15, "app=shop", size=9, mono=True)
+        label(ax, x + 1.3, 1.8, "pod-template-hash=64f8dc496f", size=7.5, mono=True, color=MUTED)
+        label(ax, x + 1.3, 1.1, "shop:1.0", size=9.5, mono=True)
+        arrow(ax, 4.85, 3.85, x + 1.3, 2.95, color=BLUE, lw=1.1)
+    label(ax, 5.0, 0.35, "A deleted pod is noticed by its ReplicaSet, which creates a replacement to keep three running.", size=8.5, color=MUTED)
+    return f
+
+
+@fig("k8s-service")
+def k8s_service_fig():
+    f, ax = diag.canvas(9.8, 5.0)
+    sbox(ax, 0.2, 2.9, 3.0, 1.5, "", color=GREY)
+    label(ax, 1.7, 4.1, "caller (any pod)", size=10, bold=True)
+    label(ax, 1.7, 3.7, "http://shop:80", size=9.5, mono=True)
+    label(ax, 1.7, 3.2, "cluster DNS: shop", size=8.5, color=MUTED)
+    sbox(ax, 4.1, 2.9, 2.9, 1.5, "", color=TEAL)
+    label(ax, 5.55, 4.1, "Service shop", size=10, bold=True, color=TEAL, mono=True)
+    label(ax, 5.55, 3.7, "ClusterIP 10.96.143.166", size=8.5, mono=True)
+    label(ax, 5.55, 3.25, "selector app=shop · 80 → 3000", size=8.5, mono=True)
+    arrow(ax, 3.25, 3.65, 4.05, 3.65, color=INK)
+    pods = [("10.244.0.5", True), ("10.244.0.7", True), ("10.244.0.9", False)]
+    for i, (ip, ready) in enumerate(pods):
+        x = 0.4 + i * 3.1
+        sbox(ax, x, 0.35, 2.7, 1.6, "", color=BLUE if ready else GREY)
+        label(ax, x + 1.35, 1.55, "shop pod", size=9.5, bold=True, color=BLUE if ready else MUTED)
+        label(ax, x + 1.35, 1.15, ip + ":3000", size=8.5, mono=True)
+        label(ax, x + 1.35, 0.7, "ready" if ready else "not ready: no traffic", size=8.5, color=BLUE if ready else CRIMSON)
+        if ready:
+            arrow(ax, 5.55, 2.85, x + 1.35, 1.98, color=TEAL, lw=1.1)
+    label(ax, 4.9, 2.45, "endpoints: the ready pods only", size=8.5, color=MUTED)
+    return f
+
+
 def main(names):
     OUT.mkdir(exist_ok=True)
     for name in names or FIGS:

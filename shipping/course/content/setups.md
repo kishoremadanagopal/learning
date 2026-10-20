@@ -1372,3 +1372,86 @@ docker compose up -d kafka > /dev/null 2>&1
 docker compose exec kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 3 > /dev/null
 docker compose up -d > /dev/null 2>&1
 ```
+
+## k8s-cluster
+
+`~/shop` (the Part 4 image `shop:1.0` built) and a kind cluster named `kind`, running, with kubectl's context pointing at it. Nothing deployed yet.
+
+```sh
+@include docker-shop-built
+cd ~/shop
+kind create cluster > /dev/null 2>&1
+```
+
+## k8s-shop-loaded
+
+`k8s-cluster` with the image `shop:1.0` loaded into the cluster's nodes (`kind load docker-image`).
+
+```sh
+@include k8s-cluster
+kind load docker-image shop:1.0 > /dev/null 2>&1
+```
+
+## k8s-pod
+
+`k8s-shop-loaded` with `~/shop/pod.yaml` applied: the pod `shop-pod` running `shop:1.0`.
+
+```sh
+@include k8s-shop-loaded
+cat > pod.yaml <<'EOF'
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shop-pod
+  labels:
+    app: shop
+spec:
+  containers:
+    - name: shop
+      image: shop:1.0
+      ports:
+        - containerPort: 3000
+EOF
+kubectl apply -f pod.yaml > /dev/null
+```
+
+## k8s-deployment
+
+`k8s-shop-loaded` with the Deployment `shop` (3 replicas of `shop:1.0`), rolled out.
+
+```sh
+@include k8s-shop-loaded
+kubectl create deployment shop --image=shop:1.0 --replicas=3 > /dev/null
+kubectl rollout status deployment/shop > /dev/null
+```
+
+## k8s-deployment-v2
+
+`k8s-deployment`, plus the image `shop:2.0` (the same shop with a different welcome text) loaded into the cluster.
+
+```sh
+@include k8s-deployment
+sed -i 's/Welcome to/Welcome back to/' server.js
+docker build -q -t shop:2.0 . > /dev/null
+kind load docker-image shop:2.0 > /dev/null 2>&1
+```
+
+## k8s-service
+
+`k8s-deployment` with the Service `shop` on port 80 (to the containers' port 3000).
+
+```sh
+@include k8s-deployment
+kubectl expose deployment shop --port=80 --target-port=3000 > /dev/null
+```
+
+## k8s-config-wired
+
+`k8s-service` with the ConfigMap `shop-config` (`SHOP_NAME=the bike shop`) and the shop Deployment reading it with `envFrom`.
+
+```sh
+@include k8s-service
+kubectl create configmap shop-config --from-literal=SHOP_NAME="the bike shop" > /dev/null
+kubectl patch deployment shop --patch '{"spec":{"template":{"spec":{"containers":[{"name":"shop","envFrom":[{"configMapRef":{"name":"shop-config"}}]}]}}}}' > /dev/null
+kubectl rollout status deployment/shop > /dev/null
+```
