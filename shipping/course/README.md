@@ -20,6 +20,9 @@ NODE_BIN=/path/to/node22-or-newer python course/build.py --test
 | `github.js` | everything with more than one repository: clone, remote, fetch, push, pull, rebase, cherry-pick, and the pretend GitHub with the `gh` command (repositories live under `/github.com/<owner>/<name>`; you're signed in as `ada`, with a second account `grace`) |
 | `nodejs.js` | the `node` and `npm` commands: runs JavaScript files with ES modules and a few built-in modules, `node --test` with Node.js's spec reporter (fixed durations), and package.json scripts |
 | `actions.js` | GitHub Actions on the pretend GitHub: workflows start on push, pull requests, releases and `gh workflow run`; jobs run in a fresh runner shell; expressions, matrices, needs, outputs, secrets, artifacts, caches, environments, Pages deployments; `gh run`, `gh workflow`, `gh secret`, `gh variable`, `gh pr checks`, `actionlint` and `curl` for Pages sites |
+| `docker.js` | a pretend Docker Engine 29: images from a small Docker Hub, `docker build` with BuildKit's output, containers with their own file systems, networks and processes, volumes, health checks, registries (`ghcr.io`) and `docker login` |
+| `compose.js` | `docker compose` (Compose 5): projects, services, networks, volumes, `depends_on` conditions, `--build`, `--scale`, `exec`, `logs`, `config` and `watch` |
+| `kafka.js` | Apache Kafka 4.3.1 in Docker (the `apache/kafka` image): brokers and KRaft controllers, topics, partitions, replication, consumer groups, Kafka's command-line tools in `/opt/kafka/bin`, and the `@confluentinc/kafka-javascript` client for Node.js |
 | `yamllib.js` | yaml 2.9.1 (eemeli/yaml), bundled with esbuild, for reading workflow files |
 | `gitlib.js` | isomorphic-git 1.42.2 with a Buffer polyfill, bundled with esbuild (`esbuild entry.js --bundle --format=esm --minify --inject:shim.js`) |
 | `runner.js` | runs JavaScript examples and checks (shared with the JavaScript course) |

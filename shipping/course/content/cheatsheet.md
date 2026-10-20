@@ -323,3 +323,36 @@ volumes:
 | publish | `docker tag shop:1.0 ghcr.io/ada/shop:1.0`, `echo "$CR_PAT" \| docker login ghcr.io -u ada --password-stdin`, `docker push ghcr.io/ada/shop:1.0` |
 
 Exit codes: 0 ended normally, 1 failed, 137 killed (SIGKILL: stop timeout or out of memory), 143 SIGTERM, 125–127 Docker couldn't run it. In CI: `permissions: packages: write`, then `docker/login-action@v4` (`password: ${{ secrets.GITHUB_TOKEN }}`), `docker/metadata-action@v6` and `docker/build-push-action@v7` with `push: true`.
+
+## Kafka [25–29]
+
+Kafka's tools live in `/opt/kafka/bin` in the `apache/kafka:4.3.1` image; run them with `docker exec kafka /opt/kafka/bin/TOOL --bootstrap-server localhost:9092 …` (B below).
+
+| Task | Command |
+|---|---|
+| run one broker | `docker run -d --name kafka -p 9092:9092 apache/kafka:4.3.1` |
+| topics | `kafka-topics.sh B --create --topic orders --partitions 3` (`--replication-factor 3 --config min.insync.replicas=2`), `--list`, `--describe --topic orders`, `--alter --partitions 4`, `--describe --under-replicated-partitions` |
+| send | `docker exec -i kafka …kafka-console-producer.sh B --topic orders` (keys: `--reader-property parse.key=true --reader-property key.separator=:`; `--command-property acks=1`) |
+| read | `kafka-console-consumer.sh B --topic orders --from-beginning --max-messages 5` (`--timeout-ms 2000`, `--group billing`, `--partition 2 --offset 4`, `--formatter-property print.key=true`) |
+| offsets and lag | `kafka-get-offsets.sh B --topic orders`, `kafka-consumer-groups.sh B --list`, `--describe --group billing` (`--members`, `--state`) |
+| reprocess | stop the consumers, then `kafka-consumer-groups.sh B --reset-offsets --group billing --topic orders --to-earliest --execute` (`--shift-by -2`, `--to-datetime …`, `--dry-run`) |
+| topic settings | `kafka-configs.sh B --entity-type topics --entity-name orders --alter --add-config retention.ms=1209600000` (`--describe`, `--delete-config`) |
+
+```js
+// Node.js: npm install @confluentinc/kafka-javascript
+import kafkajs from "@confluentinc/kafka-javascript";
+const { Kafka } = kafkajs.KafkaJS;
+const kafka = new Kafka({ kafkaJS: { brokers: ["kafka:19092"], clientId: "shop" } });
+
+const producer = kafka.producer();
+await producer.connect();
+await producer.send({ topic: "orders", messages: [{ key: order.customer, value: JSON.stringify(event) }] });
+
+const consumer = kafka.consumer({ kafkaJS: { groupId: "billing", fromBeginning: true } });
+await consumer.connect();
+await consumer.subscribe({ topics: ["orders"] });
+await consumer.run({ eachMessage: async ({ partition, message }) => { /* handle it idempotently */ } });
+process.on("SIGTERM", async () => { await consumer.disconnect(); process.exit(0); });
+```
+
+Remember: order is per partition, so key by what must stay in order; a group uses at most one consumer per partition; lag = log-end offset − committed offset; durable topics use replication factor 3, `min.insync.replicas=2` and `acks=all`; containers need a listener that advertises a name they can resolve (`kafka:19092`), your computer one that advertises `localhost:9092`.

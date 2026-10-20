@@ -423,6 +423,179 @@ def compose_network_fig():
     return f
 
 
+# ---------------------------------------------------------------- Part 5: Kafka
+
+KEYC = {"ada": BLUE, "grace": ORANGE, "linus": PURPLE}
+
+
+@fig("kafka-log")
+def kafka_log_fig():
+    f, ax = diag.canvas(9.6, 5.0)
+    # producers
+    for y, name in ((3.3, "shop's API"), (1.7, "website")):
+        sbox(ax, 0.1, y, 1.6, 0.7, name, color=GREY, fontsize=10)
+    label(ax, 0.9, 4.45, "producers", size=10, bold=True, color=MUTED)
+    # the topic
+    sbox(ax, 2.2, 0.75, 4.75, 3.85, "", color=BLUE)
+    label(ax, 2.35, 4.32, "topic orders", size=10.5, bold=True, color=BLUE, mono=True, ha="left")
+    rows = [("partition 0", 6, 3.35), ("partition 1", 4, 2.3), ("partition 2", 5, 1.25)]
+    for name, n, y in rows:
+        label(ax, 2.35, y + 0.27, name, size=9, color=MUTED, mono=True, ha="left")
+        cells(ax, 3.55, y, list(range(n)), w=0.5, h=0.55, color=BLUE, fontsize=9.5)
+        arrow(ax, 3.55 + n * 0.5 + 0.05, y + 0.27, 3.55 + n * 0.5 + 0.45, y + 0.27, color=GREY, lw=1.3)
+    label(ax, 6.2, 0.95, "new events go at the end", size=8.5, color=MUTED, italic=True)
+    arrow(ax, 1.75, 3.65, 2.25, 3.4, color=INK)
+    arrow(ax, 1.75, 2.05, 2.25, 2.3, color=INK)
+    label(ax, 1.95, 2.85, "append", size=9, color=MUTED)
+    # consumer groups
+    sbox(ax, 7.55, 3.15, 1.95, 0.85, "", color=TEAL)
+    label(ax, 8.52, 3.75, "group billing", size=9.5, bold=True, color=TEAL, mono=True)
+    label(ax, 8.52, 3.4, "partition 0: next is 3", size=8.5, color=MUTED)
+    sbox(ax, 7.55, 1.6, 1.95, 0.85, "", color=CRIMSON)
+    label(ax, 8.52, 2.2, "group analytics", size=9.5, bold=True, color=CRIMSON, mono=True)
+    label(ax, 8.52, 1.85, "partition 0: next is 1", size=8.5, color=MUTED)
+    # where each group will read next in partition 0
+    for x, name, c in ((5.27, "billing", TEAL), (4.27, "analytics", CRIMSON)):
+        arrow(ax, x, 4.22, x, 3.93, color=c, lw=1.4)
+        label(ax, x, 4.33, name, size=8, color=c, bold=True)
+    label(ax, 8.52, 1.15, "each group reads", size=9, color=MUTED)
+    label(ax, 8.52, 0.87, "at its own pace", size=9, color=MUTED)
+    label(ax, 4.8, 0.3, "Reading doesn't remove events: they stay until the topic's retention period ends.", size=9.5, color=MUTED)
+    return f
+
+
+@fig("kafka-partitions")
+def kafka_partitions_fig():
+    f, ax = diag.canvas(9.4, 4.9)
+    events = [("ada", 1), ("grace", 2), ("ada", 3), ("linus", 4), ("grace", 5), ("ada", 6)]
+    label(ax, 0.9, 4.6, "events, in order sent", size=9.5, bold=True, color=MUTED)
+    for i, (k, n) in enumerate(events):
+        sbox(ax, 0.1, 3.85 - i * 0.62, 1.6, 0.5, f"{k} · #{n}", color=KEYC[k], mono=True, fontsize=9.5)
+    sbox(ax, 2.45, 1.85, 2.0, 1.1, "", color=GREY)
+    label(ax, 3.45, 2.6, "partitioner", size=10, bold=True)
+    label(ax, 3.45, 2.2, "murmur2(key) % 3", size=9, mono=True)
+    arrow(ax, 1.8, 2.4, 2.4, 2.4, color=INK)
+    parts = [("partition 0", [("grace", 2), ("grace", 5)], 3.55), ("partition 1", [], 2.25), ("partition 2", [("ada", 1), ("ada", 3), ("linus", 4), ("ada", 6)], 0.95)]
+    for name, recs, y in parts:
+        sbox(ax, 5.15, y - 0.36, 4.15, 1.19, "", color=GREY)
+        label(ax, 5.25, y + 0.68, name, size=8.5, color=MUTED, mono=True, ha="left")
+        for j, (k, n) in enumerate(recs):
+            sbox(ax, 5.3 + j * 0.98, y, 0.9, 0.5, f"{k}", color=KEYC[k], mono=True, fontsize=8.5)
+        if not recs:
+            label(ax, 7.2, y + 0.25, "(no key lands here yet)", size=9, color=MUTED, italic=True)
+        arrow(ax, 4.5, 2.4, 5.1, y + 0.3, color=GREY, lw=1.3)
+    for y, recs in ((3.55, 2), (0.95, 4)):
+        for j in range(recs):
+            label(ax, 5.3 + j * 0.98 + 0.45, y - 0.19, f"offset {j}", size=7.5, color=MUTED, mono=True)
+    label(ax, 4.7, 0.2, "Each partition keeps its events in order; there's no order between partitions.", size=9.5, color=MUTED)
+    return f
+
+
+@fig("kafka-groups")
+def kafka_groups_fig():
+    f, ax = diag.canvas(10.2, 5.4)
+    label(ax, 1.1, 5.15, "topic orders", size=10, bold=True, color=BLUE, mono=True)
+    ys = {0: 4.1, 1: 2.95, 2: 1.8}
+    for i, y in ys.items():
+        sbox(ax, 0.2, y, 1.8, 0.65, f"partition {i}", color=BLUE, mono=True, fontsize=9.5)
+    # billing: two members share the partitions
+    sbox(ax, 3.2, 3.15, 2.8, 2.15, "", color=TEAL)
+    label(ax, 4.6, 5.0, "group billing", size=10, bold=True, color=TEAL, mono=True)
+    sbox(ax, 3.5, 4.15, 2.2, 0.6, "member A", color=TEAL, fontsize=9.5)
+    sbox(ax, 3.5, 3.35, 2.2, 0.6, "member B", color=TEAL, fontsize=9.5)
+    arrow(ax, 2.05, 4.45, 3.45, 4.5, color=TEAL)
+    arrow(ax, 2.05, 3.3, 3.45, 4.3, color=TEAL)
+    arrow(ax, 2.05, 2.1, 3.45, 3.6, color=TEAL)
+    # analytics: one member reads everything
+    sbox(ax, 3.2, 0.35, 2.8, 1.75, "", color=CRIMSON)
+    label(ax, 4.6, 1.8, "group analytics", size=10, bold=True, color=CRIMSON, mono=True)
+    sbox(ax, 3.5, 0.55, 2.2, 0.9, "one member,\nall 3 partitions", color=CRIMSON, fontsize=9.5)
+    for y in ys.values():
+        arrow(ax, 2.05, y + 0.2, 3.45, 1.0, color=CRIMSON, lw=1.1)
+    # billing's lag on partition 2
+    ax.plot([6.45, 6.45], [0.4, 5.2], color=GREY, lw=1, ls=(0, (4, 3)))
+    label(ax, 8.35, 5.0, "billing on partition 2", size=10, bold=True)
+    cells(ax, 6.85, 3.7, list(range(7)), w=0.42, h=0.5, color=BLUE, highlight={5: ORANGE, 6: ORANGE}, fontsize=9, idx=None)
+    label(ax, 8.35, 4.45, "offsets", size=8.5, color=MUTED)
+    arrow(ax, 9.13, 3.05, 9.13, 3.64, color=TEAL)
+    label(ax, 9.05, 2.85, "committed: 5 (next to process)", size=8.5, color=TEAL, ha="right")
+    arrow(ax, 9.79, 2.45, 9.79, 3.64, color=INK, lw=1.2)
+    label(ax, 9.7, 2.3, "log end: 7", size=8.5, color=INK, ha="right")
+    label(ax, 8.35, 1.7, "lag = 7 − 5 = 2", size=11, bold=True, color=ORANGE)
+    label(ax, 8.35, 1.35, "events written but not yet", size=8.5, color=MUTED)
+    label(ax, 8.35, 1.1, "processed by billing", size=8.5, color=MUTED)
+    return f
+
+
+@fig("kafka-replication")
+def kafka_replication_fig():
+    f, ax = diag.canvas(10.6, 5.3)
+    reps = {0: [3, 1, 2], 1: [1, 2, 3], 2: [2, 3, 1]}
+    colors = {0: BLUE, 1: ORANGE, 2: PURPLE}
+
+    def panel(x0, title, down=None):
+        label(ax, x0 + 2.45, 5.05, title, size=10.5, bold=True)
+        sbox(ax, x0 + 1.35, 4.05, 2.2, 0.6, "controller (node 4)", color=GREY, fontsize=9)
+        for b in (1, 2, 3):
+            bx = x0 + (b - 1) * 1.65
+            dead = b == down
+            sbox(ax, bx, 0.75, 1.5, 2.95, "", color=GREY if dead else TEAL)
+            label(ax, bx + 0.75, 3.42, f"broker {b}" + (" ✕" if dead else ""), size=9.5, bold=True, color=MUTED if dead else TEAL)
+            for p in (0, 1, 2):
+                lead = reps[p][0] if not (down and reps[p][0] == down) else [r for r in reps[p] if r != down][0]
+                is_lead = b == lead and not dead
+                y = 2.6 - p * 0.75
+                c = GREY if dead else colors[p]
+                box(ax, bx + 0.12, y, 1.26, 0.58, f"P{p} " + ("leader" if is_lead else "copy"), color=c,
+                    fill=(c if is_lead else SOFT.get(c, "white")), textcolor=("white" if is_lead else (MUTED if dead else INK)), fontsize=8.5, bold=is_lead)
+        isr = lambda p: ",".join(str(r) for r in reps[p] if r != down)
+        label(ax, x0 + 2.45, 0.45, "ISR:  " + "   ".join(f"P{p} {isr(p)}" for p in (0, 1, 2)), size=8.5, color=MUTED, mono=True)
+
+    panel(0.1, "All brokers up")
+    panel(5.55, "Broker 3 stops", down=3)
+    ax.plot([5.25, 5.25], [0.7, 5.0], color=GREY, lw=1, ls=(0, (4, 3)))
+    label(ax, 5.3, 0.05, "Producers write to the leader, followers copy it; only in-sync replicas (ISR) can take over as leader.", size=9.5, color=MUTED)
+    return f
+
+
+@fig("kafka-listeners")
+def kafka_listeners_fig():
+    f, ax = diag.canvas(10.0, 6.6)
+    # the working setup
+    sbox(ax, 0.1, 5.3, 2.6, 0.95, "", color=GREY)
+    label(ax, 1.4, 5.95, "your computer", size=10, bold=True)
+    label(ax, 1.4, 5.55, "node send.js", size=9, mono=True)
+    sbox(ax, 3.2, 2.55, 6.7, 3.85, "", color=BLUE)
+    label(ax, 6.55, 6.1, "Compose network", size=10, bold=True, color=BLUE)
+    for i, name in enumerate(("api", "billing")):
+        sbox(ax, 3.45, 4.5 - i * 1.4, 1.6, 0.85, name, color=ORANGE, mono=True, fontsize=10)
+    sbox(ax, 6.5, 2.75, 3.2, 3.05, "", color=TEAL)
+    label(ax, 8.1, 5.5, "kafka", size=10.5, bold=True, color=TEAL, mono=True)
+    box(ax, 6.7, 4.25, 2.8, 0.95, "", color=TEAL)
+    label(ax, 8.1, 4.95, "INTERNAL :19092", size=9, bold=True, mono=True)
+    label(ax, 8.1, 4.55, "advertises kafka:19092", size=8.5, mono=True, color=MUTED)
+    box(ax, 6.7, 3.0, 2.8, 0.95, "", color=PURPLE)
+    label(ax, 8.1, 3.7, "EXTERNAL :9092", size=9, bold=True, mono=True)
+    label(ax, 8.1, 3.3, "advertises localhost:9092", size=8.5, mono=True, color=MUTED)
+    arrow(ax, 5.1, 4.92, 6.65, 4.75, color=TEAL)
+    arrow(ax, 5.1, 3.52, 6.65, 4.5, color=TEAL)
+    label(ax, 5.85, 5.15, "kafka:19092", size=8.5, mono=True, color=TEAL)
+    arrow(ax, 2.75, 5.6, 6.65, 3.55, color=PURPLE, rad=0.25)
+    label(ax, 1.4, 4.95, "localhost:9092", size=8.5, mono=True, color=PURPLE)
+    label(ax, 1.4, 4.65, "(published port)", size=8.5, color=MUTED)
+    # the mistake
+    label(ax, 5.0, 2.05, "The mistake: advertising localhost to containers", size=10, bold=True, color=CRIMSON)
+    sbox(ax, 0.3, 0.3, 1.8, 0.85, "api", color=ORANGE, mono=True, fontsize=10)
+    sbox(ax, 4.2, 0.3, 2.6, 0.85, "kafka :9092", color=TEAL, mono=True, fontsize=9.5)
+    arrow(ax, 2.15, 0.92, 4.15, 0.92, color=INK, text="1. bootstrap kafka:9092 ✓", fontsize=8.5)
+    arrow(ax, 4.15, 0.5, 2.15, 0.5, color=INK, text="2. \"I'm at localhost:9092\"", fontsize=8.5, text_offset=(0, -0.33))
+    ax.add_patch(FancyArrowPatch((0.55, 1.2), (1.85, 1.2), arrowstyle="-|>", mutation_scale=12, color=CRIMSON, lw=1.5, connectionstyle="arc3,rad=-1.4"))
+    label(ax, 8.4, 0.95, "3. connects to localhost:9092,", size=8.5, color=CRIMSON)
+    label(ax, 8.4, 0.65, "which is the api container itself:", size=8.5, color=CRIMSON)
+    label(ax, 8.4, 0.35, "connection refused ✕", size=8.5, color=CRIMSON, bold=True)
+    return f
+
+
 def main(names):
     OUT.mkdir(exist_ok=True)
     for name in names or FIGS:

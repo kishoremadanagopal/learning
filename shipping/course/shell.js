@@ -509,6 +509,8 @@ export class Shell {
       else stages.at(-1).push(t);
     }
     let input = heredoc ?? "";
+    // docker exec -i: the first command reads what was piped into docker exec
+    if ((heredoc === undefined || heredoc === null) && this.inheritedStdin) { input = this.inheritedStdin; this.inheritedStdin = ""; }
     let status = 0, failed = 0;
     for (let s = 0; s < stages.length; s++) {
       const last = s === stages.length - 1;
@@ -1722,12 +1724,19 @@ function statText(stats, summaryOnly = false) {
   if (!stats.length) return "";
   const width = Math.max(...stats.map((s) => s.path.length));
   const maxChange = Math.max(...stats.map((s) => s.adds + s.dels));
-  const scale = maxChange > 50 ? 50 / maxChange : 1;
+  const graphWidth = 50;
+  // git's scale_linear: any change gets at least one character
+  const lin = (it) => (it === 0 ? 0 : 1 + Math.floor((it * (graphWidth - 1)) / maxChange));
   let out = "";
   if (!summaryOnly) {
     for (const s of stats) {
       const n = s.adds + s.dels;
-      const plus = Math.round(s.adds * scale), minus = Math.round(s.dels * scale);
+      let plus = s.adds, minus = s.dels;
+      if (maxChange > graphWidth) {
+        let total = lin(n);
+        if (total < 2 && s.adds && s.dels) total = 2;
+        if (s.adds < s.dels) { plus = lin(s.adds); minus = total - plus; } else { minus = lin(s.dels); plus = total - minus; }
+      }
       out += ` ${s.path.padEnd(width)} | ${String(n).padStart(String(maxChange).length)} ${"+".repeat(plus)}${"-".repeat(minus)}\n`;
     }
   }

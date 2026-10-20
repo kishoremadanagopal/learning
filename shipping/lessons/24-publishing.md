@@ -1273,4 +1273,4 @@ gh run list
 </details>
 
 ---
-Previous: [Lesson 23](23-compose.md) · Back to the [course home](../README.md)
+Previous: [Lesson 23](23-compose.md) · Next: [Lesson 25: Events and Apache Kafka](25-kafka-basics.md)

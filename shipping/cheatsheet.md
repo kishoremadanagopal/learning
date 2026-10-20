@@ -324,6 +324,39 @@ volumes:
 
 Exit codes: 0 ended normally, 1 failed, 137 killed (SIGKILL: stop timeout or out of memory), 143 SIGTERM, 125–127 Docker couldn't run it. In CI: `permissions: packages: write`, then `docker/login-action@v4` (`password: ${{ secrets.GITHUB_TOKEN }}`), `docker/metadata-action@v6` and `docker/build-push-action@v7` with `push: true`.
 
+## Kafka [25–29]
+
+Kafka's tools live in `/opt/kafka/bin` in the `apache/kafka:4.3.1` image; run them with `docker exec kafka /opt/kafka/bin/TOOL --bootstrap-server localhost:9092 …` (B below).
+
+| Task | Command |
+|---|---|
+| run one broker | `docker run -d --name kafka -p 9092:9092 apache/kafka:4.3.1` |
+| topics | `kafka-topics.sh B --create --topic orders --partitions 3` (`--replication-factor 3 --config min.insync.replicas=2`), `--list`, `--describe --topic orders`, `--alter --partitions 4`, `--describe --under-replicated-partitions` |
+| send | `docker exec -i kafka …kafka-console-producer.sh B --topic orders` (keys: `--reader-property parse.key=true --reader-property key.separator=:`; `--command-property acks=1`) |
+| read | `kafka-console-consumer.sh B --topic orders --from-beginning --max-messages 5` (`--timeout-ms 2000`, `--group billing`, `--partition 2 --offset 4`, `--formatter-property print.key=true`) |
+| offsets and lag | `kafka-get-offsets.sh B --topic orders`, `kafka-consumer-groups.sh B --list`, `--describe --group billing` (`--members`, `--state`) |
+| reprocess | stop the consumers, then `kafka-consumer-groups.sh B --reset-offsets --group billing --topic orders --to-earliest --execute` (`--shift-by -2`, `--to-datetime …`, `--dry-run`) |
+| topic settings | `kafka-configs.sh B --entity-type topics --entity-name orders --alter --add-config retention.ms=1209600000` (`--describe`, `--delete-config`) |
+
+```js
+// Node.js: npm install @confluentinc/kafka-javascript
+import kafkajs from "@confluentinc/kafka-javascript";
+const { Kafka } = kafkajs.KafkaJS;
+const kafka = new Kafka({ kafkaJS: { brokers: ["kafka:19092"], clientId: "shop" } });
+
+const producer = kafka.producer();
+await producer.connect();
+await producer.send({ topic: "orders", messages: [{ key: order.customer, value: JSON.stringify(event) }] });
+
+const consumer = kafka.consumer({ kafkaJS: { groupId: "billing", fromBeginning: true } });
+await consumer.connect();
+await consumer.subscribe({ topics: ["orders"] });
+await consumer.run({ eachMessage: async ({ partition, message }) => { /* handle it idempotently */ } });
+process.on("SIGTERM", async () => { await consumer.disconnect(); process.exit(0); });
+```
+
+Remember: order is per partition, so key by what must stay in order; a group uses at most one consumer per partition; lag = log-end offset − committed offset; durable topics use replication factor 3, `min.insync.replicas=2` and `acks=all`; containers need a listener that advertises a name they can resolve (`kafka:19092`), your computer one that advertises `localhost:9092`.
+
 ## Every task at a glance
 
 Generated from the **At a glance** table at the end of each lesson. The number in brackets links to the lesson.
@@ -460,3 +493,31 @@ Generated from the **At a glance** table at the end of each lesson. The number i
 | Download an image | docker pull IMAGE | adds an image | docker rmi IMAGE | [24](lessons/24-publishing.md) |
 | Build and push in CI | docker/build-push-action with push: true | the registry | — | [24](lessons/24-publishing.md) |
 | Release a version | git tag v1.2.0; git push origin v1.2.0 | starts the workflow | — | [24](lessons/24-publishing.md) |
+| Run Kafka in Docker | docker run -d --name kafka -p 9092:9092 apache/kafka:4.3.1 | starts a broker | docker rm -f kafka | [25](lessons/25-kafka-basics.md) |
+| Create a topic | kafka-topics.sh --bootstrap-server B --create --topic T --partitions 3 | adds a topic | kafka-topics.sh … --delete --topic T | [25](lessons/25-kafka-basics.md) |
+| List / describe topics | kafka-topics.sh --bootstrap-server B --list / --describe --topic T | nothing | — | [25](lessons/25-kafka-basics.md) |
+| Send events from a file or here-document | docker exec -i kafka …kafka-console-producer.sh --bootstrap-server B --topic T | appends events | — (retention removes them) | [25](lessons/25-kafka-basics.md) |
+| Read a topic from the start | kafka-console-consumer.sh --bootstrap-server B --topic T --from-beginning --max-messages N | nothing | — | [25](lessons/25-kafka-basics.md) |
+| Show partition, offset and key | kafka-console-consumer.sh … --formatter-property print.partition=true --formatter-property print.offset=true --formatter-property print.key=true | nothing | — | [26](lessons/26-kafka-partitions.md) |
+| Send keyed events | kafka-console-producer.sh … --reader-property parse.key=true --reader-property key.separator=: | appends events | — | [26](lessons/26-kafka-partitions.md) |
+| Read one partition from an offset | kafka-console-consumer.sh … --partition 2 --offset 3 | nothing | — | [26](lessons/26-kafka-partitions.md) |
+| Show end offsets | kafka-get-offsets.sh --bootstrap-server B --topic T | nothing | — | [26](lessons/26-kafka-partitions.md) |
+| Add partitions | kafka-topics.sh … --alter --topic T --partitions N | more partitions (keys move) | — (can't remove) | [26](lessons/26-kafka-partitions.md) |
+| Change a topic setting | kafka-configs.sh … --entity-type topics --entity-name T --alter --add-config retention.ms=MS | the topic's config | --alter --delete-config retention.ms | [26](lessons/26-kafka-partitions.md) |
+| Read as a group | kafka-console-consumer.sh … --topic T --group G | commits the group's offsets | kafka-consumer-groups.sh … --reset-offsets | [27](lessons/27-consumer-groups.md) |
+| List groups | kafka-consumer-groups.sh --bootstrap-server B --list | nothing | — | [27](lessons/27-consumer-groups.md) |
+| Show offsets and lag | kafka-consumer-groups.sh … --describe --group G | nothing | — | [27](lessons/27-consumer-groups.md) |
+| Show members / state | kafka-consumer-groups.sh … --describe --group G --members / --state | nothing | — | [27](lessons/27-consumer-groups.md) |
+| Start a consumer in the background | docker exec -d kafka …kafka-console-consumer.sh … --group G | adds a member | docker exec kafka pkill -f ConsoleConsumer | [27](lessons/27-consumer-groups.md) |
+| Reprocess everything | kafka-consumer-groups.sh … --reset-offsets --group G --topic T --to-earliest --execute | the group's offsets | reset again to the old offsets (--to-offset) | [27](lessons/27-consumer-groups.md) |
+| Start a cluster from a Compose file | docker compose up -d | creates containers | docker compose down | [28](lessons/28-kafka-reliability.md) |
+| Create a durable topic | kafka-topics.sh … --create --topic T --partitions N --replication-factor 3 --config min.insync.replicas=2 | adds a topic | kafka-topics.sh … --delete --topic T | [28](lessons/28-kafka-reliability.md) |
+| Find under-replicated partitions | kafka-topics.sh … --describe --under-replicated-partitions | nothing | — | [28](lessons/28-kafka-reliability.md) |
+| Stop / start a broker | docker compose stop kafka-3 / docker compose start kafka-3 | the broker's container | the other one | [28](lessons/28-kafka-reliability.md) |
+| Send with weaker durability | kafka-console-producer.sh … --command-property acks=1 | appends events | — | [28](lessons/28-kafka-reliability.md) |
+| Show the controller quorum | kafka-metadata-quorum.sh --bootstrap-server B describe --status | nothing | — | [28](lessons/28-kafka-reliability.md) |
+| Install the Node.js client | npm install @confluentinc/kafka-javascript | package.json, package-lock.json, node_modules | npm uninstall @confluentinc/kafka-javascript | [29](lessons/29-kafka-apps.md) |
+| Run Kafka with the app | docker compose up -d kafka, then create topics, then docker compose up -d | starts containers | docker compose down | [29](lessons/29-kafka-apps.md) |
+| Rebuild and restart one service | docker compose up -d --build api | rebuilds the image, recreates the container | — | [29](lessons/29-kafka-apps.md) |
+| Run more workers | docker compose up -d --scale billing=2 | adds containers | docker compose up -d --scale billing=1 | [29](lessons/29-kafka-apps.md) |
+| Check a worker's group | kafka-consumer-groups.sh … --describe --group billing --members | nothing | — | [29](lessons/29-kafka-apps.md) |

@@ -1,7 +1,7 @@
 /* compose.js: Docker Compose v5 for the sandbox's pretend Docker (docker.js), printing like `docker compose` does
    when its output isn't a terminal (one line per event), and the docker/* actions that GitHub Actions uses to log in
    to a registry, work out tags and labels, and build and push images. */
-import { parseDocument } from "./yamllib.js?v=160af99cac";
+import { parseDocument } from "./yamllib.js?v=176761161d";
 
 export function installCompose(D, api) {
   const { MemFS } = api;
@@ -29,7 +29,7 @@ export function installCompose(D, api) {
     const dotenv = sh.fs.text(`${dir}/.env`);
     if (dotenv) for (const line of dotenv.split("\n")) { const m = /^\s*([A-Za-z_]\w*)\s*=\s*(.*?)\s*$/.exec(line); if (m && env[m[1]] === undefined) env[m[1]] = m[2].replace(/^(['"])(.*)\1$/, "$2"); }
     const text = interpolate(sh.fs.text(file), env);
-    const doc = parseDocument(text, { uniqueKeys: false });
+    const doc = parseDocument(text, { uniqueKeys: false, merge: true });   // Compose supports YAML merge keys (<<: *anchor)
     if (doc.errors.length) {
       const err = doc.errors[0];
       throw new D.DockerError(`yaml: line ${err.linePos?.[0]?.line ?? 1}: ${err.message.split("\n")[0].replace(/ at line \d+, column \d+:?$/, "")}`);
@@ -68,7 +68,7 @@ export function installCompose(D, api) {
         name: sname, image: s.image ?? null, build, ports, environment, deps, healthcheck, volumes: (s.volumes ?? []).map((v) => (typeof v === "string" ? v : `${v.source}:${v.target}${v.read_only ? ":ro" : ""}`)),
         command: s.command === undefined ? undefined : Array.isArray(s.command) ? s.command.map(String) : ["/bin/sh", "-c", String(s.command)],
         entrypoint: s.entrypoint === undefined ? undefined : Array.isArray(s.entrypoint) ? s.entrypoint.map(String) : ["/bin/sh", "-c", String(s.entrypoint)],
-        restart: s.restart ?? "no", user: s.user, workdir: s.working_dir, containerName: s.container_name, init: !!s.init,
+        restart: s.restart ?? "no", user: s.user, workdir: s.working_dir, containerName: s.container_name, hostname: s.hostname, init: !!s.init,
         memory: D.parseMemory(String(s.mem_limit ?? s.deploy?.resources?.limits?.memory ?? "").toLowerCase().replace(/b$/, "")),
         develop: s.develop ?? null, labels: listToMap(s.labels),
       });
@@ -113,11 +113,14 @@ export function installCompose(D, api) {
     if (!cmd || cmd === "--help") { io.out(`\nUsage:  docker compose [OPTIONS] COMMAND\n\nDefine and run multi-container applications with Docker\n\nCommands:\n  build       Build or rebuild services\n  config      Parse, resolve and render compose file in canonical format\n  down        Stop and remove containers, networks\n  exec        Execute a command in a running container\n  logs        View output from containers\n  ps          List containers\n  restart     Restart service containers\n  stop        Stop services\n  up          Create and start containers\n  version     Show the Docker Compose version information\n  watch       Watch build context for service and rebuild/refresh containers when files are updated\n`); return 0; }
     const p = loadProject(e, sh, top);
     for (const w of p.warnings) io.err(`WARN[0000] ${w} \n`);
+    // --scale SERVICE=N (one flag per service), for up
+    const scale = {};
+    for (let i = 0; i < rest.length; i++) if (rest[i] === "--scale" && rest[i + 1]) { const [sv, n] = rest[i + 1].split("="); scale[sv] = Number(n); rest.splice(i + 1, 1); }
     const flags = rest.filter((a) => a.startsWith("-"));
     const names = rest.filter((a) => !a.startsWith("-"));
     const has = (...f) => f.some((x) => flags.includes(x));
     switch (cmd) {
-      case "up": return up(e, sh, p, io, { detach: has("-d", "--detach"), build: has("--build"), wait: has("--wait"), only: names.length ? names : null, quietPull: has("--quiet-pull") });
+      case "up": return up(e, sh, p, io, { detach: has("-d", "--detach"), build: has("--build"), wait: has("--wait"), only: names.length ? names : null, quietPull: has("--quiet-pull"), scale });
       case "build": return buildAll(e, sh, p, io, names.length ? names : null, { force: true });
       case "ps": {
         const all = has("-a", "--all");
@@ -179,9 +182,11 @@ export function installCompose(D, api) {
         if (!p.services.some((s) => s.name === svc)) throw new D.DockerError(`service "${svc}" is not running`);
         if (!c) throw new D.DockerError(`service "${svc}" is not running`);
         if (!argv[0].includes("/") && !c.image.bins.includes(argv[0])) throw new D.DockerError(`OCI runtime exec failed: exec failed: unable to start container process: exec: "${argv[0]}": executable file not found in $PATH: unknown`, 127);
-        const r = await D.execIn(e, c, argv[0] === "sh" && argv[1] === "-c" ? ["/bin/sh", "-c", argv.slice(2).join(" ")] : argv, { io });
+        // compose exec keeps stdin open (-i is the default; -T only turns off the terminal); -d runs it in the background
+        const detached = rest.slice(0, k).some((a) => a === "-d" || a === "--detach");
+        const r = await D.execIn(e, c, argv[0] === "sh" && argv[1] === "-c" ? ["/bin/sh", "-c", argv.slice(2).join(" ")] : argv, { io: detached ? null : io, stdin: io.stdin ?? "", detached });
         await D.settle(e);
-        return r.code;
+        return detached ? 0 : r.code;
       }
       case "config": {
         if (has("--services")) { io.out(p.services.map((s) => s.name + "\n").join("")); return 0; }
@@ -257,21 +262,29 @@ export function installCompose(D, api) {
     const existing = containersOf(e, p);
     const plan = [];
     for (const s of services) {
-      const name = containerName(p, s);
       const img = D.imageOf(e, imageName(p, s));
       const cfgHash = D.hex(JSON.stringify([s, img.id]));
-      let c = existing.find((x) => x.compose.service === s.name);
-      if (c && c.compose.hash !== cfgHash) {
-        ev(io, `Container ${c.name}`, "Recreate");
-        if (c.state === "running") await D.stopContainer(e, c);
-        D.removeContainer(e, c);
-        c = null;
-        plan.push({ s, c: null, recreated: true, name, img, cfgHash });
-      } else plan.push({ s, c, name, img, cfgHash });
+      // --scale runs several containers of a service, numbered 1, 2, …; extra ones are removed when scaling down
+      const count = o.scale?.[s.name] ?? 1;
+      for (const x of existing.filter((x) => x.compose.service === s.name && x.compose.number > count).sort((a, b) => b.compose.number - a.compose.number)) {
+        if (x.state === "running") { ev(io, `Container ${x.name}`, "Stopping"); await D.stopContainer(e, x); ev(io, `Container ${x.name}`, "Stopped"); }
+        ev(io, `Container ${x.name}`, "Removing"); D.removeContainer(e, x); ev(io, `Container ${x.name}`, "Removed");
+      }
+      for (let number = 1; number <= count; number++) {
+        const name = number === 1 ? containerName(p, s) : `${p.name}-${s.name}-${number}`;
+        let c = existing.find((x) => x.compose.service === s.name && (x.compose.number ?? 1) === number);
+        if (c && c.compose.hash !== cfgHash) {
+          ev(io, `Container ${c.name}`, "Recreate");
+          if (c.state === "running") await D.stopContainer(e, c);
+          D.removeContainer(e, c);
+          c = null;
+          plan.push({ s, c: null, recreated: true, name, img, cfgHash, number });
+        } else plan.push({ s, c, name, img, cfgHash, number });
+      }
     }
     for (const step of plan) {
       if (step.c) continue;
-      const { s, name, img, cfgHash } = step;
+      const { s, name, img, cfgHash, number } = step;
       if (!step.recreated) ev(io, `Container ${name}`, "Creating");
       const mounts = s.volumes.map((v) => {
         const [src, target, mode] = v.split(":");
@@ -283,10 +296,10 @@ export function installCompose(D, api) {
       const [rname, rmax] = String(s.restart).split(":");
       const c = D.createContainer(e, img, {
         name, imageRef: imageName(p, s), cmd: s.command, entrypoint: s.entrypoint, ports: D.parsePorts(s.ports), env: s.environment, mounts,
-        network: netName, aliases: [s.name], restart: { name: rname, max: Number(rmax ?? 0) }, user: s.user, workdir: s.workdir, init: s.init, memory: s.memory,
+        network: netName, aliases: [s.name], hostname: s.hostname, restart: { name: rname, max: Number(rmax ?? 0) }, user: s.user, workdir: s.workdir, init: s.init, memory: s.memory,
         healthcheck: s.healthcheck ?? undefined,
-        labels: { "com.docker.compose.project": p.name, "com.docker.compose.service": s.name, "com.docker.compose.container-number": "1", "com.docker.compose.oneoff": "False", ...s.labels },
-        compose: { project: p.name, service: s.name, number: 1, hash: cfgHash },
+        labels: { "com.docker.compose.project": p.name, "com.docker.compose.service": s.name, "com.docker.compose.container-number": String(number), "com.docker.compose.oneoff": "False", ...s.labels },
+        compose: { project: p.name, service: s.name, number, hash: cfgHash },
       });
       c.compose.hash = cfgHash;
       step.c = c;

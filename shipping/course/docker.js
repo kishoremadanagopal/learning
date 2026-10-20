@@ -11,11 +11,15 @@
    Everything finishes instantly with realistic, fixed timings. It's a teaching simulation: real Docker runs Linux
    containers with namespaces and cgroups; this runs JavaScript in your browser. */
 import { installCompose } from "./compose.js";
+import { installKafka } from "./kafka.js";
 
 export function installDocker(api) {
   const { Shell, MemFS, registerCommand, registeredCommand, NET, addHelpers, tokenize } = api;
   const VERSION = { cli: "29.9.1", build: "dfc520d", compose: "v5.6.0", buildx: "v0.38.0", buildkit: "v0.34.0" };
   const BASE_TIME = Date.UTC(2026, 9, 17, 9, 0, 0) / 1000;      // the Docker clock starts on 17 October 2026, 09:00 UTC
+
+  // programs and images that other parts of the sandbox add (kafka.js)
+  const EXTRA = { programs: {} };
 
   /* ------------------------------------------------------------ small helpers */
 
@@ -171,18 +175,20 @@ export function installDocker(api) {
     let passwd = def.os === "alpine" ? PASSWD.alpine : PASSWD.debian;
     let group = "root:x:0:root\n";
     for (const [u, id] of Object.entries(def.users ?? {})) {
-      const home = u === "node" ? "/home/node" : "/var/cache/nginx";
-      passwd += `${u}:x:${id}:${id}:${u === "nginx" ? "nginx" : "Linux User,,,"}:${home}:${u === "nginx" ? "/sbin/nologin" : def.os === "alpine" ? "/bin/sh" : "/bin/bash"}\n`;
+      const home = def.homes?.[u] ?? (u === "node" ? "/home/node" : "/var/cache/nginx");
+      passwd += `${u}:x:${id}:${id}:${u === "nginx" ? "nginx" : "Linux User,,,"}:${home}:${u === "nginx" ? "/sbin/nologin" : def.shells?.[u] ?? (def.os === "alpine" ? "/bin/sh" : "/bin/bash")}\n`;
       group += `${u}:x:${id}:${u}\n`;
       dirs.push(home);
     }
     files["/etc/passwd"] = passwd;
     files["/etc/group"] = group;
-    for (const b of def.bins) files[(["node", "npm", "npx", "corepack", "docker-entrypoint.sh", "yarn"].includes(b) ? "/usr/local/bin/" : "/bin/") + b] = b === "docker-entrypoint.sh" ? NODE_ENTRYPOINT : `(the ${b} program)`;
+    for (const b of def.bins) files[(def.binDirs?.[b] ?? (["node", "npm", "npx", "corepack", "docker-entrypoint.sh", "yarn"].includes(b) ? "/usr/local/bin/" : "/bin/")) + b] = b === "docker-entrypoint.sh" ? NODE_ENTRYPOINT : `(the ${b} program)`;
     if (def.node) {
       files["/usr/local/lib/node_modules/npm/package.json"] = `{\n  "name": "npm",\n  "version": "${{ 22: "10.9.9", 24: "11.19.1", 26: "11.20.0" }[def.node]}"\n}\n`;
       if (def.node < 26) dirs.push("/opt/yarn-v1.22.22");
     }
+    if (def.files) Object.assign(files, typeof def.files === "function" ? def.files() : def.files);
+    if (def.dirs) dirs.push(...def.dirs);
     if (def.nginx) {
       files["/usr/share/nginx/html/index.html"] = NGINX_INDEX;
       files["/usr/share/nginx/html/50x.html"] = NGINX_50X;
@@ -284,7 +290,7 @@ export function installDocker(api) {
     return {
       id: def.digest, created, os: "linux", arch: "amd64", nodes: nodesFrom(baseFiles(def)), bins: def.bins, nodeMajor: def.node ?? null,
       osName: def.os, users: def.users ?? {},
-      config: { Env: [...def.config.Env], Cmd: def.config.Cmd ?? null, Entrypoint: def.config.Entrypoint ?? null, WorkingDir: def.config.WorkingDir ?? "", User: "", ExposedPorts: def.config.ExposedPorts ?? null, Labels: null, StopSignal: def.config.StopSignal, Healthcheck: null, Volumes: null },
+      config: { Env: [...def.config.Env], Cmd: def.config.Cmd ?? null, Entrypoint: def.config.Entrypoint ?? null, WorkingDir: def.config.WorkingDir ?? "", User: def.config.User ?? "", ExposedPorts: def.config.ExposedPorts ?? null, Labels: def.config.Labels ?? null, StopSignal: def.config.StopSignal, Healthcheck: null, Volumes: def.config.Volumes ?? null },
       // images built on the same Alpine release share its base layer, so it downloads once
       layers: def.layers.map((size, i) => ({ digest: i === 0 && def.os === "alpine" ? hex(`alpine-minirootfs-${def.release ?? ALPINE_RELEASE}`) : hex(`${r.path}:${def.digest}:layer${i}`), size })),
       history: def.history.map(([createdBy, size], i) => ({ createdBy, size, created: created - (def.history.length - i) * 30 })),
@@ -297,7 +303,7 @@ export function installDocker(api) {
     const r = parseRef(ref);
     if (!r.valid) return { error: `invalid reference format: repository name (${r.path}) must be lowercase` };
     let rec = null, layerSizes = null;
-    if (r.registry === "docker.io" && r.path.startsWith("library/")) {
+    if (r.registry === "docker.io" && (r.path.startsWith("library/") || HUB[r.path])) {
       const h = hubImage(r);
       if (!h) return { error: `pull access denied for ${r.familiarRepo}, repository does not exist or may require 'docker login'` };
       if (h.repoExists) return { error: `failed to resolve reference "${r.full}": ${r.full}: not found` };
@@ -576,6 +582,7 @@ export function installDocker(api) {
       // node with no script reads its program from stdin; a container's stdin is empty, so it just ends
       node: async (s, args, io) => (args.length ? nodeCmd(s, args, io) : 0),
       "/hello": async (s, args, io) => { io.out(HELLO); return 0; },
+      ...EXTRA.programs,
     };
     // a shell with no script reads commands from stdin; a container's stdin is empty, so it ends at once
     for (const name of ["sh", "/bin/sh", "ash", "bash", "/bin/bash"]) {
@@ -761,9 +768,9 @@ export function installDocker(api) {
     const status = await csh.runScript(script, { echo: false, errexit: false });
     if (c.state !== "running") return null;    // stopped meanwhile
     const proc = csh.proc;
-    if (c.nginxAlive || (proc && proc.alive && !proc.ended)) {
+    if (c.nginxAlive || c.daemon || (proc && proc.alive && !proc.ended)) {
       c.alive = true;
-      if (proc && !c.nginxAlive) proc.onEnd = (code) => { exited(e, c, code); };
+      if (proc && !c.nginxAlive && !c.daemon) proc.onEnd = (code) => { exited(e, c, code); };
     } else exited(e, c, status);
     syncOut(c);
     return null;
@@ -821,7 +828,7 @@ export function installDocker(api) {
     c.health.checkedAt += runs * interval;
   }
   // run a command in a running container (docker exec, health checks)
-  async function execIn(e, c, argv, { user = null, workdir = null, env = {}, quietExec = false, io = null } = {}) {
+  async function execIn(e, c, argv, { user = null, workdir = null, env = {}, quietExec = false, io = null, stdin = "", detached = false } = {}) {
     syncIn(c);
     const u = user ? resolveUser({ ...c, userSpec: user }) : c.user ?? resolveUser(c);
     const xsh = makeShell(e.owner, { fs: c.fs, env: { ...c.env, ...env }, cwd: workdir ?? (c.workdir || "/"), user: u, bins: c.image.bins, osName: c.osName, nodeMajor: c.image.nodeMajor, container: c });
@@ -831,8 +838,11 @@ export function installDocker(api) {
     let out = "";
     xsh.push = (kind, text) => { if (kind === "cmd" || !text) return; out += text; if (io) (kind === "err" ? io.err(text) : io.out(text)); };
     const script = argv[0] === "/bin/sh" && argv[1] === "-c" ? argv.slice(2).join(" ") : argv.map(shq).join(" ");
+    xsh.inheritedStdin = stdin;
+    xsh.detached = detached;
+    xsh.execProc = p;
     const code = await xsh.runScript(script, { echo: false, errexit: false });
-    p.ended = true;
+    if (!p.background) p.ended = true;
     syncOut(c);
     void quietExec;
     return { code, out };
@@ -844,12 +854,14 @@ export function installDocker(api) {
     const wait = timeout ?? c.stopTimeout ?? 10;
     const proc = c.shell?.proc;
     let code = null;
-    if (kill) code = 137;
+    if (c.daemon) code = c.daemon.stop(c, { kill });
+    if (code !== null) { /* the daemon decided */ }
+    else if (kill) code = 137;
     else if (c.nginxAlive) code = 0;
     else if (c.signalsReach && proc && !proc.ended) {
       const handlers = proc.signals[c.stopSignal] ?? [];
       if (handlers.length) {
-        for (const h of handlers) { try { h(c.stopSignal); } catch (err) { proc.crash(err); } }
+        for (const h of handlers) { try { const r = h(c.stopSignal); if (r && typeof r.then === "function") r.catch((err) => proc.crash(err)); } catch (err) { proc.crash(err); } }    // async handlers: process.exit() inside rejects their promise
         for (let k = 0; k < 40 && !proc.ended; k++) await new Promise((r) => setTimeout(r, 5));
         if (proc.ended) code = proc.exitCode;
       } else if (c.init) code = 143;    // with --init, Node.js gets SIGTERM and its default action ends it
@@ -858,6 +870,7 @@ export function installDocker(api) {
     else tick(e, 0);
     if (proc && !proc.ended) { proc.alive = false; proc.end(code); }
     c.nginxAlive = false;
+    c.daemon = null;
     c.state = "running";
     exited(e, c, code);
     c.pendingRestart = false;
@@ -1849,9 +1862,9 @@ export function installDocker(api) {
           return 1;
         }
         const env = Object.fromEntries((opts["-e"] ?? []).map((kv) => { const i = kv.indexOf("="); return [kv.slice(0, i), kv.slice(i + 1)]; }));
-        const r = await execIn(e, c, argv[0] === "sh" && argv[1] === "-c" ? ["/bin/sh", "-c", argv.slice(2).join(" ")] : argv, { user: opts["-u"], workdir: opts["-w"], env, io });
+        const r = await execIn(e, c, argv[0] === "sh" && argv[1] === "-c" ? ["/bin/sh", "-c", argv.slice(2).join(" ")] : argv, { user: opts["-u"], workdir: opts["-w"], env, io: opts["-d"] ? null : io, stdin: opts["-i"] ? io.stdin : "", detached: !!opts["-d"] });
         await settle(e);
-        return r.code;
+        return opts["-d"] ? 0 : r.code;
       }
       case "stop": case "kill": case "restart": {
         const { opts, rest: r2 } = parseFlags(rest, { __cmd: cmd, "-t|--timeout|--time": "value", "-s|--signal": "value" });
@@ -2205,8 +2218,9 @@ export function installDocker(api) {
 
   /* ------------------------------------------------------------ for compose.js, actions and exercise checks */
 
-  const DOCKER = { engine, now, tick, hex, short, humanSize, humanDuration, table, parseRef, imageOf, tagsOf, setTag, pull, build, createContainer, startContainer, stopContainer, removeContainer, execIn, settle, refreshHealth, statusText, portsText, ellipsis, quoteGo, commandString, createNetwork, parsePorts, parseEnvList, durationNs, DockerError, findContainer, pushImage, registries, iso, uuid, VERSION, parseMemory, writeDockerConfig, tokenOk, mkdirp };
+  const DOCKER = { EXTRA, HUB, BUSYBOX, ALPINE_RELEASE, BASE_TIME, LOOPBACK, containerByName, syncIn, syncOut, engine, now, tick, hex, short, humanSize, humanDuration, table, parseRef, imageOf, tagsOf, setTag, pull, build, createContainer, startContainer, stopContainer, removeContainer, execIn, settle, refreshHealth, statusText, portsText, ellipsis, quoteGo, commandString, createNetwork, parsePorts, parseEnvList, durationNs, DockerError, findContainer, pushImage, registries, iso, uuid, VERSION, parseMemory, writeDockerConfig, tokenOk, mkdirp };
   const COMPOSE = installCompose(DOCKER, api);
+  installKafka(DOCKER, api);
 
   addHelpers((sh, AssertionError) => ({
     // the sandbox's Docker: images, containers, volumes and networks, for exercise checks

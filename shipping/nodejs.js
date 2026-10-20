@@ -5,7 +5,7 @@
      with fixed durations so the course's examples print the same every time
    - npm test / npm run <script> run package.json scripts through the sandbox's shell
    It's a teaching simulation: the JavaScript really runs, but it's the browser's engine, not Node.js itself. */
-import { inspect } from "./runner.js?v=160af99cac";
+import { inspect } from "./runner.js?v=176761161d";
 
 export const NODE_RELEASES = {
   22: { version: "v22.23.3", npm: "10.9.9" },
@@ -13,6 +13,10 @@ export const NODE_RELEASES = {
   26: { version: "v26.12.0", npm: "11.20.0" },
 };
 export const DEFAULT_NODE = 24;
+// packages from npm that the sandbox can install and run (kafka.js adds @confluentinc/kafka-javascript):
+// NPM_PACKAGES[name] describes it for npm install; NODE_PACKAGES.get(name)(context) builds the module for import
+export const NPM_PACKAGES = {};
+export const NODE_PACKAGES = new Map();
 
 export function installNode({ registerCommand, ExitSignal, NET }) {
   const AsyncFunction = (async () => {}).constructor;
@@ -708,6 +712,7 @@ export function installNode({ registerCommand, ExitSignal, NET }) {
       // require(): built-in modules and JSON files (node -e and node -p code is CommonJS, so it often uses these)
       const requireFn = (spec) => {
         if (builtins[spec]) return builtins[spec].default;
+        if (!spec.startsWith(".") && !spec.startsWith("/")) { const m = fromNodeModules(spec, absPath); if (m) return m.default; }
         const base = absPath.startsWith("/tmp/[eval]") ? sh.cwd : dir;
         const target = pathMod.resolve(base, spec);
         if ((spec.startsWith(".") || spec.startsWith("/")) && target.endsWith(".json")) {
@@ -725,10 +730,24 @@ export function installNode({ registerCommand, ExitSignal, NET }) {
       if (!esm && mod.exports && typeof mod.exports === "object" && !("default" in mod.exports)) mod.exports = { ...mod.exports, default: mod.exports };
       return mod.exports;
     }
+    // a package installed in node_modules (in this folder or one above), that the sandbox knows how to run
+    const packageCache = new Map();
+    function fromNodeModules(spec, from) {
+      const name = spec.startsWith("@") ? spec.split("/").slice(0, 2).join("/") : spec.split("/")[0];
+      let dir = pathMod.dirname(from);
+      for (;;) {
+        if (sh.fs.exists(`${dir === "/" ? "" : dir}/node_modules/${name}/package.json`)) break;
+        if (dir === "/" || dir === ".") return null;
+        dir = pathMod.dirname(dir);
+      }
+      if (!NODE_PACKAGES.has(name)) return null;
+      if (!packageCache.has(name)) packageCache.set(name, NODE_PACKAGES.get(name)({ sh, proc, console: consoleObj, process: processObj }));
+      return packageCache.get(name);
+    }
     async function importFrom(spec, from) {
       if (builtins[spec]) return builtins[spec];
       if (spec.startsWith("node:")) throw Object.assign(new Error(`No such built-in module: ${spec}`), { code: "ERR_UNKNOWN_BUILTIN_MODULE" });
-      if (!spec.startsWith(".") && !spec.startsWith("/")) throw new ModuleNotFound(spec, from);
+      if (!spec.startsWith(".") && !spec.startsWith("/")) { const m = fromNodeModules(spec, from); if (m) return m; throw new ModuleNotFound(spec, from); }
       const abs = pathMod.resolve(pathMod.dirname(from), spec);
       if (!sh.fs.exists(abs) || sh.fs.isDir(abs)) throw new ModuleNotFound(spec, from);
       return load(abs);
@@ -784,8 +803,11 @@ export function installNode({ registerCommand, ExitSignal, NET }) {
         if (proc.servers.size) {
           // a listening server keeps Node.js running: in a container it stays up; in the sandbox's own terminal it's stopped
           if (sh.keepServers) { proc.alive = true; sh.proc = proc; return exitCode ?? 0; }
+          const consumer = [...proc.servers].some((s) => s._consumer);
           for (const s of [...proc.servers]) s._drop();
-          io.out("\n(The sandbox stopped node here. A server keeps running until you press Ctrl+C, and the terminal waits for it; to keep one running, start it in a container with docker run -d.)\n");
+          io.out(consumer
+            ? "\n(The sandbox stopped node here. A running Kafka consumer keeps waiting for new events until you press Ctrl+C; to keep one running, start it in a container.)\n"
+            : "\n(The sandbox stopped node here. A server keeps running until you press Ctrl+C, and the terminal waits for it; to keep one running, start it in a container with docker run -d.)\n");
         }
         return exitCode;
       } catch (e) {
@@ -884,6 +906,57 @@ export function installNode({ registerCommand, ExitSignal, NET }) {
   const npmLog = (sh) => `${sh.env.HOME}/.npm/_logs/${new Date(sh.clockSeconds() * 1000).toISOString().replace(/[:.]/g, "_")}-debug-0.log`;
   const npmError = (sh, io, lines) => { io.err(lines.map((l) => `npm error${l ? " " + l : ""}`).join("\n") + `\nnpm error A complete log of this run can be found in: ${npmLog(sh)}\n`); };
 
+  // install packages the sandbox knows: write node_modules, package.json and package-lock.json like npm 11 does
+  async function npmInstallKnown(sh, io, { cmd, pkg, adding, deps, omitDev }) {
+    const lockPath = sh.cwd + "/package-lock.json";
+    let lock = null;
+    try { lock = JSON.parse(sh.fs.text(lockPath) ?? "null"); } catch { lock = null; }
+    if ((cmd === "ci" || cmd === "clean-install")) {
+      const locked = lock?.packages?.[""]?.dependencies ?? {};
+      const missing = Object.keys(pkg.dependencies ?? {}).filter((d) => !locked[d]);
+      if (!lock) {
+        npmError(sh, io, ["code EUSAGE", "", "The `npm ci` command can only install with an existing package-lock.json or", "npm-shrinkwrap.json with lockfileVersion >= 1. Run an install with npm@5 or", "later to generate a package-lock.json file, then try again.", "", "Clean install a project", "", "Usage:", "npm ci", "", "Options:", "[--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]", "", "aliases: clean-install, ic, install-clean, isntall-clean", "", 'Run "npm help ci" for more info']);
+        return 1;
+      }
+      if (missing.length) {
+        npmError(sh, io, ["code EUSAGE", "", "`npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.", "", ...missing.map((d) => `Missing: ${d}@${NPM_PACKAGES[d].version} from lock file`), "", "Clean install a project", "", "Usage:", "npm ci", "", "Options:", "[--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]", "", "aliases: clean-install, ic, install-clean, isntall-clean", "", 'Run "npm help ci" for more info']);
+        return 1;
+      }
+    }
+    const prod = Object.keys(pkg.dependencies ?? {}).concat(adding);
+    const wanted = Object.keys(deps).filter((d) => !omitDev || prod.includes(d));
+    let packages = {};
+    for (const d of wanted) Object.assign(packages, NPM_PACKAGES[d].lockPackages);
+    const already = (lock?.packages && Object.keys(packages).every((k) => sh.fs.exists(`${sh.cwd}/${k}/package.json`))) && !adding.length && cmd !== "ci";
+    for (const [k, v] of Object.entries(packages)) {
+      const dir = `${sh.cwd}/${k}`;
+      if (!sh.fs.isDir(dir)) await sh.fs.mkdir(dir, { recursive: true });
+      await sh.fs.writeFile(`${dir}/package.json`, JSON.stringify({ name: k.split("node_modules/").pop(), version: v.version, ...(v.license ? { license: v.license } : {}) }, null, 2) + "\n");
+    }
+    if (adding.length) {
+      const newPkg = { ...pkg, dependencies: { ...(pkg.dependencies ?? {}) } };
+      for (const a of adding) newPkg.dependencies[a] = NPM_PACKAGES[a].range;
+      newPkg.dependencies = Object.fromEntries(Object.entries(newPkg.dependencies).sort(([a], [b]) => (a < b ? -1 : 1)));
+      await sh.fs.writeFile(sh.cwd + "/package.json", JSON.stringify(newPkg, null, 2) + "\n");
+      pkg = newPkg;
+    }
+    if (cmd !== "ci" && cmd !== "clean-install") {
+      const root = { name: pkg.name, version: pkg.version, ...(pkg.license ? { license: pkg.license } : {}), ...(pkg.dependencies ? { dependencies: pkg.dependencies } : {}), ...(pkg.devDependencies ? { devDependencies: pkg.devDependencies } : {}) };
+      const all = {};
+      for (const d of Object.keys(deps)) Object.assign(all, NPM_PACKAGES[d].lockPackages);
+      const newLock = { name: pkg.name, version: pkg.version, lockfileVersion: 3, requires: true, packages: { "": root, ...Object.fromEntries(Object.entries(all).sort(([a], [b]) => (a < b ? -1 : 1))) } };
+      await sh.fs.writeFile(lockPath, JSON.stringify(newLock, null, 2) + "\n");
+    }
+    const count = Object.keys(packages).length;
+    const funding = wanted.reduce((n, d) => n + (NPM_PACKAGES[d].funding ?? 0), 0);
+    const secs = 2 + (count % 5);
+    if (already) io.out(`\nup to date, audited ${count + 1} packages in ${secs}s\n`);
+    else io.out(`\nadded ${count} package${count === 1 ? "" : "s"}, and audited ${count + 1} packages in ${secs}s\n`);
+    if (funding) io.out(`\n${funding} package${funding === 1 ? " is" : "s are"} looking for funding\n  run \`npm fund\` for details\n`);
+    io.out("\nfound 0 vulnerabilities\n");
+    return 0;
+  }
+
   registerCommand("npm", async (sh, args, io) => {
     const rel = release(sh);
     const [cmd, ...rest] = args;
@@ -898,11 +971,15 @@ export function installNode({ registerCommand, ExitSignal, NET }) {
     const id = `${pkg.name ?? "unnamed"}@${pkg.version ?? "1.0.0"}`;
     const scripts = pkg.scripts ?? {};
     if (["ci", "install", "i", "clean-install"].includes(cmd)) {
+      const adding = rest.filter((a) => !a.startsWith("-")).map((a) => a.replace(/(.)@[^/@]*$/, "$1"));
       const deps = { ...(pkg.dependencies ?? {}), ...(pkg.devDependencies ?? {}) };
-      if (Object.keys(deps).length) {
-        io.err(`npm: the sandbox can't download packages (${Object.keys(deps).join(", ")}). Run this project on your own computer.\n`);
+      for (const a of adding) deps[a] = NPM_PACKAGES[a]?.range ?? "*";
+      const unknown = Object.keys(deps).filter((d) => !NPM_PACKAGES[d]);
+      if (unknown.length) {
+        io.err(`npm: the sandbox can't download packages (${unknown.join(", ")}). Run this project on your own computer.\n`);
         return 1;
       }
+      if (Object.keys(deps).length) return npmInstallKnown(sh, io, { cmd, pkg, adding, deps, omitDev: rest.includes("--omit=dev") });
       if ((cmd === "ci" || cmd === "clean-install") && !sh.fs.exists(sh.cwd + "/package-lock.json")) {
         npmError(sh, io, ["code EUSAGE", "", "The `npm ci` command can only install with an existing package-lock.json or", "npm-shrinkwrap.json with lockfileVersion >= 1. Run an install with npm@5 or", "later to generate a package-lock.json file, then try again.", "", "Clean install a project", "", "Usage:", "npm ci", "", "Options:", "[--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]", "", "aliases: clean-install, ic, install-clean, isntall-clean", "", 'Run "npm help ci" for more info']);
         return 1;

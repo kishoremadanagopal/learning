@@ -988,3 +988,387 @@ git add .github/workflows/docker.yml
 git commit -qm "Build and push the image"
 git push -q
 ```
+
+## kafka-running
+
+Apache Kafka 4.3.1 running in Docker as the container `kafka` (the official `apache/kafka` image with its default single-broker configuration), with port 9092 published. No topics yet.
+
+```sh
+docker run -d --name kafka -p 9092:9092 apache/kafka:4.3.1 > /dev/null 2>&1
+```
+
+## kafka-orders
+
+`kafka` running with the topic `orders` (3 partitions) holding six order events, keyed by customer: three for `ada`, two for `grace`, one for `linus`.
+
+```sh
+@include kafka-running
+docker exec kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 3 > /dev/null
+docker exec -i kafka /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders --reader-property parse.key=true --reader-property key.separator=: <<'EOF'
+ada:{"id":1,"customer":"ada","items":["bell"]}
+grace:{"id":2,"customer":"grace","items":["pump","lock"]}
+ada:{"id":3,"customer":"ada","items":["lock"]}
+linus:{"id":4,"customer":"linus","items":["bell","bell"]}
+grace:{"id":5,"customer":"grace","items":["bell"]}
+ada:{"id":6,"customer":"ada","items":["pump"]}
+EOF
+```
+
+## kafka-billing-behind
+
+`orders` with its six events read by the consumer group `billing` (which then stopped), and three more orders placed since, so `billing` is behind.
+
+```sh
+@include kafka-orders
+docker exec kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --group billing --from-beginning --timeout-ms 1000 > /dev/null 2>&1
+docker exec -i kafka /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders --reader-property parse.key=true --reader-property key.separator=: <<'EOF'
+linus:{"id":7,"customer":"linus","items":["pump"]}
+ada:{"id":8,"customer":"ada","items":["bell","lock"]}
+grace:{"id":9,"customer":"grace","items":["lock"]}
+EOF
+```
+
+## kafka-billing-running
+
+`kafka-billing-behind`, plus two console consumers of the group `billing` running in the background in the `kafka` container (started with `docker exec -d`).
+
+```sh
+@include kafka-billing-behind
+docker exec -d kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --group billing
+docker exec -d kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --group billing
+```
+
+## kafka-cluster
+
+`~/cluster/compose.yaml` with a Kafka cluster in isolated mode: one KRaft controller (`controller`, node 4) and three brokers (`kafka-1`, `kafka-2`, `kafka-3`, nodes 1 to 3), running with `docker compose up -d`. Each broker listens on port 19092 inside the network; `kafka-1` is also published on port 9092.
+
+```sh
+mkdir -p ~/cluster && cd ~/cluster
+cat > compose.yaml <<'EOF'
+services:
+  controller:
+    image: apache/kafka:4.3.1
+    environment:
+      KAFKA_NODE_ID: 4
+      KAFKA_PROCESS_ROLES: controller
+      KAFKA_LISTENERS: CONTROLLER://:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 4@controller:9093
+      CLUSTER_ID: 4L6g3nShT-eMCtK--X86sw
+  kafka-1:
+    image: apache/kafka:4.3.1
+    ports:
+      - "9092:9092"
+    environment: &broker
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_LISTENERS: PLAINTEXT://:19092,EXTERNAL://:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:19092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 4@controller:9093
+      CLUSTER_ID: 4L6g3nShT-eMCtK--X86sw
+  kafka-2:
+    image: apache/kafka:4.3.1
+    environment:
+      <<: *broker
+      KAFKA_NODE_ID: 2
+      KAFKA_LISTENERS: PLAINTEXT://:19092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:19092
+  kafka-3:
+    image: apache/kafka:4.3.1
+    environment:
+      <<: *broker
+      KAFKA_NODE_ID: 3
+      KAFKA_LISTENERS: PLAINTEXT://:19092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3:19092
+EOF
+docker compose up -d > /dev/null 2>&1
+```
+
+## kafka-cluster-payments
+
+`kafka-cluster` with the topic `payments`: 3 partitions, replication factor 3, `min.insync.replicas=2`.
+
+```sh
+@include kafka-cluster
+docker compose exec kafka-1 /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:19092 --create --topic payments --partitions 3 --replication-factor 3 --config min.insync.replicas=2 > /dev/null
+```
+
+## kafka-shop
+
+The shop from Part 4 with `@confluentinc/kafka-javascript` installed, `events.js` (publishes an `order-placed` event to the `orders` topic, keyed by customer), `server.js` calling it for every new order, a billing worker `billing.js` (the consumer group `billing`), and a `compose.yaml` that runs Kafka, the API and the worker. Nothing is running yet.
+
+```sh
+@include docker-shop-built
+npm install @confluentinc/kafka-javascript > /dev/null
+cat > events.js <<'EOF'
+import kafkajs from "@confluentinc/kafka-javascript";
+
+const { Kafka } = kafkajs.KafkaJS;
+const kafka = new Kafka({
+  kafkaJS: { brokers: (process.env.KAFKA_BROKERS ?? "localhost:9092").split(","), clientId: "shop" },
+});
+const producer = kafka.producer();
+let connecting = null;
+
+// Publish an order-placed event, keyed by customer so each customer's events stay in order.
+export async function publishOrder(order) {
+  connecting ??= producer.connect();
+  await connecting;
+  await producer.send({
+    topic: "orders",
+    messages: [{ key: order.customer, value: JSON.stringify({ type: "order-placed", ...order }) }],
+  });
+}
+EOF
+cat > billing.js <<'EOF'
+import kafkajs from "@confluentinc/kafka-javascript";
+import { formatPrice } from "./prices.js";
+
+const { Kafka } = kafkajs.KafkaJS;
+const kafka = new Kafka({
+  kafkaJS: { brokers: (process.env.KAFKA_BROKERS ?? "localhost:9092").split(","), clientId: "billing" },
+});
+const consumer = kafka.consumer({ kafkaJS: { groupId: "billing", fromBeginning: true } });
+
+await consumer.connect();
+await consumer.subscribe({ topics: ["orders"] });
+await consumer.run({
+  eachMessage: async ({ partition, message }) => {
+    const event = JSON.parse(message.value.toString());
+    console.log(`Invoice for ${event.customer}: ${formatPrice(event.total)} (partition ${partition}, offset ${message.offset})`);
+  },
+});
+
+process.on("SIGTERM", async () => {
+  await consumer.disconnect();
+  process.exit(0);
+});
+EOF
+cat > server.js <<'EOF'
+import http from "node:http";
+import fs from "node:fs";
+import { PRICES, total } from "./prices.js";
+import { publishOrder } from "./events.js";
+
+const port = Number(process.env.PORT ?? 3000);
+const shopName = process.env.SHOP_NAME ?? "the bike shop";
+const ordersFile = "data/orders.jsonl";
+fs.mkdirSync("data", { recursive: true });
+
+const server = http.createServer((req, res) => {
+  console.log(`${req.method} ${req.url}`);
+  if (req.url === "/") {
+    res.end(`Welcome to ${shopName}!\n`);
+  } else if (req.url === "/prices") {
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(PRICES) + "\n");
+  } else if (req.url === "/health") {
+    res.end("ok\n");
+  } else if (req.url === "/orders" && req.method === "POST") {
+    let body = "";
+    req.on("data", (chunk) => (body += chunk));
+    req.on("end", async () => {
+      const order = JSON.parse(body);    // a body that isn't JSON throws here
+      const placed = { customer: order.customer, items: order.items, total: total(order.items) };
+      const line = JSON.stringify(placed);
+      fs.appendFileSync(ordersFile, line + "\n");
+      try {
+        await publishOrder(placed);
+      } catch (err) {
+        console.error(`Couldn't publish the order event: ${err.message}`);
+      }
+      res.statusCode = 201;
+      res.end(line + "\n");
+    });
+  } else if (req.url === "/orders") {
+    res.end(fs.existsSync(ordersFile) ? fs.readFileSync(ordersFile, "utf8") : "");
+  } else {
+    res.statusCode = 404;
+    res.end("Not found\n");
+  }
+});
+
+server.listen(port, () => console.log(`Shop listening on port ${port}`));
+EOF
+cat > compose.yaml <<'EOF'
+services:
+  kafka:
+    image: apache/kafka:4.3.1
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: INTERNAL://:19092,EXTERNAL://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:19092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    healthcheck:
+      test: /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+      interval: 5s
+      retries: 10
+  api:
+    build: .
+    ports:
+      - "8080:3000"
+    environment:
+      KAFKA_BROKERS: kafka:19092
+    depends_on:
+      kafka:
+        condition: service_healthy
+  billing:
+    build: .
+    command: ["node", "billing.js"]
+    environment:
+      KAFKA_BROKERS: kafka:19092
+    depends_on:
+      kafka:
+        condition: service_healthy
+EOF
+git add . && git commit -qm "Publish order events to Kafka; add the billing worker"
+```
+
+## kafka-shop-up
+
+`kafka-shop` running: Kafka started first, the topic `orders` created with 3 partitions, then the API (on port 8080) and the billing worker.
+
+```sh
+@include kafka-shop
+docker compose up -d kafka > /dev/null 2>&1
+docker compose exec kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 3 > /dev/null
+docker compose up -d > /dev/null 2>&1
+```
+
+## kafka-orders-empty
+
+`kafka` running with the topic `orders` (3 partitions), still empty.
+
+```sh
+@include kafka-running
+docker exec kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 3 > /dev/null
+```
+
+## kafka-two-orders
+
+`orders` with the two events sent in lesson 25 (without keys).
+
+```sh
+@include kafka-orders-empty
+docker exec -i kafka /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders <<'EOF'
+{"id":1,"customer":"ada","items":["bell"]}
+{"id":2,"customer":"grace","items":["pump","lock"]}
+EOF
+```
+
+## kafka-orders-node
+
+The shop in `~/shop` with `@confluentinc/kafka-javascript` installed and a small script `send.js` that sends one order event, plus `kafka` running with `orders` and its six events (port 9092 published, so programs on the computer reach it at `localhost:9092`).
+
+```sh
+@include docker-shop-built
+@include kafka-orders
+npm install @confluentinc/kafka-javascript > /dev/null
+cat > send.js <<'EOF'
+import kafkajs from "@confluentinc/kafka-javascript";
+
+const { Kafka } = kafkajs.KafkaJS;
+const kafka = new Kafka({ kafkaJS: { brokers: ["localhost:9092"], clientId: "shop" } });
+const producer = kafka.producer();
+
+await producer.connect();
+const report = await producer.send({
+  topic: "orders",
+  messages: [{ key: "ada", value: JSON.stringify({ id: 7, customer: "ada", items: ["bell"] }) }],
+});
+console.log(report);
+await producer.disconnect();
+EOF
+```
+
+## kafka-shop-todo
+
+`kafka-shop` running (Kafka, the topic `orders`, the API and the billing worker), but with an `events.js` whose `publishOrder()` connects and then sends nothing yet.
+
+```sh
+@include kafka-shop
+cat > events.js <<'EOF'
+import kafkajs from "@confluentinc/kafka-javascript";
+
+const { Kafka } = kafkajs.KafkaJS;
+const kafka = new Kafka({
+  kafkaJS: { brokers: (process.env.KAFKA_BROKERS ?? "localhost:9092").split(","), clientId: "shop" },
+});
+const producer = kafka.producer();
+let connecting = null;
+
+// Publish an order-placed event, keyed by customer so each customer's events stay in order.
+export async function publishOrder(order) {
+  connecting ??= producer.connect();
+  await connecting;
+  // TODO: send the event to the topic orders
+}
+EOF
+git commit -qam "Publish order events (to do)"
+docker compose up -d kafka > /dev/null 2>&1
+docker compose exec kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 3 > /dev/null
+docker compose up -d > /dev/null 2>&1
+```
+
+## kafka-shop-wrong-listener
+
+`kafka-shop` with a `compose.yaml` whose Kafka has a single client listener advertising `localhost:9092`, and the API and worker pointed at `kafka:9092`. Everything is running, and the topic `orders` exists.
+
+```sh
+@include kafka-shop
+cat > compose.yaml <<'EOF'
+services:
+  kafka:
+    image: apache/kafka:4.3.1
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    healthcheck:
+      test: /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+      interval: 5s
+      retries: 10
+  api:
+    build: .
+    ports:
+      - "8080:3000"
+    environment:
+      KAFKA_BROKERS: kafka:9092
+    depends_on:
+      kafka:
+        condition: service_healthy
+  billing:
+    build: .
+    command: ["node", "billing.js"]
+    environment:
+      KAFKA_BROKERS: kafka:9092
+    depends_on:
+      kafka:
+        condition: service_healthy
+EOF
+git commit -qam "Run Kafka with one listener"
+docker compose up -d kafka > /dev/null 2>&1
+docker compose exec kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 3 > /dev/null
+docker compose up -d > /dev/null 2>&1
+```
